@@ -1,175 +1,163 @@
-Return-Path: <linux-hyperv+bounces-11186-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11187-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oO+MGt82FGpuKwcAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11186-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 25 May 2026 13:47:43 +0200
+	id UNFzJNs6FGpDLAcAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11187-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 25 May 2026 14:04:43 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF9205CA277
-	for <lists+linux-hyperv@lfdr.de>; Mon, 25 May 2026 13:47:42 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 896E75CA424
+	for <lists+linux-hyperv@lfdr.de>; Mon, 25 May 2026 14:04:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 449C3302E90E
-	for <lists+linux-hyperv@lfdr.de>; Mon, 25 May 2026 11:44:04 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 96321300370D
+	for <lists+linux-hyperv@lfdr.de>; Mon, 25 May 2026 12:04:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E933C37F8C3;
-	Mon, 25 May 2026 11:44:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A365337F743;
+	Mon, 25 May 2026 12:04:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NWJaSFdA"
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="oxT5JLS0"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BECBC37FF5F;
-	Mon, 25 May 2026 11:44:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F3F37DE9F
+	for <linux-hyperv@vger.kernel.org>; Mon, 25 May 2026 12:04:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779709443; cv=none; b=dt8J6IeK/RU0u7tlh2HWTzie6N/5Ktxdc9q6hO+v1zof3bFtHbiJRtzHc91GBhBhyvHP1us78zlf1aTHunrCIlRUwD8teUBf/M4yBYaIHNDbRwMrR+h0f3SwVyIN88TSDb6EYtaH7+HAGz8G/Kq8fRxV80EvbGkIbRwLqN7vJZg=
+	t=1779710678; cv=none; b=dthax1WOk4SEK9YBrF8UTofQQUAy8I03zqHSOuSLGyJyfw6c7k549cws59z6BH/rgIgee9xUZ4F/4fpbyOrvH1sz+cEw5UhSWBRoZ2NpEnQIxpzU73SOiHIV328z5zeK1NgorncaLLg0l3prNBa5H31NN9cg/ONF9/lu7KVz3Z8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779709443; c=relaxed/simple;
-	bh=WecPQJfCrErCiVESIdsqsyUdYnPBMpehDox7J972gPE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a+xQ77G3qaYTVU+gDfEe/vJRBxuC8zBiimQ0pv8DUTULHicaVj5OXKASo2mjGzLFnm951nKN/ete7qmJhs9c3HI4+2C3pu09/mEGXvxknwZbzWLAtYUe9sL8ZjBFd9oRAYP47+WmShoIXf+zbMgcanVxWXXMM3UlTaKryWBj0SQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NWJaSFdA; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779709441; x=1811245441;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WecPQJfCrErCiVESIdsqsyUdYnPBMpehDox7J972gPE=;
-  b=NWJaSFdAnfztwyxmO8qr8t8ll28H/aqB0dgJhrQprlHaYXYyjTN9UrN8
-   3l2z9ZOAgqAw8PeOy8OFzMEKsQQ9dAJDt3jT4LFMzHJjjHlW87epnSlQd
-   ZyGRo5psLCsV7MD0QWLMp0ZRUep3omQzaQZroPFX471ruvKB794/hFen6
-   mq+civkBes4cXKzFn6UshwAvToh9LvGHTp3sccuRpZTIdUEp88s9HKQKI
-   WhTBB2ngEqXVHnzZjGhzxTbA1UUxeBCa/6ctzXY7eVu/MJDgCJnzrSIsj
-   aZjiZyRAcORD8V/uJJpMCbokBELsXHwXbasdvsqtB/vEsaKOrMs8R4Raq
-   g==;
-X-CSE-ConnectionGUID: LAt7DdmfQT++CZOjw1L9zg==
-X-CSE-MsgGUID: dVflHA2VQI6iMO06UBtQJw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11796"; a="84381702"
-X-IronPort-AV: E=Sophos;i="6.24,167,1774335600"; 
-   d="scan'208";a="84381702"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2026 04:43:59 -0700
-X-CSE-ConnectionGUID: UcMbxQW7Sw2/vc+29vukHQ==
-X-CSE-MsgGUID: cfo44RCpSy+bKieFXbF9JQ==
-X-ExtLoop1: 1
-Received: from lkp-server01.sh.intel.com (HELO f0d55cb201f0) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 25 May 2026 04:43:55 -0700
-Received: from kbuild by f0d55cb201f0 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wRTiq-000000001QI-1Msq;
-	Mon, 25 May 2026 11:43:52 +0000
-Date: Mon, 25 May 2026 19:42:54 +0800
-From: kernel test robot <lkp@intel.com>
-To: Michael Kelley <mhklkml@zohomail.com>, kys@microsoft.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	longli@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-	hpa@zytor.com, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH 1/1] x86/hyperv: Refactor hv_smp_prepare_cpus()
-Message-ID: <202605251945.TesslTvF-lkp@intel.com>
-References: <20260521192336.99623-1-mhklkml@zohomail.com>
+	s=arc-20240116; t=1779710678; c=relaxed/simple;
+	bh=tmwruVzFG6Pq/2XoiDv/T22JQE8Li4Uugk6mvbPFKuQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=XO8l1Av4sPIvNJLubmVA3GCjWbw1YrmyH2/XwlkF0mNdjKR6qKRkpW24Pr3QvRMl4KkDUHrc5by8dfr8ylpnZoUT7lzoZF8pnbT52JCO7jZqcU6vTtvv5Acn6/cu1/jUI0lLRhLLsNo1tpL7dDiR5cajMictVgoqL3jRZCo0VFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=oxT5JLS0; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:Content-Type:MIME-Version:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=ONZX2yTc9nYLJ2fyqI6rG6ATLvCKYL7I+rUstwhQ++w=; b=oxT5JLS0G0bdHUkhSEX+YVYDTa
+	dV+LocJHSUr/Dr1JXrC1jJRwtvFRw+sH2h0o++RSqDdlDGOXLb58aZ+UlQqvCBJqn1COl6icgSA4s
+	8lAAFc59zwiCRK9dF2l9Lk3GVhIyf4l9tF8boCp/f1FIF6Z6fpj++N2owKxMJcH5mmgXL2SUHj9e3
+	hNI2xBmaUA/Dunh2ANgg19d0AqKQhehXHn4d09TPWdhVrDX+VvhpVsbQf+clKRxjXv68dYIS57/fh
+	VHilpQJdHUuXj4U+sSEQ58SONpssUVyyIcwYxV24+HGm8fXUWD9q+Vy/kUC7xUi+4QQt26vwebkOI
+	RpmOfADw==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <benh@debian.org>)
+	id 1wRU2i-001YvC-36;
+	Mon, 25 May 2026 12:04:25 +0000
+Date: Mon, 25 May 2026 14:04:22 +0200
+From: Ben Hutchings <benh@debian.org>
+To: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-hyperv@vger.kernel.org
+Subject: [PATCH] uio_hv_generic: Bind to FCopy device by default
+Message-ID: <ahQ6xuhSReidmN-3@decadent.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="IkPp9eu9jZv5OtLK"
 Content-Disposition: inline
-In-Reply-To: <20260521192336.99623-1-mhklkml@zohomail.com>
-X-Spamd-Result: default: False [-1.16 / 15.00];
+X-Debian-User: benh
+X-Spamd-Result: default: False [-4.26 / 15.00];
+	SIGNED_PGP(-2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[debian.org,none];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_DKIM_ALLOW(-0.20)[debian.org:s=smtpauto.stravinsky];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11186-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11187-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[intel.com:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-hyperv@vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[debian.org:+];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	TAGGED_RCPT(0.00)[linux-hyperv];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,intel.com:mid,intel.com:dkim,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,git-scm.com:url,01.org:url]
-X-Rspamd-Queue-Id: BF9205CA277
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[benh@debian.org,linux-hyperv@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 896E75CA424
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Michael,
 
-kernel test robot noticed the following build errors:
+--IkPp9eu9jZv5OtLK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[auto build test ERROR on tip/master]
-[also build test ERROR on linus/master v7.1-rc5 next-20260522]
-[cannot apply to tip/x86/core arnd-asm-generic/master tip/auto-latest]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+The Hyper-V kernel-mode fcopy driver was removed in 6.10 and the new
+fcopy daemon requires this uio driver to function.  However, by
+default the driver does not bind to any devices, and must be
+configured through the sysfs "new_id" file.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Michael-Kelley/x86-hyperv-Refactor-hv_smp_prepare_cpus/20260522-032610
-base:   tip/master
-patch link:    https://lore.kernel.org/r/20260521192336.99623-1-mhklkml%40zohomail.com
-patch subject: [PATCH 1/1] x86/hyperv: Refactor hv_smp_prepare_cpus()
-config: x86_64-randconfig-076-20260524 (https://download.01.org/0day-ci/archive/20260525/202605251945.TesslTvF-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260525/202605251945.TesslTvF-lkp@intel.com/reproduce)
+Since the FCopy device is now only usable through this driver, add its
+ID to the driver's ID table so that the daemon will work "out of the
+box".
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202605251945.TesslTvF-lkp@intel.com/
+Signed-off-by: Ben Hutchings <benh@debian.org>
+Fixes: ec314f61e4fc ("Drivers: hv: Remove fcopy driver")
+---
+--- a/drivers/uio/uio_hv_generic.c
++++ b/drivers/uio/uio_hv_generic.c
+@@ -395,9 +395,15 @@ hv_uio_remove(struct hv_device *dev)
+ 	vmbus_free_ring(dev->channel);
+ }
+=20
++static const struct hv_vmbus_device_id hv_uio_id_table[] =3D {
++	{ HV_FCOPY_GUID },
++	{}
++};
++MODULE_DEVICE_TABLE(vmbus, hv_uio_id_table);
++
+ static struct hv_driver hv_uio_drv =3D {
+ 	.name =3D "uio_hv_generic",
+-	.id_table =3D NULL, /* only dynamic id's */
++	.id_table =3D hv_uio_id_table,
+ 	.probe =3D hv_uio_probe,
+ 	.remove =3D hv_uio_remove,
+ };
 
-All errors (new ones prefixed by >>):
+--IkPp9eu9jZv5OtLK
+Content-Type: application/pgp-signature; name="signature.asc"
 
->> drivers/hv/hv_proc.c:303:55: error: call to undeclared function 'cpu_physical_id'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     303 |                 ret = hv_call_add_logical_proc(numa_cpu_node(i), i, cpu_physical_id(i));
-         |                                                                     ^
-   1 error generated.
+-----BEGIN PGP SIGNATURE-----
 
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for MFD_STMFX
-   Depends on [n]: HAS_IOMEM [=y] && I2C [=y] && OF [=n]
-   Selected by [y]:
-   - PINCTRL_STMFX [=y] && PINCTRL [=y] && I2C [=y] && HAS_IOMEM [=y]
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAmoUOsEACgkQ57/I7JWG
+EQmwLA/+KqGzASAjZjtfITrT0b/cdyuEm74o/kHTKvqgTcdmI4kRxdiNziYa/lhk
+9hsefBStfGOMRcN3v/nDHmyWOxONTBc4HCBwIKh85MBPQ+2cX0whXpgfuJvwLyup
+POvltlPevFlhc4pJrcjur7arz4qq4Xbw4CRHkR7KffE+hawn6TUMs+W/ZI390XFX
+PulSTXR5u5VEt3i61tp7XQ28d4rY03BdH7bh9qFAPvG7hmmLwQtBJFF6rENUPwsf
+WsHuAMyhIvXDHEoiH/DnB5OF89E8/HEWNEfs1ayeYXi15149mOvwr1udUWhf5kH0
+b3va7PjUYAEEnoc37C+PKE8jU9c9jmUcVL45eXythWBB19T6Siuck4WfWPk8kb5y
+XH8Hnj4ckjaPR5B7PK3joYe0j5LZZiBJLZAl9BySpjwL1AWBC2v/qn6FurBAv62g
+bNJ21rL6MyfKDBCK/vuOOIdU60Mw0iTQJj+5rGkY5Q9ePzx3Z+3W7dL9RQsHeneS
+524N2I9f87RV97FaP/Sg21jW2RuV6+jhBZCPkmfwH7YySD873jytjP2wfNKtHqDJ
+N102YGP4emjTvRgGz9UqjMrCB0z7sCp4B9OHeC4aVKtFjCRF96INEDGmUg2rijJg
+4SP0iTvQQX5u2UvuNn3rzmiPVVbVhsBYPEYeTNc6q/h3mOPkz10=
+=roSv
+-----END PGP SIGNATURE-----
 
-
-vim +/cpu_physical_id +303 drivers/hv/hv_proc.c
-
-   290	
-   291	void hv_smp_prep_cpus(void)
-   292	{
-   293	#ifdef CONFIG_X86_64
-   294		int i, ret;
-   295	
-   296		/* If AP LPs exist, we are in a kexec'd kernel and VPs already exist */
-   297		if (num_present_cpus() == 1 || hv_lp_exists(1))
-   298			return;
-   299	
-   300		for_each_present_cpu(i) {
-   301			if (i == 0)
-   302				continue;
- > 303			ret = hv_call_add_logical_proc(numa_cpu_node(i), i, cpu_physical_id(i));
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--IkPp9eu9jZv5OtLK--
 
