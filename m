@@ -1,80 +1,67 @@
-Return-Path: <linux-hyperv+bounces-11180-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11181-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SJHJKpD8E2qDIQcAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11180-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 25 May 2026 09:38:56 +0200
+	id 2LUxGOEBFGquIQcAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11181-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 25 May 2026 10:01:37 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5511D5C7359
-	for <lists+linux-hyperv@lfdr.de>; Mon, 25 May 2026 09:38:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 00C295C7628
+	for <lists+linux-hyperv@lfdr.de>; Mon, 25 May 2026 10:01:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id A1DCC3006689
-	for <lists+linux-hyperv@lfdr.de>; Mon, 25 May 2026 07:38:53 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 323CF3003D09
+	for <lists+linux-hyperv@lfdr.de>; Mon, 25 May 2026 08:01:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C8553D3D11;
-	Mon, 25 May 2026 07:38:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 516B43CD8BB;
+	Mon, 25 May 2026 08:01:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hHhBi01h"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="oi8TQ0x3"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF7F3D25D8;
-	Mon, 25 May 2026 07:38:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9DA415ECCC;
+	Mon, 25 May 2026 08:01:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779694728; cv=none; b=SdKQIdljEaTB3gpxc/dtBJ/Pj7aXIyQL/Qsbc4tbPhQ3FZRC2o4ZUCfvBpCg0AzE3f7rqZtV3OHO5JlFASxCRkT0QG0XtykohB5idY9b9t/gRz4LLxPBJiJrIXfpT24M7P4kylASEZ8mFYwdD6K1iX1gmHB9VRALRalOoGnM9Gc=
+	t=1779696095; cv=none; b=nP9xyzll4yLfSdzdWnJgpYepwsK/7s8i/rF7H/GeZr07+69Sg8nzpXeYmQw2yy45K8q996XalkYwkfJkTpnn11pyp9eK+yUa05TnzibJ/9A5mqkWH2i/Wya9rsfqhox0EAzEdB0Q65F6PqXX4jnga8IEuiAmUxXqmkTnpXQugSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779694728; c=relaxed/simple;
-	bh=nKqtSJgxnHFTkrcccM59rL3lptufu+7u672ok4yxBsk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QXGUApAo98VkiWh0hiEpiJeLgxuz/3sCswzNRcpZ+mnLAaFn7tQfprvKwZ9l3JfLubhDpY8+R3RAIqzRK82hmOIcOrbWGCpmCBWL3xMGbcU18LtKSW0rZWzVkv6Gq0cjXTZ5HvFvXsL2ojn0/uEb9ZFevx7iJP6c7D+w9Bew6r0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hHhBi01h; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779694727; x=1811230727;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nKqtSJgxnHFTkrcccM59rL3lptufu+7u672ok4yxBsk=;
-  b=hHhBi01h+5PmE7u54oZlQq8RfVf2CkrOddrX4f2+Iw/1vrzOLuk9edFj
-   1qd/enxYpBG0xuuncWKjtS09+RQ0MOlbLZf4wY/Kb95ohn0xZAsFYJmK/
-   BN0ycDTCrwlWAU9/LVm9EDLgKitjn/et56UHAY7gW2+yn+MyGd1eJ+oLa
-   U+7O2PIAZcCnz+4Hpfo4/itkgl65p0osM4EZ/hC9QVwfQFiSzZMKu2Wjc
-   D7QXRSndWjR5mZNsEWjLi+CuJgZ/ei8K5ST/U8KzsqO+DookkHXLSGrAF
-   SUBcyIZns1wla0kHSgXeDENZBfKBEv054D42jfL5ZIt3/LYW34BFTHPFL
-   g==;
-X-CSE-ConnectionGUID: RdsJo093SdqjIVBqBXuC5w==
-X-CSE-MsgGUID: 3I5xJYWDQ/CUSba6LQNPHA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11796"; a="80421634"
-X-IronPort-AV: E=Sophos;i="6.24,167,1774335600"; 
-   d="scan'208";a="80421634"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2026 00:38:46 -0700
-X-CSE-ConnectionGUID: W8d7wfxhS7aM7UqGp73cXA==
-X-CSE-MsgGUID: UgSqjgRhQfy95JyVj7Oa3A==
-X-ExtLoop1: 1
-Received: from lkp-server01.sh.intel.com (HELO f0d55cb201f0) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 25 May 2026 00:38:43 -0700
-Received: from kbuild by f0d55cb201f0 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wRPtX-000000001EM-3ZB2;
-	Mon, 25 May 2026 07:38:39 +0000
-Date: Mon, 25 May 2026 15:37:51 +0800
-From: kernel test robot <lkp@intel.com>
-To: Michael Kelley <mhklkml@zohomail.com>, kys@microsoft.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	longli@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-	hpa@zytor.com, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH 1/1] x86/hyperv: Refactor hv_smp_prepare_cpus()
-Message-ID: <202605251528.eVtKHPbX-lkp@intel.com>
-References: <20260521192336.99623-1-mhklkml@zohomail.com>
+	s=arc-20240116; t=1779696095; c=relaxed/simple;
+	bh=DqNzwrd0I5meiHoTPh1oTbGQ2oglAwf0hjhojpIZtjw=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RRTxVkzys5VDHMeacJcEmS/D+RAu48CVdEOqLmLLV3CHgEKTCWhkUd3pNEAuMOGIJo0fXkL6D5zQlKexGmPPDFcnMhWgc17M7sft+y12ZZh2dyI9VvX9/foA5Hp2Pm1iphJcaCvMNQ3UVt+s1YBFTmzWy1/Vh88Z9FZc+rs6TYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=oi8TQ0x3; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1204)
+	id C3A6920B7166; Mon, 25 May 2026 01:01:17 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C3A6920B7166
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1779696077;
+	bh=a/3OpYSo7pi6L2H8KYxVX0pCbOmL1iviVE9A8mWM6fU=;
+	h=Date:From:To:Subject:References:In-Reply-To:From;
+	b=oi8TQ0x3y+QA64J+IjyUy33bkzwlppB+pb0CmgiDCkAEmWEdVn6MsiP4GZ6fi9jhc
+	 YYEdCNV/yqS++KqDW3oT7gp2SKN/rWcSKesJFv5ZzGJ02WvvN3+hTpi+g60xK7k1Jh
+	 F5ZDkRKeCKORE8Whs+sPJDZDUghCAmwd3mAwpMRc=
+Date: Mon, 25 May 2026 01:01:17 -0700
+From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+To: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	leon@kernel.org, longli@microsoft.com, kotaranov@microsoft.com,
+	horms@kernel.org, shradhagupta@linux.microsoft.com,
+	ssengar@linux.microsoft.com, ernis@linux.microsoft.com,
+	shirazsaleem@microsoft.com, linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org, stephen@networkplumber.org,
+	jacob.e.keller@intel.com, dipayanroy@microsoft.com,
+	leitao@debian.org, kees@kernel.org, john.fastabend@gmail.com,
+	hawk@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
+	ast@kernel.org, sdf@fomichev.me, yury.norov@gmail.com
+Subject: Re: [PATCH net v2 1/2] net: mana: Add NULL guards in teardown path
+ to prevent panic on attach failure
+Message-ID: <ahQBzTUrhzvsy22C@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20260522233555.1099342-1-dipayanroy@linux.microsoft.com>
+ <20260522233555.1099342-2-dipayanroy@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -83,93 +70,177 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260521192336.99623-1-mhklkml@zohomail.com>
-X-Spamd-Result: default: False [-1.16 / 15.00];
+In-Reply-To: <20260522233555.1099342-2-dipayanroy@linux.microsoft.com>
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11180-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
+	TAGGED_FROM(0.00)[bounces-11181-lists,linux-hyperv=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[microsoft.com,kernel.org,lunn.ch,davemloft.net,google.com,redhat.com,linux.microsoft.com,vger.kernel.org,networkplumber.org,intel.com,debian.org,gmail.com,iogearbox.net,fomichev.me];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[intel.com:+];
+	FROM_HAS_DN(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-hyperv@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_NONE(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dipayanroy@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	NEURAL_HAM(-0.00)[-0.998];
 	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,intel.com:mid,intel.com:dkim,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 5511D5C7359
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	RCPT_COUNT_TWELVE(0.00)[33];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,linux.dev:url,linux.microsoft.com:dkim,linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net:mid]
+X-Rspamd-Queue-Id: 00C295C7628
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Michael,
+On Fri, May 22, 2026 at 04:33:12PM -0700, Dipayaan Roy wrote:
+> When queue allocation fails partway through, the error cleanup frees
+> and NULLs apc->tx_qp and apc->rxqs. Multiple teardown paths such as
+> mana_remove(), mana_change_mtu() recovery, and internal error handling
+> in mana_alloc_queues() can subsequently call into functions that
+> dereference these pointers without NULL checks:
+> 
+> - mana_chn_setxdp() dereferences apc->rxqs[0], causing a NULL pointer
+>   dereference panic (CR2: 0000000000000000 at mana_chn_setxdp+0x26).
+> - mana_destroy_vport() iterates apc->rxqs without a NULL check.
+> - mana_fence_rqs() iterates apc->rxqs without a NULL check.
+> - mana_dealloc_queues() iterates apc->tx_qp without a NULL check.
+> 
+> Add NULL guards for apc->rxqs in mana_fence_rqs(),
+> mana_destroy_vport(), and before the mana_chn_setxdp() call. Add a
+> NULL guard for apc->tx_qp in mana_dealloc_queues() to skip TX queue
+> draining when TX queues were never allocated or already freed.
+> 
+> Fixes: ca9c54d2d6a5 ("net: mana: Add a driver for Microsoft Azure Network Adapter (MANA)")
+> 
+> Signed-off-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+Hi, 
 
-kernel test robot noticed the following build errors:
+I will send a v3 to fix the fixes tag issue highlighted in:
+https://netdev-ctrl.bots.linux.dev/logs/build/1099669/14590738/verify_fixes/summary
 
-[auto build test ERROR on tip/master]
-[also build test ERROR on linus/master v7.1-rc5 next-20260522]
-[cannot apply to tip/x86/core arnd-asm-generic/master tip/auto-latest]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Michael-Kelley/x86-hyperv-Refactor-hv_smp_prepare_cpus/20260522-032610
-base:   tip/master
-patch link:    https://lore.kernel.org/r/20260521192336.99623-1-mhklkml%40zohomail.com
-patch subject: [PATCH 1/1] x86/hyperv: Refactor hv_smp_prepare_cpus()
-config: x86_64-buildonly-randconfig-006-20260525 (https://download.01.org/0day-ci/archive/20260525/202605251528.eVtKHPbX-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260525/202605251528.eVtKHPbX-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202605251528.eVtKHPbX-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   drivers/hv/hv_proc.c: In function 'hv_smp_prep_cpus':
->> drivers/hv/hv_proc.c:303:69: error: implicit declaration of function 'cpu_physical_id' [-Wimplicit-function-declaration]
-     303 |                 ret = hv_call_add_logical_proc(numa_cpu_node(i), i, cpu_physical_id(i));
-         |                                                                     ^~~~~~~~~~~~~~~
-
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for MFD_STMFX
-   Depends on [n]: HAS_IOMEM [=y] && I2C [=y] && OF [=n]
-   Selected by [y]:
-   - PINCTRL_STMFX [=y] && PINCTRL [=y] && I2C [=y] && HAS_IOMEM [=y]
-
-
-vim +/cpu_physical_id +303 drivers/hv/hv_proc.c
-
-   290	
-   291	void hv_smp_prep_cpus(void)
-   292	{
-   293	#ifdef CONFIG_X86_64
-   294		int i, ret;
-   295	
-   296		/* If AP LPs exist, we are in a kexec'd kernel and VPs already exist */
-   297		if (num_present_cpus() == 1 || hv_lp_exists(1))
-   298			return;
-   299	
-   300		for_each_present_cpu(i) {
-   301			if (i == 0)
-   302				continue;
- > 303			ret = hv_call_add_logical_proc(numa_cpu_node(i), i, cpu_physical_id(i));
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> ---
+>  drivers/net/ethernet/microsoft/mana/mana_en.c | 70 +++++++++++--------
+>  1 file changed, 41 insertions(+), 29 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> index 9afc786b297a..0582803907a8 100644
+> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> @@ -1727,6 +1727,9 @@ static void mana_fence_rqs(struct mana_port_context *apc)
+>  	struct mana_rxq *rxq;
+>  	int err;
+>  
+> +	if (!apc->rxqs)
+> +		return;
+> +
+>  	for (rxq_idx = 0; rxq_idx < apc->num_queues; rxq_idx++) {
+>  		rxq = apc->rxqs[rxq_idx];
+>  		err = mana_fence_rq(apc, rxq);
+> @@ -2858,13 +2861,16 @@ static void mana_destroy_vport(struct mana_port_context *apc)
+>  	struct mana_rxq *rxq;
+>  	u32 rxq_idx;
+>  
+> -	for (rxq_idx = 0; rxq_idx < apc->num_queues; rxq_idx++) {
+> -		rxq = apc->rxqs[rxq_idx];
+> -		if (!rxq)
+> -			continue;
+> +	if (apc->rxqs) {
+>  
+> -		mana_destroy_rxq(apc, rxq, true);
+> -		apc->rxqs[rxq_idx] = NULL;
+> +		for (rxq_idx = 0; rxq_idx < apc->num_queues; rxq_idx++) {
+> +			rxq = apc->rxqs[rxq_idx];
+> +			if (!rxq)
+> +				continue;
+> +
+> +			mana_destroy_rxq(apc, rxq, true);
+> +			apc->rxqs[rxq_idx] = NULL;
+> +		}
+>  	}
+>  
+>  	mana_destroy_txq(apc);
+> @@ -3269,7 +3275,8 @@ static int mana_dealloc_queues(struct net_device *ndev)
+>  	if (apc->port_is_up)
+>  		return -EINVAL;
+>  
+> -	mana_chn_setxdp(apc, NULL);
+> +	if (apc->rxqs)
+> +		mana_chn_setxdp(apc, NULL);
+>  
+>  	if (gd->gdma_context->is_pf && !apc->ac->bm_hostmode)
+>  		mana_pf_deregister_filter(apc);
+> @@ -3287,33 +3294,38 @@ static int mana_dealloc_queues(struct net_device *ndev)
+>  	 * number of queues.
+>  	 */
+>  
+> -	for (i = 0; i < apc->num_queues; i++) {
+> -		txq = &apc->tx_qp[i].txq;
+> -		tsleep = 1000;
+> -		while (atomic_read(&txq->pending_sends) > 0 &&
+> -		       time_before(jiffies, timeout)) {
+> -			usleep_range(tsleep, tsleep + 1000);
+> -			tsleep <<= 1;
+> -		}
+> -		if (atomic_read(&txq->pending_sends)) {
+> -			err = pcie_flr(to_pci_dev(gd->gdma_context->dev));
+> -			if (err) {
+> -				netdev_err(ndev, "flr failed %d with %d pkts pending in txq %u\n",
+> -					   err, atomic_read(&txq->pending_sends),
+> -					   txq->gdma_txq_id);
+> +	if (apc->tx_qp) {
+> +		for (i = 0; i < apc->num_queues; i++) {
+> +			txq = &apc->tx_qp[i].txq;
+> +			tsleep = 1000;
+> +			while (atomic_read(&txq->pending_sends) > 0 &&
+> +			       time_before(jiffies, timeout)) {
+> +				usleep_range(tsleep, tsleep + 1000);
+> +				tsleep <<= 1;
+> +			}
+> +			if (atomic_read(&txq->pending_sends)) {
+> +				err =
+> +				    pcie_flr(to_pci_dev(gd->gdma_context->dev));
+> +				if (err) {
+> +					netdev_err(ndev, "flr failed %d with %d pkts pending in txq %u\n",
+> +						   err,
+> +					    atomic_read(&txq->pending_sends),
+> +					    txq->gdma_txq_id);
+> +				}
+> +				break;
+>  			}
+> -			break;
+>  		}
+> -	}
+>  
+> -	for (i = 0; i < apc->num_queues; i++) {
+> -		txq = &apc->tx_qp[i].txq;
+> -		while ((skb = skb_dequeue(&txq->pending_skbs))) {
+> -			mana_unmap_skb(skb, apc);
+> -			dev_kfree_skb_any(skb);
+> +		for (i = 0; i < apc->num_queues; i++) {
+> +			txq = &apc->tx_qp[i].txq;
+> +			while ((skb = skb_dequeue(&txq->pending_skbs))) {
+> +				mana_unmap_skb(skb, apc);
+> +				dev_kfree_skb_any(skb);
+> +			}
+> +			atomic_set(&txq->pending_sends, 0);
+>  		}
+> -		atomic_set(&txq->pending_sends, 0);
+>  	}
+> +
+>  	/* We're 100% sure the queues can no longer be woken up, because
+>  	 * we're sure now mana_poll_tx_cq() can't be running.
+>  	 */
+> -- 
+> 2.43.0
+> 
 
