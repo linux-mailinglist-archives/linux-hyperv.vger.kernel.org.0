@@ -1,729 +1,959 @@
-Return-Path: <linux-hyperv+bounces-11203-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11204-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MFR9Nc3KFWqQbgcAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11203-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 26 May 2026 18:31:09 +0200
+	id qFqMFi8KFmpNhAcAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11204-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 26 May 2026 23:01:35 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3D275D9B9D
-	for <lists+linux-hyperv@lfdr.de>; Tue, 26 May 2026 18:31:08 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3D3D5DC8F0
+	for <lists+linux-hyperv@lfdr.de>; Tue, 26 May 2026 23:01:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 29095304FECF
-	for <lists+linux-hyperv@lfdr.de>; Tue, 26 May 2026 16:15:22 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B6FE7303ADEA
+	for <lists+linux-hyperv@lfdr.de>; Tue, 26 May 2026 20:53:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2BAA3B0AE5;
-	Tue, 26 May 2026 16:15:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC71737DEAD;
+	Tue, 26 May 2026 20:53:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="drg47POS"
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=mhklkml@zohomail.com header.b="Vf2gXuLy"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012048.outbound.protection.outlook.com [52.101.53.48])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F543B0AD9;
-	Tue, 26 May 2026 16:15:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A0B3C0A05;
+	Tue, 26 May 2026 20:53:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779812121; cv=fail; b=pnBmfVvH7gZ1atgT0zbghQ6cdCKOfM4xwpZ6qeEkfMF1nacKVRdLYjmC/pM1nLYcymMWEiVPm/mW4wt0Ct8flfHXzloFFybOX4voEjK695tAHwFUnHHoVlplLKX6RvbNxn10Btj6XjSrPkGHjOk8HEoOrwGphmL43xVizTUjlq4=
+	t=1779828788; cv=pass; b=We1KRtw7UE8vmaV0+VG+GZWLkFRY4mrVk2o4jwKbdP1RBAb3E6pHQ1uSe+cM4LGXPJH3n/hFh27FwWQJp2CE2gPLwf/CsK8aRMk4M2gaTI+MzU9x0HSVUbe/GzfGIMujP587sffvNs9/TI5S8UPzO+B38iJby8CssYmZidIo2KU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779812121; c=relaxed/simple;
-	bh=3D589RfxnGwvqWo4h82aOKB0MO4K2F9w+zRyZtc1tKE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jkDkSixqYg06brpPrVP7kReNWyNgmc15FQh4H1X7FzxKCDKjBfphaFwE3B82V6hMgfi2aP2alVRnCQVlsB54iiiDQr4mWmFbPwKHgZqt97szkqRnNuCpksNTkOKMHfdUO3WMWWGiYoBshztNmzfFTUSW8MDn/1mCsvijLKvktKA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=drg47POS; arc=fail smtp.client-ip=52.101.53.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fchwy/IKWFWgsrBUGHbHCMZzwy8xt7IVNLCwU9zMAcBxKY+BroZTtRyI6lNJ7oLQMKqxYzfbiWWCXiULoa8j+ZG1GCa+61mKnN5KqH9uTnUcfpOfWis29+OQc/5jjUaf+oxbgJAOCC7m5O0GmzMSyrfduUz2wba6+Hx2kD4L3M8t/gzwI32KdDf1w/InmK7Fz0fcw2Jqta6IFdBvmYRR6hesjiqnHstj/i+BaWkQfUAmmcCpYtw8dhPNaCOdccE5kDt2+9ePQKwu97KLWESm/hVEJB2ev2ggpyFEmPRQec3WNrVdPJsbumMQBXJvBLRq2/VKxlacsAULzySqyicRDw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=N0E70cdv+l9pfwub3ybCdtOpn6kXoDIxWTGZb5UyAGY=;
- b=SwXSRoe0/vf3vKNAJZoqX/tqAppDKQKw7muRfNgPlL7Bp1K1DeG0cXDr02ang/fKLLxusZLKIu2iUsRL/PoI+v575mxwlmSA3oFfuVD4cI96a/8rIuQ9IrtkECqotWc2imgHmv6ITx354yZl+vJVI61jg3TD8H3HtaBP+IQ9hSdGxPZExfhQ8/7lxKS3gq/B9JoqjxUvb+7APjIW2SDwsy6LsGJKo96IGHyhLISqtErYtsyQvmuV703D04A98XvTSzkvtK/H6Xq1kvZ8hztuhpUVMW6bWl+3l+aZU6ILWD9ORU9CGxW/0Vx6hRPBDj9vdhJoGdUmgNNeSPK6nCl53Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N0E70cdv+l9pfwub3ybCdtOpn6kXoDIxWTGZb5UyAGY=;
- b=drg47POS82ix0gdZQn96yIKFUPN49ta4z0wTsOGc2n18jDNBNdAE+Ur6qomoBTSta7kFoDHflaz14u6DSQUGbh2PKWdqXoNSgFIytF84vx2os5j9LMHFcB2IhHuLjc/pdK2GRb0tR24a4cI6puacpyo7V9rlmOMu7X0UEizJU5Y5VYK0GOP6TsBEFYRO7DaIFnFufXtOOUi2IIDXpOSiDkhtrC+XAE7rJatyIH0/DfXA/hxEdGtqyd/2OUUWnUr5anxFD6LasT8Mzv+14Ktk0+jqMLw2HivPNiVOL9FVv6o40iIJqJy+GDMn4teW5qNHs2FuFofcpiui6Apj3P9YNg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
- by DS2PR12MB9774.namprd12.prod.outlook.com (2603:10b6:8:270::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.48.20; Tue, 26 May
- 2026 16:15:09 +0000
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::299d:f5e0:3550:1528]) by LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::299d:f5e0:3550:1528%4]) with mapi id 15.21.0071.010; Tue, 26 May 2026
- 16:15:09 +0000
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Abhijit Gangurde <abhijit.gangurde@amd.com>,
-	Allen Hubbe <allen.hubbe@amd.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Bernard Metzler <bernard.metzler@linux.dev>,
-	Potnuri Bharat Teja <bharat@chelsio.com>,
-	Bryan Tan <bryan-bt.tan@broadcom.com>,
-	Cheng Xu <chengyou@linux.alibaba.com>,
-	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-	Junxian Huang <huangjunxian6@hisilicon.com>,
-	Kai Shen <kaishen@linux.alibaba.com>,
-	Kalesh AP <kalesh-anakkur.purayil@broadcom.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Krzysztof Czurylo <krzysztof.czurylo@intel.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	linux-hyperv@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	Long Li <longli@microsoft.com>,
-	Michal Kalderon <mkalderon@marvell.com>,
-	Nelson Escobar <neescoba@cisco.com>,
-	Satish Kharat <satishkh@cisco.com>,
-	Selvin Xavier <selvin.xavier@broadcom.com>,
-	Chengchang Tang <tangchengchang@huawei.com>,
-	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
-	Vishnu Dasa <vishnu.dasa@broadcom.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>
-Cc: Leon Romanovsky <leonro@nvidia.com>,
-	patches@lists.linux.dev
-Subject: [PATCH 2/2] RDMA: Update the query_device() op
-Date: Tue, 26 May 2026 13:15:06 -0300
-Message-ID: <2-v1-922fa8e828ba+f7-ib_udata_stack_jgg@nvidia.com>
-In-Reply-To: <0-v1-922fa8e828ba+f7-ib_udata_stack_jgg@nvidia.com>
-References:
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: YT4PR01CA0412.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:10b::11) To LV8PR12MB9620.namprd12.prod.outlook.com
- (2603:10b6:408:2a1::19)
+	s=arc-20240116; t=1779828788; c=relaxed/simple;
+	bh=eCzvnOwKiLQ/vD6USjF+sYmh6wKglSNK+j1LuntkZrU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VpGxOkaQEBi231+UHfco053DfwB9apaypc/t8D5Ro0z6sqgQ2f+S2BCgKfjMxQTbt4OCmkf3P19fPn00e4t0naPf7cx1dG+Vt05yT8nCCexACyOl4bL5WYX/Bv/IJjKa/9epAwE891Tt6S8+01nw6XdZRwxwNiEIeNlvucmyHNY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=mhklkml@zohomail.com header.b=Vf2gXuLy; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+ARC-Seal: i=1; a=rsa-sha256; t=1779828765; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=VE7YgjeUXlbAimJ6jjveBTqRBwNjcrhvcA0GBKU7t60bdHHB5N06BuLzraoDY4Y1ZYzY/GJVsWr4XwJQJh9ZvPaWHfpxy02gi5v43SkM+GdtHdBehl9/wVfpD6+iTWISIPZhN6PXshxPdQIM9KiFEVzEMJSBeLDHwQ7EdUm0ETk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1779828765; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Reply-To:Reply-To:Subject:Subject:To:To:Message-Id; 
+	bh=51hvaZ1LutPY/xGMn7ksHlBXjal0+iUpOfAxIe9BYwE=; 
+	b=Nx9mJ3ahaIcFbEFAiDXtaxiyNabKz02zIlYPx+tk/uK6E2e53rDKSd6iy1C+Fp6ThiAJdaJDh8rZxKYWZEvBE1S4dYVJhABt33UcuD6cY771Yc8Vdah+/D+JJ66i/THD9jsg6NSH9ml6wecjq8CMrpX3fP+4YSjM74sPFcpcBE4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=mhklkml@zohomail.com;
+	dmarc=pass header.from=<mhklkml@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1779828765;
+	s=zm2022; d=zohomail.com; i=mhklkml@zohomail.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:Reply-To:Reply-To:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
+	bh=51hvaZ1LutPY/xGMn7ksHlBXjal0+iUpOfAxIe9BYwE=;
+	b=Vf2gXuLybfEKdgrUA5ksElyZTJ7+HwZnd3J80et5TmkrNFxrU4I/1EOTfMYagn6E
+	SUxClZoXDPRWi6sOYAhB6IpCOqPLN2GD1paye+2MGLnctrmFVOOFIVyK2yUvQwew4zx
+	H1N+tan9bUA12ESWAgBkF0ZfrXl4JKMg6fEu0FzU=
+Received: by mx.zohomail.com with SMTPS id 1779828763760367.34514660547507;
+	Tue, 26 May 2026 13:52:43 -0700 (PDT)
+From: Michael Kelley <mhklkml@zohomail.com>
+To: maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	decui@microsoft.com,
+	longli@microsoft.com,
+	ssengar@linux.microsoft.com
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org
+Subject: [PATCH 1/1] drm/hyperv: Replace "hyperv_" with "hvdrm_" as symbol name prefix
+Date: Tue, 26 May 2026 13:52:39 -0700
+Message-Id: <20260526205239.1509-1-mhklkml@zohomail.com>
+X-Mailer: git-send-email 2.25.1
+Reply-To: mhklinux@outlook.com
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|DS2PR12MB9774:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1749d0f1-9490-4de6-9f72-08debb41f481
-X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|921020|56012099006|18002099003|22082099003|6133799003|11063799006|5023799004;
-X-Microsoft-Antispam-Message-Info:
-	3svl/9cENuYjdgdRwVNXYoNQeSVF9gahCiyj+vw1O6N0vauMJFXnq2di7QriHdH45rz/GGg5GkVR4JXNHK0Oj0NyKGKW8Sret300ptAZWGJzjLyG/kdSzt8HlrVc4NVEu2fbwja7nUJiUeeguX8PT5O6E0tqDy3xVeBEhxkm7UwoMlObcUnDBUDDBzpcAlLQTnAEdNLlRVcgKmA6dbIJRwxqkHK8rSDd5N+sVEToObF+rkcbH65ZCDR+pwycpCKBRzXPOoAdraFd0UyG0thqehul7jLgQJqLu7MA2m0/9Is/XLKji9R9fdBIobPjJljfWB6xIuifTasbvx89QexHdHo++1IEEkXEnjz4CBhVJSXcEFikgO0Py6jEMa2Xeb4mEWz8Z4+KHD9TNxtNYjdhGL2+zRITmLrE/5qW14QyUzjhZ56i0aIKM53DL2/ienhOYaVoWeReHKFzov9Yd08zkPCW/US8T/jPh2MfQOPBMwUMeBjxx1QCx0cSi+ZbeJup2oafR4taoLu5LZ1ngFbSuD9fFxaGoL1COneLrTlnfStbtOUrgxVNMCL1+q3B9FnFG3ZO1PmOhjyj/sVY6MXwWeiseej2IshgxMRrFdYBfJqgJTUqhL5oi3UtpLzcwiX5sRqNGQ4aSdbxUm8WbR+0/jQ03qfgdw9hTP8ziv/XjXG4vo6ywigAdph9ovcuvDAEY/rBDoLFelgPb+hMvs0NIC0hUXk8aZ4VaB6t3oYY9OI=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(921020)(56012099006)(18002099003)(22082099003)(6133799003)(11063799006)(5023799004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?tejHLdPbjNtLAZlNOsO1iWrMO9z8d+e1p/5FW62Rdfa0FF1PIlLACoj0nfFS?=
- =?us-ascii?Q?zs5ysY6g5U3UwAocuQ7MD/NoX2aAve5bVRBHIP/i3rlN8Rk2gwEWPfbXSk42?=
- =?us-ascii?Q?aDyKKJFElhCB4X4D7ZPJltjA8s36QNwiML9kNY+1YrTp8caQY37fScMly/ZO?=
- =?us-ascii?Q?xC2f0OHb13opSTVXF5J3t/TWCCktFegZmWNzdJtug/88psqXr8kNr13Q+YXE?=
- =?us-ascii?Q?i9lulO4/0K2j2pLBd4bl33F+ALdtTCE2Pbq10Gi0AUqkddjrj7Mt1rVMmZAx?=
- =?us-ascii?Q?NKAzqMoXeWWn7sJbXyU5Z4VZ0itCy8S95dp+NoXAUj+5O7ZI+BeCy7ghEFCB?=
- =?us-ascii?Q?kAthdUchbnZL3QEgoGyTaYxyoHe2wlOqlXG0RS2Y+B0vkZ1AHkZYpTSTPUUs?=
- =?us-ascii?Q?GLoogh4AXrPLZCmeoX9DcwJ3Q7Dtdrtkol8MxCb7fvFIEaQWDH9yfr4OiUst?=
- =?us-ascii?Q?UCDP3eSQteErUd50Wav5S297jVqJ4IRXq9TnPLDVGVuWQi4zXvs43T2j+fE6?=
- =?us-ascii?Q?/GvaXNM7KoKI8YztST0kE/XM3Z2liKnFYq91Ps/ep9dK9QI5UOpViwhtNph2?=
- =?us-ascii?Q?EeiMe90jVrt8kAca9CGDH2yq9vTwBVa2/FPvdSv+ZSFqiytA3fCK28bGE2nR?=
- =?us-ascii?Q?e2CAtp7lq+QBApdUD9D114daEj6sYGoq8oMHOepyaY+ixzxH7gk5+mgBRNEw?=
- =?us-ascii?Q?V1lxHW+NEpvs1Uwk3dms3HsBG8IVLnT41hCbn2oooN1nj98paNwB/dW1P7yK?=
- =?us-ascii?Q?UobDvQSPJm8QbVwEz6+mkKmnfM3w0AWdNRAoq+OX0DmbU0bVbcmkulADU525?=
- =?us-ascii?Q?V3dEFMv5nitSq39ZezVrqsG59Vs2MlHULuJ9UMPp9lN5D+fcN/pyPMo/3o4i?=
- =?us-ascii?Q?Q9q66dTgMEnWasxnt19bvSW/6ZxLJc2le+G5OBvWTmTlb2Tu2wwePpWsVuqw?=
- =?us-ascii?Q?Ld/LzGIn9MmnGyt9/9tlKpjXWdLaaa6+bKt0tR4FuBM2Cy0Zl+fTkLQDbSAQ?=
- =?us-ascii?Q?b8mpZHdoyn/Uz3gEyNgBMsNeqjo6VhC9SDV3qvAxNpmOiic3hPwFz+nTcDWx?=
- =?us-ascii?Q?BoQJ0EnVru2+xtCsFtiJ0jgT8koe2bUQVjxC35f6MGKIA5dDTZ2Vz9HALqpR?=
- =?us-ascii?Q?a0tLt61thJ/2fqClZEvTiReLAnB5Q4GEhYzyrc+N28EryhZG2RvASQM7PCBX?=
- =?us-ascii?Q?iQ5XKMbEeQ/TyDDrCIma5ve9x5zEgvuKOXtydOj2NJ0x/PGfE1iBkp7ibW4L?=
- =?us-ascii?Q?1mAOk+gacGCTtMrPweyTMFDfR/nhW3n25pWK1QMSkqnhHhQ8dI+g8LXZXzsC?=
- =?us-ascii?Q?f0sCYsNQ1IX09CarPveU7AxPCc5JkBGUkKdvPsgz3ZBF1DLqUEEYCSxzpX+y?=
- =?us-ascii?Q?wj7ppQ7DA47ttblFuteVdIOt5x++/thkdx/pWePbavtDUQAFQ2EobCojJUBT?=
- =?us-ascii?Q?B83o/t3yT9GulMH+s3HcJMW1xyFmPr+QVREdJv0PC3uI/mtMULOmNnitSNzw?=
- =?us-ascii?Q?6+HjjaTjvCiKxcCV4mMk0BHruN1dd1cSQj6UF/w5CphOTcgMbypjblMsq8zp?=
- =?us-ascii?Q?JvtPu9h7Q+JOqEt+ZxJZAtD5Vw7aKRn2d6k3zSdU4JbwG7Niy0Ca6LPpaT5f?=
- =?us-ascii?Q?LaYt+607eJKfiDW/H/a1ZSFM5i36isAv2e3rzs5NtTbuz5wazbuc3DRqNwbJ?=
- =?us-ascii?Q?dmFp63mdqgOotY4JBPPlLhu5fG2su9kvD7gD785Ufakl1cYq?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1749d0f1-9490-4de6-9f72-08debb41f481
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2026 16:15:08.7204
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PfsnJ2LXngrPjJ/MvVKumzMQvOc0oWrZI+8C8vunE5zdKPAzPKCwXpcVE00n40UD
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS2PR12MB9774
-X-Spamd-Result: default: False [1.34 / 15.00];
+Content-Transfer-Encoding: 8bit
+Feedback-ID: zu08011227e7130c556580e4678e2a7a79000061a7d616774dbf6282238815d5386b4e9102905136ade4ea29:ZohoMail
+X-Zoho-CM-AccountID: 0c88436b239415d28725328898ceccb9ce2ba3b61598c1c37bcb2109e0248174
+X-ZohoMailClient: External
+X-Spamd-Result: default: False [6.84 / 15.00];
+	SEM_URIBL(3.50)[zohomail.com:dkim];
+	FREEMAIL_REPLYTO_NEQ_FROM(2.00)[];
 	MID_CONTAINS_FROM(1.00)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
 	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[nvidia.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[Nvidia.com:s=selector2];
 	MAILLIST(-0.15)[generic];
+	BAD_REP_POLICIES(0.10)[];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11203-lists,linux-hyperv=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[28];
+	TAGGED_FROM(0.00)[bounces-11204-lists,linux-hyperv=lfdr.de];
+	GREYLIST(0.00)[pass,body];
+	DMARC_POLICY_ALLOW(0.00)[zohomail.com,reject];
+	FREEMAIL_REPLYTO(0.00)[outlook.com];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	R_DKIM_ALLOW(0.00)[zohomail.com:s=zm2022];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[amd.com,broadcom.com,linux.dev,chelsio.com,linux.alibaba.com,cornelisnetworks.com,hisilicon.com,microsoft.com,intel.com,kernel.org,vger.kernel.org,marvell.com,cisco.com,huawei.com,nvidia.com,gmail.com];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[linux.intel.com,kernel.org,suse.de,gmail.com,ffwll.ch,microsoft.com,linux.microsoft.com];
+	MIME_TRACE(0.00)[0:+];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	HAS_REPLYTO(0.00)[mhklinux@outlook.com];
+	TO_DN_NONE(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jgg@nvidia.com,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[Nvidia.com:+];
-	RCVD_COUNT_FIVE(0.00)[5];
+	FROM_NEQ_ENVFROM(0.00)[mhklkml@zohomail.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[zohomail.com:+];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	NEURAL_HAM(-0.00)[-0.998];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[Nvidia.com:dkim,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,nvidia.com:mid,nvidia.com:email]
-X-Rspamd-Queue-Id: F3D275D9B9D
-X-Rspamd-Action: no action
+	ARC_ALLOW(0.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	R_SPF_ALLOW(0.00)[+ip4:172.234.253.10:c];
+	NEURAL_SPAM(0.00)[0.583];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[hyperv_driver.name:url,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,outlook.com:replyto,outlook.com:email,hvdrm_driver.name:url,zohomail.com:mid,zohomail.com:dkim,ptr_shape.data:url]
+X-Rspamd-Queue-Id: A3D3D5DC8F0
+X-Rspamd-Action: add header
 X-Rspamd-Server: lfdr
+X-Spam: Yes
 
-This op hasn't followed the normal pattern of passing NULL for udata when
-invoked by the kernel. Instead the kernel caller creates a dummy ib_udata
-on the stack and passes that in. It does not seem to currently be a bug,
-but this flow should be modernized to use the new API flow and in the
-process accept NULL as well.
+From: Michael Kelley <mhklinux@outlook.com>
 
-Only mlx4 uses an input request structure, have every other driver call
-ib_is_udata_in_empty() to enforce the lack of request structs.
+Function and structure names in the Hyper-V DRM driver currently
+use "hyperv_" as the prefix. This conflicts with usage in core Hyper-V
+and VMBus code, and incorrectly implies that functions and structures
+in this driver apply generically to Hyper-V. A specific conflict arises
+for "hyperv_init", which is an initcall for generic Hyper-V
+initialization on arm64. The conflict prevents the use of
+initcall_blacklist on the kernel boot line to skip loading this driver.
 
-Use ib_respond_empty_udata() in every driver that does not use a response
-struct.
+Fix this by substituting "hvdrm_" as the prefix for all functions and
+structures in this driver. This prefix marries the existing "hv" prefix
+for Hyper-V related code with "drm" to indicate this driver.
 
-Ensure a check for NULL udata before calling ib_respond_udata() in
-bnxt_re, efa, and mlx5.
+The changes are all mechanical text substitution in symbol names.
+There are no other code or functional changes.
 
-Make mlx4 safe to be called with NULL.
-
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Signed-off-by: Michael Kelley <mhklinux@outlook.com>
 ---
- drivers/infiniband/core/device.c                |  3 +--
- drivers/infiniband/hw/bnxt_re/ib_verbs.c        |  5 ++++-
- drivers/infiniband/hw/cxgb4/provider.c          |  8 +++++---
- drivers/infiniband/hw/erdma/erdma_verbs.c       |  9 +++++++--
- drivers/infiniband/hw/hns/hns_roce_main.c       |  7 ++++++-
- drivers/infiniband/hw/ionic/ionic_ibdev.c       |  7 ++++++-
- drivers/infiniband/hw/irdma/verbs.c             |  8 +++++---
- drivers/infiniband/hw/mana/main.c               |  7 ++++++-
- drivers/infiniband/hw/mlx4/main.c               | 13 +++++++------
- drivers/infiniband/hw/mthca/mthca_provider.c    | 13 ++++++++-----
- drivers/infiniband/hw/ocrdma/ocrdma_verbs.c     |  8 +++++---
- drivers/infiniband/hw/qedr/verbs.c              |  7 ++++++-
- drivers/infiniband/hw/usnic/usnic_ib_verbs.c    |  8 +++++---
- drivers/infiniband/hw/vmw_pvrdma/pvrdma_verbs.c |  8 +++++---
- drivers/infiniband/sw/rdmavt/vt.c               |  9 ++++++---
- drivers/infiniband/sw/rxe/rxe_verbs.c           | 14 ++++----------
- drivers/infiniband/sw/siw/siw_verbs.c           |  8 +++++---
- 17 files changed, 91 insertions(+), 51 deletions(-)
+This patch is built against linux-next20260526.
 
-diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
-index b89efaaa81ec58..9f9662e9228186 100644
---- a/drivers/infiniband/core/device.c
-+++ b/drivers/infiniband/core/device.c
-@@ -1245,7 +1245,6 @@ static int assign_name(struct ib_device *device, const char *name)
-  */
- static int setup_device(struct ib_device *device)
+ drivers/gpu/drm/hyperv/hyperv_drm.h         |  20 ++--
+ drivers/gpu/drm/hyperv/hyperv_drm_drv.c     |  88 ++++++++--------
+ drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 110 ++++++++++----------
+ drivers/gpu/drm/hyperv/hyperv_drm_proto.c   |  70 ++++++-------
+ 4 files changed, 144 insertions(+), 144 deletions(-)
+
+diff --git a/drivers/gpu/drm/hyperv/hyperv_drm.h b/drivers/gpu/drm/hyperv/hyperv_drm.h
+index 9e776112c03e..66bd8730aad2 100644
+--- a/drivers/gpu/drm/hyperv/hyperv_drm.h
++++ b/drivers/gpu/drm/hyperv/hyperv_drm.h
+@@ -8,7 +8,7 @@
+ 
+ #define VMBUS_MAX_PACKET_SIZE 0x4000
+ 
+-struct hyperv_drm_device {
++struct hvdrm_drm_device {
+ 	/* drm */
+ 	struct drm_device dev;
+ 	struct drm_plane plane;
+@@ -39,17 +39,17 @@ struct hyperv_drm_device {
+ 	struct hv_device *hdev;
+ };
+ 
+-#define to_hv(_dev) container_of(_dev, struct hyperv_drm_device, dev)
++#define to_hv(_dev) container_of(_dev, struct hvdrm_drm_device, dev)
+ 
+-/* hyperv_drm_modeset */
+-int hyperv_mode_config_init(struct hyperv_drm_device *hv);
++/* hvdrm_drm_modeset */
++int hvdrm_mode_config_init(struct hvdrm_drm_device *hv);
+ 
+-/* hyperv_drm_proto */
+-int hyperv_update_vram_location(struct hv_device *hdev, phys_addr_t vram_pp);
+-int hyperv_update_situation(struct hv_device *hdev, u8 active, u32 bpp,
++/* hvdrm_drm_proto */
++int hvdrm_update_vram_location(struct hv_device *hdev, phys_addr_t vram_pp);
++int hvdrm_update_situation(struct hv_device *hdev, u8 active, u32 bpp,
+ 			    u32 w, u32 h, u32 pitch);
+-int hyperv_hide_hw_ptr(struct hv_device *hdev);
+-int hyperv_update_dirt(struct hv_device *hdev, struct drm_rect *rect);
+-int hyperv_connect_vsp(struct hv_device *hdev);
++int hvdrm_hide_hw_ptr(struct hv_device *hdev);
++int hvdrm_update_dirt(struct hv_device *hdev, struct drm_rect *rect);
++int hvdrm_connect_vsp(struct hv_device *hdev);
+ 
+ #endif
+diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+index b6bf6412ae34..a4456ccf340e 100644
+--- a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
++++ b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+@@ -26,7 +26,7 @@
+ 
+ DEFINE_DRM_GEM_FOPS(hv_fops);
+ 
+-static struct drm_driver hyperv_driver = {
++static struct drm_driver hvdrm_driver = {
+ 	.driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_ATOMIC,
+ 
+ 	.name		 = DRIVER_NAME,
+@@ -39,17 +39,17 @@ static struct drm_driver hyperv_driver = {
+ 	DRM_FBDEV_SHMEM_DRIVER_OPS,
+ };
+ 
+-static int hyperv_pci_probe(struct pci_dev *pdev,
++static int hvdrm_pci_probe(struct pci_dev *pdev,
+ 			    const struct pci_device_id *ent)
  {
--	struct ib_udata uhw = {.outlen = 0, .inlen = 0};
+ 	return 0;
+ }
+ 
+-static void hyperv_pci_remove(struct pci_dev *pdev)
++static void hvdrm_pci_remove(struct pci_dev *pdev)
+ {
+ }
+ 
+-static const struct pci_device_id hyperv_pci_tbl[] = {
++static const struct pci_device_id hvdrm_pci_tbl[] = {
+ 	{
+ 		.vendor = PCI_VENDOR_ID_MICROSOFT,
+ 		.device = PCI_DEVICE_ID_HYPERV_VIDEO,
+@@ -60,14 +60,14 @@ static const struct pci_device_id hyperv_pci_tbl[] = {
+ /*
+  * PCI stub to support gen1 VM.
+  */
+-static struct pci_driver hyperv_pci_driver = {
++static struct pci_driver hvdrm_pci_driver = {
+ 	.name =		KBUILD_MODNAME,
+-	.id_table =	hyperv_pci_tbl,
+-	.probe =	hyperv_pci_probe,
+-	.remove =	hyperv_pci_remove,
++	.id_table =	hvdrm_pci_tbl,
++	.probe =	hvdrm_pci_probe,
++	.remove =	hvdrm_pci_remove,
+ };
+ 
+-static int hyperv_setup_vram(struct hyperv_drm_device *hv,
++static int hvdrm_setup_vram(struct hvdrm_drm_device *hv,
+ 			     struct hv_device *hdev)
+ {
+ 	struct drm_device *dev = &hv->dev;
+@@ -102,15 +102,15 @@ static int hyperv_setup_vram(struct hyperv_drm_device *hv,
+ 	return ret;
+ }
+ 
+-static int hyperv_vmbus_probe(struct hv_device *hdev,
++static int hvdrm_vmbus_probe(struct hv_device *hdev,
+ 			      const struct hv_vmbus_device_id *dev_id)
+ {
+-	struct hyperv_drm_device *hv;
++	struct hvdrm_drm_device *hv;
+ 	struct drm_device *dev;
  	int ret;
  
- 	ib_device_check_mandatory(device);
-@@ -1257,7 +1256,7 @@ static int setup_device(struct ib_device *device)
- 	}
+-	hv = devm_drm_dev_alloc(&hdev->device, &hyperv_driver,
+-				struct hyperv_drm_device, dev);
++	hv = devm_drm_dev_alloc(&hdev->device, &hvdrm_driver,
++				struct hvdrm_drm_device, dev);
+ 	if (IS_ERR(hv))
+ 		return PTR_ERR(hv);
  
- 	memset(&device->attrs, 0, sizeof(device->attrs));
--	ret = device->ops.query_device(device, &device->attrs, &uhw);
-+	ret = device->ops.query_device(device, &device->attrs, NULL);
+@@ -119,15 +119,15 @@ static int hyperv_vmbus_probe(struct hv_device *hdev,
+ 	hv_set_drvdata(hdev, hv);
+ 	hv->hdev = hdev;
+ 
+-	ret = hyperv_connect_vsp(hdev);
++	ret = hvdrm_connect_vsp(hdev);
  	if (ret) {
- 		dev_warn(&device->dev,
- 			 "Couldn't query the device attributes\n");
-diff --git a/drivers/infiniband/hw/bnxt_re/ib_verbs.c b/drivers/infiniband/hw/bnxt_re/ib_verbs.c
-index 94aa06e3b828ca..98d65c1b102200 100644
---- a/drivers/infiniband/hw/bnxt_re/ib_verbs.c
-+++ b/drivers/infiniband/hw/bnxt_re/ib_verbs.c
-@@ -265,7 +265,10 @@ int bnxt_re_query_device(struct ib_device *ibdev,
- 		resp.packet_pacing_caps.supported_qpts =
- 			1 << IB_QPT_RC;
- 	}
--	return ib_respond_udata(udata, resp);
-+
-+	if (udata)
-+		return ib_respond_udata(udata, resp);
-+	return 0;
- }
- 
- int bnxt_re_modify_device(struct ib_device *ibdev,
-diff --git a/drivers/infiniband/hw/cxgb4/provider.c b/drivers/infiniband/hw/cxgb4/provider.c
-index 0e3827022c63da..e1eec37ee8222a 100644
---- a/drivers/infiniband/hw/cxgb4/provider.c
-+++ b/drivers/infiniband/hw/cxgb4/provider.c
-@@ -259,11 +259,13 @@ static int c4iw_query_device(struct ib_device *ibdev, struct ib_device_attr *pro
- {
- 
- 	struct c4iw_dev *dev;
-+	int err;
- 
- 	pr_debug("ibdev %p\n", ibdev);
- 
--	if (uhw->inlen || uhw->outlen)
--		return -EINVAL;
-+	err = ib_is_udata_in_empty(uhw);
-+	if (err)
-+		return err;
- 
- 	dev = to_c4iw_dev(ibdev);
- 	addrconf_addr_eui48((u8 *)&props->sys_image_guid,
-@@ -298,7 +300,7 @@ static int c4iw_query_device(struct ib_device *ibdev, struct ib_device_attr *pro
- 	props->max_fast_reg_page_list_len =
- 		t4_max_fr_depth(dev->rdev.lldi.ulptx_memwrite_dsgl && use_dsgl);
- 
--	return 0;
-+	return ib_respond_empty_udata(uhw);
- }
- 
- static int c4iw_query_port(struct ib_device *ibdev, u32 port,
-diff --git a/drivers/infiniband/hw/erdma/erdma_verbs.c b/drivers/infiniband/hw/erdma/erdma_verbs.c
-index b59c2e3a5306d1..d9eb8ae2c56fba 100644
---- a/drivers/infiniband/hw/erdma/erdma_verbs.c
-+++ b/drivers/infiniband/hw/erdma/erdma_verbs.c
-@@ -315,9 +315,14 @@ erdma_user_mmap_entry_insert(struct erdma_ucontext *uctx, void *address,
- }
- 
- int erdma_query_device(struct ib_device *ibdev, struct ib_device_attr *attr,
--		       struct ib_udata *unused)
-+		       struct ib_udata *udata)
- {
- 	struct erdma_dev *dev = to_edev(ibdev);
-+	int err;
-+
-+	err = ib_is_udata_in_empty(udata);
-+	if (err)
-+		return err;
- 
- 	memset(attr, 0, sizeof(*attr));
- 
-@@ -358,7 +363,7 @@ int erdma_query_device(struct ib_device *ibdev, struct ib_device_attr *attr,
- 		addrconf_addr_eui48((u8 *)&attr->sys_image_guid,
- 				    dev->netdev->dev_addr);
- 
--	return 0;
-+	return ib_respond_empty_udata(udata);
- }
- 
- int erdma_query_gid(struct ib_device *ibdev, u32 port, int idx,
-diff --git a/drivers/infiniband/hw/hns/hns_roce_main.c b/drivers/infiniband/hw/hns/hns_roce_main.c
-index 77bad9f5d482bb..c6f633bd5a3402 100644
---- a/drivers/infiniband/hw/hns/hns_roce_main.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_main.c
-@@ -221,6 +221,11 @@ static int hns_roce_query_device(struct ib_device *ib_dev,
- 				 struct ib_udata *uhw)
- {
- 	struct hns_roce_dev *hr_dev = to_hr_dev(ib_dev);
-+	int ret;
-+
-+	ret = ib_is_udata_in_empty(uhw);
-+	if (ret)
-+		return ret;
- 
- 	memset(props, 0, sizeof(*props));
- 
-@@ -274,7 +279,7 @@ static int hns_roce_query_device(struct ib_device *ib_dev,
- 	if (hr_dev->caps.flags & HNS_ROCE_CAP_FLAG_XRC)
- 		props->device_cap_flags |= IB_DEVICE_XRC;
- 
--	return 0;
-+	return ib_respond_empty_udata(uhw);
- }
- 
- static int hns_roce_query_port(struct ib_device *ib_dev, u32 port_num,
-diff --git a/drivers/infiniband/hw/ionic/ionic_ibdev.c b/drivers/infiniband/hw/ionic/ionic_ibdev.c
-index 73a616ae350236..b0449c75f8938f 100644
---- a/drivers/infiniband/hw/ionic/ionic_ibdev.c
-+++ b/drivers/infiniband/hw/ionic/ionic_ibdev.c
-@@ -25,6 +25,11 @@ static int ionic_query_device(struct ib_device *ibdev,
- {
- 	struct ionic_ibdev *dev = to_ionic_ibdev(ibdev);
- 	struct net_device *ndev;
-+	int err;
-+
-+	err = ib_is_udata_in_empty(udata);
-+	if (err)
-+		return err;
- 
- 	ndev = ib_device_get_netdev(ibdev, 1);
- 	addrconf_ifid_eui48((u8 *)&attr->sys_image_guid, ndev);
-@@ -69,7 +74,7 @@ static int ionic_query_device(struct ib_device *ibdev,
- 	attr->max_fast_reg_page_list_len = dev->lif_cfg.npts_per_lif / 2;
- 	attr->max_pkeys = IONIC_PKEY_TBL_LEN;
- 
--	return 0;
-+	return ib_respond_empty_udata(udata);
- }
- 
- static int ionic_query_port(struct ib_device *ibdev, u32 port,
-diff --git a/drivers/infiniband/hw/irdma/verbs.c b/drivers/infiniband/hw/irdma/verbs.c
-index 3f4811bb5514c6..5ba2e63b51036e 100644
---- a/drivers/infiniband/hw/irdma/verbs.c
-+++ b/drivers/infiniband/hw/irdma/verbs.c
-@@ -16,9 +16,11 @@ static int irdma_query_device(struct ib_device *ibdev,
- 	struct irdma_pci_f *rf = iwdev->rf;
- 	struct pci_dev *pcidev = iwdev->rf->pcidev;
- 	struct irdma_hw_attrs *hw_attrs = &rf->sc_dev.hw_attrs;
-+	int err;
- 
--	if (udata->inlen || udata->outlen)
--		return -EINVAL;
-+	err = ib_is_udata_in_empty(udata);
-+	if (err)
-+		return err;
- 
- 	memset(props, 0, sizeof(*props));
- 	addrconf_addr_eui48((u8 *)&props->sys_image_guid,
-@@ -74,7 +76,7 @@ static int irdma_query_device(struct ib_device *ibdev,
- 	if (hw_attrs->uk_attrs.hw_rev >= IRDMA_GEN_3)
- 		props->device_cap_flags |= IB_DEVICE_MEM_WINDOW_TYPE_2B;
- 
--	return 0;
-+	return ib_respond_empty_udata(udata);
- }
- 
- /**
-diff --git a/drivers/infiniband/hw/mana/main.c b/drivers/infiniband/hw/mana/main.c
-index 307ae01bf26f34..4dcd048d44b69a 100644
---- a/drivers/infiniband/hw/mana/main.c
-+++ b/drivers/infiniband/hw/mana/main.c
-@@ -549,6 +549,11 @@ int mana_ib_query_device(struct ib_device *ibdev, struct ib_device_attr *props,
- {
- 	struct mana_ib_dev *dev = container_of(ibdev, struct mana_ib_dev, ib_dev);
- 	struct pci_dev *pdev = to_pci_dev(mdev_to_gc(dev)->dev);
-+	int err;
-+
-+	err = ib_is_udata_in_empty(uhw);
-+	if (err)
-+		return err;
- 
- 	memset(props, 0, sizeof(*props));
- 	props->vendor_id = pdev->vendor;
-@@ -576,7 +581,7 @@ int mana_ib_query_device(struct ib_device *ibdev, struct ib_device_attr *props,
- 	if (!mana_ib_is_rnic(dev))
- 		props->raw_packet_caps = IB_RAW_PACKET_CAP_IP_CSUM;
- 
--	return 0;
-+	return ib_respond_empty_udata(uhw);
- }
- 
- int mana_ib_query_port(struct ib_device *ibdev, u32 port,
-diff --git a/drivers/infiniband/hw/mlx4/main.c b/drivers/infiniband/hw/mlx4/main.c
-index d50743f090bf21..17073e8f105aab 100644
---- a/drivers/infiniband/hw/mlx4/main.c
-+++ b/drivers/infiniband/hw/mlx4/main.c
-@@ -444,8 +444,9 @@ static int mlx4_ib_query_device(struct ib_device *ibdev,
- 	struct mlx4_uverbs_ex_query_device cmd;
- 	struct mlx4_uverbs_ex_query_device_resp resp = {};
- 	struct mlx4_clock_params clock_params;
-+	size_t uhw_outlen = uhw ? uhw->outlen : 0;
- 
--	if (uhw->inlen) {
-+	if (uhw && uhw->inlen) {
- 		err = ib_copy_validate_udata_in_cm(uhw, cmd, reserved, 0);
- 		if (err)
- 			return err;
-@@ -572,7 +573,7 @@ static int mlx4_ib_query_device(struct ib_device *ibdev,
- 	props->cq_caps.max_cq_moderation_count = MLX4_MAX_CQ_COUNT;
- 	props->cq_caps.max_cq_moderation_period = MLX4_MAX_CQ_PERIOD;
- 
--	if (uhw->outlen >= resp.response_length + sizeof(resp.hca_core_clock_offset)) {
-+	if (uhw_outlen >= resp.response_length + sizeof(resp.hca_core_clock_offset)) {
- 		resp.response_length += sizeof(resp.hca_core_clock_offset);
- 		if (!mlx4_get_internal_clock_params(dev->dev, &clock_params)) {
- 			resp.comp_mask |= MLX4_IB_QUERY_DEV_RESP_MASK_CORE_CLOCK_OFFSET;
-@@ -580,14 +581,14 @@ static int mlx4_ib_query_device(struct ib_device *ibdev,
- 		}
+ 		drm_err(dev, "Failed to connect to vmbus.\n");
+ 		goto err_hv_set_drv_data;
  	}
  
--	if (uhw->outlen >= resp.response_length +
-+	if (uhw_outlen >= resp.response_length +
- 	    sizeof(resp.max_inl_recv_sz)) {
- 		resp.response_length += sizeof(resp.max_inl_recv_sz);
- 		resp.max_inl_recv_sz  = dev->dev->caps.max_rq_sg *
- 			sizeof(struct mlx4_wqe_data_seg);
- 	}
+-	aperture_remove_all_conflicting_devices(hyperv_driver.name);
++	aperture_remove_all_conflicting_devices(hvdrm_driver.name);
  
--	if (offsetofend(typeof(resp), rss_caps) <= uhw->outlen) {
-+	if (offsetofend(typeof(resp), rss_caps) <= uhw_outlen) {
- 		if (props->rss_caps.supported_qpts) {
- 			resp.rss_caps.rx_hash_function =
- 				MLX4_IB_RX_HASH_FUNC_TOEPLITZ;
-@@ -611,7 +612,7 @@ static int mlx4_ib_query_device(struct ib_device *ibdev,
- 				       sizeof(resp.rss_caps);
- 	}
+-	ret = hyperv_setup_vram(hv, hdev);
++	ret = hvdrm_setup_vram(hv, hdev);
+ 	if (ret)
+ 		goto err_vmbus_close;
  
--	if (offsetofend(typeof(resp), tso_caps) <= uhw->outlen) {
-+	if (offsetofend(typeof(resp), tso_caps) <= uhw_outlen) {
- 		if (dev->dev->caps.max_gso_sz &&
- 		    ((mlx4_ib_port_link_layer(ibdev, 1) ==
- 		    IB_LINK_LAYER_ETHERNET) ||
-@@ -625,7 +626,7 @@ static int mlx4_ib_query_device(struct ib_device *ibdev,
- 				       sizeof(resp.tso_caps);
- 	}
- 
--	if (uhw->outlen) {
-+	if (uhw_outlen) {
- 		err = ib_respond_udata(uhw, resp);
- 		if (err)
- 			goto out;
-diff --git a/drivers/infiniband/hw/mthca/mthca_provider.c b/drivers/infiniband/hw/mthca/mthca_provider.c
-index afa97d3801f783..079c51003b24a4 100644
---- a/drivers/infiniband/hw/mthca/mthca_provider.c
-+++ b/drivers/infiniband/hw/mthca/mthca_provider.c
-@@ -55,16 +55,19 @@ static int mthca_query_device(struct ib_device *ibdev, struct ib_device_attr *pr
- {
- 	struct ib_smp *in_mad;
- 	struct ib_smp *out_mad;
--	int err = -ENOMEM;
-+	int err;
- 	struct mthca_dev *mdev = to_mdev(ibdev);
- 
--	if (uhw->inlen || uhw->outlen)
--		return -EINVAL;
-+	err = ib_is_udata_in_empty(uhw);
-+	if (err)
-+		return err;
- 
- 	in_mad = kzalloc_obj(*in_mad);
- 	out_mad = kmalloc_obj(*out_mad);
--	if (!in_mad || !out_mad)
-+	if (!in_mad || !out_mad) {
-+		err = -ENOMEM;
- 		goto out;
-+	}
- 
- 	memset(props, 0, sizeof *props);
- 
-@@ -111,7 +114,7 @@ static int mthca_query_device(struct ib_device *ibdev, struct ib_device_attr *pr
- 	props->max_total_mcast_qp_attach = props->max_mcast_qp_attach *
- 					   props->max_mcast_grp;
- 
--	err = 0;
-+	err = ib_respond_empty_udata(uhw);
-  out:
- 	kfree(in_mad);
- 	kfree(out_mad);
-diff --git a/drivers/infiniband/hw/ocrdma/ocrdma_verbs.c b/drivers/infiniband/hw/ocrdma/ocrdma_verbs.c
-index 383f1d9c15d151..17def9d9ce99ca 100644
---- a/drivers/infiniband/hw/ocrdma/ocrdma_verbs.c
-+++ b/drivers/infiniband/hw/ocrdma/ocrdma_verbs.c
-@@ -68,9 +68,11 @@ int ocrdma_query_device(struct ib_device *ibdev, struct ib_device_attr *attr,
- 			struct ib_udata *uhw)
- {
- 	struct ocrdma_dev *dev = get_ocrdma_dev(ibdev);
-+	int err;
- 
--	if (uhw->inlen || uhw->outlen)
--		return -EINVAL;
-+	err = ib_is_udata_in_empty(uhw);
-+	if (err)
-+		return err;
- 
- 	memset(attr, 0, sizeof *attr);
- 	memcpy(&attr->fw_ver, &dev->attr.fw_ver[0],
-@@ -110,7 +112,7 @@ int ocrdma_query_device(struct ib_device *ibdev, struct ib_device_attr *attr,
- 	attr->local_ca_ack_delay = dev->attr.local_ca_ack_delay;
- 	attr->max_fast_reg_page_list_len = dev->attr.max_pages_per_frmr;
- 	attr->max_pkeys = 1;
--	return 0;
-+	return ib_respond_empty_udata(uhw);
- }
- 
- static inline void get_link_speed_and_width(struct ocrdma_dev *dev,
-diff --git a/drivers/infiniband/hw/qedr/verbs.c b/drivers/infiniband/hw/qedr/verbs.c
-index 1af908275ca729..cf01078820d8cb 100644
---- a/drivers/infiniband/hw/qedr/verbs.c
-+++ b/drivers/infiniband/hw/qedr/verbs.c
-@@ -105,6 +105,7 @@ int qedr_query_device(struct ib_device *ibdev,
- {
- 	struct qedr_dev *dev = get_qedr_dev(ibdev);
- 	struct qedr_device_attr *qattr = &dev->attr;
-+	int rc;
- 
- 	if (!dev->rdma_ctx) {
- 		DP_ERR(dev,
-@@ -113,6 +114,10 @@ int qedr_query_device(struct ib_device *ibdev,
- 		return -EINVAL;
- 	}
- 
-+	rc = ib_is_udata_in_empty(udata);
-+	if (rc)
-+		return rc;
-+
- 	memset(attr, 0, sizeof(*attr));
- 
- 	attr->fw_ver = qattr->fw_ver;
-@@ -155,7 +160,7 @@ int qedr_query_device(struct ib_device *ibdev,
- 	attr->max_pkeys = qattr->max_pkey;
- 	attr->max_ah = qattr->max_ah;
- 
--	return 0;
-+	return ib_respond_empty_udata(udata);
- }
- 
- static inline void get_link_speed_and_width(int speed, u16 *ib_speed,
-diff --git a/drivers/infiniband/hw/usnic/usnic_ib_verbs.c b/drivers/infiniband/hw/usnic/usnic_ib_verbs.c
-index 261f18a8368543..dc355b00f61cec 100644
---- a/drivers/infiniband/hw/usnic/usnic_ib_verbs.c
-+++ b/drivers/infiniband/hw/usnic/usnic_ib_verbs.c
-@@ -275,10 +275,12 @@ int usnic_ib_query_device(struct ib_device *ibdev,
- 	union ib_gid gid;
- 	struct ethtool_drvinfo info;
- 	int qp_per_vf;
-+	int err;
- 
- 	usnic_dbg("\n");
--	if (uhw->inlen || uhw->outlen)
--		return -EINVAL;
-+	err = ib_is_udata_in_empty(uhw);
-+	if (err)
-+		return err;
- 
- 	mutex_lock(&us_ibdev->usdev_lock);
- 	us_ibdev->netdev->ethtool_ops->get_drvinfo(us_ibdev->netdev, &info);
-@@ -322,7 +324,7 @@ int usnic_ib_query_device(struct ib_device *ibdev,
- 	 * max_qp_wr, max_sge, max_sge_rd, max_cqe */
- 	mutex_unlock(&us_ibdev->usdev_lock);
- 
--	return 0;
-+	return ib_respond_empty_udata(uhw);
- }
- 
- int usnic_ib_query_port(struct ib_device *ibdev, u32 port,
-diff --git a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_verbs.c b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_verbs.c
-index b9c3202b9545e3..1d29a535f76a8c 100644
---- a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_verbs.c
-+++ b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_verbs.c
-@@ -67,9 +67,11 @@ int pvrdma_query_device(struct ib_device *ibdev,
- 			struct ib_udata *uhw)
- {
- 	struct pvrdma_dev *dev = to_vdev(ibdev);
-+	int err;
- 
--	if (uhw->inlen || uhw->outlen)
--		return -EINVAL;
-+	err = ib_is_udata_in_empty(uhw);
-+	if (err)
-+		return err;
- 
- 	props->fw_ver = dev->dsr->caps.fw_ver;
- 	props->sys_image_guid = dev->dsr->caps.sys_image_guid;
-@@ -114,7 +116,7 @@ int pvrdma_query_device(struct ib_device *ibdev,
- 	props->device_cap_flags |= IB_DEVICE_PORT_ACTIVE_EVENT |
- 				   IB_DEVICE_RC_RNR_NAK_GEN;
- 
--	return 0;
-+	return ib_respond_empty_udata(uhw);
- }
- 
- /**
-diff --git a/drivers/infiniband/sw/rdmavt/vt.c b/drivers/infiniband/sw/rdmavt/vt.c
-index 40aa6420836470..5fa3a1f3332689 100644
---- a/drivers/infiniband/sw/rdmavt/vt.c
-+++ b/drivers/infiniband/sw/rdmavt/vt.c
-@@ -6,6 +6,7 @@
- #include <linux/module.h>
- #include <linux/kernel.h>
- #include <linux/dma-mapping.h>
-+#include <rdma/uverbs_ioctl.h>
- #include "vt.h"
- #include "cq.h"
- #include "trace.h"
-@@ -79,14 +80,16 @@ static int rvt_query_device(struct ib_device *ibdev,
- 			    struct ib_udata *uhw)
- {
- 	struct rvt_dev_info *rdi = ib_to_rvt(ibdev);
-+	int err;
- 
--	if (uhw->inlen || uhw->outlen)
--		return -EINVAL;
-+	err = ib_is_udata_in_empty(uhw);
-+	if (err)
-+		return err;
- 	/*
- 	 * Return rvt_dev_info.dparms.props contents
+@@ -136,11 +136,11 @@ static int hyperv_vmbus_probe(struct hv_device *hdev,
+ 	 * vram location is not fatal. Device will update dirty area till
+ 	 * preferred resolution only.
  	 */
- 	*props = rdi->dparms.props;
--	return 0;
-+	return ib_respond_empty_udata(uhw);
+-	ret = hyperv_update_vram_location(hdev, hv->fb_base);
++	ret = hvdrm_update_vram_location(hdev, hv->fb_base);
+ 	if (ret)
+ 		drm_warn(dev, "Failed to update vram location.\n");
+ 
+-	ret = hyperv_mode_config_init(hv);
++	ret = hvdrm_mode_config_init(hv);
+ 	if (ret)
+ 		goto err_free_mmio;
+ 
+@@ -168,10 +168,10 @@ static int hyperv_vmbus_probe(struct hv_device *hdev,
+ 	return ret;
  }
  
- static int rvt_get_numa_node(struct ib_device *ibdev)
-diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.c b/drivers/infiniband/sw/rxe/rxe_verbs.c
-index 8edd4dd1f031f4..5815ce34d9704c 100644
---- a/drivers/infiniband/sw/rxe/rxe_verbs.c
-+++ b/drivers/infiniband/sw/rxe/rxe_verbs.c
-@@ -22,19 +22,13 @@ static int rxe_query_device(struct ib_device *ibdev,
- 	struct rxe_dev *rxe = to_rdev(ibdev);
- 	int err;
- 
--	if (udata->inlen || udata->outlen) {
--		rxe_dbg_dev(rxe, "malformed udata\n");
--		err = -EINVAL;
--		goto err_out;
--	}
-+	err = ib_is_udata_in_empty(udata);
-+	if (err)
-+		return err;
- 
- 	memcpy(attr, &rxe->attr, sizeof(*attr));
- 
--	return 0;
--
--err_out:
--	rxe_err_dev(rxe, "returned err = %d\n", err);
--	return err;
-+	return ib_respond_empty_udata(udata);
- }
- 
- static int rxe_query_port(struct ib_device *ibdev,
-diff --git a/drivers/infiniband/sw/siw/siw_verbs.c b/drivers/infiniband/sw/siw/siw_verbs.c
-index b34f3d6547ffc7..b74ac85c1b8b8b 100644
---- a/drivers/infiniband/sw/siw/siw_verbs.c
-+++ b/drivers/infiniband/sw/siw/siw_verbs.c
-@@ -130,9 +130,11 @@ int siw_query_device(struct ib_device *base_dev, struct ib_device_attr *attr,
- 		     struct ib_udata *udata)
+-static void hyperv_vmbus_remove(struct hv_device *hdev)
++static void hvdrm_vmbus_remove(struct hv_device *hdev)
  {
- 	struct siw_device *sdev = to_siw_dev(base_dev);
-+	int rv;
+ 	struct drm_device *dev = hv_get_drvdata(hdev);
+-	struct hyperv_drm_device *hv = to_hv(dev);
++	struct hvdrm_drm_device *hv = to_hv(dev);
  
--	if (udata->inlen || udata->outlen)
--		return -EINVAL;
-+	rv = ib_is_udata_in_empty(udata);
-+	if (rv)
-+		return rv;
- 
- 	memset(attr, 0, sizeof(*attr));
- 
-@@ -165,7 +167,7 @@ int siw_query_device(struct ib_device *base_dev, struct ib_device_attr *attr,
- 	addrconf_addr_eui48((u8 *)&attr->sys_image_guid,
- 			    sdev->raw_gid);
- 
--	return 0;
-+	return ib_respond_empty_udata(udata);
+ 	vmbus_set_skip_unload(false);
+ 	drm_dev_unplug(dev);
+@@ -183,12 +183,12 @@ static void hyperv_vmbus_remove(struct hv_device *hdev)
+ 	vmbus_free_mmio(hv->mem->start, hv->fb_size);
  }
  
- int siw_query_port(struct ib_device *base_dev, u32 port,
+-static void hyperv_vmbus_shutdown(struct hv_device *hdev)
++static void hvdrm_vmbus_shutdown(struct hv_device *hdev)
+ {
+ 	drm_atomic_helper_shutdown(hv_get_drvdata(hdev));
+ }
+ 
+-static int hyperv_vmbus_suspend(struct hv_device *hdev)
++static int hvdrm_vmbus_suspend(struct hv_device *hdev)
+ {
+ 	struct drm_device *dev = hv_get_drvdata(hdev);
+ 	int ret;
+@@ -202,67 +202,67 @@ static int hyperv_vmbus_suspend(struct hv_device *hdev)
+ 	return 0;
+ }
+ 
+-static int hyperv_vmbus_resume(struct hv_device *hdev)
++static int hvdrm_vmbus_resume(struct hv_device *hdev)
+ {
+ 	struct drm_device *dev = hv_get_drvdata(hdev);
+-	struct hyperv_drm_device *hv = to_hv(dev);
++	struct hvdrm_drm_device *hv = to_hv(dev);
+ 	int ret;
+ 
+-	ret = hyperv_connect_vsp(hdev);
++	ret = hvdrm_connect_vsp(hdev);
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = hyperv_update_vram_location(hdev, hv->fb_base);
++	ret = hvdrm_update_vram_location(hdev, hv->fb_base);
+ 	if (ret)
+ 		return ret;
+ 
+ 	return drm_mode_config_helper_resume(dev);
+ }
+ 
+-static const struct hv_vmbus_device_id hyperv_vmbus_tbl[] = {
++static const struct hv_vmbus_device_id hvdrm_vmbus_tbl[] = {
+ 	/* Synthetic Video Device GUID */
+ 	{HV_SYNTHVID_GUID},
+ 	{}
+ };
+ 
+-static struct hv_driver hyperv_hv_driver = {
++static struct hv_driver hvdrm_hv_driver = {
+ 	.name = KBUILD_MODNAME,
+-	.id_table = hyperv_vmbus_tbl,
+-	.probe = hyperv_vmbus_probe,
+-	.remove = hyperv_vmbus_remove,
+-	.shutdown = hyperv_vmbus_shutdown,
+-	.suspend = hyperv_vmbus_suspend,
+-	.resume = hyperv_vmbus_resume,
++	.id_table = hvdrm_vmbus_tbl,
++	.probe = hvdrm_vmbus_probe,
++	.remove = hvdrm_vmbus_remove,
++	.shutdown = hvdrm_vmbus_shutdown,
++	.suspend = hvdrm_vmbus_suspend,
++	.resume = hvdrm_vmbus_resume,
+ 	.driver = {
+ 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+ 	},
+ };
+ 
+-static int __init hyperv_init(void)
++static int __init hvdrm_init(void)
+ {
+ 	int ret;
+ 
+ 	if (drm_firmware_drivers_only())
+ 		return -ENODEV;
+ 
+-	ret = pci_register_driver(&hyperv_pci_driver);
++	ret = pci_register_driver(&hvdrm_pci_driver);
+ 	if (ret != 0)
+ 		return ret;
+ 
+-	return vmbus_driver_register(&hyperv_hv_driver);
++	return vmbus_driver_register(&hvdrm_hv_driver);
+ }
+ 
+-static void __exit hyperv_exit(void)
++static void __exit hvdrm_exit(void)
+ {
+-	vmbus_driver_unregister(&hyperv_hv_driver);
+-	pci_unregister_driver(&hyperv_pci_driver);
++	vmbus_driver_unregister(&hvdrm_hv_driver);
++	pci_unregister_driver(&hvdrm_pci_driver);
+ }
+ 
+-module_init(hyperv_init);
+-module_exit(hyperv_exit);
++module_init(hvdrm_init);
++module_exit(hvdrm_exit);
+ 
+-MODULE_DEVICE_TABLE(pci, hyperv_pci_tbl);
+-MODULE_DEVICE_TABLE(vmbus, hyperv_vmbus_tbl);
++MODULE_DEVICE_TABLE(pci, hvdrm_pci_tbl);
++MODULE_DEVICE_TABLE(vmbus, hvdrm_vmbus_tbl);
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Deepak Rawat <drawat.floss@gmail.com>");
+ MODULE_DESCRIPTION("DRM driver for Hyper-V synthetic video device");
+diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+index 793dbbf61893..6844d085e709 100644
+--- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
++++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+@@ -25,11 +25,11 @@
+ 
+ #include "hyperv_drm.h"
+ 
+-static int hyperv_blit_to_vram_rect(struct drm_framebuffer *fb,
++static int hvdrm_blit_to_vram_rect(struct drm_framebuffer *fb,
+ 				    const struct iosys_map *vmap,
+ 				    struct drm_rect *rect)
+ {
+-	struct hyperv_drm_device *hv = to_hv(fb->dev);
++	struct hvdrm_drm_device *hv = to_hv(fb->dev);
+ 	struct iosys_map dst = IOSYS_MAP_INIT_VADDR_IOMEM(hv->vram);
+ 	int idx;
+ 
+@@ -44,9 +44,9 @@ static int hyperv_blit_to_vram_rect(struct drm_framebuffer *fb,
+ 	return 0;
+ }
+ 
+-static int hyperv_connector_get_modes(struct drm_connector *connector)
++static int hvdrm_connector_get_modes(struct drm_connector *connector)
+ {
+-	struct hyperv_drm_device *hv = to_hv(connector->dev);
++	struct hvdrm_drm_device *hv = to_hv(connector->dev);
+ 	int count;
+ 
+ 	count = drm_add_modes_noedid(connector,
+@@ -58,11 +58,11 @@ static int hyperv_connector_get_modes(struct drm_connector *connector)
+ 	return count;
+ }
+ 
+-static const struct drm_connector_helper_funcs hyperv_connector_helper_funcs = {
+-	.get_modes = hyperv_connector_get_modes,
++static const struct drm_connector_helper_funcs hvdrm_connector_helper_funcs = {
++	.get_modes = hvdrm_connector_get_modes,
+ };
+ 
+-static const struct drm_connector_funcs hyperv_connector_funcs = {
++static const struct drm_connector_funcs hvdrm_connector_funcs = {
+ 	.fill_modes = drm_helper_probe_single_connector_modes,
+ 	.destroy = drm_connector_cleanup,
+ 	.reset = drm_atomic_helper_connector_reset,
+@@ -70,15 +70,15 @@ static const struct drm_connector_funcs hyperv_connector_funcs = {
+ 	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
+ };
+ 
+-static inline int hyperv_conn_init(struct hyperv_drm_device *hv)
++static inline int hvdrm_conn_init(struct hvdrm_drm_device *hv)
+ {
+-	drm_connector_helper_add(&hv->connector, &hyperv_connector_helper_funcs);
++	drm_connector_helper_add(&hv->connector, &hvdrm_connector_helper_funcs);
+ 	return drm_connector_init(&hv->dev, &hv->connector,
+-				  &hyperv_connector_funcs,
++				  &hvdrm_connector_funcs,
+ 				  DRM_MODE_CONNECTOR_VIRTUAL);
+ }
+ 
+-static int hyperv_check_size(struct hyperv_drm_device *hv, int w, int h,
++static int hvdrm_check_size(struct hvdrm_drm_device *hv, int w, int h,
+ 			     struct drm_framebuffer *fb)
+ {
+ 	u32 pitch = w * (hv->screen_depth / 8);
+@@ -92,25 +92,25 @@ static int hyperv_check_size(struct hyperv_drm_device *hv, int w, int h,
+ 	return 0;
+ }
+ 
+-static const uint32_t hyperv_formats[] = {
++static const uint32_t hvdrm_formats[] = {
+ 	DRM_FORMAT_XRGB8888,
+ };
+ 
+-static const uint64_t hyperv_modifiers[] = {
++static const uint64_t hvdrm_modifiers[] = {
+ 	DRM_FORMAT_MOD_LINEAR,
+ 	DRM_FORMAT_MOD_INVALID
+ };
+ 
+-static void hyperv_crtc_helper_atomic_enable(struct drm_crtc *crtc,
++static void hvdrm_crtc_helper_atomic_enable(struct drm_crtc *crtc,
+ 					     struct drm_atomic_commit *state)
+ {
+-	struct hyperv_drm_device *hv = to_hv(crtc->dev);
++	struct hvdrm_drm_device *hv = to_hv(crtc->dev);
+ 	struct drm_plane *plane = &hv->plane;
+ 	struct drm_plane_state *plane_state = plane->state;
+ 	struct drm_crtc_state *crtc_state = crtc->state;
+ 
+-	hyperv_hide_hw_ptr(hv->hdev);
+-	hyperv_update_situation(hv->hdev, 1,  hv->screen_depth,
++	hvdrm_hide_hw_ptr(hv->hdev);
++	hvdrm_update_situation(hv->hdev, 1,  hv->screen_depth,
+ 				crtc_state->mode.hdisplay,
+ 				crtc_state->mode.vdisplay,
+ 				plane_state->fb->pitches[0]);
+@@ -118,14 +118,14 @@ static void hyperv_crtc_helper_atomic_enable(struct drm_crtc *crtc,
+ 	drm_crtc_vblank_on(crtc);
+ }
+ 
+-static const struct drm_crtc_helper_funcs hyperv_crtc_helper_funcs = {
++static const struct drm_crtc_helper_funcs hvdrm_crtc_helper_funcs = {
+ 	.atomic_check = drm_crtc_helper_atomic_check,
+ 	.atomic_flush = drm_crtc_vblank_atomic_flush,
+-	.atomic_enable = hyperv_crtc_helper_atomic_enable,
++	.atomic_enable = hvdrm_crtc_helper_atomic_enable,
+ 	.atomic_disable = drm_crtc_vblank_atomic_disable,
+ };
+ 
+-static const struct drm_crtc_funcs hyperv_crtc_funcs = {
++static const struct drm_crtc_funcs hvdrm_crtc_funcs = {
+ 	.reset = drm_atomic_helper_crtc_reset,
+ 	.destroy = drm_crtc_cleanup,
+ 	.set_config = drm_atomic_helper_set_config,
+@@ -135,11 +135,11 @@ static const struct drm_crtc_funcs hyperv_crtc_funcs = {
+ 	DRM_CRTC_VBLANK_TIMER_FUNCS,
+ };
+ 
+-static int hyperv_plane_atomic_check(struct drm_plane *plane,
++static int hvdrm_plane_atomic_check(struct drm_plane *plane,
+ 				     struct drm_atomic_commit *state)
+ {
+ 	struct drm_plane_state *plane_state = drm_atomic_get_new_plane_state(state, plane);
+-	struct hyperv_drm_device *hv = to_hv(plane->dev);
++	struct hvdrm_drm_device *hv = to_hv(plane->dev);
+ 	struct drm_framebuffer *fb = plane_state->fb;
+ 	struct drm_crtc *crtc = plane_state->crtc;
+ 	struct drm_crtc_state *crtc_state = NULL;
+@@ -167,10 +167,10 @@ static int hyperv_plane_atomic_check(struct drm_plane *plane,
+ 	return 0;
+ }
+ 
+-static void hyperv_plane_atomic_update(struct drm_plane *plane,
++static void hvdrm_plane_atomic_update(struct drm_plane *plane,
+ 				       struct drm_atomic_commit *state)
+ {
+-	struct hyperv_drm_device *hv = to_hv(plane->dev);
++	struct hvdrm_drm_device *hv = to_hv(plane->dev);
+ 	struct drm_plane_state *old_state = drm_atomic_get_old_plane_state(state, plane);
+ 	struct drm_plane_state *new_state = drm_atomic_get_new_plane_state(state, plane);
+ 	struct drm_shadow_plane_state *shadow_plane_state = to_drm_shadow_plane_state(new_state);
+@@ -185,15 +185,15 @@ static void hyperv_plane_atomic_update(struct drm_plane *plane,
+ 		if (!drm_rect_intersect(&dst_clip, &damage))
+ 			continue;
+ 
+-		hyperv_blit_to_vram_rect(new_state->fb, &shadow_plane_state->data[0], &damage);
+-		hyperv_update_dirt(hv->hdev, &damage);
++		hvdrm_blit_to_vram_rect(new_state->fb, &shadow_plane_state->data[0], &damage);
++		hvdrm_update_dirt(hv->hdev, &damage);
+ 	}
+ }
+ 
+-static int hyperv_plane_get_scanout_buffer(struct drm_plane *plane,
++static int hvdrm_plane_get_scanout_buffer(struct drm_plane *plane,
+ 					   struct drm_scanout_buffer *sb)
+ {
+-	struct hyperv_drm_device *hv = to_hv(plane->dev);
++	struct hvdrm_drm_device *hv = to_hv(plane->dev);
+ 	struct iosys_map map = IOSYS_MAP_INIT_VADDR_IOMEM(hv->vram);
+ 
+ 	if (plane->state && plane->state->fb) {
+@@ -207,9 +207,9 @@ static int hyperv_plane_get_scanout_buffer(struct drm_plane *plane,
+ 	return -ENODEV;
+ }
+ 
+-static void hyperv_plane_panic_flush(struct drm_plane *plane)
++static void hvdrm_plane_panic_flush(struct drm_plane *plane)
+ {
+-	struct hyperv_drm_device *hv = to_hv(plane->dev);
++	struct hvdrm_drm_device *hv = to_hv(plane->dev);
+ 	struct drm_rect rect;
+ 
+ 	if (plane->state && plane->state->fb) {
+@@ -218,32 +218,32 @@ static void hyperv_plane_panic_flush(struct drm_plane *plane)
+ 		rect.x2 = plane->state->fb->width;
+ 		rect.y2 = plane->state->fb->height;
+ 
+-		hyperv_update_dirt(hv->hdev, &rect);
++		hvdrm_update_dirt(hv->hdev, &rect);
+ 	}
+ 
+ 	vmbus_initiate_unload(true);
+ }
+ 
+-static const struct drm_plane_helper_funcs hyperv_plane_helper_funcs = {
++static const struct drm_plane_helper_funcs hvdrm_plane_helper_funcs = {
+ 	DRM_GEM_SHADOW_PLANE_HELPER_FUNCS,
+-	.atomic_check = hyperv_plane_atomic_check,
+-	.atomic_update = hyperv_plane_atomic_update,
+-	.get_scanout_buffer = hyperv_plane_get_scanout_buffer,
+-	.panic_flush = hyperv_plane_panic_flush,
++	.atomic_check = hvdrm_plane_atomic_check,
++	.atomic_update = hvdrm_plane_atomic_update,
++	.get_scanout_buffer = hvdrm_plane_get_scanout_buffer,
++	.panic_flush = hvdrm_plane_panic_flush,
+ };
+ 
+-static const struct drm_plane_funcs hyperv_plane_funcs = {
++static const struct drm_plane_funcs hvdrm_plane_funcs = {
+ 	.update_plane		= drm_atomic_helper_update_plane,
+ 	.disable_plane		= drm_atomic_helper_disable_plane,
+ 	.destroy		= drm_plane_cleanup,
+ 	DRM_GEM_SHADOW_PLANE_FUNCS,
+ };
+ 
+-static const struct drm_encoder_funcs hyperv_drm_simple_encoder_funcs_cleanup = {
++static const struct drm_encoder_funcs hvdrm_drm_simple_encoder_funcs_cleanup = {
+ 	.destroy = drm_encoder_cleanup,
+ };
+ 
+-static inline int hyperv_pipe_init(struct hyperv_drm_device *hv)
++static inline int hvdrm_pipe_init(struct hvdrm_drm_device *hv)
+ {
+ 	struct drm_device *dev = &hv->dev;
+ 	struct drm_encoder *encoder = &hv->encoder;
+@@ -253,29 +253,29 @@ static inline int hyperv_pipe_init(struct hyperv_drm_device *hv)
+ 	int ret;
+ 
+ 	ret = drm_universal_plane_init(dev, plane, 0,
+-				       &hyperv_plane_funcs,
+-				       hyperv_formats, ARRAY_SIZE(hyperv_formats),
+-				       hyperv_modifiers,
++				       &hvdrm_plane_funcs,
++				       hvdrm_formats, ARRAY_SIZE(hvdrm_formats),
++				       hvdrm_modifiers,
+ 				       DRM_PLANE_TYPE_PRIMARY, NULL);
+ 	if (ret)
+ 		return ret;
+-	drm_plane_helper_add(plane, &hyperv_plane_helper_funcs);
++	drm_plane_helper_add(plane, &hvdrm_plane_helper_funcs);
+ 	drm_plane_enable_fb_damage_clips(plane);
+ 
+ 	ret = drm_crtc_init_with_planes(dev, crtc, plane, NULL,
+-					&hyperv_crtc_funcs, NULL);
++					&hvdrm_crtc_funcs, NULL);
+ 	if (ret)
+ 		return ret;
+-	drm_crtc_helper_add(crtc, &hyperv_crtc_helper_funcs);
++	drm_crtc_helper_add(crtc, &hvdrm_crtc_helper_funcs);
+ 
+ 	encoder->possible_crtcs = drm_crtc_mask(crtc);
+ 	ret = drm_encoder_init(dev, encoder,
+-			       &hyperv_drm_simple_encoder_funcs_cleanup,
++			       &hvdrm_drm_simple_encoder_funcs_cleanup,
+ 			       DRM_MODE_ENCODER_NONE, NULL);
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = hyperv_conn_init(hv);
++	ret = hvdrm_conn_init(hv);
+ 	if (ret) {
+ 		drm_err(dev, "Failed to initialized connector.\n");
+ 		return ret;
+@@ -285,25 +285,25 @@ static inline int hyperv_pipe_init(struct hyperv_drm_device *hv)
+ }
+ 
+ static enum drm_mode_status
+-hyperv_mode_valid(struct drm_device *dev,
++hvdrm_mode_valid(struct drm_device *dev,
+ 		  const struct drm_display_mode *mode)
+ {
+-	struct hyperv_drm_device *hv = to_hv(dev);
++	struct hvdrm_drm_device *hv = to_hv(dev);
+ 
+-	if (hyperv_check_size(hv, mode->hdisplay, mode->vdisplay, NULL))
++	if (hvdrm_check_size(hv, mode->hdisplay, mode->vdisplay, NULL))
+ 		return MODE_BAD;
+ 
+ 	return MODE_OK;
+ }
+ 
+-static const struct drm_mode_config_funcs hyperv_mode_config_funcs = {
++static const struct drm_mode_config_funcs hvdrm_mode_config_funcs = {
+ 	.fb_create = drm_gem_fb_create_with_dirty,
+-	.mode_valid = hyperv_mode_valid,
++	.mode_valid = hvdrm_mode_valid,
+ 	.atomic_check = drm_atomic_helper_check,
+ 	.atomic_commit = drm_atomic_helper_commit,
+ };
+ 
+-int hyperv_mode_config_init(struct hyperv_drm_device *hv)
++int hvdrm_mode_config_init(struct hvdrm_drm_device *hv)
+ {
+ 	struct drm_device *dev = &hv->dev;
+ 	int ret;
+@@ -322,9 +322,9 @@ int hyperv_mode_config_init(struct hyperv_drm_device *hv)
+ 	dev->mode_config.preferred_depth = hv->screen_depth;
+ 	dev->mode_config.prefer_shadow = 0;
+ 
+-	dev->mode_config.funcs = &hyperv_mode_config_funcs;
++	dev->mode_config.funcs = &hvdrm_mode_config_funcs;
+ 
+-	ret = hyperv_pipe_init(hv);
++	ret = hvdrm_pipe_init(hv);
+ 	if (ret) {
+ 		drm_err(dev, "Failed to initialized pipe.\n");
+ 		return ret;
+diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
+index 6e09b0218df4..7c11b20a9124 100644
+--- a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
++++ b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
+@@ -181,7 +181,7 @@ struct synthvid_msg {
+ 	};
+ } __packed;
+ 
+-static inline bool hyperv_version_ge(u32 ver1, u32 ver2)
++static inline bool hvdrm_version_ge(u32 ver1, u32 ver2)
+ {
+ 	if (SYNTHVID_VER_GET_MAJOR(ver1) > SYNTHVID_VER_GET_MAJOR(ver2) ||
+ 	    (SYNTHVID_VER_GET_MAJOR(ver1) == SYNTHVID_VER_GET_MAJOR(ver2) &&
+@@ -191,10 +191,10 @@ static inline bool hyperv_version_ge(u32 ver1, u32 ver2)
+ 	return false;
+ }
+ 
+-static inline int hyperv_sendpacket(struct hv_device *hdev, struct synthvid_msg *msg)
++static inline int hvdrm_sendpacket(struct hv_device *hdev, struct synthvid_msg *msg)
+ {
+ 	static atomic64_t request_id = ATOMIC64_INIT(0);
+-	struct hyperv_drm_device *hv = hv_get_drvdata(hdev);
++	struct hvdrm_drm_device *hv = hv_get_drvdata(hdev);
+ 	int ret;
+ 
+ 	msg->pipe_hdr.type = PIPE_MSG_DATA;
+@@ -211,9 +211,9 @@ static inline int hyperv_sendpacket(struct hv_device *hdev, struct synthvid_msg
+ 	return ret;
+ }
+ 
+-static int hyperv_negotiate_version(struct hv_device *hdev, u32 ver)
++static int hvdrm_negotiate_version(struct hv_device *hdev, u32 ver)
+ {
+-	struct hyperv_drm_device *hv = hv_get_drvdata(hdev);
++	struct hvdrm_drm_device *hv = hv_get_drvdata(hdev);
+ 	struct synthvid_msg *msg = (struct synthvid_msg *)hv->init_buf;
+ 	struct drm_device *dev = &hv->dev;
+ 	unsigned long t;
+@@ -223,7 +223,7 @@ static int hyperv_negotiate_version(struct hv_device *hdev, u32 ver)
+ 	msg->vid_hdr.size = sizeof(struct synthvid_msg_hdr) +
+ 		sizeof(struct synthvid_version_req);
+ 	msg->ver_req.version = ver;
+-	hyperv_sendpacket(hdev, msg);
++	hvdrm_sendpacket(hdev, msg);
+ 
+ 	t = wait_for_completion_timeout(&hv->wait, VMBUS_VSP_TIMEOUT);
+ 	if (!t) {
+@@ -243,9 +243,9 @@ static int hyperv_negotiate_version(struct hv_device *hdev, u32 ver)
+ 	return 0;
+ }
+ 
+-int hyperv_update_vram_location(struct hv_device *hdev, phys_addr_t vram_pp)
++int hvdrm_update_vram_location(struct hv_device *hdev, phys_addr_t vram_pp)
+ {
+-	struct hyperv_drm_device *hv = hv_get_drvdata(hdev);
++	struct hvdrm_drm_device *hv = hv_get_drvdata(hdev);
+ 	struct synthvid_msg *msg = (struct synthvid_msg *)hv->init_buf;
+ 	struct drm_device *dev = &hv->dev;
+ 	unsigned long t;
+@@ -257,7 +257,7 @@ int hyperv_update_vram_location(struct hv_device *hdev, phys_addr_t vram_pp)
+ 	msg->vram.user_ctx = vram_pp;
+ 	msg->vram.vram_gpa = vram_pp;
+ 	msg->vram.is_vram_gpa_specified = 1;
+-	hyperv_sendpacket(hdev, msg);
++	hvdrm_sendpacket(hdev, msg);
+ 
+ 	t = wait_for_completion_timeout(&hv->wait, VMBUS_VSP_TIMEOUT);
+ 	if (!t) {
+@@ -272,7 +272,7 @@ int hyperv_update_vram_location(struct hv_device *hdev, phys_addr_t vram_pp)
+ 	return 0;
+ }
+ 
+-int hyperv_update_situation(struct hv_device *hdev, u8 active, u32 bpp,
++int hvdrm_update_situation(struct hv_device *hdev, u8 active, u32 bpp,
+ 			    u32 w, u32 h, u32 pitch)
+ {
+ 	struct synthvid_msg msg;
+@@ -292,7 +292,7 @@ int hyperv_update_situation(struct hv_device *hdev, u8 active, u32 bpp,
+ 	msg.situ.video_output[0].height_pixels = h;
+ 	msg.situ.video_output[0].pitch_bytes = pitch;
+ 
+-	hyperv_sendpacket(hdev, &msg);
++	hvdrm_sendpacket(hdev, &msg);
+ 
+ 	return 0;
+ }
+@@ -306,11 +306,11 @@ int hyperv_update_situation(struct hv_device *hdev, u8 active, u32 bpp,
+  * the msg.ptr_shape.data. Note: setting msg.ptr_pos.is_visible to 0 doesn't
+  * work in tests.
+  *
+- * The hyperv_hide_hw_ptr() is also called in the handler of the
++ * The hvdrm_hide_hw_ptr() is also called in the handler of the
+  * SYNTHVID_FEATURE_CHANGE event, otherwise the host still draws an extra
+  * unwanted mouse pointer after the VM Connection window is closed and reopened.
+  */
+-int hyperv_hide_hw_ptr(struct hv_device *hdev)
++int hvdrm_hide_hw_ptr(struct hv_device *hdev)
+ {
+ 	struct synthvid_msg msg;
+ 
+@@ -322,7 +322,7 @@ int hyperv_hide_hw_ptr(struct hv_device *hdev)
+ 	msg.ptr_pos.video_output = 0;
+ 	msg.ptr_pos.image_x = 0;
+ 	msg.ptr_pos.image_y = 0;
+-	hyperv_sendpacket(hdev, &msg);
++	hvdrm_sendpacket(hdev, &msg);
+ 
+ 	memset(&msg, 0, sizeof(struct synthvid_msg));
+ 	msg.vid_hdr.type = SYNTHVID_POINTER_SHAPE;
+@@ -338,14 +338,14 @@ int hyperv_hide_hw_ptr(struct hv_device *hdev)
+ 	msg.ptr_shape.data[1] = 1;
+ 	msg.ptr_shape.data[2] = 1;
+ 	msg.ptr_shape.data[3] = 1;
+-	hyperv_sendpacket(hdev, &msg);
++	hvdrm_sendpacket(hdev, &msg);
+ 
+ 	return 0;
+ }
+ 
+-int hyperv_update_dirt(struct hv_device *hdev, struct drm_rect *rect)
++int hvdrm_update_dirt(struct hv_device *hdev, struct drm_rect *rect)
+ {
+-	struct hyperv_drm_device *hv = hv_get_drvdata(hdev);
++	struct hvdrm_drm_device *hv = hv_get_drvdata(hdev);
+ 	struct synthvid_msg msg;
+ 
+ 	if (!hv->dirt_needed)
+@@ -363,14 +363,14 @@ int hyperv_update_dirt(struct hv_device *hdev, struct drm_rect *rect)
+ 	msg.dirt.rect[0].x2 = rect->x2;
+ 	msg.dirt.rect[0].y2 = rect->y2;
+ 
+-	hyperv_sendpacket(hdev, &msg);
++	hvdrm_sendpacket(hdev, &msg);
+ 
+ 	return 0;
+ }
+ 
+-static int hyperv_get_supported_resolution(struct hv_device *hdev)
++static int hvdrm_get_supported_resolution(struct hv_device *hdev)
+ {
+-	struct hyperv_drm_device *hv = hv_get_drvdata(hdev);
++	struct hvdrm_drm_device *hv = hv_get_drvdata(hdev);
+ 	struct synthvid_msg *msg = (struct synthvid_msg *)hv->init_buf;
+ 	struct drm_device *dev = &hv->dev;
+ 	unsigned long t;
+@@ -383,7 +383,7 @@ static int hyperv_get_supported_resolution(struct hv_device *hdev)
+ 		sizeof(struct synthvid_supported_resolution_req);
+ 	msg->resolution_req.maximum_resolution_count =
+ 		SYNTHVID_MAX_RESOLUTION_COUNT;
+-	hyperv_sendpacket(hdev, msg);
++	hvdrm_sendpacket(hdev, msg);
+ 
+ 	t = wait_for_completion_timeout(&hv->wait, VMBUS_VSP_TIMEOUT);
+ 	if (!t) {
+@@ -420,9 +420,9 @@ static int hyperv_get_supported_resolution(struct hv_device *hdev)
+ 	return 0;
+ }
+ 
+-static void hyperv_receive_sub(struct hv_device *hdev, u32 bytes_recvd)
++static void hvdrm_receive_sub(struct hv_device *hdev, u32 bytes_recvd)
+ {
+-	struct hyperv_drm_device *hv = hv_get_drvdata(hdev);
++	struct hvdrm_drm_device *hv = hv_get_drvdata(hdev);
+ 	struct synthvid_msg *msg;
+ 	size_t hdr_size;
+ 	size_t need;
+@@ -486,7 +486,7 @@ static void hyperv_receive_sub(struct hv_device *hdev, u32 bytes_recvd)
+ 		}
+ 		hv->dirt_needed = msg->feature_chg.is_dirt_needed;
+ 		if (hv->dirt_needed)
+-			hyperv_hide_hw_ptr(hv->hdev);
++			hvdrm_hide_hw_ptr(hv->hdev);
+ 		return;
+ 	default:
+ 		return;
+@@ -508,10 +508,10 @@ static void hyperv_receive_sub(struct hv_device *hdev, u32 bytes_recvd)
+ 	complete(&hv->wait);
+ }
+ 
+-static void hyperv_receive(void *ctx)
++static void hvdrm_receive(void *ctx)
+ {
+ 	struct hv_device *hdev = ctx;
+-	struct hyperv_drm_device *hv = hv_get_drvdata(hdev);
++	struct hvdrm_drm_device *hv = hv_get_drvdata(hdev);
+ 	struct synthvid_msg *recv_buf;
+ 	u32 bytes_recvd;
+ 	u64 req_id;
+@@ -539,19 +539,19 @@ static void hyperv_receive(void *ctx)
+ 					    ret, bytes_recvd);
+ 		} else if (bytes_recvd > 0 &&
+ 			   recv_buf->pipe_hdr.type == PIPE_MSG_DATA) {
+-			hyperv_receive_sub(hdev, bytes_recvd);
++			hvdrm_receive_sub(hdev, bytes_recvd);
+ 		}
+ 	} while (bytes_recvd > 0 && ret == 0);
+ }
+ 
+-int hyperv_connect_vsp(struct hv_device *hdev)
++int hvdrm_connect_vsp(struct hv_device *hdev)
+ {
+-	struct hyperv_drm_device *hv = hv_get_drvdata(hdev);
++	struct hvdrm_drm_device *hv = hv_get_drvdata(hdev);
+ 	struct drm_device *dev = &hv->dev;
+ 	int ret;
+ 
+ 	ret = vmbus_open(hdev->channel, VMBUS_RING_BUFSIZE, VMBUS_RING_BUFSIZE,
+-			 NULL, 0, hyperv_receive, hdev);
++			 NULL, 0, hvdrm_receive, hdev);
+ 	if (ret) {
+ 		drm_err(dev, "Unable to open vmbus channel\n");
+ 		return ret;
+@@ -561,16 +561,16 @@ int hyperv_connect_vsp(struct hv_device *hdev)
+ 	switch (vmbus_proto_version) {
+ 	case VERSION_WIN10:
+ 	case VERSION_WIN10_V5:
+-		ret = hyperv_negotiate_version(hdev, SYNTHVID_VERSION_WIN10);
++		ret = hvdrm_negotiate_version(hdev, SYNTHVID_VERSION_WIN10);
+ 		if (!ret)
+ 			break;
+ 		fallthrough;
+ 	case VERSION_WIN8:
+ 	case VERSION_WIN8_1:
+-		ret = hyperv_negotiate_version(hdev, SYNTHVID_VERSION_WIN8);
++		ret = hvdrm_negotiate_version(hdev, SYNTHVID_VERSION_WIN8);
+ 		break;
+ 	default:
+-		ret = hyperv_negotiate_version(hdev, SYNTHVID_VERSION_WIN10);
++		ret = hvdrm_negotiate_version(hdev, SYNTHVID_VERSION_WIN10);
+ 		break;
+ 	}
+ 
+@@ -581,8 +581,8 @@ int hyperv_connect_vsp(struct hv_device *hdev)
+ 
+ 	hv->screen_depth = SYNTHVID_DEPTH_WIN8;
+ 
+-	if (hyperv_version_ge(hv->synthvid_version, SYNTHVID_VERSION_WIN10)) {
+-		ret = hyperv_get_supported_resolution(hdev);
++	if (hvdrm_version_ge(hv->synthvid_version, SYNTHVID_VERSION_WIN10)) {
++		ret = hvdrm_get_supported_resolution(hdev);
+ 		if (ret)
+ 			drm_err(dev, "Failed to get supported resolution from host, use default\n");
+ 	}
 -- 
-2.43.0
+2.25.1
 
 
