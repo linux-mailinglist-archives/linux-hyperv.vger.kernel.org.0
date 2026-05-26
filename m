@@ -1,208 +1,123 @@
-Return-Path: <linux-hyperv+bounces-11197-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11198-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qJlaJ1yxFWpxYAcAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11197-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 26 May 2026 16:42:36 +0200
+	id IFdrImGzFWpxYAcAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11198-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 26 May 2026 16:51:13 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7C3E5D7CF5
-	for <lists+linux-hyperv@lfdr.de>; Tue, 26 May 2026 16:42:35 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E65285D7F33
+	for <lists+linux-hyperv@lfdr.de>; Tue, 26 May 2026 16:51:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 677E03003E8E
-	for <lists+linux-hyperv@lfdr.de>; Tue, 26 May 2026 14:13:27 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 30086303FAB7
+	for <lists+linux-hyperv@lfdr.de>; Tue, 26 May 2026 14:44:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B3583FAE08;
-	Tue, 26 May 2026 14:13:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F00424028CD;
+	Tue, 26 May 2026 14:43:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=mhklkml@zohomail.com header.b="XjZAtOW0"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="FrFggD3/"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934DE3BE156;
-	Tue, 26 May 2026 14:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779804806; cv=pass; b=qyqc0Ui65oAkWeY4Ob7Dr3q398a0Er1GHjzu029Inrbuy9fAVQj0uMuRxUjvkNK7pFl68tIFY7oucG4aKUevDsQgz4qqE5o5H+Jp4IztQbv0kESEKqdxIf9iRr+m7cPTlhpbYcT9BBwstX7V0Fsz2tphDf8cz7+7/Oac8ETxWXw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779804806; c=relaxed/simple;
-	bh=Sg5HFQ+6c0me1xR1i3ICG44h19Au3qCBspO6LbloZG4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XMR7y8qx5m1gNJSfOUI8oCdMTMCH7OkUZUd0Ik/mDe9K7jKtRLVveGPsnpvJrxqhQQgsPnvKUo1FtddDkKPlAr+KD3EBzcaj4qGs/YvWH0OzfoetjWOYl3BV1d7VMGejHWCJEEE5ImQLJ7M33hPBREqQomCvYAsOYvSihb8yE7Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=mhklkml@zohomail.com header.b=XjZAtOW0; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
-ARC-Seal: i=1; a=rsa-sha256; t=1779804795; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=iz9/jN8Q4K8XLedi13LCBWlei8/oOgJca15e7VUCM/VNvYXN2+skJ3BXIvaYz8tqtTa2TzU2yD69lWh5r8AUCIOlQm8mPW0K6xgg8TMbWK9Cs1LhqIowPqayZT8eJK+MXK2GZUgd9zX422UJ2FFAnkuMJvjkK4afwwogHC/nYMk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1779804795; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Reply-To:Reply-To:Subject:Subject:To:To:Message-Id; 
-	bh=/WI/REGq2+DPFS3rMfaBEFu5yWsh1kHMtr9A64GzV44=; 
-	b=VI6PrZFwaiJgGuDxLLCkpx8uslRLw/wTs8XuKE19p1Zl/S7w7ValuEce5xOQgyPcAYp2RttNef7QUFUrSJ1A1kCcw3payH1P6tr7ResyX2jfIz4fu5W9QRfF+kvlFHIN6xTEvGqvicP9kf4w9dObPXi2cFavbR4neOTwQGD/MwI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=mhklkml@zohomail.com;
-	dmarc=pass header.from=<mhklkml@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1779804795;
-	s=zm2022; d=zohomail.com; i=mhklkml@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:Reply-To:Reply-To:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
-	bh=/WI/REGq2+DPFS3rMfaBEFu5yWsh1kHMtr9A64GzV44=;
-	b=XjZAtOW0JsxjOzT7A0dXUARloTb58STl5EZPjCDdgsmWFOvIfQooZeGrZSJ5uKZ/
-	mq2xlmBmkvAWEFf3A2BsBS72aF6Qsl1878MrgqOD68LZ5V04H85jO06A3FaSC7XpgkX
-	TqnCzk3V2bF5xi0D8jvZSfVS752fzSPjajUFYbY0=
-Received: by mx.zohomail.com with SMTPS id 1779804794141532.659716772417;
-	Tue, 26 May 2026 07:13:14 -0700 (PDT)
-From: Michael Kelley <mhklkml@zohomail.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	longli@microsoft.com,
-	jloeser@linux.microsoft.com,
-	linux-hyperv@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	arnd@arndb.de,
-	hamzamahfooz@linux.microsoft.com
-Subject: [PATCH v2 1/1] mshv: Add conditional VMBus dependency
-Date: Tue, 26 May 2026 07:13:04 -0700
-Message-Id: <20260526141304.3924-1-mhklkml@zohomail.com>
-X-Mailer: git-send-email 2.25.1
-Reply-To: mhklinux@outlook.com
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A724C402442;
+	Tue, 26 May 2026 14:43:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779806621; cv=none; b=O6T0FrbPXyKg4nrC2tE+UXMXdMnsnJXfVZVnSKEA79dr54DQeLm+nQv7FlTXgskaQtEoh9+A0oID/4K/ZT0yatIMyrZziOjrlIAxpmejoqtdT/QbKffQHkboxDZ6ARIiFfBrxe9XaC8bZE3UAThpBeqZNzSdPmbBSkJfA0Q7k0o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779806621; c=relaxed/simple;
+	bh=hZvvN0oBfdzwQ/sjgOKpDYLeU3Uo+CRREWp4kYRbAIM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N8aX7LJ6G88rJigbFGalfjkFNv8BsEoNvXq+WgG0gl9V5Rozv4g2O/vsFNnjp/x6KcjgWgBMjoY+RYdHRRQy8F3Z+k0Hx2ZOapBh/dBH1z15WIoX9TLVMZAp/SivxafH2OHFY4S574x+Q9itKx/teL1c0zuR/NxinaH/5i1m3hs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=FrFggD3/; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1173)
+	id 9B04A20B7168; Tue, 26 May 2026 07:43:30 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9B04A20B7168
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1779806610;
+	bh=6+tmVNDyxF9HD3+7YnlVRkDsRoAC36scvoAFEWcFK04=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FrFggD3/X0T92vrZM8xnRx20Ni9VTv5GPuJyRpoAKD/ow4pKSS/zbdw4dreaceIzB
+	 uMHu5A5vI0zdrNQHWxWSquGG/e2B+VLfCqbRaqa7Y7VX2lKm8MefRE2VVsYwCZJ2b1
+	 ZpcSb2sXl/nwyKvzFdA67tvzS3gWOnBIUBTCaLgY=
+Date: Tue, 26 May 2026 07:43:30 -0700
+From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Long Li <longli@microsoft.com>, Leon Romanovsky <leon@kernel.org>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [EXTERNAL] Re: [PATCH rdma-next v2] RDMA/mana_ib: hardening:
+ Clamp adapter capability values from MANA_IB_GET_ADAPTER_CAP
+Message-ID: <ahWxkgvRqL8V13fO@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20260312181642.989735-1-ernis@linux.microsoft.com>
+ <20260316194929.GI61385@unreal>
+ <SA1PR21MB66832D25A93394735624F454CE40A@SA1PR21MB6683.namprd21.prod.outlook.com>
+ <20260317094408.GR61385@unreal>
+ <SA1PR21MB66833EBAF447BA0B102862FCCE4DA@SA1PR21MB6683.namprd21.prod.outlook.com>
+ <20260410154327.GA2551565@ziepe.ca>
+ <LV0PR21MB66700DC2FB827B93ED6A5714CE592@LV0PR21MB6670.namprd21.prod.outlook.com>
+ <20260413134602.GL3694781@ziepe.ca>
+ <ahSbyYcq0sgfJnmZ@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <20260525230155.GB2487554@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Feedback-ID: zu08011227ba939d4f58f01ca51200a84b00006f3733c4cfff1608e8ed7a32285a16c2a1b902e42fec993368:ZohoMail
-X-Zoho-CM-AccountID: 0c88436b239415d28725328898ceccb9ce2ba3b61598c1c37bcb2109e0248174
-X-ZohoMailClient: External
-X-Spamd-Result: default: False [6.84 / 15.00];
-	SEM_URIBL(3.50)[zohomail.com:dkim];
-	FREEMAIL_REPLYTO_NEQ_FROM(2.00)[];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
+In-Reply-To: <20260525230155.GB2487554@ziepe.ca>
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
-	BAD_REP_POLICIES(0.10)[];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_REPLYTO(0.00)[outlook.com];
-	GREYLIST(0.00)[pass,body];
-	DMARC_POLICY_ALLOW(0.00)[zohomail.com,reject];
-	TAGGED_FROM(0.00)[bounces-11197-lists,linux-hyperv=lfdr.de];
-	R_DKIM_ALLOW(0.00)[zohomail.com:s=zm2022];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[4];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	DKIM_TRACE(0.00)[zohomail.com:+];
-	HAS_REPLYTO(0.00)[mhklinux@outlook.com];
-	TO_DN_NONE(0.00)[];
-	NEURAL_HAM(-0.00)[-0.222];
-	PRECEDENCE_BULK(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11198-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mhklkml@zohomail.com,linux-hyperv@vger.kernel.org];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	R_SPF_ALLOW(0.00)[+ip4:172.234.253.10:c];
+	RCVD_COUNT_THREE(0.00)[4];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ernis@linux.microsoft.com,linux-hyperv@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	ARC_ALLOW(0.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[zohomail.com:mid,zohomail.com:dkim,outlook.com:replyto,outlook.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,arndb.de:email]
-X-Rspamd-Queue-Id: D7C3E5D7CF5
-X-Rspamd-Action: add header
+	RCPT_COUNT_SEVEN(0.00)[7];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: E65285D7F33
+X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spam: Yes
 
-From: Michael Kelley <mhklinux@outlook.com>
+On Mon, May 25, 2026 at 08:01:55PM -0300, Jason Gunthorpe wrote:
+> On Mon, May 25, 2026 at 11:58:17AM -0700, Erni Sri Satya Vennela wrote:
+> > > “There is no reason they should be signed, you should just fix the
+> > > type.”
+> > 
+> > It is not allowed to change sign in props, so clamping is the best bet.
+> 
+> Why not? Fix the core code, it is just old junk they are signed, they
+> should't never have been.
+> 
+> Jason
 
-When the VMBus driver is not part of the kernel (CONFIG_HYPERV_VMBUS=n),
-the MSHV root driver fails to link:
+Thanks for the feedback, Jason.
 
-ERROR: modpost: "hv_vmbus_exists" [drivers/hv/mshv_root.ko] undefined!
+I sent the v3 before your comments in v2.
+I'll be sending a v4 which drops the clamping entirely.
 
-Fix this while meeting these requirements:
-* It must be possible to include the MSHV root driver without the
-  VMBus driver. In such case, the MSHV root driver can be built-in
-  to the kernel image, or it can be built as a separate module.
-* If both the MSHV root driver and the VMBus driver are present, the
-  MSHV root driver and VMBus driver can both be built-in, or they can
-  both be separate modules. Or the MSHV root driver can be a module
-  while the VMBus driver can be built-in, but the reverse is
-  disallowed. Regardless of the build choices, the VMBus driver must
-  be loaded before the MSHV driver in order for the SynIC to be
-  managed properly (see comments in the MSHV SynIC code).
-
-The fix has two parts:
-* Add a Kconfig entry for MSHV_ROOT to depend on HYPERV_VMBUS if
-  HYPERV_VMBUS is present. The entry disallows MSHV_ROOT being
-  built-in when HYPERV_VMBUS is a module, but without requiring that
-  HYPERV_VMBUS be built.
-* Add a stub implementation of hv_vmbus_exists() for when the
-  VMBus driver is not present so that the MSHV root driver has
-  no module dependency on VMBus. When the VMBus driver *is*
-  present, the module dependency ensures that the VMBus driver
-  loads first when both are built as modules.
-
-Existing code ensures that the VMBus driver loads first if it is
-built-in. The VMBus driver uses subsys_initcall(), which is
-initcall level 4. The MSHV root driver uses module_init(), which
-becomes device_init() when built-in, and device_init() is
-initcall level 6.
-
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Closes: https://lore.kernel.org/all/20260520074044.923728-1-arnd@kernel.org/
-Signed-off-by: Michael Kelley <mhklinux@outlook.com>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Jork Loeser <jloeser@linux.microsoft.com>
----
-Changes in v2:
-* Instead of putting IS_ENABLED(CONFIG_HYPERV_VMBUS) around each of
-  the two calls to hv_vmbus_exists() in mshv_synic.c, provide a stub
-  for hv_vmbus_exists() when CONFIG_HYPERV_VMBUS is not set. The
-  effect is the same as in v1, but the code is cleaner. [Jork Loeser]
-
-Arnd: I've kept your Ack even though I changed how hv_vmbus_exists()
-is stubbed out since the effect is the same. Let me know if
-you have any concerns.
-
- drivers/hv/Kconfig     | 1 +
- include/linux/hyperv.h | 4 ++++
- 2 files changed, 5 insertions(+)
-
-diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-index 2d0b3fcb0ff8..aa11bcefddf2 100644
---- a/drivers/hv/Kconfig
-+++ b/drivers/hv/Kconfig
-@@ -74,6 +74,7 @@ config MSHV_ROOT
- 	# e.g. When withdrawing memory, the hypervisor gives back 4k pages in
- 	# no particular order, making it impossible to reassemble larger pages
- 	depends on PAGE_SIZE_4KB
-+	depends on HYPERV_VMBUS if HYPERV_VMBUS
- 	select EVENTFD
- 	select VIRT_XFER_TO_GUEST_WORK
- 	select HMM_MIRROR
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index 41a3d82f0722..734b7ef98f4d 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -1304,7 +1304,11 @@ static inline void *hv_get_drvdata(struct hv_device *dev)
- 
- struct device *hv_get_vmbus_root_device(void);
- 
-+#if IS_ENABLED(CONFIG_HYPERV_VMBUS)
- bool hv_vmbus_exists(void);
-+#else
-+static inline bool hv_vmbus_exists(void) { return false; }
-+#endif
- 
- struct hv_ring_buffer_debug_info {
- 	u32 current_interrupt_mask;
--- 
-2.25.1
-
+- Vennela
 
