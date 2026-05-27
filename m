@@ -1,204 +1,294 @@
-Return-Path: <linux-hyperv+bounces-11245-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11246-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mIFPHv4KF2qH2QcAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11245-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 27 May 2026 17:17:18 +0200
+	id mO2FEh4MF2oR2gcAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11246-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 27 May 2026 17:22:06 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id BEA405E6B87
-	for <lists+linux-hyperv@lfdr.de>; Wed, 27 May 2026 17:17:17 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F9625E6CA4
+	for <lists+linux-hyperv@lfdr.de>; Wed, 27 May 2026 17:22:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DF2EA3042E5C
-	for <lists+linux-hyperv@lfdr.de>; Wed, 27 May 2026 15:11:59 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 71C23303DD1D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 27 May 2026 15:17:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 976FF426D02;
-	Wed, 27 May 2026 15:11:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 154841A9F87;
+	Wed, 27 May 2026 15:17:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KeWgOHKT"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Zd4OU75J";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hflNZb+8";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Zd4OU75J";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hflNZb+8"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AFB91427A
-	for <linux-hyperv@vger.kernel.org>; Wed, 27 May 2026 15:11:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B923176EE
+	for <linux-hyperv@vger.kernel.org>; Wed, 27 May 2026 15:17:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779894719; cv=none; b=bdnPxUpXf6nGEHPGce6VJ/MgvdB7g8SOZR+RJ4j6q+/SxlgQeIwhA26T71Wshs0uKa/F1EDr8WMBqGKQfcUaqXxhnG8ox1DdDsNvKve4acNElF3yX4B9vIbmmqwfVBOsrsq95gqqFhRngEHJVy+Hu7aHFavM7t4kf8Wy//6eUD0=
+	t=1779895051; cv=none; b=gdFP7BcGg1mnTJT+X1QIU2kMcZ9NNUDX5G7S1EEmuP19kCKcO3sHysJtM8O9BFER4EESuWpy5RHAikoIr3+PVMl85djxKozVoUaybOmKzRCG7B0UPB1E1sbBn9fIWAkgxPlEIaZFkzlpQy3p+tKZMLe2CWGxuXNj+atXZ5J8mAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779894719; c=relaxed/simple;
-	bh=5T4gxjarj2RInId0VAEQvcnbrKrk3ZlrVlxTY/TQfwI=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=WLzS5M5XhUfsPPrgsd9eQOxysrcm+FsA3ZYpWjvxr4TxmYsDCpIjaGDp89NeqyLTOt7Kkamei8B4DvfbUNCyOihBzgMPcfHYHvUjYQsN4jaTnvByaT65AQ+ejZPXmGHOlAt9PPYjQ+EEJungizPHxp1o+2j5iFdPbm7nGV4FFS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KeWgOHKT; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C79751F000E9;
-	Wed, 27 May 2026 15:11:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779894717;
-	bh=tlEXp8x3Bwxu5e/Bsi1R8NPLlzjpEltB5ppJTfwDcHw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=KeWgOHKTARdbTdbGVkQ8BvZKUOb2PjuS5qYCv3seXhgI/Nz4+b5m6RG8nJAFRwRj6
-	 vO0Pjw5X+fl2WKC2ajkfaL1q3X+bFxy23aUjj0nkFzboleIcZ9EcdJHyIYuMZRs/vy
-	 06vrBnVLul/UPB5GfpaaoRSIV7yMKe13p5B/yVBAtiWvJOx6VxiVyETQg/1B2qFDfS
-	 NwADjWE8HHCCNgqeTVW/Jy48FDTQbTPRXQh0XSX6VC8XTrB7aI3rW15/PfUYHA2woz
-	 nZTGdxgwfafBw0+zHHft6H9DH9rcZDHwTUXUlAB1cfOY8qx3kca2EN+evdMAnIC3SP
-	 KZC0GNBubb+yw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 04/10] drm/damage-helper: Test src coord in
- drm_atomic_helper_check_plane_damage()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Thomas Zimmermann" <tzimmermann@suse.de>
-Cc: linux-hyperv@vger.kernel.org
-In-Reply-To: <20260527145113.241595-5-tzimmermann@suse.de>
-References: <20260527145113.241595-5-tzimmermann@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 27 May 2026 15:11:57 +0000
-Message-Id: <20260527151157.C79751F000E9@smtp.kernel.org>
+	s=arc-20240116; t=1779895051; c=relaxed/simple;
+	bh=OoMgu8lc4ZCQhTa+NKdwxlwIbrqthTdX7mEVcaRKtLA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ajvxh4+J0rTrgLbC228E0T28A2VZACfcZ1yB/VfFNwuw4dXVhtSINwTvbZetDVfsRunLZlonQZPh1yDbENul8qvqVCsqm+DkkuXiwm0SAMzm7UDsTPMjSmfUFVPumTrpzQNzSvYx1btcBLRPFaaAsaQH8MP2u4ZcTgD/dj71Axk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Zd4OU75J; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hflNZb+8; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Zd4OU75J; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hflNZb+8; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 053AB6AA37;
+	Wed, 27 May 2026 15:17:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1779895048; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=GpmrI14U1zRKg9Ft8HCdKifIOo3atbqffDM/wjrE0sE=;
+	b=Zd4OU75JnmqVM0QH1YVMAYVh2GO3JhgIo2g5fzm5k8Yy9+AGyj0XfK3nr/B69yzYq/YFXm
+	t4Cw/q9r27+oXrEK2AfPuY77Eq/wfHyNjPqBrIIIE+pS7B1IsnZl+mSWQ7uXT4GhwWSJXI
+	IAjKhNkm8jQ4HFYexUNiZ3u4Gn0U3UA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1779895048;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=GpmrI14U1zRKg9Ft8HCdKifIOo3atbqffDM/wjrE0sE=;
+	b=hflNZb+8oVB2a+7/Iz3RBlSMhoxMfTaSZ13xqcKmRCZMT30z3xcle53Dk+i3EUsTjraod+
+	m8MtH/jWlalsJgCw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1779895048; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=GpmrI14U1zRKg9Ft8HCdKifIOo3atbqffDM/wjrE0sE=;
+	b=Zd4OU75JnmqVM0QH1YVMAYVh2GO3JhgIo2g5fzm5k8Yy9+AGyj0XfK3nr/B69yzYq/YFXm
+	t4Cw/q9r27+oXrEK2AfPuY77Eq/wfHyNjPqBrIIIE+pS7B1IsnZl+mSWQ7uXT4GhwWSJXI
+	IAjKhNkm8jQ4HFYexUNiZ3u4Gn0U3UA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1779895048;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=GpmrI14U1zRKg9Ft8HCdKifIOo3atbqffDM/wjrE0sE=;
+	b=hflNZb+8oVB2a+7/Iz3RBlSMhoxMfTaSZ13xqcKmRCZMT30z3xcle53Dk+i3EUsTjraod+
+	m8MtH/jWlalsJgCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7B0845A8C2;
+	Wed, 27 May 2026 15:17:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id dT6MHAcLF2qmFgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Wed, 27 May 2026 15:17:27 +0000
+Message-ID: <ed56eba9-8a34-4f17-b400-0ebf538ebcb4@suse.de>
+Date: Wed, 27 May 2026 17:17:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	MISSING_MIME_VERSION(2.00)[];
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 00/10] drm: Improve logic behind damage handling
+To: mripard@kernel.org, maarten.lankhorst@linux.intel.com,
+ airlied@redhat.com, airlied@gmail.com, simona@ffwll.ch, admin@kodeit.net,
+ gargaditya08@proton.me, paul@crapouillou.net, jani.nikula@linux.intel.com,
+ mhklinux@outlook.com, zack.rusin@broadcom.com,
+ bcm-kernel-feedback-list@broadcom.com
+Cc: dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+ intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
+ linux-mips@vger.kernel.org, virtualization@lists.linux.dev
+References: <20260527145113.241595-1-tzimmermann@suse.de>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20260527145113.241595-1-tzimmermann@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	DMARC_POLICY_ALLOW(-0.50)[suse.de,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11245-lists,linux-hyperv=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
-	RCPT_COUNT_TWO(0.00)[2];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	DKIM_TRACE(0.00)[suse.de:+];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11246-lists,linux-hyperv=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[kernel.org,linux.intel.com,redhat.com,gmail.com,ffwll.ch,kodeit.net,proton.me,crapouillou.net,outlook.com,broadcom.com];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_NO_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.linux.dev:replyto,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,suse.de:email,smtp.kernel.org:mid,sashiko.dev:url]
-X-Rspamd-Queue-Id: BEA405E6B87
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[tzimmermann@suse.de,linux-hyperv@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_FIVE(0.00)[6];
+	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_NONE(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[18]
+X-Rspamd-Queue-Id: 9F9625E6CA4
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] Comparing plane `src` coordinates before `atomic_check` clips th=
-em causes unintended full frame updates for partially off-screen planes.
-- [Low] Removal of unit tests for `src` coordinate changes without replacin=
-g them causes a loss of critical test coverage.
+
+
+Am 27.05.26 um 16:46 schrieb Thomas Zimmermann:
+> DRM clients can supply information on framebuffer areas to update as
+> part of each page flip, called damage clipping rectangles. But DRM's
+> processing of this information is inconsistent and prone to errors.
+>
+> - There are multiple fields and tests that decide if damage clips
+> should be taken or ignored.
+>
+> - Sometimes damage clips are removed behind the back of the DRM client.
+>
+> - Atomic helpers evaluate damage clipping in the middle of the atomic
+> check: after connectors and encoders, but before planes and CRTCs. Hence
+> pipeline stages have an inconsistent view.
+>
+> - Which leads to drivers (ingenic) doing a re-evaluation if necessary.
+>
+> - Tests of plane source coordinates only happen during commits. At this
+> point, the driver should already know if damage clips are to be taken or
+> not. Because of this, some drivers (appletbdrm) might operate on incorrect
+> damage information for their internal workings. This also leads to excessive
+> use of the old plane state.
+>
+> Therefore go through DRM helpers and drivers and fix the logic.
+>
+> - Run all of the atomic checks with the damage information supplied by
+> DRM clients. Afterwards evaluate plane and CRTC states on whether to
+> take or ignore damage clips. Do all related tests in a single atomic
+> helper.
+>
+> - Do not discard damage clips. Set ignore_damage_clips in struct
+> drm_plane_state instead. This includes changes to plane source-coordinates.
+> The damage iterator now only has to look at this flag to detect if it
+> should use the damage clips.
+>
+> - Go over drivers and fix the damage handling in the plane's
+> atomic_update helpers. Most drivers no longer need the old plane state
+> in their update.
+>
+> - The appletbdrm driver requires a fix in how it uses damage information.
+> Ingenic and vmwgfx can be simplified. These changes improve the drivers'
+> code organization.
+>
+> - Kunit tests require some changes. Drop some obsolete tests and add a new
+> one for ignore_damage_flags.
+>
+> Tested with bochs, mgag200, Kunit tests.
+>
+> v3:
+> - fix error path in appletbdrm
+> v2:
+> - rebase on latest upstream
+>
+> Thomas Zimmermann (10):
+>    drm/damage-helper: Do not alter damage clips on modeset, but ignore
+>      them
+>    drm/atomic-helpers: Evaluate plane damage after atomic_check
+>    drm/ingenic: Remove calls to drm_atomic_helper_check_plane_damage()
+>    drm/damage-helper: Test src coord in
+>      drm_atomic_helper_check_plane_damage()
+>    drm/appletbdrm: Allocate request/response buffers in begin_fb_access
+>    drm/damage-helper: Remove old state from
+>      drm_atomic_helper_damage_iter_init()
+>    drm/damage-helper: Remove old state from
+>      drm_atomic_helper_damage_merged()
+>    drm/atomic_helper: Do not evaluate plane damage before atomic_check
+>    drm/damage-helper: Rename state parameters in damage helpers
+>    drm/vmwgfx: Remove unused field struct
+>      vmwgfx_du_update_plane.old_state
+>
+>   drivers/gpu/drm/ast/ast_cursor.c              |   3 +-
+>   drivers/gpu/drm/ast/ast_mode.c                |   2 +-
+>   drivers/gpu/drm/drm_atomic_helper.c           |   6 +-
+>   drivers/gpu/drm/drm_atomic_state_helper.c     |   1 +
+>   drivers/gpu/drm/drm_damage_helper.c           |  44 ++--
+>   drivers/gpu/drm/drm_fb_dma_helper.c           |   2 +-
+>   drivers/gpu/drm/drm_mipi_dbi.c                |   3 +-
+>   drivers/gpu/drm/gud/gud_pipe.c                |   3 +-
+>   drivers/gpu/drm/hyperv/hyperv_drm_modeset.c   |   3 +-
+>   drivers/gpu/drm/i915/display/intel_plane.c    |  11 +-
+>   drivers/gpu/drm/i915/display/intel_psr.c      |   3 +-
+>   drivers/gpu/drm/ingenic/ingenic-drm-drv.c     |   3 -
+>   drivers/gpu/drm/ingenic/ingenic-ipu.c         |   8 +-
+>   drivers/gpu/drm/mgag200/mgag200_mode.c        |   3 +-
+>   drivers/gpu/drm/sitronix/st7571.c             |   3 +-
+>   drivers/gpu/drm/sitronix/st7586.c             |   3 +-
+>   drivers/gpu/drm/sitronix/st7920.c             |   3 +-
+>   drivers/gpu/drm/solomon/ssd130x.c             |   9 +-
+>   drivers/gpu/drm/sysfb/drm_sysfb_modeset.c     |   3 +-
+>   .../gpu/drm/tests/drm_damage_helper_test.c    | 200 +++---------------
+>   drivers/gpu/drm/tiny/appletbdrm.c             |  59 +++---
+>   drivers/gpu/drm/tiny/bochs.c                  |   3 +-
+>   drivers/gpu/drm/tiny/cirrus-qemu.c            |   2 +-
+>   drivers/gpu/drm/tiny/gm12u320.c               |   2 +-
+>   drivers/gpu/drm/tiny/ili9225.c                |   3 +-
+>   drivers/gpu/drm/tiny/repaper.c                |   2 +-
+>   drivers/gpu/drm/tiny/sharp-memory.c           |   3 +-
+>   drivers/gpu/drm/udl/udl_modeset.c             |   3 +-
+>   drivers/gpu/drm/virtio/virtgpu_plane.c        |   2 +-
+>   drivers/gpu/drm/vmwgfx/vmwgfx_kms.c           |   5 +-
+>   drivers/gpu/drm/vmwgfx/vmwgfx_kms.h           |   2 -
+>   drivers/gpu/drm/vmwgfx/vmwgfx_scrn.c          |  12 +-
+>   drivers/gpu/drm/vmwgfx/vmwgfx_stdu.c          |  15 +-
+>   include/drm/drm_damage_helper.h               |   9 +-
+>   34 files changed, 123 insertions(+), 315 deletions(-)
+>
+>
+> base-commit: 5fb5a9a63cf5ece68e0eeb6fa397da27712bccf0
+
+-- 
 --
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstr. 146, 90461 Nürnberg, Germany, www.suse.com
+GF: Jochen Jaser, Andrew McDonald, Werner Knoblich, (HRB 36809, AG Nürnberg)
 
-commit 70283d9d64d3987145c43d7d6e7df2c84b0de6ae
-Author: Thomas Zimmermann <tzimmermann@suse.de>
-drm/damage-helper: Test src coord in drm_atomic_helper_check_plane_damage()
 
-This commit evaluates plane source coordinate changes during the atomic che=
-ck
-phase instead of the atomic commit phase. It sets the ignore_damage_clips f=
-lag
-in the plane state if coordinates change and removes related unit tests.
-
-> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_at=
-omic_helper.c
-> --- a/drivers/gpu/drm/drm_atomic_helper.c
-> +++ b/drivers/gpu/drm/drm_atomic_helper.c
-> @@ -1034,7 +1034,7 @@ drm_atomic_helper_check_planes(struct drm_device *d=
-ev,
-> =20
->  		drm_atomic_helper_plane_changed(state, old_plane_state, new_plane_stat=
-e, plane);
-> =20
-> -		drm_atomic_helper_check_plane_damage(state, new_plane_state);
-> +		drm_atomic_helper_check_plane_damage(state, old_plane_state, new_plane=
-_state);
-
-[Severity: Medium]
-Is there a risk of unintended full frame updates for partially off-screen
-planes here?
-
-When userspace requests an update, the DRM core provides unclipped coordina=
-tes
-into new_plane_state->src. The old_plane_state->src retains the coordinates
-from the previous commit, which were already clipped during that commit's
-atomic check phase via drm_atomic_helper_check_plane_state().
-
-Because drm_atomic_helper_check_plane_damage() now performs the
-drm_rect_equals check before atomic_check scales and clips the new
-coordinates, does it erroneously detect a change in src and permanently lat=
-ch
-ignore_damage_clips =3D true? This could cause any plane positioned partial=
-ly
-off-screen to continuously ignore damage clips and perform a full update on
-every single frame.
-
-Note: This regression is fixed later in the patch series by commit
-"drm/atomic_helper: Do not evaluate plane damage before atomic_check".
-
-> =20
->  		if (!funcs || !funcs->atomic_check)
->  			continue;
-
-[ ... ]
-
-> diff --git a/drivers/gpu/drm/tests/drm_damage_helper_test.c b/drivers/gpu=
-/drm/tests/drm_damage_helper_test.c
-> --- a/drivers/gpu/drm/tests/drm_damage_helper_test.c
-> +++ b/drivers/gpu/drm/tests/drm_damage_helper_test.c
-
-[ ... ]
-
-> -static void drm_test_damage_iter_no_damage_src_moved(struct kunit *test)
-> -{
-> -	struct drm_damage_mock *mock =3D test->priv;
-> -	struct drm_atomic_helper_damage_iter iter;
-> -	struct drm_rect clip;
-> -	u32 num_hits =3D 0;
-> -
-> -	/* Plane src moved since old plane state. */
-> -	set_plane_src(&mock->old_state, 0, 0, 1024 << 16, 768 << 16);
-> -	set_plane_src(&mock->state, 10 << 16, 10 << 16,
-> -		      (10 + 1024) << 16, (10 + 768) << 16);
-> -	drm_atomic_helper_damage_iter_init(&iter, &mock->old_state, &mock->stat=
-e);
-> -	drm_atomic_for_each_plane_damage(&iter, &clip)
-> -		num_hits++;
-> -
-> -	KUNIT_EXPECT_EQ_MSG(test, num_hits, 1, "Should return plane src as dama=
-ge.");
-> -	check_damage_clip(test, &clip, 10, 10, 1034, 778);
-> -}
-
-[Severity: Low]
-Does the removal of these unit tests cause a loss of valuable test coverage?
-
-The commit message mentions there is a separate unit test for when
-ignore_damage_clips is true, but without these removed tests, there are no
-longer any tests ensuring that moving the src coordinates actually correctly
-sets ignore_damage_clips =3D true via drm_atomic_helper_check_plane_damage(=
-).
-
-Instead of completely deleting these tests, could they have been adapted to
-call drm_atomic_helper_check_plane_damage() prior to initializing the
-iterator, preserving the validation of the source coordinate tracking logic?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260527145113.2415=
-95-1-tzimmermann@suse.de?part=3D4
 
