@@ -1,254 +1,241 @@
-Return-Path: <linux-hyperv+bounces-11249-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11250-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MDagMEQUF2pf3QcAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11249-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 27 May 2026 17:56:52 +0200
+	id QOyXMW0cF2rw5AcAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11250-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 27 May 2026 18:31:41 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 213A75E747E
-	for <lists+linux-hyperv@lfdr.de>; Wed, 27 May 2026 17:56:51 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 60E355E7CA3
+	for <lists+linux-hyperv@lfdr.de>; Wed, 27 May 2026 18:31:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D03043114870
-	for <lists+linux-hyperv@lfdr.de>; Wed, 27 May 2026 15:42:24 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id C986A302AB0A
+	for <lists+linux-hyperv@lfdr.de>; Wed, 27 May 2026 16:31:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E748A42EED5;
-	Wed, 27 May 2026 15:42:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D03ED37D107;
+	Wed, 27 May 2026 16:31:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ha5qHCIB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pdi/capn"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f52.google.com (mail-yx1-f52.google.com [74.125.224.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9153642EEC5
-	for <linux-hyperv@vger.kernel.org>; Wed, 27 May 2026 15:42:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779896526; cv=none; b=s/9jIhs40jmxusD1LBMcLmnCIWSWuXDeq3FPxlm/uGLZBgjzWHnUhA1BjjzdJftUbJMvgcEiH7RkOmHO6AC9c9gI4b+VgueGuXzI1Fb5c2uKZldKA9XwKCOfIIUCmHWOom5h7YZUE95hA/UqhemEBOJCpiI4TlVXjE6JZdb8uc0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779896526; c=relaxed/simple;
-	bh=Il5TTgZZuPreqSAVntMqokXtSyvjn/lOmSjqhfOp1ac=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=i4SI1xAsAY+B42VvsWNKPGZLaTfTs/XQHhVQl8HFdyiFMJCFTE4AtBmkxI0urZgyA1CCi3dTcdg7HzlFJr7bketsEBKjBpjC3jQqqtdiBZEeZRLSlsigiFJGeWAoI1g0yZT8O5so6vrieXXu2ANZhDM2t68MnHE0X0htDyKPIrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ha5qHCIB; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 140101F000E9;
-	Wed, 27 May 2026 15:42:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779896525;
-	bh=lrWXyRCzhzKWlmuF/OpfVXL71RcRw4S8dM99HRM+OTM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Ha5qHCIBnXEbrOrR8r3VlsBHJTOdgdM3xGUbZmnOdT8g4b9D6/ihamspWc3ukhtbx
-	 RMMpzQhSkjw4xuhnstGb0Dvy+aa4bkWhAXuchorK6SqpyZsV2DkLRnaHUstgNyXEJM
-	 gG3kaizIbgVW4sWR5MW50Ik+qcDMPqdH133/uEunhQwQqIZKhLvV0Mlo87umnpSYoH
-	 Vq/2HGsNf491QO18DUvwiBoqtDpfsuGoKpwxms+FOpYmUDkg8UIpBO41VCnGFVoaxZ
-	 XZJRp77jGLnnsfQl1qqWKeiDCehlZLebZvZuktNLqMhLBsoewKhdW9OWOdW4v5XnSC
-	 0k004PdFHay4w==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 05/10] drm/appletbdrm: Allocate request/response
- buffers in begin_fb_access
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Thomas Zimmermann" <tzimmermann@suse.de>
-Cc: linux-hyperv@vger.kernel.org
-In-Reply-To: <20260527145113.241595-6-tzimmermann@suse.de>
-References: <20260527145113.241595-6-tzimmermann@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 27 May 2026 15:42:04 +0000
-Message-Id: <20260527154205.140101F000E9@smtp.kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B15913C455B
+	for <linux-hyperv@vger.kernel.org>; Wed, 27 May 2026 16:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779899496; cv=pass; b=WTFvHhnlN58y8uepRAOlBplzANrVXb1Rf5UwPePnOisFG7gBWk21MPXZNhsnXIsxnSdrhREmb2kIDO1a/TuNV8+m8Tfd/9Fg2VH1UrPjRZDDdlRULIetNfDd5T8yiQc7Ro4QlFAroBLtkV45t+sD1NDzCf34DsS20FqrW34BgwM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779899496; c=relaxed/simple;
+	bh=41fjdWeo1ypd6ycqKoTySWJowPiFRaJs4jlzo281OZ8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K1ND/Hg6CTbufGEeWcqKDh1OybvVkskPhxzbYkpw0nhTfVxY0zrFeXv8ocnAgBiTTecvo3Ku62Xi8RF8bnl3fp+gdz8my+AhQfF4djHf6NB4UEEmXRMe2qrlJf56doK/sn/1s6vEGH6KCKvKVMeoJHvP86zug+kKBIIrcKoBYkA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pdi/capn; arc=pass smtp.client-ip=74.125.224.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yx1-f52.google.com with SMTP id 956f58d0204a3-65eb226b1ceso6276810d50.0
+        for <linux-hyperv@vger.kernel.org>; Wed, 27 May 2026 09:31:33 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779899492; cv=none;
+        d=google.com; s=arc-20240605;
+        b=CZYtyspjHTsWAdho1wlWoyvBHMzJ3XzAl0HBfkcKOgbRMX7rljxi0pTqAE1Yh/XveW
+         yKKLftC6foJH5nAsEAyhNwr/HbFJuDjAs1r+xfdAO803/mw/5TJIGm4YFiYz6EdhI6JX
+         9BrV0/JYoY5Cz5d0OlnnD2cJd5hhCsoGrgqVvAiTLDajyDE1D184OS9eP5oUyZpkrDRg
+         TJrc6/CM6xZ/lPFIIsMJu7ZXJG5tGVVVJk8iH7UHH5msSt5doQoZB2ZRfqig8SFAic/F
+         RO4PgAC0QF3SeYrPDh20rWWnJEEMX73Oe+B2IuDTHZGS6zEFHQL9fm0qEaysWbAPSxqI
+         uBOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=9tLf8lt1YoAuBidXkoX7o9PfBwuIjJNOIKz1xekd6O8=;
+        fh=o3ufkGVSKvYXbCCqZDL0L7HdvxhP6vlJ1z1kdkdxVjQ=;
+        b=TXhUOodwj9E5F3cv/qaWnQWR9pt2AachUB2FTb2d9NPXSCReeTAKxCQrSKPmJbFwOA
+         eqoh2G4FF7vBYMCf+bGNQS1IMZ1rvOPhWvypJI7NpXccWThp8ih5qrIkR8T9mt2pjgqF
+         UTkM+Y/BLwQZ+rwRtRTZq2+/gjesOoGecuyvxmhE8rQHM2Tniy9TwUeAdnGwPt7g+wJO
+         K3Rg6/knMmEqDy1hVGH+ZmgUdGeeW/QR8ix91Gz/4LZ8ChSCw/xL8c1/layofg4D+V73
+         VbooDkAd9wMiuppTIKr43wBZdqje1EZPmX05/u/Eygqye/coPz/wfzGVQoYoZNGTeJ2b
+         AeyA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779899492; x=1780504292; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9tLf8lt1YoAuBidXkoX7o9PfBwuIjJNOIKz1xekd6O8=;
+        b=Pdi/capnr64OG11hd9axHgYNn4plUPjBPZgYhtzEPNlEtUNTt1KUgj6Ol4Equ+hQPy
+         sfRK0E9mBOMiQVWZ422gWXKNhqwFtnLeEIVMlqtuMziHp5ua9+gfJfF2kjPQLhG8PsPN
+         OAqJTLOwhyqCkS3TNTvt/BQb9fS/FU1ymCocbOKguJlIIEv9klutjue2R3hCCul4ng+0
+         CaxZZapo4SEkVwvf+KpzBrr5+4WOPkgVFnsmpHxg+jvN5wcQx6UjA7qqJ0GOtjFxeivX
+         cgtYK1oAQk58J4+6BL3E8sJraZhySDvDXfUpI+dQYN2s+NSH3gSoEmfS11TKEthLCv8k
+         lC3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779899492; x=1780504292;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=9tLf8lt1YoAuBidXkoX7o9PfBwuIjJNOIKz1xekd6O8=;
+        b=pmoml3yjIsmreDEM52qeDOnA51Wmg1e8pB3IEi1QxfL7v62VPimEJPUO+JbGTq23TQ
+         fUQM4+6RSPSwFe7ABDtzQ6uisRKBFIArULb0igMoMt0U7KeCjfzDbpwdQ6Lar5+U4xDC
+         naLL5IrFyF5kbMzp1iB23izOvfUN7b18qT7WR7DDwtCGXXLP451QQbRKqwaWUerA2PbK
+         up/1laoicYhNfYZtjK3MT2a/qFLRbM/80gE6ASWMkQ07AgkULXKrTrEAGcq2HqxlLmcp
+         X65zkLXFFiTV4Sskr2A6f3wAjWvo0maUkYkCQaz1U2FziuxOidfiSmeB2PcKdsuM46Ra
+         HhnA==
+X-Forwarded-Encrypted: i=1; AFNElJ+zmtEQLmSIlvu0eYTsajSTX0LEo8BXsdtMCgjL5vvxoV85ZB6K2Sexn+6KsrvHNh2gSEK3G5BibQRH+f4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywo1BmZSw7EnLn3At38BgFId3zBo8N/zN5R9ec844eoK9T5wqL5
+	zQW/XuZmNvFX0vLgjBgDY3CEaGu/LA4PhijsDtIKIZVwfrMj5iZuwhmmnbQLSsj5gBLo3vzHt69
+	7kndUb8OkvU7S5k3w/M7Ygbk0pvopgy0=
+X-Gm-Gg: Acq92OExoCTQr6NnNiKOQ6oPXS/7KN/nzb/YYQrnVrhXULaLeePPICJQ5gKiBhx92x7
+	Tk974zkp73UVtsY+S6Hs+g0GrfEmlPAJNiCYHmK3hVyeym7rj3AMjg2AopdG0iYZZMBTSRO3k+R
+	ufgo8/ahaqaRyLw5j460fRu4drSmEN5RSRz6+W8e1KjHxAQV9+b+y8L5XUsQVCs//6Z9ggGBqjX
+	l3Vq4hFw2R7naPgyTjJrDwk/uzfdwLPaBJFTlKkmeueJaX874iHjhUnAe3OH0Brvmn8cLjD/Ekk
+	iAvvCTlAAyTGx/w0KUctdDZp5HZtDX8+4x+Q040KOBdEZEUnLRevrWPF+g9UlStHdRTvh3tK
+X-Received: by 2002:a05:690e:158f:10b0:65e:14b6:b1c3 with SMTP id
+ 956f58d0204a3-65ec965c9f8mr17896814d50.16.1779899491716; Wed, 27 May 2026
+ 09:31:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	MISSING_MIME_VERSION(2.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+MIME-Version: 1.0
+References: <20260527133917.207150-1-tzimmermann@suse.de>
+In-Reply-To: <20260527133917.207150-1-tzimmermann@suse.de>
+From: Julian Orth <ju.orth@gmail.com>
+Date: Wed, 27 May 2026 18:31:22 +0200
+X-Gm-Features: AVHnY4LiGKeklklqrya8rDzPqcZQqpOuXv9liIo0k9FzrL8MbPYNMzvo_QUUG_E
+Message-ID: <CAHijbEVZBRTK7yhZy8gaZwb19JMzUD_nA2S1LOKX2NrK19RBsQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/9] drm: Limit DRM_IOCTL_WAIT_VBLANK to vblank interrupts
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: simona@ffwll.ch, airlied@gmail.com, mdaenzer@redhat.com, 
+	pekka.paalanen@collabora.com, jadahl@gmail.com, contact@emersion.fr, 
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org, mhklinux@outlook.com, 
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	wayland-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org, 
+	virtualization@lists.linux.dev, spice-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11249-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11250-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
-	RCPT_COUNT_TWO(0.00)[2];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[ffwll.ch,gmail.com,redhat.com,collabora.com,emersion.fr,linux.intel.com,kernel.org,outlook.com,lists.freedesktop.org,vger.kernel.org,lists.linux.dev];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_COUNT_THREE(0.00)[4];
-	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
 	MIME_TRACE(0.00)[0:+];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_NO_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
+	FROM_NEQ_ENVFROM(0.00)[juorth@gmail.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-hyperv];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,suse.de:email,smtp.kernel.org:mid,lists.linux.dev:replyto]
-X-Rspamd-Queue-Id: 213A75E747E
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,people.freedesktop.org:url,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: 60E355E7CA3
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
+On Wed, May 27, 2026 at 3:39=E2=80=AFPM Thomas Zimmermann <tzimmermann@suse=
+.de> wrote:
+>
+> DRM's WAIT_VBLANK ioctl synchronizes user-space clients to display
+> refresh. This is meaningless with vblank timers, which run unrelated
+> to the hardware's vblank.
+>
+> Disable the ioctl for simulated vblanks. Set DRM_VBLANK_FLAG_SIMULATED
+> for CRTCs with simulated vblank events in all such drivers. The vblank
+> timers of these devices still rate-limit the number of page-flip events
+> to match the display refresh.
+>
+> According to maintainers, user-space compositors do not require the ioctl
+> for rate-limitting display output. Weston, Kwin and Mutter rely on comple=
+tion
+> events. Mutter optionally uses the WAIT_VBLANK ioctl only to optimize the
+> time from input to output.
+>
+> When testing with mutter and weston, the page-flip rate appears correct
+> with the patch set applied.
 
-Pre-existing issues:
-- [Critical] Unbounded accumulation of damage clip sizes causes an integer =
-overflow, resulting in an undersized buffer allocation and subsequent out-o=
-f-bounds heap write.
-- [High] The plane `atomic_update` callback incorrectly calls sleeping func=
-tions, violating DRM atomic context guidelines.
-- [High] Mismatched coordinate space intersection and inconsistent calculat=
-ion ordering lead to uninitialized memory gaps and malformed hardware paylo=
-ads.
---
+To avoid this being a regression, you need to test that this change
+does not regress input latency.
 
-commit fc37b98d4bfc3183056fa690c4e2e659894c67e7
-Author: Thomas Zimmermann <tzimmermann@suse.de>
-Date:   Wed May 27 14:46:24 2026 +0000
+As discussed on IRC, compositors use vblank data to predict the time
+of the next flip event. For each device that you are touching here,
+there are two possibilities:
 
-drm/appletbdrm: Allocate request/response buffers in begin_fb_access
+- The vblank data is related to the flip timing, i.e. flip events and
+vblank events are sent at almost the same time. In this case removing
+these apis removes the path for compositors to predict the time of the
+next flip event. Input latency will therefore regress after idle
+periods when the compositor no longer has the time of the last vblank.
 
-In atomic_check, damage handling is not fully evaluated. Another
-atomic_check helper could trigger a full modeset and thus invalidate
-damage clips.
+- The vblank data has nothing to do with the time of the next flip
+event. In this case this series could in fact improve latency because
+it removes the incorrect data from the compositor.
 
-Allocation of the request/response buffers in appletbdrm depends on
-correct damage information. Otherwise it might allocate incorrectly
-sized buffers. Allocate the buffers in the driver's begin_fb_access
-helper. It runs early during the commit when damage clipping has been
-fully evaluated.
+Whether the times of the flip events correspond to hardware timings is
+not relevant. Everything in wayland compositors is scheduled against
+flip event timings and they are also forwarded to clients for their
+frame scheduling. If the flip timings are wrong/out of sync with the
+hardware, then removing the vblank apis does not improve this
+situation.
 
-> diff --git a/drivers/gpu/drm/tiny/appletbdrm.c b/drivers/gpu/drm/tiny/app=
-letbdrm.c
-> index cdd35af498920..b683dcb35b0be 100644
-> --- a/drivers/gpu/drm/tiny/appletbdrm.c
-> +++ b/drivers/gpu/drm/tiny/appletbdrm.c
-> @@ -315,33 +315,16 @@ static const u32 appletbdrm_primary_plane_formats[]=
- =3D {
->  	DRM_FORMAT_XRGB8888, /* emulated */
->  };
-> =20
-> -static int appletbdrm_primary_plane_helper_atomic_check(struct drm_plane=
- *plane,
-> -						   struct drm_atomic_commit *state)
-> +static int appletbdrm_primary_plane_helper_begin_fb_access(struct drm_pl=
-ane *plane,
-> +							   struct drm_plane_state *new_plane_state)
->  {
->  	struct appletbdrm_plane_state *appletbdrm_state =3D to_appletbdrm_plane=
-_state(new_plane_state);
-> +	size_t frames_size =3D 0;
->  	struct drm_atomic_helper_damage_iter iter;
->  	struct drm_rect damage;
->  	size_t request_size;
-> =20
-> -	drm_atomic_helper_damage_iter_init(&iter, old_plane_state, new_plane_st=
-ate);
-> +	drm_atomic_helper_damage_iter_init(&iter, NULL, new_plane_state);
->  	drm_atomic_for_each_plane_damage(&iter, &damage) {
->  		frames_size +=3D struct_size((struct appletbdrm_frame *)0, buf, rect_s=
-ize(&damage));
->  	}
-
-[Severity: Critical]
-This is a pre-existing issue, but could the unbounded accumulation of damage
-clip sizes cause an integer overflow?
-
-The FB_DAMAGE_CLIPS property allows userspace to pass an unbounded number of
-damage clips, limited only by the maximum DRM property blob size.
-
-If millions of clips are provided, accumulating the sizes with:
-
-    frames_size +=3D struct_size(...)
-
-could wrap around size_t on 32-bit systems. Even if frames_size doesn't wra=
-p,
-the subsequent calculation:
-
-    request_size =3D ALIGN(sizeof(...) + frames_size + sizeof(...), 16)
-
-might easily wrap around to a small value, causing kvzalloc() to successful=
-ly
-allocate an undersized buffer.
-
-When appletbdrm_flush_damage() iteratively processes the exact same clips,
-could it trust the per-clip buf_size and copy pixel data into the undersized
-buffer via drm_fb_memcpy(), resulting in an out-of-bounds heap write?
-
-[Severity: High]
-This is also a pre-existing issue, but does this allocation properly account
-for the intersection calculations that happen later?
-
-In appletbdrm_flush_damage(), buf_size is calculated before the intersectio=
-n:
-
-    buf_size =3D rect_size(&damage);
-    if (!drm_rect_intersect(&dst_clip, &damage))
-        continue;
-
-If the intersection shrinks the damage rectangle, drm_fb_memcpy() copies fe=
-wer
-bytes than buf_size, leaving zeroed memory at the end of the frame buffer.
-Since frame->buf_size was already set to the original size, the hardware wi=
-ll
-read these zeroes as pixel data.
-
-Furthermore, dst_clip is in CRTC coordinates while damage is in Framebuffer
-(SRC) coordinates. If userspace utilizes a framebuffer larger than the CRTC
-and applies a source offset, the coordinate spaces will not overlap properl=
-y.
-This causes valid damage clips to be skipped entirely.
-
-Since the begin_fb_access() helper factored these skipped clips into the to=
-tal
-frames_size allocation without performing the intersection, skipping them l=
-ater
-fails to advance the frame pointer.
-
-Could this leave uninitialized gaps before the footer, corrupting the packed
-payload structure sent to the hardware?
-
-[ ... ]
-
-> @@ -468,7 +474,7 @@ static int appletbdrm_flush_damage(struct appletbdrm_=
-device *adev,
->  }
-> =20
->  static void appletbdrm_primary_plane_helper_atomic_update(struct drm_pla=
-ne *plane,
-> -						     struct drm_atomic_commit *old_state)
-> +							  struct drm_atomic_commit *old_state)
->  {
->  	struct appletbdrm_device *adev =3D drm_to_adev(plane->dev);
->  	struct drm_device *drm =3D plane->dev;
-
-[Severity: High]
-This is a pre-existing issue, but does this code execute sleeping functions
-from an atomic context?
-
-According to DRM atomic context guidelines, plane atomic update callbacks
-execute in an atomic context where sleeping is forbidden.
-
-The appletbdrm_primary_plane_helper_atomic_update() callback invokes
-appletbdrm_flush_damage(), which subsequently calls:
-
-    drm_gem_fb_begin_cpu_access(fb, DMA_FROM_DEVICE);
-
-This function takes locks and can wait on fences. The flush function then
-performs synchronous USB bulk transfers, which also sleep.
-
-Could this break atomic context rules and cause system instability?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260527145113.2415=
-95-1-tzimmermann@suse.de?part=3D5
+>
+> This change has been discussed at length on IRC recently.
+>
+> https://people.freedesktop.org/~cbrill/dri-log/?channel=3Ddri-devel&highl=
+ight_names=3D&date=3D2026-05-08&show_html=3Dtrue
+> https://people.freedesktop.org/~cbrill/dri-log/?channel=3Ddri-devel&highl=
+ight_names=3D&date=3D2026-05-12&show_html=3Dtrue
+> https://people.freedesktop.org/~cbrill/dri-log/?channel=3Ddri-devel&highl=
+ight_names=3D&date=3D2026-05-13&show_html=3Dtrue
+> https://people.freedesktop.org/~cbrill/dri-log/?channel=3Ddri-devel&highl=
+ight_names=3D&date=3D2026-05-15&show_html=3Dtrue
+>
+> v2:
+> - add filter to CRTC_GET_SEQUENCE and CRTC_QUEUE_SEQUENCE ioctls (Michel)
+> - clarify Mutter's behavior in cover letter (Michel)
+>
+> Thomas Zimmermann (9):
+>   drm/vblank: Add drmm_vblank_init() to indicate managed cleanup
+>   drm/vblank: Add DRM_VBLANK_FLAG_SIMULATED
+>   drm/amdgpu: vkms: Set DRM_VBLANK_FLAG_SIMULATED
+>   drm/bochs: Set DRM_VBLANK_FLAG_SIMULATED
+>   drm/cirrus: Set DRM_VBLANK_FLAG_SIMULATED
+>   drm/hypervdrm: Set DRM_VBLANK_FLAG_SIMULATED
+>   drm/qxl: Set DRM_VBLANK_FLAG_SIMULATED
+>   drm/virtgpu: Set DRM_VBLANK_FLAG_SIMULATED
+>   drm/vkms: Set DRM_VBLANK_FLAG_SIMULATED
+>
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_vkms.c    |  3 ++-
+>  drivers/gpu/drm/drm_vblank.c                | 26 +++++++++++++++------
+>  drivers/gpu/drm/drm_vblank_helper.c         |  2 +-
+>  drivers/gpu/drm/hyperv/hyperv_drm_modeset.c |  2 +-
+>  drivers/gpu/drm/qxl/qxl_display.c           |  2 +-
+>  drivers/gpu/drm/tiny/bochs.c                |  2 +-
+>  drivers/gpu/drm/tiny/cirrus-qemu.c          |  2 +-
+>  drivers/gpu/drm/virtio/virtgpu_display.c    |  2 +-
+>  drivers/gpu/drm/vkms/vkms_drv.c             |  4 ++--
+>  include/drm/drm_crtc.h                      |  2 +-
+>  include/drm/drm_device.h                    |  2 +-
+>  include/drm/drm_vblank.h                    | 15 +++++++++++-
+>  12 files changed, 45 insertions(+), 19 deletions(-)
+>
+>
+> base-commit: 5fb5a9a63cf5ece68e0eeb6fa397da27712bccf0
+> --
+> 2.54.0
+>
 
