@@ -1,60 +1,59 @@
-Return-Path: <linux-hyperv+bounces-11257-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11258-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 9VcRCyRsF2r7EggAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11257-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 00:11:48 +0200
+	id gGOzMedvF2pDFAgAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11258-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 00:27:51 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A6A95EA8EE
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 00:11:47 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 209D25EAA96
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 00:27:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 15D38300F24D
-	for <lists+linux-hyperv@lfdr.de>; Wed, 27 May 2026 22:11:44 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1F8EA3034BF7
+	for <lists+linux-hyperv@lfdr.de>; Wed, 27 May 2026 22:27:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B16BE3BE178;
-	Wed, 27 May 2026 22:11:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A373F3C1F37;
+	Wed, 27 May 2026 22:27:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JGFw7WKf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z7MNn1du"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3BB38AC7B;
-	Wed, 27 May 2026 22:11:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854C53ACA52;
+	Wed, 27 May 2026 22:27:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779919902; cv=none; b=gvOAebE9wRXK+eOGfocKffYU/8xcJjC+s/XruUM3nSyE1aogqIxgJUcj3dCjrjEm8OGVWzEjqX//3NwKr7XiImC3TtrILcyv5X2q3XQaiViFQ90pxI7R04LUMxWaBU4LxmVvfAgcy/Yupqycsn6WJ7B5tObNh+JwdvtJ7qtdlZg=
+	t=1779920824; cv=none; b=LiSbQhKo6L4wf9/r+scbdBtn6cmRvjXTroBNc+SsVxmDplwpXfBheeE35L2d4JYEpKEltZo21vB3CfnMltiMsRWmqXDK9v1qSeJaRFMChoOigEHE0djnrQez2TU8g7FFR5MWB6XgexD88jygQ4r1PmO6ZNfVBWYaZJYY1njOMGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779919902; c=relaxed/simple;
-	bh=xlJk3uUxV+1iATm0aX5MXplaQUnxroieSVFf9SVpj4o=;
+	s=arc-20240116; t=1779920824; c=relaxed/simple;
+	bh=YYPQMaGSOGCyGuRgQ6KkRhpV3psyeiFtLHhVoR8l9Tw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qd71R6/ebbgbu97xti49NT588aymc245yFlFE2BebAzJzMSKXhIBfOHX1p58YsSI94EI2e2n7wVpdcWooYYhVEtE3vYURVHaTRwghrSTNTMdcCwGjiu+IeMlAn24kTLeZluS8ByaHByXzoocXqI2FL+bBTKpwC+NrPcIhw1r384=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JGFw7WKf; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5BF01F000E9;
-	Wed, 27 May 2026 22:11:40 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=YClYQ9IQ49YOOOYjG2PcWn7gKNcMJnM85N4NTUmLtyZC6B7CsqInY2eRtW5SDOg2QwMLQJ7xdLm/gbUMudv8He6+KV78zMHwni2AmrtbqK90yB9C2tORZY/vuCbmIrpbBj4Xvn3ei8vhh+U3xAhF/wB8vQEtOFAS//Gr/Mldp4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z7MNn1du; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02F2A1F000E9;
+	Wed, 27 May 2026 22:27:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779919901;
-	bh=sosG4dC3axvMoFiGA4ZWpAgtzupkO+rPJPY6YvFKKBU=;
+	s=k20260515; t=1779920823;
+	bh=Kq/Q4+ThDF9dZrfshBxHg+q9mvQxgCwlhQwNZ+X8Gq4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=JGFw7WKf+LGM9mlbcVKs3DmcJoYBlqqpp6d63GbfCvgszdUJu7ZIgcsG5x8UvI01h
-	 edgWriUOKj95lTtMj5iakmVcqfaukj0WhG4qSGKN2I3+cA/JqkE/iXH2ubX3+MrBkG
-	 wHuOKFNjDQHmI6HgikwpWrybJs2pVPOjiwm4ii+3pMfura1ihmSNCyV6c0ZVwmXncd
-	 auJbfx7yoyhlL+xrzo0rAwbFw5U+384Stu8t83D6sGkheKoJ8k2s4y1INOqVbqN1Ix
-	 Z8wk5D+yMDG66GEnqnEz4ekm56SJSn2o1GdW8gEcbHA8meAzmA5Zsxldzrx5UUkgNj
-	 d0mMMeDDbms4w==
-Date: Wed, 27 May 2026 15:11:39 -0700
+	b=Z7MNn1duO1R/t0/sEGLYNEsPcq6ssgXk061l88FLtPgHwJ3NHhnZ+F/v5pgK7D55E
+	 isErcKuQ+Y0eeIr/L7BQWcT0w3jQFGRrAx+MYyx+Cvp2p8f+dtucVILdj2q24cDlSo
+	 gpoIIpcIiLvT4zl7uYcHVtRXftRJ9RbbFMIoG20+CxPhy3MlaZONsy0wqERu9xE5AG
+	 h6rG8kYBe6fFMfj433pnNIFibs6Qj8jWq736BPVYvfwgD8pohHbt9SZNI6p/ix9+Vp
+	 D400aQzsPEtBFDo/GqXjaOeIDny0PB6uSlh7zIUi/kFudpxrHzUKGfi5Sg8DlOapwz
+	 8ReQcQmgudsUQ==
+Date: Wed, 27 May 2026 15:27:01 -0700
 From: Wei Liu <wei.liu@kernel.org>
-To: mhklinux@outlook.com
+To: Can Peng <pengcan@kylinos.cn>
 Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, longli@microsoft.com,
-	jloeser@linux.microsoft.com, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, arnd@arndb.de,
-	hamzamahfooz@linux.microsoft.com
-Subject: Re: [PATCH v2 1/1] mshv: Add conditional VMBus dependency
-Message-ID: <20260527221139.GB3518940@liuwe-devbox-debian-v2.local>
-References: <20260526141304.3924-1-mhklkml@zohomail.com>
+	longli@microsoft.com, decui@microsoft.com,
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH] drivers: hv: use kmalloc_array in
+ mshv_root_scheduler_init
+Message-ID: <20260527222701.GC3518940@liuwe-devbox-debian-v2.local>
+References: <20260520071632.557990-1-pengcan@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -63,80 +62,72 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260526141304.3924-1-mhklkml@zohomail.com>
+In-Reply-To: <20260520071632.557990-1-pengcan@kylinos.cn>
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[outlook.com];
-	TAGGED_FROM(0.00)[bounces-11257-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11258-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
 	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MIME_TRACE(0.00)[0:+];
-	TO_DN_NONE(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[wei.liu@kernel.org,linux-hyperv@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	MISSING_XM_UA(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	RCPT_COUNT_SEVEN(0.00)[11];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[liuwe-devbox-debian-v2.local:mid,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,outlook.com:email]
-X-Rspamd-Queue-Id: 2A6A95EA8EE
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,liuwe-devbox-debian-v2.local:mid,kylinos.cn:email]
+X-Rspamd-Queue-Id: 209D25EAA96
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, May 26, 2026 at 07:13:04AM -0700, Michael Kelley wrote:
-> From: Michael Kelley <mhklinux@outlook.com>
+On Wed, May 20, 2026 at 03:16:32PM +0800, Can Peng wrote:
+> Replace kmalloc() with kmalloc_array() to prevent potential
+> overflow, as recommended in Documentation/process/deprecated.rst.
 > 
-> When the VMBus driver is not part of the kernel (CONFIG_HYPERV_VMBUS=n),
-> the MSHV root driver fails to link:
+> Signed-off-by: Can Peng <pengcan@kylinos.cn>
+> ---
+>  drivers/hv/mshv_root_main.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> ERROR: modpost: "hv_vmbus_exists" [drivers/hv/mshv_root.ko] undefined!
-> 
-> Fix this while meeting these requirements:
-> * It must be possible to include the MSHV root driver without the
->   VMBus driver. In such case, the MSHV root driver can be built-in
->   to the kernel image, or it can be built as a separate module.
-> * If both the MSHV root driver and the VMBus driver are present, the
->   MSHV root driver and VMBus driver can both be built-in, or they can
->   both be separate modules. Or the MSHV root driver can be a module
->   while the VMBus driver can be built-in, but the reverse is
->   disallowed. Regardless of the build choices, the VMBus driver must
->   be loaded before the MSHV driver in order for the SynIC to be
->   managed properly (see comments in the MSHV SynIC code).
-> 
-> The fix has two parts:
-> * Add a Kconfig entry for MSHV_ROOT to depend on HYPERV_VMBUS if
->   HYPERV_VMBUS is present. The entry disallows MSHV_ROOT being
->   built-in when HYPERV_VMBUS is a module, but without requiring that
->   HYPERV_VMBUS be built.
-> * Add a stub implementation of hv_vmbus_exists() for when the
->   VMBus driver is not present so that the MSHV root driver has
->   no module dependency on VMBus. When the VMBus driver *is*
->   present, the module dependency ensures that the VMBus driver
->   loads first when both are built as modules.
-> 
-> Existing code ensures that the VMBus driver loads first if it is
-> built-in. The VMBus driver uses subsys_initcall(), which is
-> initcall level 4. The MSHV root driver uses module_init(), which
-> becomes device_init() when built-in, and device_init() is
-> initcall level 6.
-> 
-> Reported-by: Arnd Bergmann <arnd@arndb.de>
-> Closes: https://lore.kernel.org/all/20260520074044.923728-1-arnd@kernel.org/
-> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> Reviewed-by: Jork Loeser <jloeser@linux.microsoft.com>
+> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+> index bd1359eb58dd..146726cc4e9b 100644
+> --- a/drivers/hv/mshv_root_main.c
+> +++ b/drivers/hv/mshv_root_main.c
+> @@ -2241,7 +2241,7 @@ static int mshv_root_scheduler_init(unsigned int cpu)
+>  	outputarg = (void **)this_cpu_ptr(root_scheduler_output);
+>  
+>  	/* Allocate two consecutive pages. One for input, one for output. */
+> -	p = kmalloc(2 * HV_HYP_PAGE_SIZE, GFP_KERNEL);
+> +	p = kmalloc_array(2, HV_HYP_PAGE_SIZE, GFP_KERNEL);
 
-Applied. Thanks everyone.
+HV_HYP_PAGE_SIZE is a constant (4096). We don't have any dynamism in code.
+There is zero potential for overflow.
+
+That being said, I'm fine with taking this patch to stay consistent with
+the document.
+
+Thanks for your contribution.
+
+Wei
+
+
+>  	if (!p)
+>  		return -ENOMEM;
+>  
+> -- 
+> 2.53.0
+> 
 
