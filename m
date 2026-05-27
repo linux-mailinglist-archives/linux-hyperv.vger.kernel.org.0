@@ -1,61 +1,61 @@
-Return-Path: <linux-hyperv+bounces-11248-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11249-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KD6kGGENF2oR2gcAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11248-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 27 May 2026 17:27:29 +0200
+	id MDagMEQUF2pf3QcAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11249-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 27 May 2026 17:56:52 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF7835E6DAC
-	for <lists+linux-hyperv@lfdr.de>; Wed, 27 May 2026 17:27:28 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 213A75E747E
+	for <lists+linux-hyperv@lfdr.de>; Wed, 27 May 2026 17:56:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id EA79C30422DF
-	for <lists+linux-hyperv@lfdr.de>; Wed, 27 May 2026 15:22:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D03043114870
+	for <lists+linux-hyperv@lfdr.de>; Wed, 27 May 2026 15:42:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15D7635F180;
-	Wed, 27 May 2026 15:22:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E748A42EED5;
+	Wed, 27 May 2026 15:42:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WAZpYVt8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ha5qHCIB"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525FE423A80
-	for <linux-hyperv@vger.kernel.org>; Wed, 27 May 2026 15:22:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9153642EEC5
+	for <linux-hyperv@vger.kernel.org>; Wed, 27 May 2026 15:42:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779895324; cv=none; b=WH0s64iMI/+5DmK4H2EXN62WC5wDXwTWKf1H1ykUFCC6uuDJTAaQQhJq9CfQo0XkaP7FqfXDXFa7ADIv65QBsKeJJ+tiINuGSjwgB+LxX+gva1PSkbJQByPYmKMEFzaoyPiUelF9s6IoQz7YBByQZ/1qubF8l912aA5Ka8A+Jnk=
+	t=1779896526; cv=none; b=s/9jIhs40jmxusD1LBMcLmnCIWSWuXDeq3FPxlm/uGLZBgjzWHnUhA1BjjzdJftUbJMvgcEiH7RkOmHO6AC9c9gI4b+VgueGuXzI1Fb5c2uKZldKA9XwKCOfIIUCmHWOom5h7YZUE95hA/UqhemEBOJCpiI4TlVXjE6JZdb8uc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779895324; c=relaxed/simple;
-	bh=iGLrbUC7V0PH4BQ97Ko8S5LhjhnxRjItScmiUwAfJho=;
+	s=arc-20240116; t=1779896526; c=relaxed/simple;
+	bh=Il5TTgZZuPreqSAVntMqokXtSyvjn/lOmSjqhfOp1ac=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=QW7wA4xtt9ZnbHyQZbVp2o44CjM50pmMC6xoKNQTMZB6LD4wK1/61GKKHtBGcZkj8dog0FbCgA4EbJv4on5tCNOh0JVda2yjv8vJH1C2cbVUGdm2KSl5eky0xfDUOqkcXI2c4mNuw2VMt01FehRaUXU2H8tggCYVXw2iSEN3Oo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WAZpYVt8; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F49F1F000E9;
-	Wed, 27 May 2026 15:22:00 +0000 (UTC)
+	 Message-Id; b=i4SI1xAsAY+B42VvsWNKPGZLaTfTs/XQHhVQl8HFdyiFMJCFTE4AtBmkxI0urZgyA1CCi3dTcdg7HzlFJr7bketsEBKjBpjC3jQqqtdiBZEeZRLSlsigiFJGeWAoI1g0yZT8O5so6vrieXXu2ANZhDM2t68MnHE0X0htDyKPIrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ha5qHCIB; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 140101F000E9;
+	Wed, 27 May 2026 15:42:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779895320;
-	bh=+Jj/uuMIJAZYhW6SsSmHA74OlMVhhMt//vmT5hLwJ2Y=;
+	s=k20260515; t=1779896525;
+	bh=lrWXyRCzhzKWlmuF/OpfVXL71RcRw4S8dM99HRM+OTM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=WAZpYVt8DYQ/ed+jVaxBVdFVTj34+mJcHxokH5lLQqjilo9PzltgoOH4CtNheOBE4
-	 GI5i6/qFHP/0zI0u0eIXXJFYw4ppn4IflPl7QMuZG9qWnngxARFAQE1oUZT6fpAXqQ
-	 wBSLOHvCIYdwPAUfB8aT5WpPq158d7xK/o7395D6oG3Q0Tq18U8lJCv6GGzghvRvWU
-	 Scrz+/PpvPJeZwmvvClo0AU478IbAz9qNkoVxUicL9GmdfBLeNWNIMkDA/Rve+7IKt
-	 i95SSKh6U/VMsO4Q0sVNUHWjTPc5tInzZqU4rsPOqoyoOvbZFy1IZHzliYZvtQy8+H
-	 SLVmiLaVYVz9w==
+	b=Ha5qHCIBnXEbrOrR8r3VlsBHJTOdgdM3xGUbZmnOdT8g4b9D6/ihamspWc3ukhtbx
+	 RMMpzQhSkjw4xuhnstGb0Dvy+aa4bkWhAXuchorK6SqpyZsV2DkLRnaHUstgNyXEJM
+	 gG3kaizIbgVW4sWR5MW50Ik+qcDMPqdH133/uEunhQwQqIZKhLvV0Mlo87umnpSYoH
+	 Vq/2HGsNf491QO18DUvwiBoqtDpfsuGoKpwxms+FOpYmUDkg8UIpBO41VCnGFVoaxZ
+	 XZJRp77jGLnnsfQl1qqWKeiDCehlZLebZvZuktNLqMhLBsoewKhdW9OWOdW4v5XnSC
+	 0k004PdFHay4w==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 10/10] drm/vmwgfx: Remove unused field struct
- vmwgfx_du_update_plane.old_state
+Subject: Re: [PATCH v3 05/10] drm/appletbdrm: Allocate request/response
+ buffers in begin_fb_access
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Thomas Zimmermann" <tzimmermann@suse.de>
 Cc: linux-hyperv@vger.kernel.org
-In-Reply-To: <20260527145113.241595-11-tzimmermann@suse.de>
-References: <20260527145113.241595-11-tzimmermann@suse.de>
+In-Reply-To: <20260527145113.241595-6-tzimmermann@suse.de>
+References: <20260527145113.241595-6-tzimmermann@suse.de>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 27 May 2026 15:22:00 +0000
-Message-Id: <20260527152200.9F49F1F000E9@smtp.kernel.org>
+Date: Wed, 27 May 2026 15:42:04 +0000
+Message-Id: <20260527154205.140101F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -65,108 +65,190 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11249-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11248-lists,linux-hyperv=lfdr.de];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
-	RCVD_COUNT_THREE(0.00)[4];
 	RCPT_COUNT_TWO(0.00)[2];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
 	FROM_NO_DN(0.00)[];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
-X-Rspamd-Queue-Id: CF7835E6DAC
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,suse.de:email,smtp.kernel.org:mid,lists.linux.dev:replyto]
+X-Rspamd-Queue-Id: 213A75E747E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] Plane atomic_update callbacks indirectly call sleeping functions (=
-mutex_lock/mutex_lock_interruptible) from an atomic context.
+- [Critical] Unbounded accumulation of damage clip sizes causes an integer =
+overflow, resulting in an undersized buffer allocation and subsequent out-o=
+f-bounds heap write.
+- [High] The plane `atomic_update` callback incorrectly calls sleeping func=
+tions, violating DRM atomic context guidelines.
+- [High] Mismatched coordinate space intersection and inconsistent calculat=
+ion ordering lead to uninitialized memory gaps and malformed hardware paylo=
+ads.
 --
 
-commit deccb03fba43ed6006d88ae9933240eb52b52fee
+commit fc37b98d4bfc3183056fa690c4e2e659894c67e7
 Author: Thomas Zimmermann <tzimmermann@suse.de>
+Date:   Wed May 27 14:46:24 2026 +0000
 
-drm/vmwgfx: Remove unused field struct vmwgfx_du_update_plane.old_state
+drm/appletbdrm: Allocate request/response buffers in begin_fb_access
 
-This commit removes the unused old_state field from the
-vmw_du_update_plane structure and updates all caller functions to
-accommodate this change.
+In atomic_check, damage handling is not fully evaluated. Another
+atomic_check helper could trigger a full modeset and thus invalidate
+damage clips.
 
-> diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_scrn.c b/drivers/gpu/drm/vmwgf=
-x/vmwgfx_scrn.c
-> --- a/drivers/gpu/drm/vmwgfx/vmwgfx_scrn.c
-> +++ b/drivers/gpu/drm/vmwgfx/vmwgfx_scrn.c
-[ ... ]
-> @@ -721,7 +717,6 @@ static void
->  vmw_sou_primary_plane_atomic_update(struct drm_plane *plane,
->  				    struct drm_atomic_commit *state)
->  {
-> -	struct drm_plane_state *old_state =3D drm_atomic_get_old_plane_state(st=
-ate, plane);
->  	struct drm_plane_state *new_state =3D drm_atomic_get_new_plane_state(st=
-ate, plane);
->  	struct drm_crtc *crtc =3D new_state->crtc;
->  	struct vmw_fence_obj *fence =3D NULL;
-> @@ -734,12 +729,9 @@ vmw_sou_primary_plane_atomic_update(struct drm_plane=
- *plane,
->  			vmw_framebuffer_to_vfb(new_state->fb);
+Allocation of the request/response buffers in appletbdrm depends on
+correct damage information. Otherwise it might allocate incorrectly
+sized buffers. Allocate the buffers in the driver's begin_fb_access
+helper. It runs early during the commit when damage clipping has been
+fully evaluated.
+
+> diff --git a/drivers/gpu/drm/tiny/appletbdrm.c b/drivers/gpu/drm/tiny/app=
+letbdrm.c
+> index cdd35af498920..b683dcb35b0be 100644
+> --- a/drivers/gpu/drm/tiny/appletbdrm.c
+> +++ b/drivers/gpu/drm/tiny/appletbdrm.c
+> @@ -315,33 +315,16 @@ static const u32 appletbdrm_primary_plane_formats[]=
+ =3D {
+>  	DRM_FORMAT_XRGB8888, /* emulated */
+>  };
 > =20
->  		if (vfb->bo)
-> -			ret =3D vmw_sou_plane_update_bo(dev_priv, plane,
-> -						      old_state, vfb, &fence);
-> +			ret =3D vmw_sou_plane_update_bo(dev_priv, plane, vfb, &fence);
->  		else
-> -			ret =3D vmw_sou_plane_update_surface(dev_priv, plane,
-> -							   old_state, vfb,
-> -							   &fence);
-> +			ret =3D vmw_sou_plane_update_surface(dev_priv, plane, vfb, &fence);
+> -static int appletbdrm_primary_plane_helper_atomic_check(struct drm_plane=
+ *plane,
+> -						   struct drm_atomic_commit *state)
+> +static int appletbdrm_primary_plane_helper_begin_fb_access(struct drm_pl=
+ane *plane,
+> +							   struct drm_plane_state *new_plane_state)
+>  {
+>  	struct appletbdrm_plane_state *appletbdrm_state =3D to_appletbdrm_plane=
+_state(new_plane_state);
+> +	size_t frames_size =3D 0;
+>  	struct drm_atomic_helper_damage_iter iter;
+>  	struct drm_rect damage;
+>  	size_t request_size;
+> =20
+> -	drm_atomic_helper_damage_iter_init(&iter, old_plane_state, new_plane_st=
+ate);
+> +	drm_atomic_helper_damage_iter_init(&iter, NULL, new_plane_state);
+>  	drm_atomic_for_each_plane_damage(&iter, &damage) {
+>  		frames_size +=3D struct_size((struct appletbdrm_frame *)0, buf, rect_s=
+ize(&damage));
+>  	}
+
+[Severity: Critical]
+This is a pre-existing issue, but could the unbounded accumulation of damage
+clip sizes cause an integer overflow?
+
+The FB_DAMAGE_CLIPS property allows userspace to pass an unbounded number of
+damage clips, limited only by the maximum DRM property blob size.
+
+If millions of clips are provided, accumulating the sizes with:
+
+    frames_size +=3D struct_size(...)
+
+could wrap around size_t on 32-bit systems. Even if frames_size doesn't wra=
+p,
+the subsequent calculation:
+
+    request_size =3D ALIGN(sizeof(...) + frames_size + sizeof(...), 16)
+
+might easily wrap around to a small value, causing kvzalloc() to successful=
+ly
+allocate an undersized buffer.
+
+When appletbdrm_flush_damage() iteratively processes the exact same clips,
+could it trust the per-clip buf_size and copy pixel data into the undersized
+buffer via drm_fb_memcpy(), resulting in an out-of-bounds heap write?
 
 [Severity: High]
-This is a pre-existing issue, but does this code path end up calling sleepi=
-ng
-functions from an atomic context?
+This is also a pre-existing issue, but does this allocation properly account
+for the intersection calculations that happen later?
 
-Looking at the call chain, vmw_sou_primary_plane_atomic_update() is a plane
-atomic update callback, which runs in atomic context where sleeping is
-forbidden. However, it calls vmw_sou_plane_update_surface(), which assigns a
-mutex pointer to the update structure:
+In appletbdrm_flush_damage(), buf_size is calculated before the intersectio=
+n:
 
-vmw_sou_plane_update_surface()
-  srf_update.base.mutex =3D &dev_priv->cmdbuf_mutex;
-  vmw_du_helper_plane_update(&srf_update.base);
+    buf_size =3D rect_size(&damage);
+    if (!drm_rect_intersect(&dst_clip, &damage))
+        continue;
 
-This closure is then passed down to vmw_du_helper_plane_update(), which cal=
-ls
-vmw_validation_prepare(). That function then takes the lock using
-mutex_lock() or mutex_lock_interruptible().
+If the intersection shrinks the damage rectangle, drm_fb_memcpy() copies fe=
+wer
+bytes than buf_size, leaving zeroed memory at the end of the frame buffer.
+Since frame->buf_size was already set to the original size, the hardware wi=
+ll
+read these zeroes as pixel data.
 
-Could this lead to system instability or deadlocks if the atomic commit runs
-in a non-blocking path where sleeping is not allowed?
+Furthermore, dst_clip is in CRTC coordinates while damage is in Framebuffer
+(SRC) coordinates. If userspace utilizes a framebuffer larger than the CRTC
+and applies a source offset, the coordinate spaces will not overlap properl=
+y.
+This causes valid damage clips to be skipped entirely.
+
+Since the begin_fb_access() helper factored these skipped clips into the to=
+tal
+frames_size allocation without performing the intersection, skipping them l=
+ater
+fails to advance the frame pointer.
+
+Could this leave uninitialized gaps before the footer, corrupting the packed
+payload structure sent to the hardware?
 
 [ ... ]
+
+> @@ -468,7 +474,7 @@ static int appletbdrm_flush_damage(struct appletbdrm_=
+device *adev,
+>  }
+> =20
+>  static void appletbdrm_primary_plane_helper_atomic_update(struct drm_pla=
+ne *plane,
+> -						     struct drm_atomic_commit *old_state)
+> +							  struct drm_atomic_commit *old_state)
+>  {
+>  	struct appletbdrm_device *adev =3D drm_to_adev(plane->dev);
+>  	struct drm_device *drm =3D plane->dev;
+
+[Severity: High]
+This is a pre-existing issue, but does this code execute sleeping functions
+from an atomic context?
+
+According to DRM atomic context guidelines, plane atomic update callbacks
+execute in an atomic context where sleeping is forbidden.
+
+The appletbdrm_primary_plane_helper_atomic_update() callback invokes
+appletbdrm_flush_damage(), which subsequently calls:
+
+    drm_gem_fb_begin_cpu_access(fb, DMA_FROM_DEVICE);
+
+This function takes locks and can wait on fences. The flush function then
+performs synchronous USB bulk transfers, which also sleep.
+
+Could this break atomic context rules and cause system instability?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260527145113.2415=
-95-1-tzimmermann@suse.de?part=3D10
+95-1-tzimmermann@suse.de?part=3D5
 
