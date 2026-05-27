@@ -1,167 +1,260 @@
-Return-Path: <linux-hyperv+bounces-11230-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11231-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mL05IEL6FmqGzwcAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11230-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 27 May 2026 16:05:54 +0200
+	id qDcRKLsGF2pz1gcAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11231-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 27 May 2026 16:59:07 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25FAA5E58E3
-	for <lists+linux-hyperv@lfdr.de>; Wed, 27 May 2026 16:05:54 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21FD75E6617
+	for <lists+linux-hyperv@lfdr.de>; Wed, 27 May 2026 16:59:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 342E3304FBDA
-	for <lists+linux-hyperv@lfdr.de>; Wed, 27 May 2026 14:05:02 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 31794306D0DC
+	for <lists+linux-hyperv@lfdr.de>; Wed, 27 May 2026 14:51:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E46F932D7F8;
-	Wed, 27 May 2026 14:04:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E19B425CF7;
+	Wed, 27 May 2026 14:51:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="ZvGfevqs"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="DZ7FnH8A";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8PesZOzc";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="DZ7FnH8A";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8PesZOzc"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768D933F8D4
-	for <linux-hyperv@vger.kernel.org>; Wed, 27 May 2026 14:04:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221654279E9
+	for <linux-hyperv@vger.kernel.org>; Wed, 27 May 2026 14:51:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779890668; cv=none; b=j2DexZNPDzXdGv+3Wlyy911u0fJdAITvSx/0E4/p2fvYt3rh7AM/1PcNQPtOON/5k6YQhn6ORxc+xDKtCQZnfQ2gwZ5hM+FnBs4dWKGwJtEMR7r0N4JIrhuRhuMAtoZY/2+VBR8+4SjbgNT6ujE5A9GLBkd17CHQrqFHRSEn7wo=
+	t=1779893485; cv=none; b=pYX+H64zdCR+jIuIyyGnC8jwBr4aBHfnvM97IQXJWhzaC0i0CaB0NRIuUElObe8Si21tIEtET0yGRIrTL8rFTb72QVA08Qy/ixBXqhQJhQCPDE/VUJlrDIcFtntENguZE5Z+x+EhED47YcYDsu1AzuVnpg0diqVAd9CnECvTSkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779890668; c=relaxed/simple;
-	bh=X/K9y8vuVThi9XH7HKLmcfEOig/T/xWfkrNIqlzokGU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aDF0I5WuoZDeZ3hi9gWvgL/l/hIcqyj+kvEV/T4XQTqmOhkykOh7I2Mzcgwp3S+o8MMaYBqlSJAS1pJDfUCQfrw5sRmOL/kab1jipZjv+tzONPrp39YUlLOfY7XuRXhSLbbQOieqyA4dEK3/SI5HIdFS47cwNlf9WYFHf55FpMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=ZvGfevqs; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
+	s=arc-20240116; t=1779893485; c=relaxed/simple;
+	bh=k827t0Gpl5UIxT0WX7sDfvGLGH6+qLHxIr9aBJyULbw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pYgFixndDUomVDLRcz4qeX2PFih/54pH5a4PBGFJ+ZqHi7swpL+wd2B7YfYjbowPhXH1oliguZhWxN9+HtKeqNeBSpiTjTSclPeKYFfpWix13E9LsbJWOw0wWj6kV5CdZ4VzitHd+gzHt/2DUPqCkkpn1aWt3xnCKt5ZKqwm9F8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=DZ7FnH8A; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8PesZOzc; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=DZ7FnH8A; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8PesZOzc; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4gQWZT4ly4z9tvF;
-	Wed, 27 May 2026 16:04:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1779890657;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Wd5htzRfLBGwibwUQk6XgZcfpjdhvIy1tNh3HyG0SI8=;
-	b=ZvGfevqsj0s26ZioqgmqYP/Dr7HmLsJiRSxfUCYpHBdnDEc8SaLNc4nRt2whAxk1UAeJFC
-	m8Wwig3odlhUEQ1gCAI3d52SlUvPB4/sGlQZ3lVVbnYvWr5Hw79vYK4pZrLCDa4m//Mbt1
-	0ykyZ3z2zohSGAeU2UjP6gwCXQyhz8EVwSqeMfTxe8tWhx74LOkalUXrEFL07Qms94tctw
-	hjFIwHb7WFCvYFonA6MxhBM4VmKTfJkky+y0ULRgsp7XXhYqVaMA5CtzevTNJ74W4C3zlN
-	HjOlCVLLP3oABKNzLkdiDkxjPtTVPtuNTnxddJag+ye42fCRHIK8zdLF7FDrsg==
-Message-ID: <ec64120b-c5e7-4622-9d21-84573d363443@mailbox.org>
-Date: Wed, 27 May 2026 16:04:12 +0200
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 8D88A6B168;
+	Wed, 27 May 2026 14:51:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1779893479; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=3m/5O51/6gJpJUZlgUTVM23u58TzBQcvVOdnYvwVijI=;
+	b=DZ7FnH8ALizYFlWsPDtGw1BbG30NFsDogiD7MDWhCf7nVJE2UgYrh6alRlkFh6H+7ND1kO
+	6qfwUq2eOH7Yx0cpzq6XXPzV/MgTcp/ejg1l605BpPxtxovA8QiAJNfGIhc8jSTKpm4lzC
+	rSc2bdGJe6PIRTeeLQ9nAeTFxgm2aa0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1779893479;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=3m/5O51/6gJpJUZlgUTVM23u58TzBQcvVOdnYvwVijI=;
+	b=8PesZOzcfDnFpPOQpRyzeLQI7qcUcreVJGAgzCjTwQTV8ZVSzWz/vjeuSn0/Td/XhUy1AJ
+	1ESvfZnabZYNjSBQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1779893479; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=3m/5O51/6gJpJUZlgUTVM23u58TzBQcvVOdnYvwVijI=;
+	b=DZ7FnH8ALizYFlWsPDtGw1BbG30NFsDogiD7MDWhCf7nVJE2UgYrh6alRlkFh6H+7ND1kO
+	6qfwUq2eOH7Yx0cpzq6XXPzV/MgTcp/ejg1l605BpPxtxovA8QiAJNfGIhc8jSTKpm4lzC
+	rSc2bdGJe6PIRTeeLQ9nAeTFxgm2aa0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1779893479;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=3m/5O51/6gJpJUZlgUTVM23u58TzBQcvVOdnYvwVijI=;
+	b=8PesZOzcfDnFpPOQpRyzeLQI7qcUcreVJGAgzCjTwQTV8ZVSzWz/vjeuSn0/Td/XhUy1AJ
+	1ESvfZnabZYNjSBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0E2FC5A8A8;
+	Wed, 27 May 2026 14:51:19 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id aW4MAucEF2qsegAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Wed, 27 May 2026 14:51:19 +0000
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: mripard@kernel.org,
+	maarten.lankhorst@linux.intel.com,
+	airlied@redhat.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	admin@kodeit.net,
+	gargaditya08@proton.me,
+	paul@crapouillou.net,
+	jani.nikula@linux.intel.com,
+	mhklinux@outlook.com,
+	zack.rusin@broadcom.com,
+	bcm-kernel-feedback-list@broadcom.com
+Cc: dri-devel@lists.freedesktop.org,
+	linux-hyperv@vger.kernel.org,
+	intel-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org,
+	linux-mips@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Subject: [PATCH v3 00/10] 
+Date: Wed, 27 May 2026 16:46:19 +0200
+Message-ID: <20260527145113.241595-1-tzimmermann@suse.de>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/9] drm: Limit DRM_IOCTL_WAIT_VBLANK to vblank interrupts
-To: Thomas Zimmermann <tzimmermann@suse.de>, simona@ffwll.ch,
- airlied@gmail.com, pekka.paalanen@collabora.com, jadahl@gmail.com,
- contact@emersion.fr, maarten.lankhorst@linux.intel.com, mripard@kernel.org
-Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
- spice-devel@lists.freedesktop.org, wayland-devel@lists.freedesktop.org
-References: <20260515120916.333614-1-tzimmermann@suse.de>
- <b5d03921-1e6f-4c4f-900e-fc9e28222176@mailbox.org>
- <cb461424-e4c1-4d2c-934b-ffd7374e2a56@mailbox.org>
- <4a7c2f87-60fd-458c-a579-a36799b86557@suse.de>
-From: =?UTF-8?Q?Michel_D=C3=A4nzer?= <michel.daenzer@mailbox.org>
-Content-Language: en-CA
-In-Reply-To: <4a7c2f87-60fd-458c-a579-a36799b86557@suse.de>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-MBO-RS-META: rqxx3f1fpz8x483rfo6ubtay19g8ggmf
-X-MBO-RS-ID: b673024b871ac3e9b15
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spam-Level: 
+X-Spam-Score: -2.30
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[mailbox.org,reject];
-	R_DKIM_ALLOW(-0.20)[mailbox.org:s=mail20150812];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	SUBJECT_ENDS_SPACES(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[suse.de,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-11231-lists,linux-hyperv=lfdr.de];
+	FREEMAIL_TO(0.00)[kernel.org,linux.intel.com,redhat.com,gmail.com,ffwll.ch,kodeit.net,proton.me,crapouillou.net,outlook.com,broadcom.com];
+	RCPT_COUNT_TWELVE(0.00)[19];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[suse.de,ffwll.ch,gmail.com,collabora.com,emersion.fr,linux.intel.com,kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11230-lists,linux-hyperv=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[14];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[michel.daenzer@mailbox.org,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[mailbox.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[tzimmermann@suse.de,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[suse.de:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,mailbox.org:mid,mailbox.org:dkim]
-X-Rspamd-Queue-Id: 25FAA5E58E3
+	FROM_HAS_DN(0.00)[]
+X-Rspamd-Queue-Id: 21FD75E6617
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 5/27/26 15:07, Thomas Zimmermann wrote:
-> Am 15.05.26 um 18:56 schrieb Michel Dänzer:
->> On 5/15/26 17:12, Michel Dänzer wrote:
->>> On 5/15/26 13:55, Thomas Zimmermann wrote:
->>>> DRM's WAIT_VBLANK ioctl synchronizes user-space clients to display
->>>> refresh. This is meaningless with vblank timers, which run unrelated
->>>> to the hardware's vblank.
->>>>
->>>> Disable the ioctl for simulated vblanks. Set DRM_VBLANK_FLAG_SIMULATED
->>>> for CRTCs with simulated vblank events in all such drivers. The vblank
->>>> timers of these devices still rate-limit the number of page-flip events
->>>> to match the display refresh.
->>>>
->>>> According to maintainers, user-space compositors do not require the ioctl
->>>> for rate-limitting display output. Weston and Kwin rely on page-flip
->>>> events. Mutter uses and internal timer to limit the number of display
->>>> updates per second.
->>> Actually mutter fundamentally relies on atomic commit completion events for that, same as Weston & KWin. Mutter uses the WAIT_VBLANK ioctl only for minimizing input → output latency (which can hide issues when completion of atomic commits isn't properly throttled).
->>>
->>>
->>> (Just a side not on the cover letter, no objections to the patches themselves)
->> After more discussion on IRC, I have some concerns.
->>
->>
->> The big one first: For drivers with no strict refresh cycle (i.e. an atomic commit can take effect more or less anytime after at least one "refresh cycle" has passed since the last one), does this change really make sense / what's the actual benefit?
-> 
-> I don't have a strong opinion on that matter. I just think we should clarify the meaning of these ioctls.
-> 
-> Timing page flip is currently not supported on any driver without hardware vblank IRQ or a vblank timer. The situation might vary among compositors, but there have been plenty of reports of animation and frame rates either being too high or too low.
+DRM clients can supply information on framebuffer areas to update as
+part of each page flip, called damage clipping rectangles. But DRM's
+processing of this information is inconsistent and prone to errors.
 
-As discussed on IRC, that's due to insufficient throttling of atomic commits in the kernel, not directly related to the functionality in this series.
+- There are multiple fields and tests that decide if damage clips
+should be taken or ignored.
+
+- Sometimes damage clips are removed behind the back of the DRM client.
+
+- Atomic helpers evaluate damage clipping in the middle of the atomic
+check: after connectors and encoders, but before planes and CRTCs. Hence
+pipeline stages have an inconsistent view.
+
+- Which leads to drivers (ingenic) doing a re-evaluation if necessary.
+
+- Tests of plane source coordinates only happen during commits. At this
+point, the driver should already know if damage clips are to be taken or
+not. Because of this, some drivers (appletbdrm) might operate on incorrect
+damage information for their internal workings. This also leads to excessive
+use of the old plane state.
+
+Therefore go through DRM helpers and drivers and fix the logic.
+
+- Run all of the atomic checks with the damage information supplied by
+DRM clients. Afterwards evaluate plane and CRTC states on whether to
+take or ignore damage clips. Do all related tests in a single atomic
+helper.
+
+- Do not discard damage clips. Set ignore_damage_clips in struct
+drm_plane_state instead. This includes changes to plane source-coordinates.
+The damage iterator now only has to look at this flag to detect if it
+should use the damage clips. 
+
+- Go over drivers and fix the damage handling in the plane's
+atomic_update helpers. Most drivers no longer need the old plane state
+in their update.
+
+- The appletbdrm driver requires a fix in how it uses damage information.
+Ingenic and vmwgfx can be simplified. These changes improve the drivers'
+code organization.
+
+- Kunit tests require some changes. Drop some obsolete tests and add a new
+one for ignore_damage_flags.
+
+Tested with bochs, mgag200, Kunit tests.
+
+v3:
+- fix error path in appletbdrm
+v2:
+- rebase on latest upstream
+
+Thomas Zimmermann (10):
+  drm/damage-helper: Do not alter damage clips on modeset, but ignore
+    them
+  drm/atomic-helpers: Evaluate plane damage after atomic_check
+  drm/ingenic: Remove calls to drm_atomic_helper_check_plane_damage()
+  drm/damage-helper: Test src coord in
+    drm_atomic_helper_check_plane_damage()
+  drm/appletbdrm: Allocate request/response buffers in begin_fb_access
+  drm/damage-helper: Remove old state from
+    drm_atomic_helper_damage_iter_init()
+  drm/damage-helper: Remove old state from
+    drm_atomic_helper_damage_merged()
+  drm/atomic_helper: Do not evaluate plane damage before atomic_check
+  drm/damage-helper: Rename state parameters in damage helpers
+  drm/vmwgfx: Remove unused field struct
+    vmwgfx_du_update_plane.old_state
+
+ drivers/gpu/drm/ast/ast_cursor.c              |   3 +-
+ drivers/gpu/drm/ast/ast_mode.c                |   2 +-
+ drivers/gpu/drm/drm_atomic_helper.c           |   6 +-
+ drivers/gpu/drm/drm_atomic_state_helper.c     |   1 +
+ drivers/gpu/drm/drm_damage_helper.c           |  44 ++--
+ drivers/gpu/drm/drm_fb_dma_helper.c           |   2 +-
+ drivers/gpu/drm/drm_mipi_dbi.c                |   3 +-
+ drivers/gpu/drm/gud/gud_pipe.c                |   3 +-
+ drivers/gpu/drm/hyperv/hyperv_drm_modeset.c   |   3 +-
+ drivers/gpu/drm/i915/display/intel_plane.c    |  11 +-
+ drivers/gpu/drm/i915/display/intel_psr.c      |   3 +-
+ drivers/gpu/drm/ingenic/ingenic-drm-drv.c     |   3 -
+ drivers/gpu/drm/ingenic/ingenic-ipu.c         |   8 +-
+ drivers/gpu/drm/mgag200/mgag200_mode.c        |   3 +-
+ drivers/gpu/drm/sitronix/st7571.c             |   3 +-
+ drivers/gpu/drm/sitronix/st7586.c             |   3 +-
+ drivers/gpu/drm/sitronix/st7920.c             |   3 +-
+ drivers/gpu/drm/solomon/ssd130x.c             |   9 +-
+ drivers/gpu/drm/sysfb/drm_sysfb_modeset.c     |   3 +-
+ .../gpu/drm/tests/drm_damage_helper_test.c    | 200 +++---------------
+ drivers/gpu/drm/tiny/appletbdrm.c             |  59 +++---
+ drivers/gpu/drm/tiny/bochs.c                  |   3 +-
+ drivers/gpu/drm/tiny/cirrus-qemu.c            |   2 +-
+ drivers/gpu/drm/tiny/gm12u320.c               |   2 +-
+ drivers/gpu/drm/tiny/ili9225.c                |   3 +-
+ drivers/gpu/drm/tiny/repaper.c                |   2 +-
+ drivers/gpu/drm/tiny/sharp-memory.c           |   3 +-
+ drivers/gpu/drm/udl/udl_modeset.c             |   3 +-
+ drivers/gpu/drm/virtio/virtgpu_plane.c        |   2 +-
+ drivers/gpu/drm/vmwgfx/vmwgfx_kms.c           |   5 +-
+ drivers/gpu/drm/vmwgfx/vmwgfx_kms.h           |   2 -
+ drivers/gpu/drm/vmwgfx/vmwgfx_scrn.c          |  12 +-
+ drivers/gpu/drm/vmwgfx/vmwgfx_stdu.c          |  15 +-
+ include/drm/drm_damage_helper.h               |   9 +-
+ 34 files changed, 123 insertions(+), 315 deletions(-)
 
 
-> So I think we should rollout vblank timers for all drivers without hardware vblank IRQ.
-
-I'm not arguing against that. It doesn't necessarily invalidate my concern though.
-
-
-> Right now, vblank timers act like a vblank IRQ in these ioctls. That's a convenient position for user space.
-> 
-> But we don't really sync anything with hardware here, so the alternate proposal is to not support them.  This also appears to be the original intention of these ioctls.
-
-Speaking as the creator of the DRM_IOCTL_WAIT_VBLANK ioctl, I'm afraid it's not that simple. While it's true that the ioctl was originally only available if backed by corresponding HW & driver support, that's mostly because vblank timers and the scenarios which motivated them weren't really a thing until much later though, not an explicit intention at the time.
-
-I created it to give user space information about the display refresh cycle timing, and to allow it to synchronize to that. This seems like it could be useful even with vblank timers. At least if this ioctl and atomic commits are properly integrated, similar to how they are with a proper HW display refresh cycle, which I'm not sure is currently the case though.
-
-
-> Vblank timers would just limit the internal page-flip rate, but nothing else. That's the more defensive approach.
-
-If those two things aren't properly integrated though, then this might indeed be less bad than the status quo.
-
-
+base-commit: 5fb5a9a63cf5ece68e0eeb6fa397da27712bccf0
 -- 
-Earthling Michel Dänzer       \        GNOME / Xwayland / Mesa developer
-https://redhat.com             \               Libre software enthusiast
+2.54.0
+
 
