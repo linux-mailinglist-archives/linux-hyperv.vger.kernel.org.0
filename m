@@ -1,141 +1,145 @@
-Return-Path: <linux-hyperv+bounces-11310-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11311-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QGNjOsRLGGr4iggAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11310-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 16:05:56 +0200
+	id gI7NKAJ0GGq4kAgAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11311-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 18:57:38 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7004B5F359C
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 16:05:55 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49AA35F54D7
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 18:57:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 7D73530FB752
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 13:54:23 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 03FC03074849
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 16:47:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3466282F17;
-	Thu, 28 May 2026 13:54:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF6BC3F888D;
+	Thu, 28 May 2026 16:47:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="hWKWBe9Z"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="iZB2yKA+"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazolkn19012086.outbound.protection.outlook.com [52.103.20.86])
+Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazolkn19011033.outbound.protection.outlook.com [52.103.13.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F29275B1A;
-	Thu, 28 May 2026 13:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.20.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2AFE3F7882;
+	Thu, 28 May 2026 16:47:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.13.33
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779976462; cv=fail; b=PBKS8oEFB8a4Lar7B7/HFnkg6I5eTxKhydt5vhybjEqP0noPeMsFFOXJ8oEPQZvpXmYdi1FNnNZYpbE9/+/kGcv2l8hM9Bqqr22WA0zrGgJ+wCfLM3xWIsAS+ORFqujzsEkYxWC+nU5aXs73T0uFmsg7jJqQd7icPbYLsn8pDTg=
+	t=1779986854; cv=fail; b=NkAsaiZEEqrkjf6MQ+l3wWbVn4pDs1qwrK57yc9PJzhjjDHYQQLZY0DO9RwtHsYuXwmyfWPgnFoucOnGXiCJ3R7xkZXtnJ6Wlmy/wSQ5hKXgxx7PXZvp7vJXWkaSBY4/+XYLlqWewoyDesYtw9BC0xnTtUOkDkGzwacbUVWSYcc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779976462; c=relaxed/simple;
-	bh=0kttSxputzrZ2nk+Yg4XD+x5n16GYrc/8Dp4PAQwBi8=;
+	s=arc-20240116; t=1779986854; c=relaxed/simple;
+	bh=lt8LT2UQ9GXPtyInK9wBJAWKPbhOBhYdm6B8A7B5dTU=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=FY8NXkIuxxx7rFxDZU536nYaA8yX2Ec8BTV4wYJmJyY9l1VOLiURY8WG+88We3Z/HZ+lq8d6c1iYvuixbexFs0SEa7zn6fJXeMSeSFwuEKxmbzqRMfKJHyWkrHE4zz/AUgLAWWgBZWo7H037Wyf03GPaJOTb925sl4f6rpaI7ZM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=hWKWBe9Z; arc=fail smtp.client-ip=52.103.20.86
+	 Content-Type:MIME-Version; b=gmzGrKcfxNfVTDhSxtcUqIFFzHnuTX56mIS50qZR95CIXQJOmsSjvnRkh4d23r2HCjE6bM5ItiIkBdm7cjHW6KPWuU8BQ9FIjHX5aO3B5OCwARshn0Dk1JF1wfRs0XFfcBYXAi1S/uK9216qfI45cRUup+iz7Trl/ggiYfZ2jW0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=iZB2yKA+; arc=fail smtp.client-ip=52.103.13.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DBhU+PLwB6con+xIrbuFeThCpfyLOO5t+9/OVF6OG6gEl9B0+238rsNs45uNnktiyR0miAQMQhasS5pXJWjz1IBAoHSwmvgBr7uLpKKNPuHM6Qs0CvUF1gxyqzlPRu2o/B4leIeuF1OpWvcQbPxTDCAXRgUwzEWXmUIWoYu3aDOau5T7lOP6jRQZgQl81wZRFgB+63/Qt9upG/kXnjv3O8e23J3mFYWrKGbwKAAe3ZNje3tk/03oYzLMF3LKeAKgVqDuVMKbQRR+L+Zd4VbxKSyjcRytX/D+Z/JazGmF44TMf0FCJD+hcteTkaz00F8Wr8WgG1L8FzfZDAbID+luHA==
+ b=rm2OJpBsMMulBEE/xfv+gn227Rw857VnyGJ4UQwlnHlxz4kWLhQ4u2rhqv6+UmMe3gymB7PMW8w5KY83o3aXBZjY8vnZf7UziFtgMMsR1oMh0WrcoiArGdNPxxxOCysg/xoqE07hDGEM83E3C8XnQTypnwA2DzdVx/2RAQM87sCUA+FfKagx3RXtqzeGk8bo3/g+djgJerrcTHPwx1/2jtkjJ8exoAm2vdPSiOgSfpk00bWzUSZSYWaeMfL6HPpMmm80e4Lti5/2Oy2U8NaIiKJyv+bxkQwyD7A+LTuVrqAuNbT+cQXmc83InIRad+Vs/qvt7JN2zYRn80GFku44KA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TLHtXXW3t5imumU6tX5NvOAaMXNw1RdDRNwA2GPcDfI=;
- b=R8e9/8capRsk+evHq5hYSmfS9N+hgfcQ8yO+SjlfpmmCWnC2b2dmV+WpGpJwP6xn+FfTXskvSFWHSmmEPMOrFSJcjJRYHi00QHb0rErn3h7n4T/2gAdJ+lG7b1+zUbC/yN1DEPxwBxWAa7HoTGUaDXHnmad2ns6hVaf7ZMHSYCYp1suGGSwjaWOeUaVXhr3nDMkqzku0GVjrOVy0Yxeb2y+lpkjOuuhdwezgGgqeExguWAKhesKKpOMEHj7YgwFDQj7KBxMBg7vIIgnWWIYCDCGBO1cjOUX6jAennz7PNTgSMYQJW0KKlFA6oCpTFZ3FLhyFZujXZjsk7cWDTIKqOw==
+ bh=FbgRav/HWaX2oNTGIeENhzI92Jz35dHYMBO7mYxiYWc=;
+ b=eQIJF1YoJNzQ9to7qJ6Arw+w7b9iQO6yZNsMUPGgyGB6mAHjzgECuVdq6x8l1guDTYwrfh7mX0GQLadQbfSc1U9cagWXomXZSfbLj0kQwSdGnUWx98h/1gnD6syyZH++7GeCiCoM4CH/EfhzhLVAkl9/BmZcFuwDmNWobuMDLYnSVJDaFePWG/Nj9A9IQCtMpf+8sKl2ZI/vYLGHlhUfVybkDZpAi4qaAyfxMg/JGOdSalvWpTaZwYJEUV3gvRiwELTOjEdJEH92Cw/q8//1CbH/9QMd/imS5ve8007NUrtiqJ46Jt1/NHAYYBdx87DjD94KFa/orgqOJvGK7Ep1vQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TLHtXXW3t5imumU6tX5NvOAaMXNw1RdDRNwA2GPcDfI=;
- b=hWKWBe9ZokbB2NhNP2w2wsyBIAMGn1KHAK7j5Z8f9UdipJ+kVWd1vDSDBMSdteq7VNlzQrN4hhdpZ1dIexVXFWNe9OEoyJMAY8g34fxs+8rkWX0JVJq+AULqCVzqiFApsymKLWC2i6s4MNtCYKh4TTvLjc63vBSVrZrQ1piOdMCRmqV9ZQUMXK64RZt550dCfbHsFS457q7SxRfyfbsmOZEvQB5sQM6GVb15aaQkDHPfPWJcRf3dTrJ/izOE3OCOQHTkgKDAkflvGPoAqR3Vuw0xFqwGXT0K/KhtsM/Er/myiTpClqunr9b8/UOQyNmBfy5fo8kvFB/kVVtqg3toTg==
+ bh=FbgRav/HWaX2oNTGIeENhzI92Jz35dHYMBO7mYxiYWc=;
+ b=iZB2yKA+EbNdpMGqjM/Tf7jYtnzS6kIkwJftLs+MNloItqQpz9TJCifi7+UDPAJ8g2RW84WjmiOhPeOfukFitrNnA1/swtES4yHW71QN+44MPxPNcGca1XZTkCt9wbzGfF8DyjN1B2Ga1lJq0Ft+JzJmXMMTLB6n/kifUKIo98RZwObIc7s4r2eKBPcCFwxnu+KRdVdgjrvr3ncWYAl63DT0JXqV2G+31uPsy1/Of7Rv2J1r6hYhII/mKhNev7CS4BmMJwuQd6vuGlma/u/yGsgBdj+D2wZuQ4zF8DbY44HKv0rd4+FL70E71TS14/u8mvwYyuq5CJoQky1Vn+XY5w==
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by BL3PR02MB7905.namprd02.prod.outlook.com (2603:10b6:208:350::22) with
+ by CO1PR02MB8473.namprd02.prod.outlook.com (2603:10b6:303:158::12) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.14; Thu, 28 May
- 2026 13:54:12 +0000
+ 2026 16:47:30 +0000
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::900:1ccf:2b1e:52b6%3]) with mapi id 15.21.0071.011; Thu, 28 May 2026
- 13:54:12 +0000
+ 16:47:29 +0000
 From: Michael Kelley <mhklinux@outlook.com>
-To: Dexuan Cui <DECUI@microsoft.com>, Michael Kelley <mhklinux@outlook.com>,
-	Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
-CC: "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
-	"mripard@kernel.org" <mripard@kernel.org>, "tzimmermann@suse.de"
-	<tzimmermann@suse.de>, "airlied@gmail.com" <airlied@gmail.com>,
-	"simona@ffwll.ch" <simona@ffwll.ch>, Long Li <longli@microsoft.com>,
-	"ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: RE: [PATCH 1/1] drm/hyperv: Replace "hyperv_" with "hvdrm_" as symbol
- name prefix
-Thread-Topic: [PATCH 1/1] drm/hyperv: Replace "hyperv_" with "hvdrm_" as
- symbol name prefix
-Thread-Index: AQGYZGmpZbciqp3jXtRxdrQwqzIko7aq6eCAgAAhusCAAEsHcIABM3WQ
-Date: Thu, 28 May 2026 13:54:12 +0000
+To: David Woodhouse <dwmw2@infradead.org>, Sean Christopherson
+	<seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner
+	<tglx@kernel.org>, John Stultz <jstultz@google.com>, Michael Kelley
+	<mhklinux@outlook.com>
+CC: Vitaly Kuznetsov <vkuznets@redhat.com>, Marcelo Tosatti
+	<mtosatti@redhat.com>, "Christopher S . Hall" <christopher.s.hall@intel.com>,
+	Stephen Boyd <sboyd@kernel.org>, Miroslav Lichvar <mlichvar@redhat.com>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, "K . Y .
+ Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei
+ Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, Daniel Lezcano
+	<daniel.lezcano@kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [RFC PATCH 2/8] clocksource/hyperv: Implement read_raw() for TSC
+ page clocksource
+Thread-Topic: [RFC PATCH 2/8] clocksource/hyperv: Implement read_raw() for TSC
+ page clocksource
+Thread-Index: AQHc7WRU87pVGB1DykmPwn6q6AeeLLYjqIkA
+Date: Thu, 28 May 2026 16:47:29 +0000
 Message-ID:
- <SN6PR02MB4157FA02F09ED49D58F2B39FD4092@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20260526205239.1509-1-mhklkml@zohomail.com>
- <ahbr3aepFUuJ45Zg@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <SN6PR02MB4157EC6C4CE3BBE2ACC3E86AD4082@SN6PR02MB4157.namprd02.prod.outlook.com>
- <SA1PR21MB6921A2C91F67C10F272E9430BF082@SA1PR21MB6921.namprd21.prod.outlook.com>
-In-Reply-To:
- <SA1PR21MB6921A2C91F67C10F272E9430BF082@SA1PR21MB6921.namprd21.prod.outlook.com>
+ <SN6PR02MB4157D116CE958158638A2DC2D4092@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <to=b6d2173312b8d0469774846eb18b9799832d9cfc.camel@infradead.org>
+ <20260526230635.136914-1-dwmw2@infradead.org>
+ <20260526230635.136914-2-dwmw2@infradead.org>
+In-Reply-To: <20260526230635.136914-2-dwmw2@infradead.org>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|BL3PR02MB7905:EE_
-x-ms-office365-filtering-correlation-id: 96d3cb4f-d364-4ad1-e317-08debcc09982
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CO1PR02MB8473:EE_
+x-ms-office365-filtering-correlation-id: e2acae83-a95f-4a08-3f1a-08debcd8ce9b
 x-microsoft-antispam:
- BCL:0;ARA:14566002|37011999003|15080799012|51005399006|19101099003|8060799015|8062599012|13091999003|31061999003|19110799012|440099028|3412199025|102099032|40105399003|1710799026;
+ BCL:0;ARA:14566002|37011999003|15080799012|51005399006|13091999003|19101099003|19110799012|8060799015|31061999003|41001999006|8062599012|3412199025|440099028|102099032|40105399003|1710799026;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?ZqM/3LQC/bfvnfUDUDc2+L5ND7SJO2LdjfaFw8HoLalByB9m8Qwc6CbbRqAO?=
- =?us-ascii?Q?9VFpVG3CRAUYcQ7M+WWP6uMIoy68jyjeBbDNSlz2VCo3q3YsqOa4VlKF4dNp?=
- =?us-ascii?Q?KmoOHLmRr0xYmdUlRVF7QHyMKjLvVoaBoaU9xTF2fmX1aPrvTGzXWe1WpQuY?=
- =?us-ascii?Q?3NclXwr+aGcbqp6akKF8A5sk4qu6DHt22GjbnbUx4N/2r7dd6zULwy+6sKBr?=
- =?us-ascii?Q?swtPIK6MYpstMMV5849G4VGxevqL0WxZjcyXc2i3sNKIsgSxKZ9/j2YpnpvC?=
- =?us-ascii?Q?eYFdq031E7mbxpqM0g28+vqaqRIjYrciWBLRxSkHlYABM4kgUqB0vKFqWyZW?=
- =?us-ascii?Q?mbNd5sDGKRCRd8lPXD6/wFCriQ/ZM0flGe+KZfEeZnrmQT9dkvXI9r2bxFpP?=
- =?us-ascii?Q?Jnf+Ulx1RQo+RGd//WKqMw4wr7TrruLetNONRQWn/Qc00BbEGd4XuCIj8M2L?=
- =?us-ascii?Q?bnLJlI0gpd0tnamva0SpdDY+HFUTcHSJiD76xH+xGJMvXdFxeb5H1RHX7r4T?=
- =?us-ascii?Q?MaXIDuR5ZxTPU+tliKFHRHzExYvNoLUHRRl02jR/g2SKAxNGuG905hNnZHON?=
- =?us-ascii?Q?0c9KTnMpdcxq0/WObxyJFSqTgebYy8Zcp6O49UVUVOg0101E4al2wbEyQa7i?=
- =?us-ascii?Q?YYassDpU03MBF4ePa/HFDLoWkLRJjYFjGdD5AMfAR5mGda1D4SVUsvc2Akuh?=
- =?us-ascii?Q?2UCz2+xstb5QLO/L9TTp7ZLGPpXsFZbtsXxZpz41eJXLuQI7mPOz7i5zrs2T?=
- =?us-ascii?Q?Fln20bbDn4XtpjUFyP4O0K21bLq7Ol+nULmiPgSCsARTHKOfmsKvHFClLwsh?=
- =?us-ascii?Q?a1jFqDm4hequVAd4VpRgp3xPgnXVzeNK3rewHeP9ZdNNDsupaGPjFI0Yqy/t?=
- =?us-ascii?Q?+GJpG9TNFD1KtzJyyjNlBAdr5cVmBFoP1LnVcTmH9nMyBzmrmibgW6NwwIuV?=
- =?us-ascii?Q?MJf50N072JFe/rBTw5imotVd+/4ETpEX0UtjtYdgkcBxGt4BaU/cXoqygjZl?=
- =?us-ascii?Q?RbYC7foR2P+IyBoOzUp3Ef9anQ=3D=3D?=
+ =?us-ascii?Q?y82bsAe1fmshgJIqUwrQCUjWAKqqYyx5ar16+2SYelO5CzbQy21A7Bcnz8uG?=
+ =?us-ascii?Q?V/aPk0knmi0d+bvmDaGZuHKx+G/wCYO4BWV2MRc5jz/irNmW04jOgMxASHkP?=
+ =?us-ascii?Q?o63dHpl0U4g/sv/YBx0rqlkr97Fsv+3xh5UR1t/Y+QGBEcxudMMaGB4T7QEn?=
+ =?us-ascii?Q?RYlH8ae1kKleo9jV1TQeRXQo6FFg/4O0ZHr36MCeo1T+WZYYnLSvejHBz0X5?=
+ =?us-ascii?Q?r+CiF8CeXjJSyZWK0s3qFMdb5brX4hoX+z4R45aKuscN+Ft5la7gH7mQ+2XL?=
+ =?us-ascii?Q?/SryHf/VWIpaE1t2p/r0T9kMJcnLYOFiTFWeQMW96FGlxh18i8E0sU+DRy98?=
+ =?us-ascii?Q?Jse+IqpIvtVwVsNr1HAmUTQmrfT0FCXj2ivE+O2LfmIIvMqkSnJi4pvbQcvc?=
+ =?us-ascii?Q?QNKSrLl42JQwRptchjU9HrMoagaXdld5WzfAwQp1g9xtEtVV+CGsH2wvRt5r?=
+ =?us-ascii?Q?5r9HTBOlz0GFrg3EAnauZYgU4i/AMHXmnaKvYhFfIXt6w7LrY/rmH3DuLTJW?=
+ =?us-ascii?Q?UgdxMJVPeIZ4kEUtY6Nm8CMtIi9SstmGapoS2QhSEw7gAEqwMD8UatKdWT6i?=
+ =?us-ascii?Q?peVQKvrSm7LJRzpnLPw806dvlpPiRm05pD5skHMvTQwPxbxp3GZMMgf1iyRR?=
+ =?us-ascii?Q?KUMB7FMYpZQeVZUGokiRhvjLmHf5vGFhq4lr39cQYXHDu4K2V2M3uDeovy7x?=
+ =?us-ascii?Q?nobsVRJeKgAp+hvlWg4q0J7zDd2CZZOqR+LfSSYqT+ac8rHvtGbdazoee0v2?=
+ =?us-ascii?Q?Leq2BZcu8H0H6ukAGm3e8qGyguuzBkLAAawlJGnjayXbQsETpJGbW/3qJ+oL?=
+ =?us-ascii?Q?l/2bR6/Xc5FhQ/G2D6DEaq7f7mNJaPjDvw5J3eXh5pvqyGuvbleIRss98I+m?=
+ =?us-ascii?Q?IURYs2Lh0Tx1fWrFycWay+HUKWcdvACFWq348wHhn2ouS3I/cdVzoxcQ89LR?=
+ =?us-ascii?Q?Ybnq5zwrMO+DuQUCR3QkSOUVZMiJCQQr4dgSVh64ANKI14u7nYZLlQCvXWc0?=
+ =?us-ascii?Q?0k3mEpkFTU/9mrfAMnn1qz+U/kDWpjVZl531sIpD/HHl6OyaG67sMxzD2zzP?=
+ =?us-ascii?Q?wZVgmRfX?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?rolPEmSvFbwkbfppHNYBwXCqCqBqnbgIALn4vSXUoFSg3kEKJ9F/bwo2jCkZ?=
- =?us-ascii?Q?o8kMy9+cV9TFxEG5+gNLzqw1yQsUJJOdw7zRshI24CMrJQlBIpugH8QRRuSX?=
- =?us-ascii?Q?2BMeyKObNfd3sFth3ZOJd3t3EkI4to5LjKRe3TCAIenKwyS2vASBi1PS+5Wt?=
- =?us-ascii?Q?6U8mD+sDBMKkOzIMluFb50EjNF/WIYM0408aPI/xc/F/IdAVtO6dt8osV+eg?=
- =?us-ascii?Q?F2YzZ+QXs7znM4qBfIBbTVXhUvS2Doe5NQAdbECQ9gbnTXpBH47fAMQ/y0w3?=
- =?us-ascii?Q?4mceWg0KI/epEKLEEsz+5xQh79nrZaBbkjEoEJORzc/cFLP1GI1inxyifqfJ?=
- =?us-ascii?Q?loTzgDv2en+OZyDSHtoYeDjdj3oiFn5L5cZ0BKjBQIq/IdQy6QpNAPDqewRJ?=
- =?us-ascii?Q?Vgn+JnoNSv2RmTHTXaY0qzJtb8phT9t6nRnvMbje3s1dBTWXKaFkaG0DJ+4v?=
- =?us-ascii?Q?IAOeUgCuJBaqrzVMNVCtMczac1rEDZtdTIRn01lvwG35yHQD94uGHgaCDkrH?=
- =?us-ascii?Q?KJ4iqoXzdvTrfFOodUjUq4rYPCISB4O0e3S0M76DvVnChCqX9QLTsINX0BCM?=
- =?us-ascii?Q?XhoVp3fWiz9fpejTf7c6IlPY5lnO47XYKrAn1/MtxYsJ3L3+z5eAhuc31Eu/?=
- =?us-ascii?Q?OydNX898I99d1nQ+A5NW5WkNr2RZ/t4Kz6b0LBDAQL/D3w5WF3cJxaJmZMs1?=
- =?us-ascii?Q?oR1YC0fwyro6kN9kxrdmRbKer3IYkuAefJye57/vjYl5ejrfFTl49jNrfiv0?=
- =?us-ascii?Q?xOaB6NKWr2wm5WJTPOFj+61KaG6WRlVasHJ99sL/epcPb4VXFYD2L9W0e7oG?=
- =?us-ascii?Q?5ycuufwI2T51i2+bhTGCYa0A2R/AV7bqojycWbb9C/boVvQoKRyas7+z/AHL?=
- =?us-ascii?Q?g7XQ54HpNH+9OTn7idyauboNXvl5rf0UpQpZzScLLQtW2Q/2U2saeyr50UDU?=
- =?us-ascii?Q?N/6QSvqCiMk0JSiyt8SY6P2b9wJEVOi1UF5K0x3mEGkEuqUSOA7vlgijIsYO?=
- =?us-ascii?Q?eXibG8t7fns5cSGG8xpUWplM1Rb0URPGPGKOhyedZ6dRHBZrzaXouKx2eb/q?=
- =?us-ascii?Q?bS9ZkXh0Rx87CjT/gh2bzcu9/OQHtvXD6QwP9DLsEBqln+pARvXjoVxSUvDX?=
- =?us-ascii?Q?iVncDE5jYCFknZnE+EHexXlgMm5KZGYaVG08FAx3yPB4rF+ww8Q+Y6PR/MwK?=
- =?us-ascii?Q?g6EM2nj4ehAu+mjEsI7koHVfgRF6OEId+sDEecfKlQpCHvH8H54nBNgWsr4w?=
- =?us-ascii?Q?+tTdgLGeuxXQ6j0uIaOBrZu1dKVkUSx7vZFGvRAGn2wAkr7hXWW6IqqQI2F4?=
- =?us-ascii?Q?DzddkdheHzfnjM8R0bpkhTryUeGUCOzmyyPRPN4cU1+Det3OLc3Vgv+vtLWn?=
- =?us-ascii?Q?c2PWvho=3D?=
+ =?us-ascii?Q?CYJsY1rwN5MqqH8LF+HUcN0wRrPDMmy06WuAD4rokIt9UX27A6TOE5xcVjdQ?=
+ =?us-ascii?Q?XhscWon2HG7iNimSNQVA50H35p1bAzvp7Z836XJHq3oa4LHDqnclJn3xnmyn?=
+ =?us-ascii?Q?I/ECGRy7KrcyNgWYAV74BfLpBy+MWj+iyRkZ8T0v+w4ypmrN1hFQgSxa2OLN?=
+ =?us-ascii?Q?PmhbpR3dccbyagmXV2SSBC4vVpUyS19/hdVbkJ6a1zpUG90aMGW+5e6tUVFL?=
+ =?us-ascii?Q?SQt5+cSBEJ8V25Hcm9ENh/UhmiVWpDJGtgdqxJWW64bqiCuVg0qpRa5ZDLyJ?=
+ =?us-ascii?Q?COo66Ku4na0MlExB9gK5CaUR5Bg5p0hNH6hA2n40eFYshOzLGN6boTcpjiDC?=
+ =?us-ascii?Q?I5L0RqlKWbDCIl19Ks2EOFwI2glzETY5BzjsUJ+BycN4GyaHnjBqonGwzOa8?=
+ =?us-ascii?Q?LUPbg3oCZeWbRPZ3ljF/X4v4upif8Kbqj2niTefmlmAnJuy/Eg/uR8Td49AN?=
+ =?us-ascii?Q?WOc6n1D4eUr/aP3aqv1p68N1QaGFyLaiutLY1l8hUGvR7PL2oa7MMgwYVPDp?=
+ =?us-ascii?Q?oV5d3veOdssRM82Y/7pYK3lAVvcqTB6x1HmcChOV1aqsUK5vyZngsNJkF5by?=
+ =?us-ascii?Q?b31uopdlqNDAyT4kN4qcQd7cloblhbKfSEE7p9Pk79EEQAmlTXlasfup7Shy?=
+ =?us-ascii?Q?RTYMKLw3IqqUhW5DKpuUuMSxdNYNRvT0zIhYbe/eK9TqU7jh57xfoBtg6b+g?=
+ =?us-ascii?Q?EAx3bHPx2B55zZrg145JNit/gKZAAuJpoVQQMPFoOFqnN0vut1ZO3S1/6Hu4?=
+ =?us-ascii?Q?VA4ZIW65cRCvccI4mGGrGHoPwTOq1T1saM58c1+tJs57nlY8Q5kh+3Lgh7P0?=
+ =?us-ascii?Q?1QCWSme+wbj6VFs0pBoPYKP616/PrOejzXCkayyeI9iWhj3/8hAVblYVio5M?=
+ =?us-ascii?Q?y6XPXGcQCe1hbUhG7yPYaBfd1sow3N+dRysU5L8sx8JHkE1pQkL0wjVdQCcF?=
+ =?us-ascii?Q?uVXJyRFW4vqaKwRNfpkCzF9dWpEIJScwuaHsu120WcHngL3PAqeTLBFnF2Kx?=
+ =?us-ascii?Q?DcuzcqjNqiz5hLvela4AiNfD7Iol9YN/8QMiZBzbq2gGWnAZM11n8sYNCmv1?=
+ =?us-ascii?Q?4PUUVJIBZCSNKKnCcVG9jLhLNcxTcUiQvRGR/VOC+u3D6jQovlk/cRpWwbqp?=
+ =?us-ascii?Q?eFLk5YWP1TslbuIicqDtNZL4qasNDUNIMSkRx1jUaMHi16YOzNZr87g9+jSm?=
+ =?us-ascii?Q?om7Pp0VXyUt+BO07aih9WQ9VaefAS4IYIKvXcy35pl1RkXG6K7Ufcy68hII4?=
+ =?us-ascii?Q?W56bVFdcPGDCszpSMFKtlYDuOyxx75LROvjmghlCocHZd0aQHgw7Mblajt2+?=
+ =?us-ascii?Q?P6SqlSbVOZ5PZJmIrna76a/UEjiC2ytOg/htIGGG9G9epsfTUIVQJMTpDjFC?=
+ =?us-ascii?Q?uF1mUVs=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -148,115 +152,112 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 96d3cb4f-d364-4ad1-e317-08debcc09982
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2026 13:54:12.8136
+X-MS-Exchange-CrossTenant-Network-Message-Id: e2acae83-a95f-4a08-3f1a-08debcd8ce9b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2026 16:47:29.7991
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR02MB7905
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR02MB8473
 X-Spamd-Result: default: False [-0.16 / 15.00];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	DMARC_POLICY_ALLOW(-0.50)[outlook.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[outlook.com:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11310-lists,linux-hyperv=lfdr.de];
-	FREEMAIL_FROM(0.00)[outlook.com];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11311-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[microsoft.com,outlook.com,linux.microsoft.com];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[linux.intel.com,kernel.org,suse.de,gmail.com,ffwll.ch,microsoft.com,linux.microsoft.com,lists.freedesktop.org,vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_FROM(0.00)[outlook.com];
+	FREEMAIL_TO(0.00)[infradead.org,google.com,redhat.com,kernel.org,outlook.com];
+	RCPT_COUNT_TWELVE(0.00)[24];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[outlook.com:+];
+	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	FROM_NEQ_ENVFROM(0.00)[mhklinux@outlook.com,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[outlook.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-hyperv];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	MID_RHS_MATCH_FROMTLD(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,outlook.com:email,outlook.com:dkim]
-X-Rspamd-Queue-Id: 7004B5F359C
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,outlook.com:email,outlook.com:dkim,infradead.org:email,amazon.co.uk:email]
+X-Rspamd-Queue-Id: 49AA35F54D7
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Dexuan Cui <DECUI@microsoft.com> Sent: Wednesday, May 27, 2026 12:55 =
-PM
+From: David Woodhouse <dwmw2@infradead.org> Sent: Tuesday, May 26, 2026 4:0=
+6 PM
 >=20
-> > From: Michael Kelley <mhklinux@outlook.com>
-> > Sent: Wednesday, May 27, 2026 8:05 AM
-> > > >
-> > > > Function and structure names in the Hyper-V DRM driver currently
-> > > > use "hyperv_" as the prefix. This conflicts with usage in core Hype=
-r-V
-> > > > and VMBus code, and incorrectly implies that functions and structur=
-es
-> > > > in this driver apply generically to Hyper-V. A specific conflict ar=
-ises
-> > > > for "hyperv_init", which is an initcall for generic Hyper-V
-> > > > initialization on arm64. The conflict prevents the use of
-> > > > initcall_blacklist on the kernel boot line to skip loading this dri=
-ver.
+> From: David Woodhouse <dwmw@amazon.co.uk>
 >=20
-> I also hit the issue. Thanks for the fix!
+> Implement the read_raw() callback for the Hyper-V TSC page
+> clocksource. This returns the derived 10MHz reference time (for
+> timekeeping) while also providing the raw TSC value that was used
+> to compute it.
 >=20
-> > > > Fix this by substituting "hvdrm_" as the prefix for all functions a=
-nd
-> > >
-> > > I would personally prefer "hv_drm_", since it seems clearer.
-> >
-> > My choice of "hvdrm" mimics the old Hyper-V FBdev driver, which
-> > uses "hvfb" as the prefix. However, looking through everything that
-> > starts with "hv" in /proc/kallsyms, I also see prefixes with the additi=
-onal
-> > underscore.  "hv_kbd_" in the Hyper-V keyboard driver is an example.
-> > The Hyper-V utils drivers have both forms -- I see "hv_vss_", "hv_ptp_"=
-,
-> > and "hv_kvp_", but also "hvt" (for Hyper-V Transport). So the historica=
-l
-> > practice is inconsistent.
-> >
-> > I'm OK going either way.  Does anyone else want to express a
-> > preference?
+> When the TSC page is valid, hv_read_tsc_page_tsc() atomically
+> captures both values from a single RDTSC inside the sequence-counter
+> protected read. When the TSC page is invalid (sequence =3D=3D 0), raw is
+> set to zero indicating no value is available.
 >=20
-> I also prefer "hv_drm_".
+> This enables ktime_get_snapshot_id() to provide the raw TSC to
+> consumers like KVM's master clock when running nested on Hyper-V.
 >=20
-> > > > -struct hyperv_drm_device {
-> > > > +struct hvdrm_drm_device {
-> > >
-> > > "hvdrm_drm_device" looks kinda redundant, perhaps
-> > > s/hyperv_drm_device/hv_drm_device would be more sensible.
+> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+> Assisted-by: Kiro:claude-opus-4.6-1m
+
+Looking narrowly at just the Hyper-V clocksource code in this patch:
+
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+
+> ---
+>  drivers/clocksource/hyperv_timer.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 >=20
-> s/hyperv_drm_device/hv_drm_dev/ seems better to me.
+> diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyp=
+erv_timer.c
+> index e9f5034a1bc8..c5ae01fdbd8e 100644
+> --- a/drivers/clocksource/hyperv_timer.c
+> +++ b/drivers/clocksource/hyperv_timer.c
+> @@ -444,6 +444,18 @@ static u64 notrace read_hv_clock_tsc_cs(struct clock=
+source *arg)
+>  	return read_hv_clock_tsc();
+>  }
 >=20
->=20
-> > Yes, I'll make this change. And in looking through kallsyms, I
-> > see that the Hyper-V DRM driver has "hv_fops", which did not
-> > get changed in the mechanical substitution because it doesn't
-> > start with "hyperv_".  I'll change it to hv_drm_fops.
-> >
-> > Michael
->=20
-> Some comments need to be updated accordingly, e.g.
-> /* hvdrm_drm_modeset */
-> /* hvdrm_drm_proto */
->=20
-> This needs to be updated as well:
-> +static const struct drm_encoder_funcs hvdrm_drm_simple_encoder_funcs_cle=
-anup
+> +static u64 notrace read_hv_clock_tsc_cs_raw(struct clocksource *arg, u64=
+ *raw)
+> +{
+> +	u64 time;
+> +
+> +	if (!hv_read_tsc_page_tsc(tsc_page, raw, &time)) {
+> +		time =3D read_hv_clock_msr();
+> +		*raw =3D 0;
+> +	}
+> +
+> +	return time;
+> +}
+> +
+>  static u64 noinstr read_hv_sched_clock_tsc(void)
+>  {
+>  	return (read_hv_clock_tsc() - hv_sched_clock_offset) *
+> @@ -495,6 +507,8 @@ static struct clocksource hyperv_cs_tsc =3D {
+>  	.name	=3D "hyperv_clocksource_tsc_page",
+>  	.rating	=3D 500,
+>  	.read	=3D read_hv_clock_tsc_cs,
+> +	.read_raw =3D read_hv_clock_tsc_cs_raw,
+> +	.raw_csid =3D CSID_X86_TSC,
+>  	.mask	=3D CLOCKSOURCE_MASK(64),
+>  	.flags	=3D CLOCK_SOURCE_IS_CONTINUOUS,
+>  	.suspend=3D suspend_hv_clock_tsc,
+> --
+> 2.54.0
 >=20
 
-Dexuan and Hamza -- thanks for your feedback! I have incorporated
-all of it into the "v2" that I just posted.
-
-Michael
 
