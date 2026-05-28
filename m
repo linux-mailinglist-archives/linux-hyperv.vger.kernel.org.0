@@ -1,61 +1,60 @@
-Return-Path: <linux-hyperv+bounces-11297-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11298-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eO/zNVadF2rXLAgAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11297-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 03:41:42 +0200
+	id aX5tN+GeF2rlLQgAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11298-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 03:48:17 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 379C05EB950
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 03:41:41 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35E965EB9A7
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 03:48:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 439FC3035815
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 01:41:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CD46930A3637
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 01:48:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3E052D0C9D;
-	Thu, 28 May 2026 01:41:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16AA619F11B;
+	Thu, 28 May 2026 01:48:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fd+4Ghbb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KLS3oTYc"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE18527E076
-	for <linux-hyperv@vger.kernel.org>; Thu, 28 May 2026 01:41:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D454E19E819
+	for <linux-hyperv@vger.kernel.org>; Thu, 28 May 2026 01:48:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779932499; cv=none; b=mm9NE0xoQQEOWVL9beL5AI+gRrgLYZc9rxs48OYwIAim8hop8G46o95zT8kUa50X3ytIb4B3kHzF8IAsQXdHl5IIuGnK8AiS3UzZOkA0GvnOtl5VUR2GfAL/ig+dUL/hZQZly2aNJEkGN5bCftD6ePqAkc0UbR3w6zKVIQzyGZo=
+	t=1779932894; cv=none; b=IpH46+mfiy6hpMb3ZgDF9KdoKoEArWzR22oBZzGF5jL4GwHoegi5EtBrSMdp6AqGPVCFmArVe5+M1ovjIIjXyKkAopGYQh+21xArwEOi0FJkoUNtnNYZ0Qh6Ra5HO0Rism598hFZWjBR5J+DMbV/a6Iemxdy1v60e5TT7N8U7mE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779932499; c=relaxed/simple;
-	bh=1NNlFY9FnQ1MOLm3iSriWaGeUI/I4tkQcsaDqoB/Ftc=;
+	s=arc-20240116; t=1779932894; c=relaxed/simple;
+	bh=aKhgTyu4AqrG15kaRNG9I/QZVlpmw1pGD96NWRs8XwI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=WD1EyShaOdWGG2rAF/Rj/I/7MeC+o7MqUUHw3tnuEUodrn4cCo6iy4mL4ClS7zvefjn8yRFowrlWHPSx5MVEbj0QVvjyhaF0B/8B4tPpdSO5sMwNxSCDZZtvFeMCe3GQoD8Lxm20I/qcv3nSnITOM1W1lpfAU7eN7UJ6TsWAcV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fd+4Ghbb; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16A4C1F000E9;
-	Thu, 28 May 2026 01:41:38 +0000 (UTC)
+	 Message-Id; b=Shc6U66uKh3VzJJUX0C1REUvsDhwkubAXr+QIPTLDmqGoTnB9ugnNFpO7I+G9+D9i5Aa+PtYsv9NIiDZPsWqXbPsipfekLKoUnxTyaNwMqnZx4kHiFaEuSSYDtBAGlQRkHqrdB4jo+QneVF39hrhIdnCbV7ONgB7UM/FryjLKXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KLS3oTYc; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DF601F000E9;
+	Thu, 28 May 2026 01:48:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779932498;
-	bh=KfaWjkdQMqPjozLOhKgWZi0hHw2HAADkp8aLkx4IMKw=;
+	s=k20260515; t=1779932892;
+	bh=oKrosg7WWvXhkpwAVuFfYpER/s+YN2zqhUdY1qUl3Dg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=fd+4GhbbjHlC9pdkrO2q1OzW6kzvOi4ehtvpPjp3GKxvsMQW0BYjSe4QbFyj/vgoY
-	 ubDBBBX3CipKJ1T+kYtHSxYSPLcsCoEV/vwbbM/tLm9R+R09uFqJft2Q0lc9ve6y+y
-	 kqfY+tjr5K3VXiEWW0vfTHEK6qG8gk9yNYVykrgRI4PnucT7cOcF1r7XfEbGjsctdN
-	 fCxQDptbj8i7Tue/9DbKqFGRXdwTHRMqvI2/JsD9ryJcl3J37rOQWlk47r2Oc1ZXIT
-	 pyCL1PP7F63/i5lsBPimKqvzRvMxQFXce8238P50tDD6uPCojOrU2Vl9i6H3gFUegL
-	 0ttsZfv82+eKA==
+	b=KLS3oTYcrXNFWsl9prbDqeuZdqQ2iBtCBidyvuo4ylmPdiOJIyCZjoQZVuaK28jim
+	 s0y6RPTzH4Lun3+vRDEZ8++2Dexiz77a5ss+BXroqF2Fif1/1AZia+/UZm93YtHJcB
+	 sBIbSrUkGNSIOkmYmMBOigWxlbnIVNdfeByoQ96Enpbigz6TDuOZUa+MMN0Wr90vWw
+	 EK657zt8VyuHiaO9aNFERAGCenJIH3iGjCD6eO+lpgAxyOy7M208Na+vMFNh+6CAZk
+	 BGTQqYKuQYczBPDoEPuqGExxqWxh0SybQ8UQKmskNp7BB0keBuM3x47V8kGmryYrgQ
+	 YP7/66LdYnmEQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH 15/20] mshv: Use page tracker to manage MSHV-owned
- pages and preserve with KHO
+Subject: Re: [RFC PATCH 16/20] mshv: Add debugfs interface to page tracker
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Jork Loeser" <jloeser@linux.microsoft.com>
 Cc: linux-hyperv@vger.kernel.org
-In-Reply-To: <20260528004204.1484584-16-jloeser@linux.microsoft.com>
-References: <20260528004204.1484584-16-jloeser@linux.microsoft.com>
+In-Reply-To: <20260528004204.1484584-17-jloeser@linux.microsoft.com>
+References: <20260528004204.1484584-17-jloeser@linux.microsoft.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 28 May 2026 01:41:37 +0000
-Message-Id: <20260528014138.16A4C1F000E9@smtp.kernel.org>
+Date: Thu, 28 May 2026 01:48:11 +0000
+Message-Id: <20260528014812.2DF601F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -65,13 +64,13 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11297-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11298-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
 	RCPT_COUNT_TWO(0.00)[2];
@@ -89,93 +88,144 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FROM_NO_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.linux.dev:replyto,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,smtp.kernel.org:mid,sashiko.dev:url]
-X-Rspamd-Queue-Id: 379C05EB950
+	DBL_BLOCKED_OPENRESOLVER(0.00)[smtp.kernel.org:mid,lists.linux.dev:replyto,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,sashiko.dev:url]
+X-Rspamd-Queue-Id: 35E965EB9A7
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [High] KHO radix tree is accessed without initialization if KHO is disabl=
-ed, leading to API misuse and potential crashes.
-- [High] Concurrent memory withdrawal during kexec tree freeze causes memor=
-y corruption and use-after-free.
+- [Medium] The newly introduced `mshv_iterate_preserved()` and its debugfs =
+callers invoke KHO APIs without checking `kho_is_enabled()`, triggering a k=
+ernel warning on systems where KHO is disabled.
+- [Medium] The error handling path in `mshv_debugfs_init()` fails to clean =
+up resources allocated by `mshv_debugfs_parent_partition_create()`.
+- [Medium] The `pt_tree` debugfs interface uses `single_open()` for potenti=
+ally unbounded radix tree iteration, leading to O(N^2) processing overhead,=
+ prolonged lock contention, and allocation failures.
 --
 
-commit 9c3872dd668bb8911798d680d377645cc757d8e0
+commit 0782bfee5c54e7b8251a28d7d1fba762890a41cc
 Author: Jork Loeser <jloeser@linux.microsoft.com>
 
-mshv: Use page tracker to manage MSHV-owned pages and preserve with KHO
-   =20
-This commit adapts MSHV page deposit and withdrawal paths to use a tracker,
-and registers these pages with KHO to preserve them across kexecs.
+mshv: Add debugfs interface to page tracker
 
-> diff --git a/drivers/hv/mshv_page_preserve.c b/drivers/hv/mshv_page_prese=
-rve.c
-> --- /dev/null
-> +++ b/drivers/hv/mshv_page_preserve.c
+This commit adds debugfs files to expose statistics and tracked pages from =
+the
+MSHV page tracker, as well as the scheduler type. It also adds a new API to
+iterate over preserved pages using the KHO radix tree.
+
+> diff --git a/drivers/hv/mshv_debugfs.c b/drivers/hv/mshv_debugfs.c
+> index 3c3e02237ae94..d79898e21b361 100644
+> --- a/drivers/hv/mshv_debugfs.c
+> +++ b/drivers/hv/mshv_debugfs.c
 
 [ ... ]
 
-> +int __init mshv_preserve_init(void)
+> @@ -668,8 +675,89 @@ void mshv_debugfs_partition_remove(struct mshv_parti=
+tion *partition)
+
+[ ... ]
+
+> +static int pt_stats_show(struct seq_file *m, void *v)
 > +{
-> +	int err;
+> +	const struct kho_radix_walk_cb cb =3D {
+> +		.key =3D pt_count_data_cb,
+> +		.table =3D pt_count_meta_cb,
+> +	};
 > +
-> +	if (!kho_is_enabled()) {
-> +		pr_err("KHO is disabled; page deposits will fail.\n");
-> +		return 0;
+> +	struct mshv_pt_stats pt_stats =3D {0};
+> +
+> +	mshv_iterate_preserved(&cb, &pt_stats);
+
+[Severity: Medium]
+Is it possible to read this file when KHO is disabled?
+
+According to KHO subsystem rules, callers must gate KHO usage on
+kho_is_enabled(). If kho_is_enabled() is false, preserved_pages_tree may re=
+main
+uninitialized (root is NULL), and kho_radix_walk_tree() will trigger a kern=
+el
+warning.
+
+> +	seq_printf(m, "Data pages: %lu\n", pt_stats.count_data);
+> +	seq_printf(m, "Meta pages: %lu\n", pt_stats.count_meta);
+> +	return 0;
+> +}
+> +DEFINE_SHOW_ATTRIBUTE(pt_stats);
+
+[ ... ]
+
+> +static int pt_tree_show(struct seq_file *m, void *v)
+> +{
+> +	const struct kho_radix_walk_cb cb =3D {
+> +		.key =3D pt_tree_data_cb,
+> +		.table =3D pt_tree_meta_cb,
+> +	};
+> +
+> +	struct mshv_pt_stats pt_stats =3D {.stat_file =3D m};
+> +
+> +	mshv_iterate_preserved(&cb, &pt_stats);
+> +	return 0;
+> +}
+> +DEFINE_SHOW_ATTRIBUTE(pt_tree);
+
+[Severity: Medium]
+Will this lead to large allocations and O(N^2) lock contention for large VM=
+s?
+
+DEFINE_SHOW_ATTRIBUTE() uses single_open(), which requires all output to fi=
+t in
+a single contiguous kmalloc buffer. Iterating over all preserved pages can =
+scale
+to millions of pages.
+
+If the output exceeds the initial seq_file buffer, seq_printf() discards the
+overflow, but the tree traversal continues to completion. Afterwards, seq_r=
+ead()
+will reallocate a larger buffer and restart the entire traversal. This crea=
+tes
+an retry loop that monopolizes the KHO radix tree lock and will likely
+fail with -ENOMEM when kmalloc reaches the MAX_ORDER limit.
+
+Should unbounded outputs use stateful seq_operations instead?
+
+[ ... ]
+
+> @@ -694,6 +782,17 @@ int __init mshv_debugfs_init(void)
+>  	if (err)
+>  		goto unmap_lp_stats;
+> =20
+> +	err =3D mshv_debugfs_pt_create(mshv_debugfs);
+> +	if (err)
+> +		goto unmap_lp_stats;
+
+[Severity: Medium]
+Does this error path bypass cleaning up the parent partition stats?
+
+If mshv_debugfs_pt_create() fails, it jumps to unmap_lp_stats, which
+skips mshv_debugfs_parent_partition_remove(). This appears to permanently l=
+eak
+the resources allocated by the preceding mshv_debugfs_parent_partition_crea=
+te()
+call.
+
+> +
+> +	d =3D debugfs_create_file("scheduler_info", 0400, mshv_debugfs, NULL,
+> +				&scheduler_info_fops);
+> +	if (IS_ERR(d)) {
+> +		err =3D PTR_ERR(d);
+> +		goto unmap_lp_stats;
 > +	}
-
-[Severity: High]
-If kho_is_enabled() returns false, this function returns 0 but sets no glob=
-al
-state to actually reject subsequent deposit requests. Does this mean
-hv_call_deposit_pages() will proceed and unconditionally call
-mshv_register_preserve_page(), leading to a crash when it tries to operate =
-on
-the uninitialized radix tree?
-
-[ ... ]
-
-> diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_cal=
-l.c
-> --- a/drivers/hv/mshv_root_hv_call.c
-> +++ b/drivers/hv/mshv_root_hv_call.c
-
-[ ... ]
-
-> @@ -69,8 +69,16 @@ int hv_call_withdraw_memory(u64 count, int node, u64 p=
-artition_id)
-> =20
->  		completed =3D hv_repcomp(status);
-> =20
-> -		for (i =3D 0; i < completed; i++)
-> -			__free_page(pfn_to_page(output_page->gpa_page_list[i]));
-> +		for (i =3D 0; i < completed; i++) {
-> +			struct page *pg =3D pfn_to_page(output_page->gpa_page_list[i]);
-> +			int res =3D mshv_unregister_preserve_page(pg);
 > +
-> +			WARN_ONCE(res, "Failed to unregister PFN %#llx\n",
-> +				  output_page->gpa_page_list[i]);
-> +
-> +			/* Free regardless -- HV has already released the page */
-> +			__free_page(pg);
-> +		}
-
-[Severity: High]
-Does this code introduce a use-after-free and memory corruption during kexe=
-c?
-
-If the reboot notifier calls preserve_tree() and freezes the page tree,
-mshv_unregister_preserve_page() will fail. However, the page is still freed
-to the buddy allocator here. The concurrent preserve_tree() walk will then
-visit this still-registered node and preserve the freed page, corrupting the
-buddy allocator state.
+>  	return 0;
+> =20
+>  unmap_lp_stats:
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260528004204.1484=
-584-1-jloeser@linux.microsoft.com?part=3D15
+584-1-jloeser@linux.microsoft.com?part=3D16
 
