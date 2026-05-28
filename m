@@ -1,281 +1,193 @@
-Return-Path: <linux-hyperv+bounces-11313-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11314-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qACWAoCFGGq6kggAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11313-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 20:12:16 +0200
+	id MDQdOC+yGGr9mAgAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11314-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 23:22:55 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9B855F6222
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 20:12:14 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC0585FA5C6
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 23:22:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id B96A130742F6
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 18:08:19 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id C659D3022651
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 21:17:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD59C40800F;
-	Thu, 28 May 2026 18:08:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E9AA3546ED;
+	Thu, 28 May 2026 21:16:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Ha0wD8K+"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="oxljY1ec"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E5E1403E8E;
-	Thu, 28 May 2026 18:08:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09B781DE4E0;
+	Thu, 28 May 2026 21:16:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779991696; cv=none; b=K1LmYdOrQszGT9n6zbpvT+BaOfeBJO2Dg7EF3nlv5VFkt86snGzEmD6wk1gA/aX+E0TabsD3wR5Ihb0i2PMurmty7x9bryZwWr57C/lJio4cWGyy/q6FliebZ//eXlztm6aHVeDU0UsskXqPa4sIQgpj8qj3guVn0XoGOQedvas=
+	t=1780003019; cv=none; b=YJTZU3UTn/czx4Z3zKV/SlOkFVrg9jg8ioOP1odSMT3mpmhRx/ZvVakYT9JBeaLBWzkgVd0wQmu7UHqnPI4scQuY6xkjlLwn9O/ToIXIm5n+dXM7lz72xp0kDFi/RGynTh1Znop91rgKn0Tn+Q5g6nYEFS3f0zOG0yapo5HCKbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779991696; c=relaxed/simple;
-	bh=R0170DRurt5KznohmtGzjOoU03o4QnlFYT7pbNh0Mfc=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=U3b3MfSesDmGOU8ydmDIu3e5LWpjlq9BndiMRn9uttdDavK5fpmBJ41WYz740fc0MP+qG3dDKwY3hZ38C9SLGNKrdr8FM+/AUDWheUBc2jFG2wPzTNTl5fgindSvnpHNr6wHqx73ZojEZbAfbSA4TwDXSps1P2KizbyPGJNoZOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Ha0wD8K+; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1780003019; c=relaxed/simple;
+	bh=38pz4NqruQ7wBjK5yjTDkm05+8lX2/2u1B/6m6gJGgY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=niudkmdGsailxAGATU4h6mnPwmN+IRKF5yktjELfz6UFgiMpRvaHFUSaRWBf/dMQYDocETstpiIyzjhfZW073PtxCIqLgwKbRN4yWHggwL/gYC+kjwJ0chMcMBj5I8Mw+IbxGnnJbN7mR+qGpOhp16+D52BcwPUDhN4eHiR63TU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=oxljY1ec; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1173)
-	id 4EFC620B7167; Thu, 28 May 2026 11:07:58 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4EFC620B7167
+Received: by linux.microsoft.com (Postfix, from userid 1204)
+	id 83E7720B7167; Thu, 28 May 2026 14:16:46 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 83E7720B7167
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1779991678;
-	bh=fmR34n8OOkEcXeaFsrYkS3bWekx70hrvA5+bSqAYTs4=;
-	h=From:To:Subject:Date:From;
-	b=Ha0wD8K+aRcYuKZoK5XXPNQbpCWAMoEP+bVpi8kt3UfiXApEI5reQFcZeg2Xw5WU3
-	 h7OlrgXF3F0/p1BNLPLyr7Q5w8IqqZAgEYSrhDM3p3rEJIUhUNKsmbaD5+7iGF5cZY
-	 BRJ7lhvs9UaRQp0sY76bhYL8aw4QkJA17O0qze98=
-From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	longli@microsoft.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	kotaranov@microsoft.com,
-	horms@kernel.org,
-	ernis@linux.microsoft.com,
-	dipayanroy@linux.microsoft.com,
-	kees@kernel.org,
-	linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Subject: [PATCH net-next] net: mana: Cache MANA_QUERY_LINK_CONFIG result to avoid repeated HWC queries
-Date: Thu, 28 May 2026 11:07:51 -0700
-Message-ID: <20260528180757.1536640-1-ernis@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.7
+	s=default; t=1780003006;
+	bh=6aJz6dNdMp8mRGp620K9ImecYGAxbYnYGNREUZ85Vi0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oxljY1ecC3PgUOdISZHneEszcepJkzRMDyBU3ugDN/m8yMvRUOSRb9VXFfujRu+9c
+	 8s8EsKjQyc2YmYOeQuuwIsNaMGMd5u+SwbOkXbz9lqvdqGLBvYwjgMOo0g7tDmUtKS
+	 zWhMom1/5vCe/kLKeBgYd9p/FfoTU+ZFEEQhE9xY=
+Date: Thu, 28 May 2026 14:16:46 -0700
+From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, leon@kernel.org,
+	longli@microsoft.com, kotaranov@microsoft.com, horms@kernel.org,
+	shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com,
+	ernis@linux.microsoft.com, shirazsaleem@microsoft.com,
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+	stephen@networkplumber.org, jacob.e.keller@intel.com,
+	dipayanroy@microsoft.com, leitao@debian.org, kees@kernel.org,
+	john.fastabend@gmail.com, hawk@kernel.org, bpf@vger.kernel.org,
+	daniel@iogearbox.net, ast@kernel.org, sdf@fomichev.me,
+	yury.norov@gmail.com, pavan.chebbi@broadcom.com
+Subject: Re: [PATCH net v3 2/2] net: mana: Skip redundant detach on
+ already-detached port
+Message-ID: <ahiwvsIJv1hdX0kT@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20260525081129.1230035-1-dipayanroy@linux.microsoft.com>
+ <20260525081129.1230035-3-dipayanroy@linux.microsoft.com>
+ <3665f7c1-9c97-44ac-8b6a-e6c31ad96730@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [0.84 / 15.00];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3665f7c1-9c97-44ac-8b6a-e6c31ad96730@redhat.com>
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11314-lists,linux-hyperv=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11313-lists,linux-hyperv=lfdr.de];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ernis@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_CC(0.00)[microsoft.com,kernel.org,lunn.ch,davemloft.net,google.com,linux.microsoft.com,vger.kernel.org,networkplumber.org,intel.com,debian.org,gmail.com,iogearbox.net,fomichev.me,broadcom.com];
 	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[34];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dipayanroy@linux.microsoft.com,linux-hyperv@vger.kernel.org];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	TO_DN_NONE(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,linux.microsoft.com:mid,linux.microsoft.com:dkim]
-X-Rspamd-Queue-Id: C9B855F6222
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: EC0585FA5C6
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-mana_query_link_cfg() sends an HWC command to firmware on every call,
-but the link speed and QoS values it returns only change when the
-driver explicitly calls mana_set_bw_clamp(). This function is called
-not only by userspace via ethtool get_link_ksettings, but also
-periodically by hv_netvsc through netvsc_get_link_ksettings and by
-the sysfs speed_show attribute via dev_attr_show, resulting in
-unnecessary HWC traffic every few minutes.
+On Thu, May 28, 2026 at 11:30:39AM +0200, Paolo Abeni wrote:
+> On 5/25/26 10:08 AM, Dipayaan Roy wrote:
+> > When mana_per_port_queue_reset_work_handler() runs after a previous
+> > detach succeeded but attach failed, the port is left in a detached
+> > state with apc->tx_qp and apc->rxqs already freed. Calling
+> > mana_detach() again unconditionally leads to NULL pointer dereferences
+> > during queue teardown.
+> > 
+> > Add an early exit in mana_detach() when the port is already in
+> > detached state (!netif_device_present) for non-close callers, making
+> > it safe to call idempotently. This allows the queue reset handler and
+> > other recovery paths to simply retry mana_attach() without redundant
+> > teardown.
+> > 
+> > Fixes: 3b194343c250 ("net: mana: Implement ndo_tx_timeout and serialize queue resets per port.")
+> > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> > Signed-off-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+> > ---
+> >  drivers/net/ethernet/microsoft/mana/mana_en.c | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> > 
+> > diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> > index 0582803907a8..1e1ad2795c3c 100644
+> > --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> > +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> > @@ -3350,6 +3350,12 @@ int mana_detach(struct net_device *ndev, bool from_close)
+> >  
+> >  	ASSERT_RTNL();
+> >  
+> > +	/* If already detached (indicates detach succeeded but attach failed
+> > +	 * previously). Now skip mana detach and just retry mana_attach.
+> > +	 */
+> > +	if (!from_close && !netif_device_present(ndev))
+> > +		return 0;
+> > +
+> >  	apc->port_st_save = apc->port_is_up;
+> >  	apc->port_is_up = false;
+> 
+> sashiko(gemini) notes the above can lead to different race:
+> 
+> ---
+> Can this early return cause state machine corruption by bypassing the
+> updates
+> to apc->port_st_save?
+> Consider this sequence:
+> 1. queue_reset_work runs, mana_detach() succeeds (apc->port_st_save = true,
+>    apc->port_is_up = false), but mana_attach() fails.
+> 2. The admin brings the interface down (ip link set dev eth0 down), skipping
+>    mana_close() since apc->port_is_up is false.
+> 3. The admin changes the MTU, triggering mana_change_mtu() which calls
+>    mana_detach() followed by mana_attach().
+> 4. mana_detach() hits this new early return, preserving
+>    apc->port_st_save == true.
+> When mana_attach() runs, it sees apc->port_st_save == true and allocates
+> queues, setting apc->vport_use_count = 1 and apc->port_is_up = true, even
+> though the interface is administratively down.
+> If the admin then brings the interface up, mana_open() will unconditionally
+> call mana_alloc_queues(). That function calls mana_cfg_vport(), which will
+> return -EBUSY because apc->vport_use_count is already 1.
+> This leaves mana_open() failing and the interface down. Since the interface
+> is already down, trying to bring it down again is a no-op, meaning
+> mana_close() is never called to clean up the orphaned queues.
+> Does this sequence permanently brick the port until the driver is reloaded?
+> ---
+> 
+> I think you need to be more restrictive in the early return check.
+> 
+> /P
+>
+Hi Paolo,
 
-Add a link_cfg_error field to mana_port_context to cache the query
-result. The field uses three states: 1 (not yet queried, initial
-value set during mana_probe_port), 0 (success, speed/max_speed are
-valid), or a negative errno for permanent errors like -EOPNOTSUPP
-when the hardware does not support the command. Transient errors and
-qos_unconfigured responses are not cached so that subsequent calls
-will retry.
+Thank you for the comments,
+I think the scenario pointed out by sashiko does not seems valid,
+as it mentioned in step 2 and 3 admin changing MTU after bringing
+interface down. This is becasue netif_set_mtu_ext() in dev.c checks
+netif_device_present and returns -ENODEV before calling
+ndo_change_mtu. So mana_change_mtu() is never reachable when the
+device is in the !present state.
 
-To prevent a concurrent mana_set_bw_clamp() from racing with an
-in-flight query and publishing stale pre-clamp speed/max_speed,
-serialize the firmware transaction and the cache update under a new
-per-port mutex (link_cfg_mutex). The mutex covers both the HWC
-request and the subsequent stores in mana_query_link_cfg(), and the
-HWC request and invalidation in mana_set_bw_clamp(). With this lock
-held, two queries can no longer interleave their speed/max_speed
-stores, and an invalidation can no longer slip in between a query's
-response and its publish.
+https://elixir.bootlin.com/linux/v7.0/source/net/core/dev.c#L9906 
 
-Invalidate the cache inside mana_set_bw_clamp() on success, so all
-current and future callers that change the link configuration
-automatically trigger a fresh query on the next mana_query_link_cfg()
-call. Also reset link_cfg_error during resume in mana_probe() under
-link_cfg_mutex, so that any slow-path query already in flight cannot
-later store 0 and silently overwrite the post-resume invalidation.
+Please let me know if the above check is good enough?
 
-Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
----
- drivers/net/ethernet/microsoft/mana/mana_en.c | 41 +++++++++++++++----
- include/net/mana/mana.h                       |  4 ++
- 2 files changed, 36 insertions(+), 9 deletions(-)
+Regards
+Dipayaan Roy
 
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index 82f1461a48e9..43018bc13dc1 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -1456,6 +1456,12 @@ int mana_query_link_cfg(struct mana_port_context *apc)
- 	struct mana_query_link_config_req req = {};
- 	int err;
  
-+	mutex_lock(&apc->link_cfg_mutex);
-+
-+	err = apc->link_cfg_error;
-+	if (err <= 0)
-+		goto out;
-+
- 	mana_gd_init_req_hdr(&req.hdr, MANA_QUERY_LINK_CONFIG,
- 			     sizeof(req), sizeof(resp));
- 
-@@ -1468,10 +1474,11 @@ int mana_query_link_cfg(struct mana_port_context *apc)
- 	if (err) {
- 		if (err == -EOPNOTSUPP) {
- 			netdev_info_once(ndev, "MANA_QUERY_LINK_CONFIG not supported\n");
--			return err;
-+			apc->link_cfg_error = err;
-+			goto out;
- 		}
- 		netdev_err(ndev, "Failed to query link config: %d\n", err);
--		return err;
-+		goto out;
- 	}
- 
- 	err = mana_verify_resp_hdr(&resp.hdr, MANA_QUERY_LINK_CONFIG,
-@@ -1482,16 +1489,20 @@ int mana_query_link_cfg(struct mana_port_context *apc)
- 			   resp.hdr.status);
- 		if (!err)
- 			err = -EOPNOTSUPP;
--		return err;
-+		goto out;
- 	}
- 
- 	if (resp.qos_unconfigured) {
- 		err = -EINVAL;
--		return err;
-+		goto out;
- 	}
- 	apc->speed = resp.link_speed_mbps;
- 	apc->max_speed = resp.qos_speed_mbps;
--	return 0;
-+	apc->link_cfg_error = 0;
-+	err = 0;
-+out:
-+	mutex_unlock(&apc->link_cfg_mutex);
-+	return err;
- }
- 
- int mana_set_bw_clamp(struct mana_port_context *apc, u32 speed,
-@@ -1508,17 +1519,19 @@ int mana_set_bw_clamp(struct mana_port_context *apc, u32 speed,
- 	req.link_speed_mbps = speed;
- 	req.enable_clamping = enable_clamping;
- 
-+	mutex_lock(&apc->link_cfg_mutex);
-+
- 	err = mana_send_request(apc->ac, &req, sizeof(req), &resp,
- 				sizeof(resp));
- 
- 	if (err) {
- 		if (err == -EOPNOTSUPP) {
- 			netdev_info_once(ndev, "MANA_SET_BW_CLAMP not supported\n");
--			return err;
-+			goto out;
- 		}
- 		netdev_err(ndev, "Failed to set bandwidth clamp for speed %u, err = %d",
- 			   speed, err);
--		return err;
-+		goto out;
- 	}
- 
- 	err = mana_verify_resp_hdr(&resp.hdr, MANA_SET_BW_CLAMP,
-@@ -1529,13 +1542,18 @@ int mana_set_bw_clamp(struct mana_port_context *apc, u32 speed,
- 			   resp.hdr.status);
- 		if (!err)
- 			err = -EOPNOTSUPP;
--		return err;
-+		goto out;
- 	}
- 
- 	if (resp.qos_unconfigured)
- 		netdev_info(ndev, "QoS is unconfigured\n");
- 
--	return 0;
-+	/* Invalidate the cache; next query will re-fetch from firmware. */
-+	apc->link_cfg_error = 1;
-+	err = 0;
-+out:
-+	mutex_unlock(&apc->link_cfg_mutex);
-+	return err;
- }
- 
- int mana_create_wq_obj(struct mana_port_context *apc,
-@@ -3430,6 +3448,8 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
- 	apc->port_handle = INVALID_MANA_HANDLE;
- 	apc->pf_filter_handle = INVALID_MANA_HANDLE;
- 	apc->port_idx = port_idx;
-+	apc->link_cfg_error = 1;
-+	mutex_init(&apc->link_cfg_mutex);
- 	apc->cqe_coalescing_enable = 0;
- 
- 	mutex_init(&apc->vport_mutex);
-@@ -3750,6 +3770,9 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
- 			rtnl_lock();
- 			apc = netdev_priv(ac->ports[i]);
- 			enable_work(&apc->queue_reset_work);
-+			mutex_lock(&apc->link_cfg_mutex);
-+			apc->link_cfg_error = 1;
-+			mutex_unlock(&apc->link_cfg_mutex);
- 			err = mana_attach(ac->ports[i]);
- 			rtnl_unlock();
- 			/* Log the port for which the attach failed, stop
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index d9c27310fd04..af772b7297ec 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -555,6 +555,10 @@ struct mana_port_context {
- 	u32 speed;
- 	/* Maximum speed supported by the SKU (mbps) */
- 	u32 max_speed;
-+	/* 1 = not queried, 0 = cached success, negative = permanent error */
-+	int link_cfg_error;
-+	/* Serializes mana_query_link_cfg() and mana_set_bw_clamp(). */
-+	struct mutex link_cfg_mutex;
- 
- 	bool port_is_up;
- 	bool port_st_save; /* Saved port state */
--- 
-2.34.1
-
 
