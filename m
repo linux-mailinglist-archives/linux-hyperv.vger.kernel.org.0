@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-11272-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11270-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uIk+B9WQF2oUJggAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11272-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 02:48:21 +0200
+	id +Kz8A4qPF2oUJQgAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11270-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 02:42:50 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 696285EB64B
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 02:48:20 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7681A5EB4FD
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 02:42:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0761D31806C8
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 00:42:31 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 28A6B306F78F
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 00:42:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24AA31E7C03;
-	Thu, 28 May 2026 00:42:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD4FD1922F5;
+	Thu, 28 May 2026 00:42:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="TV6WzaN2"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="CZTqfsUm"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC41719644B;
-	Thu, 28 May 2026 00:42:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A7D3196C7C;
+	Thu, 28 May 2026 00:42:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779928949; cv=none; b=QEL7GjdOT6vGdJBgAi/NmIMctfzj67JUatJxbotDKUgkXZEC62jC2CCTl3CUUpZ2JxFz19hE2DuqR3SC05mTwSkTsQ0Z8v13YQsXSodavXH6GF/2QfGe30zI4wXuDPjqmHclRtKAxwqR10qqKD+7+mSNgW6tM21g06U76M8XhYA=
+	t=1779928948; cv=none; b=sM77ze4xyaCrfB+oo3UHIn06+O9o1RWRYvaCNwYE1C+dg8bFOVqc1boByEBffNF4lf1SxQh5oXIpURrNm+Lbc0OtvHxnCJGUeoqlU6pO1R7jMPCk9AovXGizfM8/vPjVCiBlvYseIKeiT+OeXVDfwDhvRFeYdu1VIUAVqVg3O7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779928949; c=relaxed/simple;
-	bh=HFas9e1xYDqWwTXxx9J959QMLS6myU7xaa82Waoq+Zo=;
+	s=arc-20240116; t=1779928948; c=relaxed/simple;
+	bh=oLB/5Vzdh/9Wbb70DhXCyqrFo7zLDuIhMP/NXkSGDhs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VLccvnTvbvjAsX/1ptc+zPKbCmAYluCHc8nfOsH1PGzU+26T6COW2c5AQFBmSD6pnU+JTSD1PYxrk6C9Blk4rKh2kwK1IuFlcbYUR1Wd6ivUODgG6U/GmqvCgFgk2k0LmqoUTq+dlwaWASohAgLgqvp+r2kZMM2Y+7rg5avbq/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=TV6WzaN2; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=tvchslt6f1X3ozrv8l528/hB1NjZk/xPQCZGayXTGfldKw1SXGP+mCRho9GpMYO4s81fbEtFcWX9eaYm3dkDalLlvsT3Ty94MhoCm+/E/v+aGNf0Yq2H0PAvORZQGpPJnwPtZvWAnIzwoCZFc2mllDG6UGPVv2PSGPX2cB4CvYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=CZTqfsUm; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1241)
-	id 0ACAF20B716E; Wed, 27 May 2026 17:42:16 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0ACAF20B716E
+	id D9FB720B716A; Wed, 27 May 2026 17:42:16 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D9FB720B716A
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1779928936;
-	bh=gvHZ8tn8eh+lJU0aR4E9nRrlcjViE16wdOefk57RvS4=;
+	bh=UVWiM4xIUXWQ8VX4lQw/ZW4DJ6yNUs4CT4NEYGNtMTc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TV6WzaN24cVxEuQ8e/TKSD3uD6nPrBZJ6iIBnnmVdVPZl/5J08zp1HVqbHbwFjoFK
-	 BznCKm85oKXL/JOJVUClWked59v39RpkbulIFmAU/+ig5C25ZXvVXHRwoNio4fybo+
-	 peh+vetrfdv9qXzIW8L6XPWeLUc7VZq1gt49zymc=
+	b=CZTqfsUmcLLXJT7YbU5UN7KLqaA6BUVha/oeK47UmZZXNYo/M9YmHZPL+JhzXFPDl
+	 RWF8g92V93FnpwT+SmnnZeHh/vF+yOyFDUxwz1pmiBwtOYjGVvrjhDig9SvmrS9iOD
+	 5izCOplWYR99E1vx1VZ1orE4q8bJcRWFlJ9ijylo=
 From: Jork Loeser <jloeser@linux.microsoft.com>
 To: linux-hyperv@vger.kernel.org,
 	linux-mm@kvack.org,
@@ -80,9 +80,9 @@ Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
 	linux-kernel@vger.kernel.org,
 	Michael Kelley <mhklinux@outlook.com>,
 	Jork Loeser <jloeser@linux.microsoft.com>
-Subject: [RFC PATCH 07/20] kho: allow destroying KHO radix tree
-Date: Wed, 27 May 2026 17:41:49 -0700
-Message-ID: <20260528004204.1484584-8-jloeser@linux.microsoft.com>
+Subject: [RFC PATCH 08/20] kho: add kho_radix_init_tree()
+Date: Wed, 27 May 2026 17:41:50 -0700
+Message-ID: <20260528004204.1484584-9-jloeser@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.7
 In-Reply-To: <20260528004204.1484584-1-jloeser@linux.microsoft.com>
 References: <20260528004204.1484584-1-jloeser@linux.microsoft.com>
@@ -98,7 +98,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -106,7 +106,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_CC(0.00)[microsoft.com,kernel.org,soleen.com,amazon.com,google.com,linux-foundation.org,linux.dev,suse.de,redhat.com,arm.com,alien8.de,linux.intel.com,zytor.com,zte.com.cn,linux.ibm.com,intel.com,amd.com,lists.infradead.org,vger.kernel.org,outlook.com,linux.microsoft.com];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-11272-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11270-lists,linux-hyperv=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[37];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -118,90 +118,107 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	PRECEDENCE_BULK(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:mid,linux.microsoft.com:dkim,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 696285EB64B
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:mid,linux.microsoft.com:dkim,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 7681A5EB4FD
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-Add kho_radix_destroy_tree() which allows destroying the radix tree and
-freeing all its pages.
+Move the initialization logic of the radix tree into
+kho_radix_init_tree() instead of having users open-code it. Makes the
+boundaries cleaner and reduces code duplication when a new user of the
+radix tree will be added in a future commit.
 
 Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 Signed-off-by: Jork Loeser <jloeser@linux.microsoft.com>
 ---
- include/linux/kho_radix_tree.h     |  3 +++
- kernel/liveupdate/kexec_handover.c | 34 ++++++++++++++++++++++++++++++
- 2 files changed, 37 insertions(+)
+ include/linux/kho_radix_tree.h     |  7 ++++++
+ kernel/liveupdate/kexec_handover.c | 37 ++++++++++++++++++++++++++++--
+ 2 files changed, 42 insertions(+), 2 deletions(-)
 
 diff --git a/include/linux/kho_radix_tree.h b/include/linux/kho_radix_tree.h
-index 6c0f7d82716b..617395a6647a 100644
+index 617395a6647a..c0840ecb230c 100644
 --- a/include/linux/kho_radix_tree.h
 +++ b/include/linux/kho_radix_tree.h
 @@ -54,6 +54,7 @@ int kho_radix_add_key(struct kho_radix_tree *tree, unsigned long key);
  void kho_radix_del_key(struct kho_radix_tree *tree, unsigned long key);
  int kho_radix_walk_tree(struct kho_radix_tree *tree,
  			const struct kho_radix_walk_cb *cb, void *data);
-+void kho_radix_destroy_tree(struct kho_radix_tree *tree);
++int kho_radix_init_tree(struct kho_radix_tree *tree, struct kho_radix_node *root);
+ void kho_radix_destroy_tree(struct kho_radix_tree *tree);
  
  #else  /* #ifdef CONFIG_KEXEC_HANDOVER */
- 
-@@ -71,6 +72,8 @@ static inline int kho_radix_walk_tree(struct kho_radix_tree *tree,
+@@ -72,6 +73,12 @@ static inline int kho_radix_walk_tree(struct kho_radix_tree *tree,
  	return -EOPNOTSUPP;
  }
  
-+static inline void kho_radix_destroy_tree(struct kho_radix_tree *tree) { }
++static inline int kho_radix_init_tree(struct kho_radix_tree *tree,
++				      struct kho_radix_node *root)
++{
++	return 0;
++}
 +
- #endif /* #ifdef CONFIG_KEXEC_HANDOVER */
+ static inline void kho_radix_destroy_tree(struct kho_radix_tree *tree) { }
  
- #endif	/* _LINUX_KHO_RADIX_TREE_H */
+ #endif /* #ifdef CONFIG_KEXEC_HANDOVER */
 diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index 5c201e605b96..3f3ea71baa1a 100644
+index 3f3ea71baa1a..b2d1572808eb 100644
 --- a/kernel/liveupdate/kexec_handover.c
 +++ b/kernel/liveupdate/kexec_handover.c
-@@ -286,6 +286,40 @@ void kho_radix_del_key(struct kho_radix_tree *tree, unsigned long key)
+@@ -305,6 +305,34 @@ static void __kho_radix_destroy_tree(struct kho_radix_node *root,
+ 	kho_radix_free_node(root);
  }
- EXPORT_SYMBOL_GPL(kho_radix_del_key);
  
-+static void __kho_radix_destroy_tree(struct kho_radix_node *root,
-+				     unsigned int level)
-+{
-+	unsigned long i;
-+
-+	if (level == 0) {
-+		kho_radix_free_node(root);
-+		return;
-+	}
-+
-+	for (i = 0; i < PAGE_SIZE / sizeof(phys_addr_t); i++) {
-+		if (root->table[i])
-+			__kho_radix_destroy_tree(phys_to_virt(root->table[i]),
-+						 level - 1);
-+	}
-+
-+	kho_radix_free_node(root);
-+}
-+
 +/**
-+ * kho_radix_destroy_tree - Destroy the radix tree
-+ * @tree: The radix tree to destroy
++ * kho_radix_init_tree - initialize the radix tree.
++ * @tree:   the tree to initialize.
++ * @root:   root table of the radix tree.
 + *
-+ * Walk @tree and free all its nodes.
++ * Initialize the radix tree with the given root node. If root is %NULL, an
++ * empty root table is allocated. If root is not %NULL, it is the caller's
++ * responsibility to make sure the root is valid and in the correct format.
++ *
++ * Return: 0 on success, -errno on failure.
 + */
-+void kho_radix_destroy_tree(struct kho_radix_tree *tree)
++int kho_radix_init_tree(struct kho_radix_tree *tree, struct kho_radix_node *root)
 +{
-+	if (!tree->root)
-+		return;
++	/* Already initialized. */
++	if (tree->root)
++		return 0;
 +
-+	__kho_radix_destroy_tree(tree->root, KHO_TREE_MAX_DEPTH - 1);
++	if (!root)
++		root = kho_radix_alloc_node();
++	if (!root)
++		return -ENOMEM;
++
++	tree->root = root;
++	mutex_init(&tree->lock);
++	return 0;
 +}
-+EXPORT_SYMBOL_GPL(kho_radix_destroy_tree);
++EXPORT_SYMBOL_GPL(kho_radix_init_tree);
 +
- static int kho_radix_walk_leaf(struct kho_radix_leaf *leaf, unsigned long key,
- 			       const struct kho_radix_walk_cb *cb, void *data)
- {
+ /**
+  * kho_radix_destroy_tree - Destroy the radix tree
+  * @tree: The radix tree to destroy
+@@ -1467,9 +1495,14 @@ static int __init kho_mem_retrieve(const void *fdt)
+ 	const struct kho_radix_walk_cb cb = {
+ 		.key = kho_preserved_memory_reserve,
+ 	};
++	phys_addr_t mem_map_phys;
++	int err;
++
++	mem_map_phys = kho_get_mem_map_phys(fdt);
++	err = kho_radix_init_tree(&kho_in.radix_tree, phys_to_virt(mem_map_phys));
++	if (err)
++		return err;
+ 
+-	kho_in.radix_tree.root = phys_to_virt(kho_get_mem_map_phys(fdt));
+-	mutex_init(&kho_in.radix_tree.lock);
+ 	return kho_radix_walk_tree(&kho_in.radix_tree, &cb, NULL);
+ }
+ 
 -- 
 2.43.0
 
