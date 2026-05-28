@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-11275-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11279-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EGxuC8KPF2oUJQgAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11275-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 02:43:46 +0200
+	id mI6qC/+QF2oUJggAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11279-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 02:49:03 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9EF725EB547
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 02:43:45 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB6D85EB668
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 02:49:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 8CAD53051A73
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 00:42:55 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C7D083044806
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 00:43:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 866AB231836;
-	Thu, 28 May 2026 00:42:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DD321A6834;
+	Thu, 28 May 2026 00:42:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="XVCPSidA"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bf8uJoEP"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B86F0229B12;
-	Thu, 28 May 2026 00:42:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8026923393D;
+	Thu, 28 May 2026 00:42:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779928957; cv=none; b=p9HvKeg0f7j7hsDPap9spOXt3wWa7LD9kHUdNQpbBkGR++zjvbMxfvMhNax/u07PCfT85a5qdRMRdaVEKF7OFn9V/6FGloWKehHVmZ8GXgLJttaGU+GqfTFHdEzGHd1v3ynlC90BIuyC00GVqFi/VBQz+NlVtDeG0KqZd6Obas4=
+	t=1779928960; cv=none; b=kL7HTld0AzlEoxlBkpo0UFGRB0b+OnBxB5k703nNB3BIilK/uw1RfHB4cWN92fC/LPCMYRPiiaU+gXTJlOebh3Ogc99yg7+abxcCv59t5LhFbCbYf+RLy/Gj3tk60B4Fxlt4zxfagyV2bqCy3LcWJSsr9qeTEnPz3CxtSfSuxcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779928957; c=relaxed/simple;
-	bh=kVJRvL3fmxjQ5nGQ9PNwvAvuXzx0DnSQAZMGq+ML9p4=;
+	s=arc-20240116; t=1779928960; c=relaxed/simple;
+	bh=gGsy/K8t2YLMKYqLfHkNG/ywdP4Hr7pf13q7niPfLKM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dr1H62Jt2oRQoYj/FMIKiodsBCH3UlsiR4SGkH1/KQkKjnF1/Wwwu04AvwdvMEY+Eo4mmZG4TVItIlh8lgavLv4SR2vxBzGKFiGzbrnwLZ6wliZ9k3qPPW24j7jF4utQOBCIQ19QFN+Hslq1XHZkqhCCKZW34lzONzGsLBnH7ug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=XVCPSidA; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=gDs28eSRuzj5+0ttZx8XJZwIP6uEa5Q6CrRz3epshScDu8PmREimLBZ4CToIaPpqEb9oiAwarOrMFpIQ2kK8JjWo03YtzVHTGsN4gEEiBTJW/JvuZ810vU2r8ukdMYsJqFIpknArD4fIssdLmgB0lJZTV9bAywGMFlIYuKN1WQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=bf8uJoEP; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Received: by linux.microsoft.com (Postfix, from userid 1241)
-	id 1B1D820B7175; Wed, 27 May 2026 17:42:22 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1B1D820B7175
+	id 2520020B7185; Wed, 27 May 2026 17:42:23 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2520020B7185
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1779928942;
-	bh=w9dQKTBesfWptSkwPiRIMzAcNQuxg/BKJwCMO44AZfg=;
+	s=default; t=1779928943;
+	bh=lq4AwKr8R9qQP2NXNrabboMmqmkbQuMYszFqX3guJ70=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XVCPSidAnGdHB1XpCGnE5OzRo9wqEl3lK8az8GeJAkdMTDi6QvS5UgoQ9IgB915Pd
-	 dlJU0HBIv+wFptvDvgMWvzcBah1eeYO7dGzeeoC4bVOKKk20uPM0w/8SyfDk1WOWkk
-	 7ZoEp3xh9hJ0xuG840/IpGNcOfkm0h7aJbTCn+3M=
+	b=bf8uJoEP1bHEgO11aiEzs2tCt8Rr2DofJbVrUNSAYY3Lh48wtWt3HP7cPpA0OiSEg
+	 3tEvTK2F0AGJgaG844BmxZ48X5H84FHFpFWswgwrB6O5tIdqcqaytmu1iJ7nD9tc0t
+	 TtXT9wa7PCLQIhvHzpl1EO2Nli5baFu1qRB++naU=
 From: Jork Loeser <jloeser@linux.microsoft.com>
 To: linux-hyperv@vger.kernel.org,
 	linux-mm@kvack.org,
@@ -80,9 +80,9 @@ Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
 	linux-kernel@vger.kernel.org,
 	Michael Kelley <mhklinux@outlook.com>,
 	Jork Loeser <jloeser@linux.microsoft.com>
-Subject: [RFC PATCH 14/20] kho: Add crash-kernel-safe radix tree presence check
-Date: Wed, 27 May 2026 17:41:56 -0700
-Message-ID: <20260528004204.1484584-15-jloeser@linux.microsoft.com>
+Subject: [RFC PATCH 15/20] mshv: Use page tracker to manage MSHV-owned pages and preserve with KHO
+Date: Wed, 27 May 2026 17:41:57 -0700
+Message-ID: <20260528004204.1484584-16-jloeser@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.7
 In-Reply-To: <20260528004204.1484584-1-jloeser@linux.microsoft.com>
 References: <20260528004204.1484584-1-jloeser@linux.microsoft.com>
@@ -98,7 +98,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -106,7 +106,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_CC(0.00)[microsoft.com,kernel.org,soleen.com,amazon.com,google.com,linux-foundation.org,linux.dev,suse.de,redhat.com,arm.com,alien8.de,linux.intel.com,zytor.com,zte.com.cn,linux.ibm.com,intel.com,amd.com,lists.infradead.org,vger.kernel.org,outlook.com,linux.microsoft.com];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-11275-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11279-lists,linux-hyperv=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[37];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -118,223 +118,590 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	PRECEDENCE_BULK(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:mid,linux.microsoft.com:dkim,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 9EF725EB547
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:mid,linux.microsoft.com:dkim,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: AB6D85EB668
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-In the crash kernel, the old kernel's memory is outside the direct
-map. Add a read-only radix tree variant that memremaps nodes during
-init so that subsequent page presence checks can traverse the tree
-with plain pointer dereferencing.
+The MSHV driver passes pages to MSHV for its exclusive use. A
+subsequently kexec'd-to kernel must not use these pages, so
+we need to register these pages with KHO.
 
-This will be used by the MSHV driver to exclude hypervisor-owned pages
-from /proc/vmcore via a pfn_is_ram() callback.
+- adapt hv_call_deposit_pages() and hv_call_withdraw_memory() to
+  use tracker
+- Use KHO to preserve MSHV-owned pages across kexec
 
 Signed-off-by: Jork Loeser <jloeser@linux.microsoft.com>
 ---
- include/linux/kho_radix_tree.h     |  30 +++++++
- kernel/liveupdate/kexec_handover.c | 124 +++++++++++++++++++++++++++++
- 2 files changed, 154 insertions(+)
+ drivers/hv/Kconfig              |   3 +
+ drivers/hv/Makefile             |   2 +-
+ drivers/hv/hv_common.c          |   3 +
+ drivers/hv/hv_proc.c            |  32 ++-
+ drivers/hv/mshv_page_preserve.c | 374 ++++++++++++++++++++++++++++++++
+ drivers/hv/mshv_page_preserve.h |  15 ++
+ drivers/hv/mshv_root.h          |   1 +
+ drivers/hv/mshv_root_hv_call.c  |  12 +-
+ 8 files changed, 434 insertions(+), 8 deletions(-)
+ create mode 100644 drivers/hv/mshv_page_preserve.c
+ create mode 100644 drivers/hv/mshv_page_preserve.h
 
-diff --git a/include/linux/kho_radix_tree.h b/include/linux/kho_radix_tree.h
-index 4fe2238e1e30..e906a874e612 100644
---- a/include/linux/kho_radix_tree.h
-+++ b/include/linux/kho_radix_tree.h
-@@ -49,6 +49,19 @@ struct kho_radix_walk_cb {
- 	int (*table)(phys_addr_t phys, void *data);
- };
+diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+index 2d0b3fcb0ff8..0c4ffc1c701b 100644
+--- a/drivers/hv/Kconfig
++++ b/drivers/hv/Kconfig
+@@ -74,6 +74,9 @@ config MSHV_ROOT
+ 	# e.g. When withdrawing memory, the hypervisor gives back 4k pages in
+ 	# no particular order, making it impossible to reassemble larger pages
+ 	depends on PAGE_SIZE_4KB
++	# Pages deposited to the hypervisor must be tracked and preserved
++	# across kexec to avoid memory corruption.
++	depends on KEXEC_HANDOVER
+ 	select EVENTFD
+ 	select VIRT_XFER_TO_GUEST_WORK
+ 	select HMM_MIRROR
+diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
+index 888a748cc7cb..49526ae704f9 100644
+--- a/drivers/hv/Makefile
++++ b/drivers/hv/Makefile
+@@ -21,7 +21,7 @@ mshv_vtl-y := mshv_vtl_main.o
  
-+/**
-+ * struct kho_radix_crash_tree - Read-only radix tree for crash kernel use.
-+ * @root: pointer to the remapped root node
-+ *
-+ * In the crash kernel, the old kernel's memory is not in the direct map.
-+ * This variant uses memremap() during init to map the tree nodes and
-+ * converts the physical address table entries to virtual addresses in-place,
-+ * enabling efficient pointer-based traversal without per-lookup remapping.
-+ */
-+struct kho_radix_crash_tree {
-+	struct kho_radix_node *root;
-+};
-+
- #ifdef CONFIG_KEXEC_HANDOVER
+ # Code that must be built-in
+ obj-$(CONFIG_HYPERV) += hv_common.o
+-obj-$(subst m,y,$(CONFIG_MSHV_ROOT)) += hv_proc.o
++obj-$(subst m,y,$(CONFIG_MSHV_ROOT)) += hv_proc.o mshv_page_preserve.o
+ ifneq ($(CONFIG_MSHV_ROOT)$(CONFIG_MSHV_VTL),)
+ 	obj-y += mshv_common.o
+ endif
+diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+index 6b67ac616789..8a593117e9b8 100644
+--- a/drivers/hv/hv_common.c
++++ b/drivers/hv/hv_common.c
+@@ -30,6 +30,7 @@
+ #include <linux/set_memory.h>
+ #include <hyperv/hvhdk.h>
+ #include <asm/mshyperv.h>
++#include "mshv_root.h"
  
- int kho_radix_add_key(struct kho_radix_tree *tree, unsigned long key);
-@@ -59,6 +72,11 @@ int kho_radix_init_tree(struct kho_radix_tree *tree, struct kho_radix_node *root
- void kho_radix_destroy_tree(struct kho_radix_tree *tree);
- int kho_radix_tree_freeze(struct kho_radix_tree *tree);
+ u64 hv_current_partition_id = HV_PARTITION_ID_SELF;
+ EXPORT_SYMBOL_GPL(hv_current_partition_id);
+@@ -382,6 +383,8 @@ int __init hv_common_init(void)
+ 	if (hv_parent_partition()) {
+ 		hv_synic_eventring_tail = alloc_percpu(u8 *);
+ 		BUG_ON(!hv_synic_eventring_tail);
++
++		mshv_preserve_init();
+ 	}
  
-+int kho_radix_crash_init(struct kho_radix_crash_tree *tree, phys_addr_t root_pa);
-+
-+bool kho_radix_crash_contains_page(struct kho_radix_crash_tree *tree,
-+				   unsigned long pfn, unsigned int order);
-+
- #else  /* #ifdef CONFIG_KEXEC_HANDOVER */
+ 	hv_vp_index = kmalloc_array(nr_cpu_ids, sizeof(*hv_vp_index),
+diff --git a/drivers/hv/hv_proc.c b/drivers/hv/hv_proc.c
+index 57b2c64197cb..0392ea1f3cc5 100644
+--- a/drivers/hv/hv_proc.c
++++ b/drivers/hv/hv_proc.c
+@@ -8,6 +8,7 @@
+ #include <linux/minmax.h>
+ #include <linux/export.h>
+ #include <asm/mshyperv.h>
++#include "mshv_root.h"
  
- static inline int kho_radix_add_key(struct kho_radix_tree *tree, unsigned long key)
-@@ -91,6 +109,18 @@ static inline int kho_radix_tree_freeze(struct kho_radix_tree *tree)
- 	return -EOPNOTSUPP;
- }
+ /*
+  * See struct hv_deposit_memory. The first u64 is partition ID, the rest
+@@ -22,6 +23,7 @@ int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
+ 	int *counts;
+ 	int num_allocations;
+ 	int i, j, page_count;
++	int reg_i = 0, reg_j = 0;
+ 	int order;
+ 	u64 status;
+ 	int ret;
+@@ -72,6 +74,18 @@ int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
+ 	}
+ 	num_allocations = i;
  
-+static inline int kho_radix_crash_init(struct kho_radix_crash_tree *tree,
-+				       phys_addr_t root_pa)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+static inline bool kho_radix_crash_contains_page(
-+					struct kho_radix_crash_tree *tree,
-+					unsigned long pfn, unsigned int order)
-+{
-+	return false;
-+}
- #endif /* #ifdef CONFIG_KEXEC_HANDOVER */
- 
- #endif	/* _LINUX_KHO_RADIX_TREE_H */
-diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index 2e2b4e73f00d..0dfdf0f9781e 100644
---- a/kernel/liveupdate/kexec_handover.c
-+++ b/kernel/liveupdate/kexec_handover.c
-@@ -15,6 +15,7 @@
- #include <linux/kmemleak.h>
- #include <linux/count_zeros.h>
- #include <linux/kasan.h>
-+#include <linux/io.h>
- #include <linux/kexec.h>
- #include <linux/kexec_handover.h>
- #include <linux/kho_radix_tree.h>
-@@ -396,6 +397,129 @@ void kho_radix_destroy_tree(struct kho_radix_tree *tree)
- }
- EXPORT_SYMBOL_GPL(kho_radix_destroy_tree);
- 
-+/*
-+ * Convert a crash tree node's children from PA to VA in-place via memremap().
-+ * On failure, already-remapped pages are not cleaned up -- the crash kernel
-+ * is short-lived and will reboot after dump collection, so the leak is
-+ * inconsequential.
-+ */
-+static int kho_radix_crash_convert_node(struct kho_radix_node *node,
-+					unsigned int level)
-+{
-+	struct kho_radix_node *child;
-+	unsigned int i;
-+	int err;
-+
-+	for (i = 0; i < (1 << KHO_TABLE_SIZE_LOG2); i++) {
-+		if (!node->table[i])
-+			continue;
-+
-+		/* Validate: PA must have bit 63 clear and be page-aligned */
-+		if ((node->table[i] & BIT_ULL(63)) ||
-+		    (node->table[i] & (PAGE_SIZE - 1)))
-+			return -EINVAL;
-+
-+		child = memremap(node->table[i], PAGE_SIZE, MEMREMAP_WB);
-+		if (!child)
-+			return -ENOMEM;
-+
-+		/* Overwrite PA with VA in-place */
-+		node->table[i] = (u64)(uintptr_t)child;
-+
-+		/* Recurse for intermediate levels; level 1 children are leaves */
-+		if (level > 1) {
-+			err = kho_radix_crash_convert_node(child, level - 1);
-+			if (err)
-+				return err;
++	/* Register the pages for preservation across kexec */
++	for (i = 0; i < num_allocations; ++i) {
++		for (j = 0; j < counts[i]; ++j) {
++			ret = mshv_register_preserve_page(pages[i] + j);
++			if (ret) {
++				reg_i = i;
++				reg_j = j;
++				goto err_unregister;
++			}
 +		}
 +	}
 +
-+	return 0;
-+}
+ 	local_irq_save(flags);
+ 
+ 	input_page = *this_cpu_ptr(hyperv_pcpu_input_arg);
+@@ -90,19 +104,27 @@ int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
+ 	if (!hv_result_success(status)) {
+ 		hv_status_err(status, "\n");
+ 		ret = hv_result_to_errno(status);
+-		goto err_free_allocations;
++		reg_i = num_allocations;
++		goto err_unregister;
+ 	}
+ 
+ 	ret = 0;
+ 	goto free_buf;
+ 
+-err_free_allocations:
++err_unregister:
+ 	for (i = 0; i < num_allocations; ++i) {
+-		base_pfn = page_to_pfn(pages[i]);
+-		for (j = 0; j < counts[i]; ++j)
+-			__free_page(pfn_to_page(base_pfn + j));
++		for (j = 0; j < counts[i]; ++j) {
++			if (i == reg_i && j == reg_j)
++				goto err_free_allocations;
++			mshv_unregister_preserve_page(pages[i] + j);
++		}
+ 	}
+ 
++err_free_allocations:
++	for (i = 0; i < num_allocations; ++i)
++		for (j = 0; j < counts[i]; ++j)
++			__free_page(pages[i] + j);
++
+ free_buf:
+ 	free_page((unsigned long)pages);
+ 	kfree(counts);
+diff --git a/drivers/hv/mshv_page_preserve.c b/drivers/hv/mshv_page_preserve.c
+new file mode 100644
+index 000000000000..a79725a74663
+--- /dev/null
++++ b/drivers/hv/mshv_page_preserve.c
+@@ -0,0 +1,374 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Preserve pages owned by Microsoft Hypervisor
++ *
++ * When handing pages to MSHV and kexec'ing, the next kernel needs to know which
++ * pages not to touch. Handles this preservation here.
++ *
++ * Copyright (C) 2026 Microsoft Corporation, Jork Loeser <jloeser@microsoft.com>
++ */
++
++#define pr_fmt(fmt) "mshv: " fmt
++
++#include <asm/mshyperv.h>
++#include <linux/kexec.h>
++#include <linux/kexec_handover.h>
++#include <linux/kho_radix_tree.h>
++#include <linux/libfdt.h>
++#include <linux/reboot.h>
++#include "mshv_page_preserve.h"
++
++#define FDT_SUBTREE_MSHV "mshv_prsv_pt"
++#define MSHV_KHO_COMPAT_STR "mshv_kho-v1"
++
++static void *fdt_page;
++static struct kho_radix_tree preserved_pages_tree;
 +
 +/**
-+ * kho_radix_crash_init - Initialize a crash-kernel view of a KHO radix tree.
-+ * @tree: The crash tree to initialize.
-+ * @root_pa: Physical address of the radix tree root from the old kernel.
++ * mshv_register_preserve_page() - Register a page to be preserved by KHO
++ * @pg: pointer to the page to preserve
 + *
-+ * Maps the old kernel's radix tree into the crash kernel's address space
-+ * by memremapping each node and converting table entries from physical to
-+ * virtual addresses in-place. After successful initialization, the tree
-+ * can be traversed with kho_radix_crash_contains_page() using direct
-+ * pointer dereferencing.
++ * Registers a single page to be preserved by KHO across kexec.
 + *
-+ * This function is intended for use in the crash kernel where the old
-+ * kernel's memory is not in the direct map. No locking is used as the
-+ * crash kernel is effectively single-threaded during dump collection.
-+ *
-+ * Return: 0 on success, negative error code on failure.
++ * Return: 0 on success, -errno on failure.
 + */
-+int kho_radix_crash_init(struct kho_radix_crash_tree *tree, phys_addr_t root_pa)
++int mshv_register_preserve_page(struct page *pg)
 +{
-+	struct kho_radix_node *root;
++	return kho_radix_add_key(&preserved_pages_tree, page_to_pfn(pg));
++}
++EXPORT_SYMBOL_GPL(mshv_register_preserve_page);
++
++/**
++ * mshv_unregister_preserve_page() - Unregister a page from KHO preservation
++ * @pg: pointer to the page to unpreserve
++ *
++ * Unregisters a page that was previously registered to be preserved by KHO.
++ *
++ * Return: 0 on success, -errno on failure.
++ */
++int mshv_unregister_preserve_page(struct page *pg)
++{
++	return kho_radix_del_key(&preserved_pages_tree, page_to_pfn(pg));
++}
++EXPORT_SYMBOL_GPL(mshv_unregister_preserve_page);
++
++/* Preserve a single page identified by its PFN key with KHO */
++static int preserve_key_cb(unsigned long key, void *data)
++{
++	return kho_preserve_pages(pfn_to_page(key), 1);
++}
++
++/* Preserve a radix tree metadata page with KHO */
++static int preserve_table_cb(phys_addr_t phys, void *data)
++{
++	return kho_preserve_pages(phys_to_page(phys), 1);
++}
++
++static int create_fdt(void)
++{
 +	int err;
++	void *fdt;
++	phys_addr_t root_table;
 +
-+	tree->root = NULL;
-+
-+	if (!root_pa || (root_pa & (PAGE_SIZE - 1)))
++	if (!fdt_page)
 +		return -EINVAL;
 +
-+	root = memremap(root_pa, PAGE_SIZE, MEMREMAP_WB);
-+	if (!root)
-+		return -ENOMEM;
++	fdt = fdt_page;
 +
-+	err = kho_radix_crash_convert_node(root, KHO_TREE_MAX_DEPTH - 1);
++	err = fdt_create(fdt, PAGE_SIZE);
++	if (err)
++		return err;
++	err = fdt_finish_reservemap(fdt);
++	if (err)
++		return err;
++	err = fdt_begin_node(fdt, "");
++	if (err)
++		return err;
++	err = fdt_property(fdt, "compatible", MSHV_KHO_COMPAT_STR,
++			   strlen(MSHV_KHO_COMPAT_STR) + 1);
++	if (err)
++		return err;
++	root_table = virt_to_phys(preserved_pages_tree.root);
++	err = fdt_property(fdt, "root_table", &root_table, sizeof(root_table));
++	if (err)
++		return err;
++	err = fdt_end_node(fdt);
++	if (err)
++		return err;
++	err = fdt_finish(fdt);
 +	if (err)
 +		return err;
 +
-+	tree->root = root;
 +	return 0;
 +}
-+EXPORT_SYMBOL_GPL(kho_radix_crash_init);
 +
 +/**
-+ * kho_radix_crash_contains_page - Check if a page is in a crash-kernel radix tree.
-+ * @tree: The crash tree, previously initialized with kho_radix_crash_init().
-+ * @pfn: The page frame number to check.
-+ * @order: The order of the page.
++ * preserve_tree() - Preserve pages owned by Microsoft Hypervisor
 + *
-+ * Traverses the radix tree using direct pointer dereferencing (the table
-+ * entries were converted from PA to VA during init). No locking is used as the
-+ * crash kernel is effectively single-threaded during dump collection.
++ * This gets called prior to kexec and is our signal to finally preserve the
++ * pages with KHO, and create & register the named FDT. We also need to freeze
++ * the tree, since we cannot communicate any later changes.
 + *
-+ * Note: This function checks specifically for the presence of the page at the
-+ * given order. If a larger order page that encompasses this page is preserved,
-+ * this function will return false.
-+ *
-+ * Return: true if the page is present in the tree, false otherwise.
++ * Return: 0 on success, -errno on error.
 + */
-+bool kho_radix_crash_contains_page(struct kho_radix_crash_tree *tree,
-+				   unsigned long pfn, unsigned int order)
++static int preserve_tree(void)
 +{
-+	unsigned long key = kho_encode_radix_key(PFN_PHYS(pfn), order);
-+	struct kho_radix_node *node = tree->root;
-+	struct kho_radix_leaf *leaf;
-+	unsigned int i, idx;
++	const struct kho_radix_walk_cb preserve_cb = {
++		.key = preserve_key_cb,
++		.table = preserve_table_cb,
++	};
++	int err;
 +
-+	if (!tree->root)
-+		return false;
-+
-+	/* Traverse using VA pointers stored in table[] */
-+	for (i = KHO_TREE_MAX_DEPTH - 1; i > 0; i--) {
-+		idx = kho_radix_get_table_index(key, i);
-+
-+		if (!node->table[idx])
-+			return false;
-+
-+		node = (struct kho_radix_node *)(uintptr_t)node->table[idx];
++	err = kho_radix_tree_freeze(&preserved_pages_tree);
++	if (err) {
++		pr_warn("%s() - kho_radix_tree_freeze() failed: %d\n",
++			__func__, err);
++		return err;
 +	}
 +
-+	leaf = (struct kho_radix_leaf *)node;
-+	idx = kho_radix_get_bitmap_index(key);
-+	return test_bit(idx, leaf->bitmap);
-+}
-+EXPORT_SYMBOL_GPL(kho_radix_crash_contains_page);
++	/* Populate the pre-allocated FDT page with current tree state */
++	err = create_fdt();
++	if (err) {
++		pr_warn("%s() - create_fdt() failed: %d\n", __func__, err);
++		return err;
++	}
 +
- static int kho_radix_walk_leaf(struct kho_radix_leaf *leaf, unsigned long key,
- 			       const struct kho_radix_walk_cb *cb, void *data)
- {
++	/* Preserve both data- and meta-pages */
++	err = kho_radix_walk_tree(&preserved_pages_tree, &preserve_cb, NULL);
++	if (err) {
++		/* We could not preserve all pages and cannot kexec. */
++		pr_warn("%s() - kho_radix_walk_tree() failed: %d\n", __func__,
++			err);
++		return err;
++	}
++
++	err = kho_preserve_pages(virt_to_page(fdt_page), 1);
++	if (err) {
++		pr_warn("%s() - kho_preserve_pages(fdt) failed: %d\n", __func__,
++			err);
++		return err;
++	}
++
++	err = kho_add_subtree(FDT_SUBTREE_MSHV, fdt_page, PAGE_SIZE);
++	if (err) {
++		/* KHO will abort and undo all preservations. We cannot kexec. */
++		pr_warn("%s() - kho_add_subtree() failed: %d\n", __func__, err);
++		return err;
++	}
++
++	pr_debug("%s() - success\n", __func__);
++	return 0;
++}
++
++/*
++ * Reboot-callback triggering page preservation prior to kexec. Other reboots
++ * need no KHO preservation.
++ */
++static int reboot_cb(struct notifier_block *nb, unsigned long action,
++		     void *data)
++{
++	/* codes such as SYS_RESTART, SYS_HALT do not convey kexec specifically */
++	if (kexec_in_progress) {
++		int err;
++
++		/* Finalize handover: write KHO descriptors, flush metadata */
++		pr_debug("%s() - KHO-preserving page tree\n", __func__);
++		err = preserve_tree();
++		if (err)
++			panic("preserve_tree() failed - must not kexec: %d\n",
++			      err);
++	}
++	return NOTIFY_OK;
++}
++
++/**
++ * restore_tree() - Restore the page-tree state from KHO.
++ *
++ * Return: 0 on success, -ENOENT if no KHO subtree was found (i.e. this is
++ *         not a KHO boot), -EINVAL if the preserved FDT is malformed or
++ *         incompatible.
++ */
++static int __init restore_tree(void)
++{
++	void *fdt;
++	phys_addr_t fdt_pa;
++	int len;
++	int node;
++	const phys_addr_t *root_table_fdt_ptr;
++	int err;
++
++	err = kho_retrieve_subtree(FDT_SUBTREE_MSHV, &fdt_pa, NULL);
++	if (err)
++		return err;
++
++	fdt = phys_to_virt(fdt_pa);
++	node = fdt_path_offset(fdt, "/");
++	if (node < 0) {
++		pr_err("Could not find root node in KHO-preserved FDT.\n");
++		return -EINVAL;
++	}
++
++	if (fdt_node_check_compatible(fdt, node, MSHV_KHO_COMPAT_STR)) {
++		/*
++		 * This is unfortunate. We kexec'd into a kernel that isn't
++		 * compatible with prior preservations. Pages this kernel
++		 * considers available might actually be held by MSHV. The only
++		 * recourse is to reboot.
++		 */
++		const char *s = fdt_getprop(fdt, node, "compatible", &len);
++
++		if (s && len >= 0)
++			pr_err("Incompatible kernel: Current is %s, preserved is %.*s\n",
++			       MSHV_KHO_COMPAT_STR, len, s);
++		else
++			pr_err("Incompatible kernel: preserved misses 'compatible' mark.\n");
++		return -EINVAL;
++	}
++
++	root_table_fdt_ptr = fdt_getprop(fdt, node, "root_table", &len);
++	if (!root_table_fdt_ptr || len != sizeof(*root_table_fdt_ptr)) {
++		pr_err("Could not obtain root_table property from KHO-preserved FDT.\n");
++		return -EINVAL;
++	}
++
++	/* Restore struct page so it could be freed if needed */
++	if (!kho_restore_pages(fdt_pa, 1))
++		return -EINVAL;
++
++	fdt_page = phys_to_virt(fdt_pa);
++
++	err = kho_radix_init_tree(&preserved_pages_tree,
++				  phys_to_virt(*root_table_fdt_ptr));
++	if (err)
++		return -EINVAL;
++
++	pr_debug("Restored tracking from KHO.\n");
++	return 0;
++}
++
++/*
++ * Restore individual pages using KHO's helper during boot.
++ *
++ * Pages must be restored one at a time because they were deposited to
++ * the hypervisor individually and will be withdrawn individually later.
++ * Restoring them as a higher-order group would create compound pages
++ * that cannot be freed with __free_page().
++ */
++static int __init restore_key_cb(unsigned long key, void *data)
++{
++	if (!kho_restore_pages(PFN_PHYS(key), 1))
++		return -EINVAL;
++	return 0;
++}
++
++static int __init restore_table_cb(phys_addr_t phys, void *data)
++{
++	if (!kho_restore_pages(phys, 1))
++		return -EINVAL;
++	return 0;
++}
++
++/**
++ * restore_page_structs() - Restore page-structs so they can be __free_page()'d
++ *
++ * This is necessary because KHO-preserved pages are in a "weird" state
++ * post-kexec. While doing so here in bulk adds to boot time, there is no vetted
++ * alternative that would allow doing this later, when we cannot say which pages
++ * had been freshly added, and which came into the tree through KHO.
++ *
++ * Return: 0 on success, -errno on failure.
++ */
++static int __init restore_page_structs(void)
++{
++	const struct kho_radix_walk_cb cb = {
++		.key = restore_key_cb,
++		.table = restore_table_cb,
++	};
++
++	return kho_radix_walk_tree(&preserved_pages_tree, &cb, NULL);
++}
++
++/**
++ * alloc_tree() - Allocate a fresh page tree and FDT page.
++ *
++ * Called on fresh boot (no KHO data). Allocates an empty radix tree and
++ * the FDT page used to serialize state before kexec.
++ *
++ * Return: 0 on success, -errno on failure.
++ */
++static int __init alloc_tree(void)
++{
++	int err;
++
++	fdt_page = (void *)get_zeroed_page(GFP_KERNEL);
++	if (!fdt_page)
++		return -ENOMEM;
++
++	err = kho_radix_init_tree(&preserved_pages_tree, NULL);
++	if (err) {
++		free_page((unsigned long)fdt_page);
++		fdt_page = NULL;
++		return err;
++	}
++
++	return 0;
++}
++
++static struct notifier_block reboot_notifier = {
++	.notifier_call = reboot_cb,
++	.priority = 0,
++};
++
++/**
++ * mshv_preserve_init() - Initialize the page preservation
++ *
++ * Upon return:
++ * - the tracker will be ready for use (restored post-kexec, or empty
++ *   post-reboot),
++ * - restored pages will be in a state that can be __free_page()'d,
++ * - KHO notification for preservation will be registered.
++ *
++ * Return: 0 on success, -errno on error.
++ */
++int __init mshv_preserve_init(void)
++{
++	int err;
++
++	if (!kho_is_enabled()) {
++		pr_err("KHO is disabled; page deposits will fail.\n");
++		return 0;
++	}
++
++	err = restore_tree();
++	if (!err) {
++		/* Restore struct pages so they can be __free_page()'d */
++		if (restore_page_structs())
++			/*
++			 * Unrestored struct pages would BUG when freed
++			 * at withdraw time.
++			 */
++			panic("Failed to restore MSHV page structs\n");
++	} else if (err == -ENOENT) {
++		pr_debug("Nothing to restore from KHO.\n");
++		if (alloc_tree()) {
++			pr_err("Could not allocate page tree; page deposits will fail.\n");
++			return 0;
++		}
++	} else {
++		/*
++		 * Pages from the prior kernel are held by MSHV but we
++		 * lost track of them -- memory corruption is inevitable.
++		 */
++		panic("Could not restore page tree from KHO: %d\n", err);
++	}
++
++	err = register_reboot_notifier(&reboot_notifier);
++	if (err)
++		/*
++		 * Deposits would succeed but pages would not be preserved
++		 * across kexec, causing memory corruption post-kexec.
++		 */
++		panic("Could not register reboot notification: %d\n", err);
++
++	return 0;
++}
+diff --git a/drivers/hv/mshv_page_preserve.h b/drivers/hv/mshv_page_preserve.h
+new file mode 100644
+index 000000000000..0609002e5f1d
+--- /dev/null
++++ b/drivers/hv/mshv_page_preserve.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2026 Microsoft Corporation, Jork Loeser <jloeser@microsoft.com>
++ */
++
++#ifndef _MSHV_PAGE_PRESERVE_H
++#define _MSHV_PAGE_PRESERVE_H
++
++struct page;
++
++int mshv_preserve_init(void);
++int mshv_register_preserve_page(struct page *pg);
++int mshv_unregister_preserve_page(struct page *pg);
++
++#endif /* _MSHV_PAGE_PRESERVE_H */
+diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
+index 1f086dcb7aa1..362768786c17 100644
+--- a/drivers/hv/mshv_root.h
++++ b/drivers/hv/mshv_root.h
+@@ -18,6 +18,7 @@
+ #include <linux/mmu_notifier.h>
+ #include <uapi/linux/mshv.h>
+ #include "mshv_trace.h"
++#include "mshv_page_preserve.h"
+ 
+ /*
+  * Hypervisor must be between these version numbers (inclusive)
+diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
+index cb55d4d4be2e..f5ff03318787 100644
+--- a/drivers/hv/mshv_root_hv_call.c
++++ b/drivers/hv/mshv_root_hv_call.c
+@@ -69,8 +69,16 @@ int hv_call_withdraw_memory(u64 count, int node, u64 partition_id)
+ 
+ 		completed = hv_repcomp(status);
+ 
+-		for (i = 0; i < completed; i++)
+-			__free_page(pfn_to_page(output_page->gpa_page_list[i]));
++		for (i = 0; i < completed; i++) {
++			struct page *pg = pfn_to_page(output_page->gpa_page_list[i]);
++			int res = mshv_unregister_preserve_page(pg);
++
++			WARN_ONCE(res, "Failed to unregister PFN %#llx\n",
++				  output_page->gpa_page_list[i]);
++
++			/* Free regardless -- HV has already released the page */
++			__free_page(pg);
++		}
+ 
+ 		if (!hv_result_success(status)) {
+ 			if (hv_result(status) == HV_STATUS_NO_RESOURCES)
 -- 
 2.43.0
 
