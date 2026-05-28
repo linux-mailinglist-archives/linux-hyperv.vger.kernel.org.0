@@ -1,61 +1,60 @@
-Return-Path: <linux-hyperv+bounces-11292-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11293-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EFw0IyOaF2qcKwgAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11292-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 03:28:03 +0200
+	id yEUhNXGbF2ohLAgAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11293-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 03:33:37 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFCE95EB8CD
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 03:28:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E9D65EB91C
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 03:33:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7FE06301F9D2
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 01:28:01 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4A162305D854
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 01:33:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33AC22594BD;
-	Thu, 28 May 2026 01:28:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FEA72D060C;
+	Thu, 28 May 2026 01:33:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uefu3v49"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S7pqm1kt"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B77233923
-	for <linux-hyperv@vger.kernel.org>; Thu, 28 May 2026 01:27:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBDD41D5170
+	for <linux-hyperv@vger.kernel.org>; Thu, 28 May 2026 01:33:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779931681; cv=none; b=NIVuq3RHq8v27r/HPKq4KeqgCkAouKpk5EwVHOhBMPqFBPAITj9F907FmJMPMm02Axl/jZf+2LXzeH6WjPG4TwhNwlPytyvG/bViQdb3m5HLncwcnAChNDeOnbkU8NgS4qbbIJZXnSVfod5+2ph6H5aoPySpS7thwotGryDOxnw=
+	t=1779931987; cv=none; b=vEJZEdq1pkCae5iRM0eGTE175Ir3eXLqRP8lLYAznfvlYz0jU92LV0sASNGlwTX1I7HM6m3rN05hCB6QHX98w4wZ2XfRwdUotcNnIRVK6lsuazhq40zx7CntiYGme0vhHHAFgl4L/CC+b2vT8gAz1ORL0QBy+D7MzquTBl/2en4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779931681; c=relaxed/simple;
-	bh=lAWfNc0k7QbToOaimyf8uhKR4Lv8NkiPnIRoC8cjmJc=;
+	s=arc-20240116; t=1779931987; c=relaxed/simple;
+	bh=vEOLgHWhzRsZA4grzJY0iJGaO04G372/MsgxZi7fXvE=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=REPvjUyLmc2MItPZjHLhUXsGLESGNbzvcAFAXiNwwIx+y5R3k5k/PvB1pFvd826D+yN1JsiqFS2Qf9DZ5mkCwNaM2Z214UcVHUlKO8HBPBzn6nUjMUlDRPDzH+vumRHeCUWmMiLS1C/wR339xa1112apwXVy/GKzZvhzMahF5g0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uefu3v49; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60B511F000E9;
-	Thu, 28 May 2026 01:27:59 +0000 (UTC)
+	 Message-Id; b=ZEGKlyLGR7UQyzq+T7J0RadWMudC8/N8un4/J71eh0ZFnzk0PFZ12HZbOAXO1QHJ3hl73u/AMLf7CV6syiuYt1X0g0+MOTnK4fTluWA7UkxzjVntKox3BnmwZCwIycW3FTpHT6bx5Qm6TsSPi0EgDiD2nC7ai+/l90p9nEpOHng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S7pqm1kt; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63A8D1F00A3A;
+	Thu, 28 May 2026 01:33:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779931679;
-	bh=VWs4JJVwc0O4bWR/u5pE28P+EpayJ9gwXmRrMhH9Etw=;
+	s=k20260515; t=1779931985;
+	bh=B9SCI4JCibcPU2/kPdXkLskU7+p67DDvU7ZaHaSchhQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Uefu3v49QiYO4rWgMkHQY52RfAw+Lq6zszYniLg4/H+dlq30gQ7E265egKRGR3C2D
-	 2c0HmqVKAq9Tvw7Hoel2hlbkFPUFF1G+hTAEQqn8Q3/dW0F+Q4uIYzWFsqFGRtnnG2
-	 xloq9OYtXwE/p9TeyzxYgH+/HCYbqgwI0IqWfvbuHETGPLhtbhVzQJG0jTiuYuV6K4
-	 E0fCZFZ5xATICN0FxTxSffrBktOZdQxj/dENcVO1E1GeWTuKQBgNB54jkdrfJKi9bj
-	 IQc4VgNz5epvArOX4A175yC3oTFlinbc2yKenV7IjIqDHm55m92p9N6ej4s6BAGaJe
-	 UW70bFwVlMfLg==
+	b=S7pqm1ktAK49qvSuCRRKjErsovrGK9h1wNvYFeq0EMvpI1xTV71X1gVO3cvbCMi4h
+	 Z5EB0y9DTHXzObHxiNzz0MVXPRHcE5LX/p2VNej9VSWVH0zzmK/YNIPdFhHSJf20cL
+	 MDSG46ojsZTAHJ+VDW8zPivhHWtyRJt98DjpPwnClSktKH1sPobCdiHkS2ds+ImfXB
+	 hsX9xPlNPdZwCBzEeDr/dv2yNioejyaRt7Y7jjNWIibNQvmYpBRWMj26Fx28s46SWD
+	 OhEsWd61GoTSP9ZMkj6abCNd3X/E9BLw8qi6uNSZaDRC84Yoj3usqahU4k83Ncnd5c
+	 RRgEpyDcn0LOA==
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH 14/20] kho: Add crash-kernel-safe radix tree
- presence check
+Subject: Re: [RFC PATCH 04/20] kho: add callback for table pages
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Jork Loeser" <jloeser@linux.microsoft.com>
 Cc: linux-hyperv@vger.kernel.org
-In-Reply-To: <20260528004204.1484584-15-jloeser@linux.microsoft.com>
-References: <20260528004204.1484584-15-jloeser@linux.microsoft.com>
+In-Reply-To: <20260528004204.1484584-5-jloeser@linux.microsoft.com>
+References: <20260528004204.1484584-5-jloeser@linux.microsoft.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 28 May 2026 01:27:58 +0000
-Message-Id: <20260528012759.60B511F000E9@smtp.kernel.org>
+Date: Thu, 28 May 2026 01:33:04 +0000
+Message-Id: <20260528013305.63A8D1F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -71,7 +70,7 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11292-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11293-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
 	RCPT_COUNT_TWO(0.00)[2];
@@ -93,180 +92,134 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
 	MISSING_XM_UA(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[smtp.kernel.org:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,sashiko.dev:url,lists.linux.dev:replyto]
-X-Rspamd-Queue-Id: DFCE95EB8CD
+X-Rspamd-Queue-Id: 3E9D65EB91C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Thank you for your contribution! Sashiko AI review found 5 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [High] In-place conversion destructively modifies the old kernel's memory=
-, corrupting the crash dump.
-- [High] Unbounded per-node `memremap()` calls can quickly exhaust the cras=
-h kernel's limited memory resources.
-- [High] Lack of physical address validation before `memremap()` risks trig=
-gering Machine Check Exceptions (MCE).
-- [Medium] `kho_radix_crash_contains_page()` fails to identify subpages of =
-higher-order folios.
-- [Medium] The exported API lacks a teardown function, resulting in permane=
-nt vmap memory leaks.
+
+Pre-existing issues:
+- [Critical] Severe out-of-bounds memory accesses and ABI incompatibility d=
+ue to incorrect node sizing on 32-bit platforms.
+- [High] Pre-existing memory corruption risk due to `kzalloc` crossing page=
+ boundaries for KHO radix root node.
+- [High] Undefined behavior and logic failure due to 64-bit shift assumptio=
+ns on 32-bit platforms.
 --
 
-commit c1bba78846e7698e1b8a124f8432407d41f69b0c
-Author: Jork Loeser <jloeser@linux.microsoft.com>
-Subject: kho: Add crash-kernel-safe radix tree presence check
+commit a4a688bed2326d7eaaf8a3a47636fe600e228c89
+Author: Pratyush Yadav (Google) <pratyush@kernel.org>
 
-In the crash kernel, the old kernel's memory is outside the direct map.
-This patch adds a read-only radix tree variant that memremaps nodes during
-init so that subsequent page presence checks can traverse the tree with
-plain pointer dereferencing.
+kho: add callback for table pages
+
+The KHO memory preservation radix tree does not mark the table pages
+themselves as scratch. This means any walker looking for free ranges of
+memory outside of scratch areas will ignore the table. This patch adds a
+table callback that is invoked for each table page to address this.
+
+> diff --git a/include/linux/kho_radix_tree.h b/include/linux/kho_radix_tre=
+e.h
+> index 030da6399d288..fe7151d89361d 100644
+> --- a/include/linux/kho_radix_tree.h
+> +++ b/include/linux/kho_radix_tree.h
+> @@ -37,12 +37,15 @@ struct kho_radix_tree {
+>  /**
+>   * struct kho_radix_walk_cb - Callbacks for KHO radix tree walk.
+>   * @key:      Called on each present key in the radix tree.
+> + * @table:    Called on each table of the radix tree itself. Receives the
+> + *            physical address of the page containing the table.
+>   *
+>   * For each callback, a return value of 0 continues the walk and a non-z=
+ero
+>   * return value is directly returned to the caller.
+>   */
+>  struct kho_radix_walk_cb {
+>  	int (*key)(unsigned long key);
+
+[Severity: High]
+This isn't a bug introduced by this patch, but does the key encoding work
+correctly on 32-bit platforms?
+
+Looking at kho_encode_radix_key(), the code performs
+1UL << (KHO_ORDER_0_LOG2 - order). With KHO_ORDER_0_LOG2 defined as
+64 - PAGE_SHIFT (52 for 4KB pages), doesn't shifting a 32-bit 1UL by
+52 bits invoke undefined behavior?
+
+Additionally, since the radix key is typed as unsigned long (which is 32 bi=
+ts
+on these platforms), is it structurally possible to encode and decode the
+52-bit shifted physical address and order bit as designed?
+
+> +	int (*table)(phys_addr_t phys);
+>  };
+> =20
+
+[ ... ]
 
 > diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec=
 _handover.c
-> index 2e2b4e73f00d3..0dfdf0f9781ef 100644
+> index b22b3cec251ee..0f8d058f1a272 100644
 > --- a/kernel/liveupdate/kexec_handover.c
 > +++ b/kernel/liveupdate/kexec_handover.c
+
 [ ... ]
-> @@ -396,6 +397,129 @@ void kho_radix_destroy_tree(struct kho_radix_tree *=
-tree)
->  }
->  EXPORT_SYMBOL_GPL(kho_radix_destroy_tree);
+
+> @@ -295,6 +301,12 @@ static int __kho_radix_walk_tree(struct kho_radix_no=
+de *root,
+>  	unsigned int shift;
+>  	int err;
 > =20
-> +/*
-> + * Convert a crash tree node's children from PA to VA in-place via memre=
-map().
-> + * On failure, already-remapped pages are not cleaned up -- the crash ke=
-rnel
-> + * is short-lived and will reboot after dump collection, so the leak is
-> + * inconsequential.
-> + */
-> +static int kho_radix_crash_convert_node(struct kho_radix_node *node,
-> +					unsigned int level)
-> +{
-> +	struct kho_radix_node *child;
-> +	unsigned int i;
-> +	int err;
-> +
-> +	for (i =3D 0; i < (1 << KHO_TABLE_SIZE_LOG2); i++) {
-> +		if (!node->table[i])
-> +			continue;
-> +
-> +		/* Validate: PA must have bit 63 clear and be page-aligned */
-> +		if ((node->table[i] & BIT_ULL(63)) ||
-> +		    (node->table[i] & (PAGE_SIZE - 1)))
-> +			return -EINVAL;
-> +
-> +		child =3D memremap(node->table[i], PAGE_SIZE, MEMREMAP_WB);
+> +	if (cb->table) {
+> +		err =3D cb->table(virt_to_phys(root));
 
 [Severity: High]
-Since this recursively calls memremap() for every populated node in the tre=
-e,
-could this exhaust the crash kernel's limited memory resources? A fully
-populated tree might create thousands of individual virtual mappings, consu=
-ming
-significant memory for tracking structures like vm_struct and page tables.
+This isn't a bug introduced by this patch, but does the KHO radix tree root
+node get allocated via kzalloc(PAGE_SIZE, GFP_KERNEL) in kho_init()?
 
-Also, the untrusted physical addresses read from the crashed kernel's memory
-are passed blindly to memremap(). If the old kernel crashed due to memory
-corruption, could these pointers contain garbage values pointing to non-RAM
-regions like MMIO, potentially triggering a Machine Check Exception (MCE) w=
-hen
-accessed?
+The SLUB allocator does not guarantee page alignment for PAGE_SIZE objects
+when debugging features (like redzones) are enabled. If the root node cross=
+es
+a physical page boundary, won't this table callback only receive the physic=
+al
+address of the start of the object?
 
-> +		if (!child)
-> +			return -ENOMEM;
-> +
-> +		/* Overwrite PA with VA in-place */
-> +		node->table[i] =3D (u64)(uintptr_t)child;
+If a walker treats this address as a single page, could it fail to mark the
+second page as in-use? During kexec, couldn't this unmarked page be treated
+as free scratch memory and overwritten, corrupting the KHO radix tree for t=
+he
+incoming kernel?
 
-[Severity: High]
-Because memremap() creates a direct mapping to the underlying physical memo=
-ry,
-does assigning the virtual address here destructively modify the old kernel=
-'s
-physical memory? This seems like it would corrupt the crash dump, causing
-offline analysis tools like crash or makedumpfile to encounter meaningless
-virtual addresses instead of the original physical addresses.
+Note: I see this is fixed later in the series in commit
+d207a159c7c112b64706fe2fb64399a65932fdb6 ("kho: add kho_radix_init_tree()").
 
-> +
-> +		/* Recurse for intermediate levels; level 1 children are leaves */
-> +		if (level > 1) {
-> +			err =3D kho_radix_crash_convert_node(child, level - 1);
-> +			if (err)
-> +				return err;
-> +		}
+> +		if (err)
+> +			return err;
 > +	}
 > +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * kho_radix_crash_init - Initialize a crash-kernel view of a KHO radix =
-tree.
-[ ... ]
-> + */
-> +int kho_radix_crash_init(struct kho_radix_crash_tree *tree, phys_addr_t =
-root_pa)
-> +{
-> +	struct kho_radix_node *root;
-> +	int err;
-> +
-> +	tree->root =3D NULL;
-> +
-> +	if (!root_pa || (root_pa & (PAGE_SIZE - 1)))
-> +		return -EINVAL;
-> +
-> +	root =3D memremap(root_pa, PAGE_SIZE, MEMREMAP_WB);
-> +	if (!root)
-> +		return -ENOMEM;
-> +
-> +	err =3D kho_radix_crash_convert_node(root, KHO_TREE_MAX_DEPTH - 1);
-> +	if (err)
-> +		return err;
-> +
-> +	tree->root =3D root;
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(kho_radix_crash_init);
+>  	for (i =3D 0; i < PAGE_SIZE / sizeof(phys_addr_t); i++) {
 
-[Severity: Medium]
-This API is exported to modules and allocates mappings via memremap(), but
-there is no corresponding kho_radix_crash_destroy() provided. Even if the
-crash kernel is short-lived, should kernel APIs exported to modules enforce
-symmetrical resource lifecycle management to avoid permanent vmap memory
-leaks if a module is unloaded or fails initialization?
+[Severity: Critical]
+This is a pre-existing issue, but does this loop correctly bound memory
+accesses on 32-bit platforms?
 
-> +
-> +/**
-> + * kho_radix_crash_contains_page - Check if a page is in a crash-kernel =
-radix tree.
-[ ... ]
-> + * Note: This function checks specifically for the presence of the page =
-at the
-> + * given order. If a larger order page that encompasses this page is pre=
-served,
-> + * this function will return false.
-> + *
-> + * Return: true if the page is present in the tree, false otherwise.
-> + */
-> +bool kho_radix_crash_contains_page(struct kho_radix_crash_tree *tree,
-> +				   unsigned long pfn, unsigned int order)
-> +{
-> +	unsigned long key =3D kho_encode_radix_key(PFN_PHYS(pfn), order);
+Since sizeof(phys_addr_t) is 4 bytes on 32-bit platforms,
+PAGE_SIZE / sizeof(phys_addr_t) evaluates to 1024 for 4KB pages.
+KHO_TABLE_SIZE_LOG2 evaluates to 10, meaning the table array in
+struct kho_radix_node has 1024 elements of type u64 (8 bytes each).
+This makes the structure 8192 bytes large.
 
-[Severity: Medium]
-Since this searches for an exact match of the provided pfn and order, doesn=
-'t
-this fail to identify subpages of higher-order folios? If a page was
-preserved as part of a higher-order folio, an order-0 query for a PFN within
-that folio will fail to find the key and incorrectly return false.=20
+If node allocations only allocate a single PAGE_SIZE (4096 bytes), won't
+accessing root->table[i] in this loop up to 1024 read and write well past
+the bounds of the allocated page?
 
-Would callers like pfn_is_ram() be forced to manually iterate through all
-possible orders up to MAX_PAGE_ORDER to reliably determine if a page is
-preserved?
+Also, by relying on sizeof(phys_addr_t), doesn't the FDT format vary by
+platform and break ABI cross-compatibility?
 
-> +	struct kho_radix_node *node =3D tree->root;
+>  		if (!root->table[i])
+>  			continue;
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260528004204.1484=
-584-1-jloeser@linux.microsoft.com?part=3D14
+584-1-jloeser@linux.microsoft.com?part=3D4
 
