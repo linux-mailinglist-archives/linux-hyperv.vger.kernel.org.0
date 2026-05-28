@@ -1,121 +1,202 @@
-Return-Path: <linux-hyperv+bounces-11301-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11302-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KC71BCGoF2qhMQgAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11301-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 04:27:45 +0200
+	id uEAQKWXdF2oUTggAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11302-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 08:15:01 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0416B5EBC3D
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 04:27:43 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id A69105ED2D2
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 08:14:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id C66DE3010232
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 02:27:40 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 12B75301B1C3
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 06:14:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DCBC2F547F;
-	Thu, 28 May 2026 02:27:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27C6F2C15AC;
+	Thu, 28 May 2026 06:14:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FeFqvv5+"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QsmuQI6l";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="gUwSe44R";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QsmuQI6l";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="gUwSe44R"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5632E92BA;
-	Thu, 28 May 2026 02:27:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9123523BCF7
+	for <linux-hyperv@vger.kernel.org>; Thu, 28 May 2026 06:14:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779935257; cv=none; b=Z2hau5TI43mbrwDcxhMh5xNKPBgkuTOagaGc8fBUBSs5YnbLqY0CmDytiDSrDMVkVFIrjXvbD4pvsY/vsOhNRGv58bUkCVE7moaaxKWrmpqpBg2+R4UaTf+E7SG7gVWLFT4nB5+HXZMoMnjsHC+jKKw7BvyMPOI1GBrGceFoDhc=
+	t=1779948896; cv=none; b=fBGXWpDGruITGX58LoF5MA+OEHiTr1O4NVUk44IqGvRvkUT+tPS/ep0k9sGOT9zhLuCZYHFTnHR8fXqEZ3vMv2zXuQhxv/mvGTK7CDN3z3vmXvMo82iv/lL4mr9B3hT2jsX6djxIDrsca+m7z8THYE1T78YrSN4rRzGLcIh+CjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779935257; c=relaxed/simple;
-	bh=dmb/hy0IbR3i5uy+od9KVGCaLdQwxDjYmUf8Xfw96Zs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=B/A6bF4nPlwqzlZFiU0LX3YvAW/ocHEsff7EkmeB/Dh2hTD9qLWEI/riYBQqUYjs8EuYOyDte/7ZnlZpg7ajh4copLLwlML/ZSl41VDAdvC5nHIIza5BIDzhp8IG+NnWOYCLAJ9ORW1HH6Lk81EPTjc9W/duKU7s17bEZsnrfwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FeFqvv5+; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAA541F000E9;
-	Thu, 28 May 2026 02:27:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779935256;
-	bh=maTG8Js/fanjViCJFnZ1I6Y7ycF/UHkaEKk6SqwCkv8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=FeFqvv5+1XoZxQyVyDc88Xza5pnNKMwixzq6SzQjVVNQIIDumTBQsdEO916B0+W9B
-	 ICFL7h5BF5TMogrURM/t0Yfm5BXEvFO2kDPw80xDqH0Y4H1TsBig6e323laNRFRZVP
-	 qcAOmNlOWIQdy4bsx0ixMJAElBjn4kmCkC2oKCet025LHNPzOPN5qJXNq7oa6QnEjj
-	 BazThnuN0PmMRatofV/X3tp3I4eSvwtblik9SXDsKN6LXk9qlvoTKci8JChjz3oj4Z
-	 npj4TeS0qCNOJEusyK9i7IyNDInQc0hsMcins814jbCjdoQI34UZuYhBqTqRvMaJi/
-	 3Wg/Futh/nSvQ==
-Date: Wed, 27 May 2026 19:27:35 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Long Li <longli@microsoft.com>
-Cc: Konstantin Taranov <kotaranov@microsoft.com>, "David S . Miller"
- <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>, Eric Dumazet
- <edumazet@google.com>, Andrew Lunn <andrew+netdev@lunn.ch>, Jason Gunthorpe
- <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, Haiyang Zhang
- <haiyangz@microsoft.com>, "K . Y . Srinivasan" <kys@microsoft.com>, Wei Liu
- <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
- shradhagupta@linux.microsoft.com, Simon Horman <horms@kernel.org>,
- netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v11 0/6] net: mana: Per-vPort EQ and MSI-X
- management
-Message-ID: <20260527192735.34a794cf@kernel.org>
-In-Reply-To: <20260523020258.1107742-1-longli@microsoft.com>
-References: <20260523020258.1107742-1-longli@microsoft.com>
+	s=arc-20240116; t=1779948896; c=relaxed/simple;
+	bh=2bK7PT7izEcocejQvHw3OSKE2A3Pc69JwsyCors9BFA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LSUEVvKsDCYLrMMLQlDhgpVvJcPuq6NyF/n+W0Q44htbiKUCpMrAbrtSdsbGnW9iJEJEz8/GvjP1I3iHgEMgQRM0wBmzHJatcDVPo+nhKaTmQ161jihrLuwutrsWIBBFkVvbrmkMF3RtQ72XW1n5pkNEEmY7WKGOY9Uejc6Sx58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QsmuQI6l; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=gUwSe44R; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QsmuQI6l; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=gUwSe44R; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id BA575672C6;
+	Thu, 28 May 2026 06:14:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1779948892; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=rD2q/7ZAH16ADF4bRqwBKk/NpKcW9E1DBI7Xrh/6WoI=;
+	b=QsmuQI6lL/BNCGmSn/PILJxD9ELGyrjaeJMoc1oM5zfyl8Eqnp8oZsAD3pC8zXZR5yp9CW
+	HbhyoFvzK6CLxs6G9/n8eXaVxjPf4HICP8vUnVAThunlDrNVQ3DMxeVL4mYbj84B/mqgQy
+	s3+IpuoeUcVYpcbh6m9HDZjcbtF31xs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1779948892;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=rD2q/7ZAH16ADF4bRqwBKk/NpKcW9E1DBI7Xrh/6WoI=;
+	b=gUwSe44RLMXgO7KuEFbhWBIs3yv/9nnZAOLtVLsNyHjz+MNcGQAh0dmG2fPjs6VnkZjvtw
+	o7XMUlelg81OMkDg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=QsmuQI6l;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=gUwSe44R
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1779948892; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=rD2q/7ZAH16ADF4bRqwBKk/NpKcW9E1DBI7Xrh/6WoI=;
+	b=QsmuQI6lL/BNCGmSn/PILJxD9ELGyrjaeJMoc1oM5zfyl8Eqnp8oZsAD3pC8zXZR5yp9CW
+	HbhyoFvzK6CLxs6G9/n8eXaVxjPf4HICP8vUnVAThunlDrNVQ3DMxeVL4mYbj84B/mqgQy
+	s3+IpuoeUcVYpcbh6m9HDZjcbtF31xs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1779948892;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=rD2q/7ZAH16ADF4bRqwBKk/NpKcW9E1DBI7Xrh/6WoI=;
+	b=gUwSe44RLMXgO7KuEFbhWBIs3yv/9nnZAOLtVLsNyHjz+MNcGQAh0dmG2fPjs6VnkZjvtw
+	o7XMUlelg81OMkDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A2EFC5AC36;
+	Thu, 28 May 2026 06:14:52 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Fo5SJlzdF2q9AwAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Thu, 28 May 2026 06:14:52 +0000
+Message-ID: <195283d4-bec0-4f8a-aa8a-a0a0aa7d4a86@suse.de>
+Date: Thu, 28 May 2026 08:14:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 01/10] drm/damage-helper: Do not alter damage clips on
+ modeset, but ignore them
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-hyperv@vger.kernel.org
+References: <20260527145113.241595-2-tzimmermann@suse.de>
+ <20260527151944.F29571F000E9@smtp.kernel.org>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20260527151944.F29571F000E9@smtp.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -4.51
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[suse.de,none];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11301-lists,linux-hyperv=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[kuba@kernel.org,linux-hyperv@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11302-lists,linux-hyperv=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWO(0.00)[2];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 0416B5EBC3D
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[tzimmermann@suse.de,linux-hyperv@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_FIVE(0.00)[6];
+	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_NONE(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,suse.de:mid,suse.de:dkim,suse.com:url]
+X-Rspamd-Queue-Id: A69105ED2D2
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, 22 May 2026 19:02:50 -0700 Long Li wrote:
-> The following changes since commit 95fab46aea57d6d7b76b319341acbefe8a9293c8:
-> 
->   Merge branch 'net-convert-atm-xdp-af_iucv-l2tp_ppp-rxrpc-tipc-to-getsockopt_iter' (2026-05-22 11:11:12 -0700)
-> 
-> are available in the Git repository at:
-> 
->   https://github.com/longlimsft/linux.git tags/mana-eq-msi-v11
-> 
-> for you to fetch changes up to a26d11135abba51e81ae8b9689e288718af95088:
-> 
->   RDMA/mana_ib: Allocate interrupt contexts on EQs (2026-05-22 20:35:43 +0000)
 
-The branch is no good, it needs to be your patches applied on top 
-of a commit already in Linus's tree. The current branch is on
-top of net-next, RDMA would have to pull in 100s of networking
-commits together with your changes.
+
+Am 27.05.26 um 17:19 schrieb sashiko-bot@kernel.org:
+[...]
+> [Severity: High]
+> By no longer setting plane_state->fb_damage_clips to NULL during a modeset,
+> will this break drivers that bypass the damage iterator?
+
+No drivers bypass the damage iterator. Doing so would be an error.
+
+>
+> Drivers like AMDGPU (in fill_dc_dirty_rects) and vmwgfx directly call
+> drm_plane_get_damage_clips_count() and drm_plane_get_damage_clips().
+> Because these accessor functions do not check the new ignore_damage_clips flag,
+> won't they see a non-zero clip count if userspace provided one?
+>
+> If they see a non-zero clip count during a modeset, will they incorrectly
+> skip their fallback paths and perform a partial update instead of the
+> required full framebuffer update?
+>
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstr. 146, 90461 Nürnberg, Germany, www.suse.com
+GF: Jochen Jaser, Andrew McDonald, Werner Knoblich, (HRB 36809, AG Nürnberg)
+
+
 
