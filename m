@@ -1,230 +1,321 @@
-Return-Path: <linux-hyperv+bounces-11307-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11308-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yEjAEK8NGGrMbAgAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11307-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 11:41:03 +0200
+	id oHSXJqYVGGrKbggAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11308-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 12:15:02 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id A02F55EFC61
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 11:41:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EAE455F0621
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 12:15:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4DC30323BDB5
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 09:31:42 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0A3883219BF9
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 10:01:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E8033AF672;
-	Thu, 28 May 2026 09:30:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE77F303A37;
+	Thu, 28 May 2026 10:01:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f0pO4gbd";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="V6KbaBgN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FesYG6J+"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f52.google.com (mail-yx1-f52.google.com [74.125.224.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC762F7F18
-	for <linux-hyperv@vger.kernel.org>; Thu, 28 May 2026 09:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779960650; cv=none; b=Z1i2HiVByA4quDyscAzp1e80UaF9BwKayVopHC1mlIb4MZ4TgeInT5mTUIRtHQPPJliZVPk2FJ1GQ82WjU1XuOhGJh0DmjYlHAb7mhfa9gsPUETCNkjtYkLHJRaSxqmVRaEHPPYbEYYW7N5HCPeJyxRUOX2cSS4rxkDzVwvWpn4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779960650; c=relaxed/simple;
-	bh=LoGASex2qnTG+TbDm1RTWf0ExI8R1+KY/4AGVcMtGWU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=QNk39zZC4qxfwbuMkQ2TSpo5QiOQ6lJkZ7b2d9alIixPzaOf9BJdZAaR8kiKGdLCddP4f/UzULZxmNpWB+d4TYnoO9Zj7C8sW6A/8/PIHxunMjPQ3gDZCzeVQ7jFvZnX0QLwnnoe/cucuGA8v2fWj+tXQoRf/s/y1ltaD8BWiTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f0pO4gbd; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=V6KbaBgN; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1779960645;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tDPtL7TwxG75IfmZr4FfYfvPDdnmXjEs/bxPVe7ap1c=;
-	b=f0pO4gbdAje+bUGJJpmNOBTVLTWgbtr09S6H7/x0qIrriZEEuAO84G0+FIt6OgUhSBsvEC
-	5K+TtuC5BXNg2t/3/ZIr+D46B46ttIlg0qphs/7Y0FPZMGL7Cup+oFkpCCvhcmhw8rZ4fC
-	xJmUqSh9G5gOfXwgqxFHwiEmjjtX9hg=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-561-6qh_05zJOS6LKD1-ANBHJA-1; Thu, 28 May 2026 05:30:44 -0400
-X-MC-Unique: 6qh_05zJOS6LKD1-ANBHJA-1
-X-Mimecast-MFC-AGG-ID: 6qh_05zJOS6LKD1-ANBHJA_1779960643
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-44d9ace59efso7359210f8f.1
-        for <linux-hyperv@vger.kernel.org>; Thu, 28 May 2026 02:30:43 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A327E792
+	for <linux-hyperv@vger.kernel.org>; Thu, 28 May 2026 10:01:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779962473; cv=pass; b=IYZzmqLpipPyHTA8UvghfgdJyNySZOdE03Lhl5Hi/EGmlIjRQjPPnat+uKEv900jPGIbDDEp1Ji8QliSRwn4Yc6GDUf7SsEv7O5gYdZDmvX2V/URO0FGKIkeZEV4+uRw9+2i8Nwp7bIbrPblqiYecqylIqZ5WwCJzT8bsBy7WdM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779962473; c=relaxed/simple;
+	bh=FzjUixVwJw0+1KE94lj+u5deezMCXP0d7xN7kG2mtOg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cXVjp1EEJJDVsNWL4jcutis4B4NUgWJLcDypsn3ET2O8zRgcXkGy+4kexrduELwd7EMJL72JpUvX/kZvDgai1uAz7IG+HQBH+YtegGF4IO4AVVW6ycX61RXPZ6f0uPHdSv2HOi/dHE5zZ8z3+cBA4TTGk0jfrI3Pls9Dwr/rpOk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FesYG6J+; arc=pass smtp.client-ip=74.125.224.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yx1-f52.google.com with SMTP id 956f58d0204a3-65c1ba7eeb6so12456506d50.1
+        for <linux-hyperv@vger.kernel.org>; Thu, 28 May 2026 03:01:11 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779962471; cv=none;
+        d=google.com; s=arc-20240605;
+        b=NhVkB58RNHH+DM9fLpPEV5MNvs/XOa1PHxfC1L21wk+TvTA+8IuqR7FFc6ggi16hHv
+         ymIYFyLGg9jUnplOrOSMBKvo9fCjwjK44TkCB3wSfqWKbgnFKcs3c28oWu7nA/hV2Yrp
+         r5SlLIChyhb7GYffnnrYntyYZYUn0kNYsfceFdYv8pWfQx1wDs1lvnfgSgTt3Iqhr2s8
+         GlG420Dh4K51XDeci2DDce1Cimb3wzFWUoWkjm6Cy/xDsVbUaSD11U0BcBflAlpMZ5K8
+         9xHchXo5SKIBIzDs0cZWVoBQj94cn+ZWVFAuWzHoMgB3XWKIVggY+NGcZVzDhSTI08UI
+         23CQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=ENaGop7hdOhRvlo9/v6zprcr5Co1+opC5qv3HonlvMs=;
+        fh=imtzic9tMyE3Nfh55vX+Xqx9eGnR/wDJ59Qc2FSpKgM=;
+        b=GzoAWexrf0vWc+CI2tzUyFkgwelTaPFZEQrtplm+OBiosxtjqdWJFgL2lSvq8+v404
+         Y62vxywkaWhrHqV6g9F4vXd308QTWEVYxJOua22+rjdJjtUakCzCMt1q9B+g0JL+sGoD
+         QDFWXPAq9vSr+WPdCQZ5o3m+fUWKRmgoK827HH6ATHUJMhxBiKMdF/NYVLCZ3ZEh9EEd
+         xkzCrBfLjIca1Ezurgbj/n4768BYvHfa4He5L2Gnah8s/y1tUEB3wJF8Vi6jmaPsxjdV
+         W7YkvajioCXshD2LxmlTQvAAvGmuCurYdBwWmzmJTutSVt3b8zEfMxwnwcJ4CzPmeQXV
+         4wTA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1779960643; x=1780565443; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=tDPtL7TwxG75IfmZr4FfYfvPDdnmXjEs/bxPVe7ap1c=;
-        b=V6KbaBgNjttznWNNpi1z9T3hFVZiNKzLFLHpJY4/7dM8xcU3Gn1PhchlRhVKGB2gPD
-         BADVKIINDAJhLRj69ru8cVAHH/wWq9UOWIJmA/C0pPF//y3FGrhZvNVE19dxjx0Xxpdy
-         XFKgWQ1rqOPpvulaLYdgbzBcCTcigrrR62fAvSNdAO59R1vUhVG4YFKVAKXWuEE15tpT
-         zs0/T6KrlQ1iphzT8mHq5Xc2zq/y5A2l9FO3CyboIXIROMACE5Qnw5e60dRnSzQNN/aL
-         z5nVoSjTZwpJoPDiTri3lw1bTLHEKR9Ld2tOgEjwn6z/i8plJTYcsroF7jxNGAtHd82A
-         qHoQ==
+        d=gmail.com; s=20251104; t=1779962471; x=1780567271; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ENaGop7hdOhRvlo9/v6zprcr5Co1+opC5qv3HonlvMs=;
+        b=FesYG6J+l7m+pHb7fyct4xBCLzmz1eWsnoX0b0TxMN1Za33P3X7rZGqwuFsboe69FF
+         I5c8nU2oXUIsH/IBM08kFWRN7ONGe/Yb6KxUKGbfnwJaLAUQlKveWEqbqTR0as0K0HUo
+         X1jEKKx/ls0osg2OqAEM6tHedcf60hb8KJb7+E2YkpW5zUEneqMYcua11tjN1/gBJ8IM
+         XqgnbvpCd9MBSkj5qtZohAmfXeQB8HaYpzHpAZcgVa5P6XRcGh7m2hIb8WKmtZUe0Owq
+         6lBJFMEO/2w9v4bALEnTpnRUbkJ/O9HTV0TyrIEAROtVoBgkp9Qjfjf/OgBj7PM2g2e2
+         7loA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779960643; x=1780565443;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tDPtL7TwxG75IfmZr4FfYfvPDdnmXjEs/bxPVe7ap1c=;
-        b=HZ68i9j+fikTWbLvzKq0pfcn6Cuos1LVIvtlGhFW6QekpuXHtMSQGT/B1/zGd8BKJT
-         aRwHQd540Ug/jqd7lJ6AbjDsdZ1fG85zGgIaApE5NAuxRfSLZURie8c+MZMzs1mkcmin
-         uY7ijxFqzh7RrWZNf0/kePD6ot/jqV7EH0OvVJMli3037+caukM604nNnnqIJHm3X1d5
-         Heu6ewIPar5xWKhXvjzXNRC7crsS9haDd6L3rt+9MSSmLDFbs7GJLjbSjMkO3vj/jUMz
-         4/QWBGtF7YEwc74lSou1Od92B2c1zAMON4RUzs/It3Xu0TUOLKE5pmPCDD5d7sAUUhPE
-         Py4A==
-X-Forwarded-Encrypted: i=1; AFNElJ+oAAnYnOe/WnNC712AXUt1jyCbR2+VoYO4IusTVIxR37p+ysMxbgzRU2uUtotaVd+i4vlQZLD9PWNMrd8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2ohsRD/OjvtwHNfsCUfTTutMFICZ7LvywHPmbe+6TfJpvg3jI
-	o+Kh98qHGsy7I97yHpQeNh9QxUoT5IViiHD6+Ib2klCd7r7WFiAZ2kGOUm8Gf6/OwCgipcdEJbI
-	rFjODwZZbJSjPxXX7SudDpvuKFkxfsSS4FGCIroN6aSQkOxulsc7VxAvHHr/prbz+YA==
-X-Gm-Gg: Acq92OFAmSagrTBO8mO6rDj/BcMzaCjGNUjWAFR1fTcq51Va8SwAtTGc75JLbHmGra0
-	Ba0Hj8AkDqLr2InOvUc+Zv/gPkKyK1aQG8ccHkdp67aUWQKCRymhOMRdzrLWGkvKsT2v18aEc8B
-	5sZ09PwvSwy1rSjOEkOgyxDKehfcJC9KM92zFU2hzuUXAgcyphwxkcRenCsl5zlPTOm/Q3BNR0d
-	aXl5iqnvhfa8XsdQN7yKEbl3sCztJQbZ9VNTOD0DRk/+qRHhQpVncPIiygvSygvsIKWl3HWrxQg
-	ZBI4cQGoti8Z/zlUxPWlUrirv9vU1zrUehyNAVg+k9i6zaQLmEfBRVetUycq7Z+z2bEQecdamCQ
-	8av0cK8q8kilAOLw/DHH7oVUUqi9hSmKt4D7gQRY6/yhGDJs0w4pWvgn6FFJYeXBspQ==
-X-Received: by 2002:adf:e009:0:10b0:43d:c95b:c46f with SMTP id ffacd0b85a97d-45eb38bfdebmr32523760f8f.38.1779960642517;
-        Thu, 28 May 2026 02:30:42 -0700 (PDT)
-X-Received: by 2002:adf:e009:0:10b0:43d:c95b:c46f with SMTP id ffacd0b85a97d-45eb38bfdebmr32523688f8f.38.1779960641995;
-        Thu, 28 May 2026 02:30:41 -0700 (PDT)
-Received: from [192.168.88.32] ([216.128.11.12])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45edb5a296bsm11898279f8f.21.2026.05.28.02.30.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2026 02:30:41 -0700 (PDT)
-Message-ID: <3665f7c1-9c97-44ac-8b6a-e6c31ad96730@redhat.com>
-Date: Thu, 28 May 2026 11:30:39 +0200
+        d=1e100.net; s=20251104; t=1779962471; x=1780567271;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ENaGop7hdOhRvlo9/v6zprcr5Co1+opC5qv3HonlvMs=;
+        b=eNlLNdpRauxqCIkTgDaXd5GrlD0h88KX0bevX7C+SzRj6XmafoxmuXaCKZoiuBaNlD
+         dnyE4Q/8LS4b0bXF5pEjUOA90iyg0wPKGFuCmQcWJfXP+lks5ztCHpxLqmannKWIGzgR
+         mD5/GQqTB5D3Gb+Kran/6r0vccKV8wsmijDHEwyKgZL0gFxODTZL/wq9xrgoB9RGStB3
+         ySrKnBm2KYr662gIXGPZDNDg8sFQl98X0yA+3laKFbQoD0jQ6qDUQvL1Ffxu6QK3FUBq
+         GkbStlbv1m/IdLldOkVMORPKMRFhB13GVS4K6E9cB8PLcLEKEqMuE55SeVAiA2l8obbk
+         jxXQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/39tljotY4XKhrdq46DZ3/SYj6qqLxZju9rBSMvUFA5SoPfxyUTeJg3ZJzB5Ksn2z047PqvT0BQ2AIfbI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx04RbT4jqMXx+K7OyYRcD4kNcJuOUX3wyt735b/rS3E0znnaqu
+	ay6fh8IyuLOTvqLwNjOsDI3VKu/X3YI9FjwbJpmLzAfdfk3Y0/p/Mjj5xlQYw+PzBvYqDdonQjT
+	o1P5i4MdrhtK/7iEsyiC5y1YHlENA8NA=
+X-Gm-Gg: Acq92OGCEHDBhM3cOLyRqWxu6gsTAy+ZUBAGwbsukSckyTmcpNhl+QquTrQzatmkTP9
+	gGxskBK5GIJDgXhAP1VlsdlQTNgrRLHyCDVzgpfqWAcfuyVnlEbK7vH2hDS5SUTdW5Tyt06Xorc
+	8pDu5BYLAL3/1MaKTd2KDaD6Qdq/0R6MKdjvq0QXYTPzLkZwRi5WV4kudm1RQxROCETITeNZ+fa
+	EVTcoyMCfKuuZHMPsjibRwOOTpvnQDX9hrgJOj/0k6uyGB+5P9VG8NAfQJQTG0sCupAeoycY5eT
+	jzZ0CGQJpAWlpwZo4HCK9vx60IokWsphPoNyaJdXGYQcHUzs5dgp+7OJ0ngOelklWhPfaxrDHdA
+	O7PCR1g==
+X-Received: by 2002:a05:690e:4090:b0:65e:421f:25a with SMTP id
+ 956f58d0204a3-65ec9938b9dmr23205364d50.53.1779962469261; Thu, 28 May 2026
+ 03:01:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v3 2/2] net: mana: Skip redundant detach on
- already-detached port
-To: Dipayaan Roy <dipayanroy@linux.microsoft.com>, kys@microsoft.com,
- haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, leon@kernel.org, longli@microsoft.com,
- kotaranov@microsoft.com, horms@kernel.org, shradhagupta@linux.microsoft.com,
- ssengar@linux.microsoft.com, ernis@linux.microsoft.com,
- shirazsaleem@microsoft.com, linux-hyperv@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-rdma@vger.kernel.org, stephen@networkplumber.org,
- jacob.e.keller@intel.com, dipayanroy@microsoft.com, leitao@debian.org,
- kees@kernel.org, john.fastabend@gmail.com, hawk@kernel.org,
- bpf@vger.kernel.org, daniel@iogearbox.net, ast@kernel.org, sdf@fomichev.me,
- yury.norov@gmail.com, pavan.chebbi@broadcom.com
-References: <20260525081129.1230035-1-dipayanroy@linux.microsoft.com>
- <20260525081129.1230035-3-dipayanroy@linux.microsoft.com>
-From: Paolo Abeni <pabeni@redhat.com>
-Content-Language: en-US
-In-Reply-To: <20260525081129.1230035-3-dipayanroy@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
+References: <20260527133917.207150-1-tzimmermann@suse.de> <CAHijbEVZBRTK7yhZy8gaZwb19JMzUD_nA2S1LOKX2NrK19RBsQ@mail.gmail.com>
+ <1d399c2d-b50f-4d19-8170-9db8961e4227@suse.de>
+In-Reply-To: <1d399c2d-b50f-4d19-8170-9db8961e4227@suse.de>
+From: Julian Orth <ju.orth@gmail.com>
+Date: Thu, 28 May 2026 12:01:01 +0200
+X-Gm-Features: AVHnY4Kd6TXNqqh3i-IesxOIMTyuSSIzXsJX_ARE_lWWTyd_wM1yd783Bw12QD0
+Message-ID: <CAHijbEUKpOuDLJES9AbSp8Pk+egeDPe7KPyBy1xBFM9ET9peCg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/9] drm: Limit DRM_IOCTL_WAIT_VBLANK to vblank interrupts
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: simona@ffwll.ch, airlied@gmail.com, mdaenzer@redhat.com, 
+	pekka.paalanen@collabora.com, jadahl@gmail.com, contact@emersion.fr, 
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org, mhklinux@outlook.com, 
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	wayland-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org, 
+	virtualization@lists.linux.dev, spice-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11307-lists,linux-hyperv=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[linux.microsoft.com,microsoft.com,kernel.org,lunn.ch,davemloft.net,google.com,vger.kernel.org,networkplumber.org,intel.com,debian.org,gmail.com,iogearbox.net,fomichev.me,broadcom.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11308-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[34];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[ffwll.ch,gmail.com,redhat.com,collabora.com,emersion.fr,linux.intel.com,kernel.org,outlook.com,lists.freedesktop.org,vger.kernel.org,lists.linux.dev];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[16];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[redhat.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[pabeni@redhat.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: A02F55EFC61
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[juorth@gmail.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:url,suse.de:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: EAE455F0621
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 5/25/26 10:08 AM, Dipayaan Roy wrote:
-> When mana_per_port_queue_reset_work_handler() runs after a previous
-> detach succeeded but attach failed, the port is left in a detached
-> state with apc->tx_qp and apc->rxqs already freed. Calling
-> mana_detach() again unconditionally leads to NULL pointer dereferences
-> during queue teardown.
-> 
-> Add an early exit in mana_detach() when the port is already in
-> detached state (!netif_device_present) for non-close callers, making
-> it safe to call idempotently. This allows the queue reset handler and
-> other recovery paths to simply retry mana_attach() without redundant
-> teardown.
-> 
-> Fixes: 3b194343c250 ("net: mana: Implement ndo_tx_timeout and serialize queue resets per port.")
-> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> Signed-off-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
-> ---
->  drivers/net/ethernet/microsoft/mana/mana_en.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> index 0582803907a8..1e1ad2795c3c 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> @@ -3350,6 +3350,12 @@ int mana_detach(struct net_device *ndev, bool from_close)
->  
->  	ASSERT_RTNL();
->  
-> +	/* If already detached (indicates detach succeeded but attach failed
-> +	 * previously). Now skip mana detach and just retry mana_attach.
-> +	 */
-> +	if (!from_close && !netif_device_present(ndev))
-> +		return 0;
-> +
->  	apc->port_st_save = apc->port_is_up;
->  	apc->port_is_up = false;
+On Thu, May 28, 2026 at 9:54=E2=80=AFAM Thomas Zimmermann <tzimmermann@suse=
+.de> wrote:
+>
+> Hi
+>
+> Am 27.05.26 um 18:31 schrieb Julian Orth:
+> > On Wed, May 27, 2026 at 3:39=E2=80=AFPM Thomas Zimmermann <tzimmermann@=
+suse.de> wrote:
+> >> DRM's WAIT_VBLANK ioctl synchronizes user-space clients to display
+> >> refresh. This is meaningless with vblank timers, which run unrelated
+> >> to the hardware's vblank.
+> >>
+> >> Disable the ioctl for simulated vblanks. Set DRM_VBLANK_FLAG_SIMULATED
+> >> for CRTCs with simulated vblank events in all such drivers. The vblank
+> >> timers of these devices still rate-limit the number of page-flip event=
+s
+> >> to match the display refresh.
+> >>
+> >> According to maintainers, user-space compositors do not require the io=
+ctl
+> >> for rate-limitting display output. Weston, Kwin and Mutter rely on com=
+pletion
+> >> events. Mutter optionally uses the WAIT_VBLANK ioctl only to optimize =
+the
+> >> time from input to output.
+> >>
+> >> When testing with mutter and weston, the page-flip rate appears correc=
+t
+> >> with the patch set applied.
+> > To avoid this being a regression, you need to test that this change
+> > does not regress input latency.
+>
+> Let me stress that the current situation is that there's high-quality,
+> and low-quality and no timing information. Depends on the driver and
+> hardware.
+>
+> >
+> > As discussed on IRC, compositors use vblank data to predict the time
+> > of the next flip event. For each device that you are touching here,
+> > there are two possibilities:
+> >
+> > - The vblank data is related to the flip timing, i.e. flip events and
+> > vblank events are sent at almost the same time. In this case removing
+> > these apis removes the path for compositors to predict the time of the
+> > next flip event. Input latency will therefore regress after idle
+> > periods when the compositor no longer has the time of the last vblank.
+>
+> User-space compositors seem to operate under this assumption. That, I
+> think, makes sense on better hardware with rendering and vblank IRQs.
+> Page flips are fast on such systems.
+>
+> >
+> > - The vblank data has nothing to do with the time of the next flip
+> > event. In this case this series could in fact improve latency because
+> > it removes the incorrect data from the compositor.
+>
+> Most of the hardware that would use vblank timers falls in this
+> category. Page flips often consist of memcpys into video memory, or they
+> transfer pixel data over slow peripheral busses. The amount of work per
+> page flip varies with the size of the damage rectangles.
+>
+> Any vblank timing information here is therefore of low quality. For some
+> scenarios, it would be common to miss a vblank or even the one after it.
 
-sashiko(gemini) notes the above can lead to different race:
+What matters is if the flip event will be aligned to _some_ vblank
+event. As long as that is the case, the compositor can estimate which
+vblank it will hit based on previous frames and can schedule its work
+accordingly. I believe KWin and Mutter already support scheduling
+frames for multiple vblanks in the future to support low-powered
+devices or devices that are under high load. I have not looked into
+this myself.
 
----
-Can this early return cause state machine corruption by bypassing the
-updates
-to apc->port_st_save?
-Consider this sequence:
-1. queue_reset_work runs, mana_detach() succeeds (apc->port_st_save = true,
-   apc->port_is_up = false), but mana_attach() fails.
-2. The admin brings the interface down (ip link set dev eth0 down), skipping
-   mana_close() since apc->port_is_up is false.
-3. The admin changes the MTU, triggering mana_change_mtu() which calls
-   mana_detach() followed by mana_attach().
-4. mana_detach() hits this new early return, preserving
-   apc->port_st_save == true.
-When mana_attach() runs, it sees apc->port_st_save == true and allocates
-queues, setting apc->vport_use_count = 1 and apc->port_is_up = true, even
-though the interface is administratively down.
-If the admin then brings the interface up, mana_open() will unconditionally
-call mana_alloc_queues(). That function calls mana_cfg_vport(), which will
-return -EBUSY because apc->vport_use_count is already 1.
-This leaves mana_open() failing and the interface down. Since the interface
-is already down, trying to bring it down again is a no-op, meaning
-mana_close() is never called to clean up the orphaned queues.
-Does this sequence permanently brick the port until the driver is reloaded?
----
+But even on high-powered devices compositors already take per-commit
+kernel work into account. For example, by default I aim to commit 1.5
+ms before vblank. This grace period is adjusted dynamically if I miss
+the expected vblank.
 
-I think you need to be more restrictive in the early return check.
+Therefore I don't think this is an argument against exposing vblank
+info. Even if the hardware had such an interrupt, the memcpy and
+slow-bus issues would continue to apply.
 
-/P
+>
+>
+> IMHO, the first thing to discuss is whether having possibly low-quality
+> timing information is preferable to having either high-quality timing or
+> none. I have no strong opinion, but would tend to the latter.
 
+If you want to make userspace aware that vblank events are not backed
+by hardware interrupts, then maybe this could be exposed as a driver
+cap or a flag in the vblank event. Userspace could then decide on
+their own what to do with that information.
+
+Currently I don't think any compositor would use that information
+since they target flip times and don't care if those times are driven
+by hardware or software (since this is not actionable by userspace
+anyway). So maybe the useful flag would be "flip times will not be
+aligned to any vblank event" if that applies to any driver.
+
+>
+> Best regards
+> Thomas
+>
+>
+> >
+> > Whether the times of the flip events correspond to hardware timings is
+> > not relevant. Everything in wayland compositors is scheduled against
+> > flip event timings and they are also forwarded to clients for their
+> > frame scheduling. If the flip timings are wrong/out of sync with the
+> > hardware, then removing the vblank apis does not improve this
+> > situation.
+> >
+> >> This change has been discussed at length on IRC recently.
+> >>
+> >> https://people.freedesktop.org/~cbrill/dri-log/?channel=3Ddri-devel&hi=
+ghlight_names=3D&date=3D2026-05-08&show_html=3Dtrue
+> >> https://people.freedesktop.org/~cbrill/dri-log/?channel=3Ddri-devel&hi=
+ghlight_names=3D&date=3D2026-05-12&show_html=3Dtrue
+> >> https://people.freedesktop.org/~cbrill/dri-log/?channel=3Ddri-devel&hi=
+ghlight_names=3D&date=3D2026-05-13&show_html=3Dtrue
+> >> https://people.freedesktop.org/~cbrill/dri-log/?channel=3Ddri-devel&hi=
+ghlight_names=3D&date=3D2026-05-15&show_html=3Dtrue
+> >>
+> >> v2:
+> >> - add filter to CRTC_GET_SEQUENCE and CRTC_QUEUE_SEQUENCE ioctls (Mich=
+el)
+> >> - clarify Mutter's behavior in cover letter (Michel)
+> >>
+> >> Thomas Zimmermann (9):
+> >>    drm/vblank: Add drmm_vblank_init() to indicate managed cleanup
+> >>    drm/vblank: Add DRM_VBLANK_FLAG_SIMULATED
+> >>    drm/amdgpu: vkms: Set DRM_VBLANK_FLAG_SIMULATED
+> >>    drm/bochs: Set DRM_VBLANK_FLAG_SIMULATED
+> >>    drm/cirrus: Set DRM_VBLANK_FLAG_SIMULATED
+> >>    drm/hypervdrm: Set DRM_VBLANK_FLAG_SIMULATED
+> >>    drm/qxl: Set DRM_VBLANK_FLAG_SIMULATED
+> >>    drm/virtgpu: Set DRM_VBLANK_FLAG_SIMULATED
+> >>    drm/vkms: Set DRM_VBLANK_FLAG_SIMULATED
+> >>
+> >>   drivers/gpu/drm/amd/amdgpu/amdgpu_vkms.c    |  3 ++-
+> >>   drivers/gpu/drm/drm_vblank.c                | 26 +++++++++++++++----=
+--
+> >>   drivers/gpu/drm/drm_vblank_helper.c         |  2 +-
+> >>   drivers/gpu/drm/hyperv/hyperv_drm_modeset.c |  2 +-
+> >>   drivers/gpu/drm/qxl/qxl_display.c           |  2 +-
+> >>   drivers/gpu/drm/tiny/bochs.c                |  2 +-
+> >>   drivers/gpu/drm/tiny/cirrus-qemu.c          |  2 +-
+> >>   drivers/gpu/drm/virtio/virtgpu_display.c    |  2 +-
+> >>   drivers/gpu/drm/vkms/vkms_drv.c             |  4 ++--
+> >>   include/drm/drm_crtc.h                      |  2 +-
+> >>   include/drm/drm_device.h                    |  2 +-
+> >>   include/drm/drm_vblank.h                    | 15 +++++++++++-
+> >>   12 files changed, 45 insertions(+), 19 deletions(-)
+> >>
+> >>
+> >> base-commit: 5fb5a9a63cf5ece68e0eeb6fa397da27712bccf0
+> >> --
+> >> 2.54.0
+> >>
+>
+> --
+> --
+> Thomas Zimmermann
+> Graphics Driver Developer
+> SUSE Software Solutions Germany GmbH
+> Frankenstr. 146, 90461 N=C3=BCrnberg, Germany, www.suse.com
+> GF: Jochen Jaser, Andrew McDonald, Werner Knoblich, (HRB 36809, AG N=C3=
+=BCrnberg)
+>
+>
 
