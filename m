@@ -1,145 +1,233 @@
-Return-Path: <linux-hyperv+bounces-11263-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11264-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +LeABpx7F2qqGggAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11263-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 01:17:48 +0200
+	id 2JxcFRCQF2oUJQgAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11264-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 02:45:04 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 20C285EAE15
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 01:17:47 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3DBC5EB5C0
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 02:45:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 402C93007A69
-	for <lists+linux-hyperv@lfdr.de>; Wed, 27 May 2026 23:17:44 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1773430086FC
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 May 2026 00:42:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BABE3264D0;
-	Wed, 27 May 2026 23:17:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACC98199EAD;
+	Thu, 28 May 2026 00:42:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LeLfEwA5"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="N2vAOfpA"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 748B912CDA5;
-	Wed, 27 May 2026 23:17:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 451171922F5;
+	Thu, 28 May 2026 00:42:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779923862; cv=none; b=PFciLm+e+SBs/Ek3uJbcEH336YvHeKtvnoJ6XOwP0bKLtZ2O253FSA6Qz/3W/qsoxgSPZRFognCqDX4C66U3vQ4eKSlakqBGqzoDSGeZrTeMg/Ff9Cb56uiBQq+NZ7Hc+O9L9y6jDCRh+I5pUg/u+W/HLhnVWWGBw7zqtqJtyB0=
+	t=1779928940; cv=none; b=e6qq7M/pJsWLX93NvCUz+1h9OkCxGtIf6dqtVSQ8NgO6XJMmhQE8UxecAlDF2CWtz8MCXRYa4ZPTpY6hA8B9e7OtQ4It5CFFJsHznsNDPJmo6duTZrvGK3EuLMYHuQPgWCgSGbZeS37kgfgenT2AsBFgk0xfJgk/BEVpAALGXXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779923862; c=relaxed/simple;
-	bh=CZ9SgH4iIizukUaWigKStqHzQdgwqPBo1duJe5NLhCI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IZK7hdy58ugxgaGMMayP0+ndHE71PhORiqs4AHq5AHQxrbAzGDkWKikh9D4fmz6jRA2zRl3ecl0icBNQfO4HYoQUbHYOzj3iCEwa0SvRR3jTvWHPJvYN0GZbD8DyqYjfqQXbY3TnMuZw6t4av9RXEo5zGhtMyVPLW+5cq5b9Is0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LeLfEwA5; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 105B71F000E9;
-	Wed, 27 May 2026 23:17:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779923861;
-	bh=Zb9tzaSppYJ5lTPKCwIdw1KJepg0Vogvwm6Ghu1mYEA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=LeLfEwA5nWeC4m+SCGm/zRgM6ylE45Ou+venRsXpn0lmrJ+sx1NGE1v/VNzVzLz/j
-	 pnp3XuaAoI8xj4h3aIHivij8/NEiNKFSNKjJ9OTwaqRAvJhDvetxlXGiVx7naMDn9a
-	 PnV9IxQ4QQfyVVQyApyV3mtKxtB4W5s6dNznqF+E1FTGLrEJ+B3O72HAzgqw4s3rye
-	 ub8aaQhac7jIyz46BEaTxq7astDzfcjep9T44RgXUlOiH7GNxVENDaHRsJfe1nQGNR
-	 uQSuTXKPO5ConikzW0fjRg/E8an5vxq2KLiU4ZCOL2b5bVOIwfIaHCGifYCZitREoY
-	 Dv69BGLsD+fkw==
-Date: Wed, 27 May 2026 16:17:39 -0700
-From: Wei Liu <wei.liu@kernel.org>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: Jork Loeser <jloeser@linux.microsoft.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"K . Y . Srinivasan" <kys@microsoft.com>,
+	s=arc-20240116; t=1779928940; c=relaxed/simple;
+	bh=+aNfqG5j2z/20NXpUWO2D0GxWuffbMmVFRNTztCzp1Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ryqAjaj45Es8moxMULu2oxHD9nAKOALXxR0PDIQ2dKJ45RORNLXQXkAOCxiE3w9InZkCBCo2NVPYhKrJqtnMCgg9zrLQCORrXyDbmkkSoTTC4QClAjHz83mWHC/spaQNeMv487WM3YQA/d4m/zsyuQBz8Dazkg3IJx1sjY+NAmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=N2vAOfpA; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1241)
+	id 3F42520B7167; Wed, 27 May 2026 17:42:08 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3F42520B7167
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1779928928;
+	bh=MlAphM6lIy04CUio1znmzudM4J3s/1bUFzd6ZYAVWN0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=N2vAOfpASzX1EDjGy6YAAwkPynJ5GW9q35MDxfssI1LB5uZxHV5aX1fQgJFCn0lWS
+	 FWP9njR85BuseWjwEiHUzAbNOhvtyBpu0fBVx/Pp2EtF+fHeg23fnp6RWXL6icFZ37
+	 geNEFabO21Jp613vSD92tPBkmeBr1lm1Vy/xYD/U=
+From: Jork Loeser <jloeser@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	linux-mm@kvack.org,
+	kexec@lists.infradead.org
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>, Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Alexander Graf <graf@amazon.com>,
+	Jason Miu <jasonmiu@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	Baoquan He <bhe@redhat.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-	Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
-	Stanislav Kinsburskii <stanislav.kinsburskii@gmail.com>,
-	Mukesh Rathor <mrathor@linux.microsoft.com>
-Subject: Re: [PATCH v3 3/6] x86/hyperv: Skip LP/VP creation on kexec
-Message-ID: <20260527231739.GH3518940@liuwe-devbox-debian-v2.local>
-References: <20260408013645.286723-1-jloeser@linux.microsoft.com>
- <20260408013645.286723-4-jloeser@linux.microsoft.com>
- <SN6PR02MB41578A8F9A225227FB5E79E6D4312@SN6PR02MB4157.namprd02.prod.outlook.com>
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Kees Cook <kees@kernel.org>,
+	Ran Xiaokai <ran.xiaokai@zte.com.cn>,
+	Justinien Bouron <jbouron@amazon.com>,
+	Sourabh Jain <sourabhjain@linux.ibm.com>,
+	Pingfan Liu <piliu@redhat.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	linux-arm-kernel@lists.infradead.org,
+	x86@kernel.org,
+	linux-kernel@vger.kernel.org,
+	Michael Kelley <mhklinux@outlook.com>,
+	Jork Loeser <jloeser@linux.microsoft.com>
+Subject: [RFC PATCH 00/20] mshv: enable kexec with Hyper-V donated pages and partitions
+Date: Wed, 27 May 2026 17:41:42 -0700
+Message-ID: <20260528004204.1484584-1-jloeser@linux.microsoft.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR02MB41578A8F9A225227FB5E79E6D4312@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11263-lists,linux-hyperv=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[outlook.com];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	FREEMAIL_CC(0.00)[linux.microsoft.com,vger.kernel.org,kernel.org,microsoft.com,redhat.com,alien8.de,linux.intel.com,zytor.com,arndb.de,gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[microsoft.com,kernel.org,soleen.com,amazon.com,google.com,linux-foundation.org,linux.dev,suse.de,redhat.com,arm.com,alien8.de,linux.intel.com,zytor.com,zte.com.cn,linux.ibm.com,intel.com,amd.com,lists.infradead.org,vger.kernel.org,outlook.com,linux.microsoft.com];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-11264-lists,linux-hyperv=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[37];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[wei.liu@kernel.org,linux-hyperv@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[jloeser@linux.microsoft.com,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	PRECEDENCE_BULK(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,liuwe-devbox-debian-v2.local:mid]
-X-Rspamd-Queue-Id: 20C285EAE15
+	NEURAL_HAM(-0.00)[-0.999];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:mid,linux.microsoft.com:dkim,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: A3DBC5EB5C0
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, May 04, 2026 at 03:09:21PM +0000, Michael Kelley wrote:
-> From: Jork Loeser <jloeser@linux.microsoft.com> Sent: Tuesday, April 7, 2026 6:37 PM
-> > 
-> > After a kexec the logical processors and virtual processors already
-> > exist in the hypervisor because they were created by the previous
-> > kernel. Attempting to add them again causes either a BUG_ON or
-> > corrupted VP state leading to MCEs in the new kernel.
-> > 
-> > Add hv_lp_exists() to probe whether an LP is already present by
-> > calling HVCALL_GET_LOGICAL_PROCESSOR_RUN_TIME. When it succeeds the
-> > LP exists and we skip the add-LP and create-VP loops entirely.
-> > 
-> > Also add hv_call_notify_all_processors_started() which informs the
-> > hypervisor that all processors are online. This is required after
-> > adding LPs (fresh boot) and is a no-op on kexec since we skip that
-> > path.
-> 
-> Adding hv_call_notify_all_processors_started() seems like it should be
-> a separate patch. And this paragraph in the commit message leaves me
-> with questions:  Is it really "required"?  If it is, how does the existing
-> upstream code ever work? Does the change need to be backported
-> to stable kernels? If it isn't *really* required, what are the implications
-> of not doing it?
+When Linux runs as an L1 Virtual Host (L1VH) under Hyper-V, the MSHV
+root partition driver deposits pages to the hypervisor and creates
+partitions for guest VMs. Prior patches enabled kexec for L1VH, but
+only when no partitions had been created and no memory had been donated.
 
-It is complicated. If I remember correctly, we realized this call was
-absolutely needed if SEV-SNP host side support is enabled. If that
-support is not enabled, then things continue to work. I think it is the
-right thing to do to always make this call.
+This series lifts that limitation. It uses KHO (Kexec Handover) to:
 
-We don't need to backport this yet.
+ - Track all pages deposited to the hypervisor in a KHO radix tree
+   and preserve them across kexec so the new kernel knows which pages
+   are owned by the hypervisor.
 
-Wei
+ - Freeze running partitions before kexec, record their IDs in the
+   KHO FDT, and vacuum (tear down + reclaim memory) stale partitions
+   after kexec.
+
+ - In case of a crash, exclude hypervisor-owned pages from crash
+   dump collection by passing the radix tree root PA via Hyper-V
+   crash MSR P2 to the crash kernel.
+
+Dependency on Pratyush's KHO series
+===================================
+
+Patches 1-12 are cherry-picked from Pratyush Yadav's v1 series
+"kho: make boot time huge page allocation work nicely with KHO" [1],
+which is still under discussion. This series uses functionality from
+those patches -- specifically the meta-data page enumeration via table
+callbacks and the restructured radix tree API. It also extends the
+KHO radix tree with:
+
+ - A freeze mechanism to lock the tree before serializing for kexec
+   (patch 13).
+
+ - A crash-kernel-safe variant that memremaps radix nodes for use
+   outside the direct map (patch 14).
+
+Patch overview
+==============
+
+Patches 1-12:  KHO radix tree and memblock changes (from [1])
+Patch 13:      Radix tree freeze and del_key() error reporting
+Patch 14:      Crash-kernel-safe radix tree presence check
+Patch 15:      Page tracker using KHO radix tree for deposited pages
+Patch 16:      Debugfs interface for page tracker
+Patches 17-18: Crash MSR reshuffling + crash dump page exclusion
+Patch 19:      Export kexec_in_progress for modules
+Patch 20:      Freeze and vacuum partitions across kexec
+
+Feedback
+========
+
+This is an RFC. I am looking for feedback on the overall approach as
+well as the KHO changes (patches 13-14).
+
+[1] https://lore.kernel.org/linux-mm/20260429133928.850721-1-pratyush@kernel.org/
+
+Based-on: linux-next/master (next-20260527)
+
+Jork Loeser (8):
+  kho: add radix tree freeze and del_key() error reporting
+  kho: Add crash-kernel-safe radix tree presence check
+  mshv: Use page tracker to manage MSHV-owned pages and preserve with
+    KHO
+  mshv: Add debugfs interface to page tracker
+  hyperv: Reserve crash MSR P2 for page preservation root PA
+  mshv: Exclude Hyper-V donated pages from crash dump collection
+  kexec: export kexec_in_progress for modules
+  mshv: freeze and vacuum partitions across kexec
+
+Pratyush Yadav (Google) (12):
+  kho: generalize radix tree APIs
+  kho: store incoming radix tree in kho_in
+  kho: add a struct for radix callbacks
+  kho: add callback for table pages
+  kho: add data argument to radix walk callback
+  kho: allow early-boot usage of the KHO radix tree
+  kho: allow destroying KHO radix tree
+  kho: add kho_radix_init_tree()
+  memblock: introduce MEMBLOCK_KHO_SCRATCH_EXT
+  kho: extended scratch
+  kho: return virtual address of mem_map
+  mm/hugetlb: make bootmem allocation work with KHO
+
+ arch/arm64/hyperv/hv_core.c        |   6 +-
+ arch/x86/hyperv/hv_init.c          |   4 +-
+ drivers/hv/Kconfig                 |   3 +
+ drivers/hv/Makefile                |   2 +-
+ drivers/hv/hv_common.c             |   5 +-
+ drivers/hv/hv_proc.c               |  32 +-
+ drivers/hv/mshv_debugfs.c          |  99 +++++
+ drivers/hv/mshv_page_preserve.c    | 557 ++++++++++++++++++++++++++
+ drivers/hv/mshv_page_preserve.h    |  21 +
+ drivers/hv/mshv_root.h             |   5 +
+ drivers/hv/mshv_root_hv_call.c     |  12 +-
+ drivers/hv/mshv_root_main.c        | 341 ++++++++++++++--
+ include/linux/kexec_handover.h     |   1 +
+ include/linux/kho_radix_tree.h     |  90 ++++-
+ include/linux/memblock.h           |  14 +
+ kernel/kexec_core.c                |   1 +
+ kernel/liveupdate/kexec_handover.c | 605 +++++++++++++++++++++++------
+ mm/hugetlb.c                       |  19 +-
+ mm/memblock.c                      | 177 +++++++--
+ mm/mm_init.c                       |   1 +
+ 20 files changed, 1767 insertions(+), 228 deletions(-)
+ create mode 100644 drivers/hv/mshv_page_preserve.c
+ create mode 100644 drivers/hv/mshv_page_preserve.h
+
+--
+2.43.0
+
 
