@@ -1,74 +1,74 @@
-Return-Path: <linux-hyperv+bounces-11349-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11350-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mCw2KP6tGWpyyQgAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11349-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 May 2026 17:17:18 +0200
+	id cMphGByuGWpyyQgAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11350-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 29 May 2026 17:17:48 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A17F8604787
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 May 2026 17:17:17 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B4796047AC
+	for <lists+linux-hyperv@lfdr.de>; Fri, 29 May 2026 17:17:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 3C52130AB1BF
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 May 2026 15:09:00 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id BC20A30B2F75
+	for <lists+linux-hyperv@lfdr.de>; Fri, 29 May 2026 15:09:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6572F3B3BED;
-	Fri, 29 May 2026 15:07:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BB5E3E95B1;
+	Fri, 29 May 2026 15:07:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GePsKUPF"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Aw6JhzxS"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091BF3DA7CC
-	for <linux-hyperv@vger.kernel.org>; Fri, 29 May 2026 15:07:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CD5C3E8C45
+	for <linux-hyperv@vger.kernel.org>; Fri, 29 May 2026 15:07:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780067222; cv=none; b=PjJq2Oc4FK1EzGXTgtmIqrDh5Ndewld35a/SkklnAXZrqObS2BeW9FxyUBc7fVk//o9ZvKiBvRXMyWnL0dkZ0Q2GUqR2SBOfpYN+mzWPfNVk9Srz1BlWQSXlEbfm3tnzguQGq8VWWrCT3TXafFDvv56k4d7hokbK2wBBZQoSBE8=
+	t=1780067242; cv=none; b=p9lrHZqUg+KVNCSFzHcyJaHzxaaZX/MLjB+J/AbYN39hIdn9vIuBAWhNcp2hfKgltVqRWs3iKt/hYO88cnuwxUvSC74mr8iI109Og2z/KTsgymV3JQGNijTF4/WMGuMSWeTNsFUQX2gZrykhzV4tYHBYHIYQmZg6gkOZ/T/1FTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780067222; c=relaxed/simple;
-	bh=HD6T6IXKxXHYYTEzA8sYaRKBtXpTOgGbEYUT2q1t41U=;
+	s=arc-20240116; t=1780067242; c=relaxed/simple;
+	bh=/5UTvuwmDWBQP+NjGkI8KUcbqqoDwqf+ns+dipFMGrk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=UahTwvHEidf/OCvZ0g73dM8veC9FnleVOA33+O9WWg63LJyFIlAT/HNT+fhXnfDr4qEBb6szR0DVBmVQx3ZrKO4dazAQstTxj7wdl6tFbb1qWqGBl6hVD0FvBPrzuEScclnXuL+1Jc6Nkzo/cVMDxCLiinsgeJDihO477Dzc7p4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GePsKUPF; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=QYPbqRyqunRbstkxXnFG7SrVbG8ACUivF/zQKrDoHLve9eK251BsqFollXwskPeZfTOW9J04nJW0di9uzZMUc0X05oXFp+4WdIQ8gq+ycaqId4CUMXwI+mj3DpjmVMZcBFCN0kJMZBiBoHMxAaETYcDsrAkLrS7Mp8duKNDV8kM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Aw6JhzxS; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-8397b14a689so8957510b3a.2
-        for <linux-hyperv@vger.kernel.org>; Fri, 29 May 2026 08:07:00 -0700 (PDT)
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2bc763c7256so291247335ad.3
+        for <linux-hyperv@vger.kernel.org>; Fri, 29 May 2026 08:07:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780067220; x=1780672020; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780067241; x=1780672041; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=xaVkfsA2sOgFELwC+9kgheEWN7jnZ1tVtkSLe6gYY/I=;
-        b=GePsKUPFHhVzYsmPLPHATURDMfbSytocbEzlem9fv5RLH548OfqM9+SjfiMTo5FXWF
-         Bwgm9QtikZ5YMYZxeXSmF3i1xSjr+tsN7Zoh/viE/SEpmj1NkMLDkmkFm136Fu8nsJqQ
-         NhqyqteCfdPXKDgj+bMWRwfJ82nr22GI2pX+A9d0WcREoh+nRqnUI9DifDPAvimxxKlF
-         6MKOX1u+IyUTUMskE0bOks35rXOQN94fvj12DJgOGySQ56nRM11sxvCqj/wiwLoyhS/W
-         oEDwp2AQO2DQTKuHL0NgaEBQrm/eg/XxtLL3K2Pj4KZpcS9xWjnuI5BkOVlJePu/eO+u
-         Vi4A==
+        bh=N49NWH4ro3GNRH29aAKxdd1VwjKE+o/ejmYXSEWUPuw=;
+        b=Aw6JhzxSwS0pgkwYC1UCdyE0xrpx2do/mqstwdd5znQHIswDSISiQ02v6eFzr9xYuT
+         m/eCqqiz6IvEa0zRz8RgDsHX3oU4YSHH589rgw/M2Q7j94KKO8czYhMHL9SmkEnnW+rC
+         rZLXQ0jSeBy1Z9faHq+Rzg8DS6uoUk/Vkq3WtAIFMNWrIFg68MKnM9zT367WSnQec0Ph
+         T7MCddf0bN15I4WdyvEm5LLSeKB7Xzi+uvdSBJ+Psz2sfAw0L0QgNVFd6JUVMAGFOTcX
+         9/o8jXpKd7QpaSdl4xeqDx/anvz9ZX1+9quxnzkSLUZWA8CTq9OLDuQwJzmLJiTx26Ag
+         urOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780067220; x=1780672020;
+        d=1e100.net; s=20251104; t=1780067241; x=1780672041;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=xaVkfsA2sOgFELwC+9kgheEWN7jnZ1tVtkSLe6gYY/I=;
-        b=OJu6wx7M1l2LqiAWrhcivrB5HcOqbi8IZKvrzDNz+SNuE/GBsmpPBRipqmQDx1SdzZ
-         xaf7jxBababk7zaLAY8nywpqSc2tka6SGQIqdQj6xRj49q4YV5yinQqWaMsAG8t6IfP+
-         Oxd47AEUNGn5KYibjhHllbJTQwPqCkS3wUaqNaJp1lZM/cicKSMinw1/Z57V90IPPuSD
-         jXhW24Y7uZi8YKHCLo8MBLTIiTUMSoF31feJbAwZrGBGMsiG9l3OeD2yrc3aNH0FGhgo
-         n37LpyKT6uNg4Svhh3VVKgp7TikLG645vYb7Pd1QhW0VhDAwx5PzkCFXi3zdKldAHoJS
-         6fNw==
-X-Forwarded-Encrypted: i=1; AFNElJ867sY4PALpeU8m9Ix6FtzXx9dk5rF+hyKFa9MpoBTyUoOO8Ub1DDhfemnX/L6wioweUX5ASiZMdg5fODs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLhPVduDKAXEa5Vbk5u/A/vlajweCTAzcD8wqXYP2EIOsYQ5EB
-	VrBFXVxWhFMPBOoe/K7cZokX1tClGazCRos3IfbUYuo1pEARXVm1OWkjMR8P06A66SuFho4Fxzk
-	Y9CaDrg==
-X-Received: from pfkk14.prod.google.com ([2002:aa7:90ce:0:b0:82f:6245:a6ec])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:8088:b0:838:c01a:7a50
- with SMTP id d2e1a72fcca58-84212ce8ccamr3369227b3a.30.1780067219938; Fri, 29
- May 2026 08:06:59 -0700 (PDT)
+        bh=N49NWH4ro3GNRH29aAKxdd1VwjKE+o/ejmYXSEWUPuw=;
+        b=QPqIe6lx2hg85yrcUJ9zQimOiVSdJ+uPtuowB2x/TcLDc+ImLR7YiVPalNEjiO63rt
+         s8UWDMzmoD1MsIiwhnJd2NVlg9kVjz8LFgJaFt/5tzX3jiXsSF1RwZqWH2U5xZkQ9VYD
+         jhEMnsZ0y+VNnKsw9oubpZZzyDo+jPAlH1J88pylnnHpfQ0aB5r/xhjA4CHNvrju5yhj
+         Ivq8eMHN9zPfWqPAGOfi0k3VImQsunzIj6M2qVFk8n3Em7y9oYL1gh9YNl4LILqHThk4
+         QL4fWNLNSApOJXdQfnhr3+vHBtd3FGqtcRSAFr1j/riXA+nJXeWwTYrEn0l4J+ZNO94S
+         GEYg==
+X-Forwarded-Encrypted: i=1; AFNElJ+ipaer5Sd9hM5lesYo5ImpA1axj8wLgvSJKIVYH/hvCi4UUAlH7+fDbIrH12lI1VeQzCCsWjOd8+NnHYE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzobJ3RO7AOoyPTBV6EmMiGYTZwKaXxBjINhnpinYV0KHtKcnGf
+	JIOq0YBrxPWn7JyNXx/DKP21AjgFGWcppE+dlIDz6JYOED8zQ0KgY/lR7Ao8CCj/UT2AkFcWNSR
+	IzktNhw==
+X-Received: from plge8.prod.google.com ([2002:a17:902:cf48:b0:2be:fc90:7642])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:e74d:b0:2bf:28e3:a5e7
+ with SMTP id d9443c01a7336-2bf36793522mr2531755ad.6.1780067240251; Fri, 29
+ May 2026 08:07:20 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 29 May 2026 08:06:31 -0700
+Date: Fri, 29 May 2026 08:07:00 -0700
 In-Reply-To: <20260529144435.704127-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -78,8 +78,9 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260529144435.704127-1-seanjc@google.com>
 X-Mailer: git-send-email 2.54.0.823.g6e5bcc1fc9-goog
-Message-ID: <20260529150631.713818-1-seanjc@google.com>
-Subject: [PATCH v4 27/47] x86/paravirt: Remove unnecessary PARAVIRT=n stub for paravirt_set_sched_clock()
+Message-ID: <20260529150700.713953-1-seanjc@google.com>
+Subject: [PATCH v4 28/47] x86/paravirt: Move handling of unstable PV clocks
+ into paravirt_set_sched_clock()
 From: Sean Christopherson <seanjc@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
 	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
@@ -107,12 +108,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MV_CASE(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
 	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11349-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11350-lists,linux-hyperv=lfdr.de];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,amazon.co.uk:email];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -128,53 +129,87 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	PRECEDENCE_BULK(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	REPLYTO_EQ_FROM(0.00)[]
-X-Rspamd-Queue-Id: A17F8604787
+X-Rspamd-Queue-Id: 6B4796047AC
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Remove the unnecessary paravirt_set_sched_clock() stub for PARAVIRT=n, as
-all callers are gated by PARAVIRT=y.  Eliminating the stub will avoid a
-pile of pointless churn as the "real" implementation evolves.
+Move the handling of unstable PV clocks, of which kvmclock is the only
+example, into paravirt_set_sched_clock().  This will allow modifying
+paravirt_set_sched_clock() to keep using the TSC for sched_clock in
+certain scenarios without unintentionally marking the TSC-based clock as
+unstable.
 
 No functional change intended.
 
-Fixes: 39965afb1151 ("x86/paravirt: Move paravirt_sched_clock() related code into tsc.c")
 Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/include/asm/timer.h | 3 +++
- arch/x86/kernel/tsc.c        | 1 -
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/timer.h | 7 ++++++-
+ arch/x86/kernel/kvmclock.c   | 5 +----
+ arch/x86/kernel/tsc.c        | 5 ++++-
+ 3 files changed, 11 insertions(+), 6 deletions(-)
 
 diff --git a/arch/x86/include/asm/timer.h b/arch/x86/include/asm/timer.h
-index fda18bcb19b4..c71b466d6ace 100644
+index c71b466d6ace..fe41d40a9ae6 100644
 --- a/arch/x86/include/asm/timer.h
 +++ b/arch/x86/include/asm/timer.h
-@@ -12,7 +12,10 @@ extern void recalibrate_cpu_khz(void);
- extern int no_timer_check;
- 
+@@ -14,7 +14,12 @@ extern int no_timer_check;
  extern bool using_native_sched_clock(void);
+ 
+ #ifdef CONFIG_PARAVIRT
+-void paravirt_set_sched_clock(u64 (*func)(void));
++void __paravirt_set_sched_clock(u64 (*func)(void), bool stable);
 +
-+#ifdef CONFIG_PARAVIRT
- void paravirt_set_sched_clock(u64 (*func)(void));
-+#endif
- 
- /*
-  * We use the full linear equation: f(x) = a + b*x, in order to allow
-diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-index bdff8c988866..888bd1cbd9bc 100644
---- a/arch/x86/kernel/tsc.c
-+++ b/arch/x86/kernel/tsc.c
-@@ -288,7 +288,6 @@ void paravirt_set_sched_clock(u64 (*func)(void))
- u64 sched_clock_noinstr(void) __attribute__((alias("native_sched_clock")));
- 
- bool using_native_sched_clock(void) { return true; }
--void paravirt_set_sched_clock(u64 (*func)(void)) { }
++static inline void paravirt_set_sched_clock(u64 (*func)(void))
++{
++	__paravirt_set_sched_clock(func, true);
++}
  #endif
  
- notrace u64 sched_clock(void)
+ /*
+diff --git a/arch/x86/kernel/kvmclock.c b/arch/x86/kernel/kvmclock.c
+index 13c4be3a7f0a..4e50e75ff43d 100644
+--- a/arch/x86/kernel/kvmclock.c
++++ b/arch/x86/kernel/kvmclock.c
+@@ -12,7 +12,6 @@
+ #include <linux/hardirq.h>
+ #include <linux/cpuhotplug.h>
+ #include <linux/sched.h>
+-#include <linux/sched/clock.h>
+ #include <linux/mm.h>
+ #include <linux/slab.h>
+ #include <linux/set_memory.h>
+@@ -94,10 +93,8 @@ static noinstr u64 kvm_sched_clock_read(void)
+ 
+ static inline void kvm_sched_clock_init(bool stable)
+ {
+-	if (!stable)
+-		clear_sched_clock_stable();
+ 	kvm_sched_clock_offset = kvm_clock_read();
+-	paravirt_set_sched_clock(kvm_sched_clock_read);
++	__paravirt_set_sched_clock(kvm_sched_clock_read, stable);
+ 
+ 	pr_info("kvm-clock: using sched offset of %llu cycles",
+ 		kvm_sched_clock_offset);
+diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+index 888bd1cbd9bc..a9b6d3399c23 100644
+--- a/arch/x86/kernel/tsc.c
++++ b/arch/x86/kernel/tsc.c
+@@ -280,8 +280,11 @@ bool using_native_sched_clock(void)
+ 	return static_call_query(pv_sched_clock) == native_sched_clock;
+ }
+ 
+-void paravirt_set_sched_clock(u64 (*func)(void))
++void __paravirt_set_sched_clock(u64 (*func)(void), bool stable)
+ {
++	if (!stable)
++		clear_sched_clock_stable();
++
+ 	static_call_update(pv_sched_clock, func);
+ }
+ #else
 -- 
 2.54.0.823.g6e5bcc1fc9-goog
 
