@@ -1,74 +1,75 @@
-Return-Path: <linux-hyperv+bounces-11328-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11329-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oM6IJiOoGWoIyQgAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11328-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 May 2026 16:52:19 +0200
+	id 0Fx8JDmoGWoSyQgAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11329-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 29 May 2026 16:52:41 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74F01603FCF
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 May 2026 16:52:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 40F43603FEC
+	for <lists+linux-hyperv@lfdr.de>; Fri, 29 May 2026 16:52:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id CD4A430E7509
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 May 2026 14:46:05 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id DFC0D30EF0B8
+	for <lists+linux-hyperv@lfdr.de>; Fri, 29 May 2026 14:46:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 603903F4122;
-	Fri, 29 May 2026 14:45:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BB6A3F44EA;
+	Fri, 29 May 2026 14:45:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gzER2GmV"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bpUzH+6l"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76573F1AA8
-	for <linux-hyperv@vger.kernel.org>; Fri, 29 May 2026 14:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C095E3F1AD1
+	for <linux-hyperv@vger.kernel.org>; Fri, 29 May 2026 14:45:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780065902; cv=none; b=I3ylqHFHA83DtzvE/OmHz1BINtkUDcz4AnZQ2UGkxZOuDmq58mQbqkQGHemrd2vrPld8yaReoXPqkeqFvfsjTUoIhQ3pUBJ2NLUvWu1/FZsQwvOCDrHVLyBpOcc/zWChO3Or8GHs5C199sACRfTG01EWOfX2elRcmbIgXvo4lc4=
+	t=1780065903; cv=none; b=Ft8uYlmybKzeOenL5Tws1WdBLvOwjy0ycl60zNk3CeXCbz6QdTe0wKroSKWfmDF3BgPZOx9EdFkJqv5r1AK0NfOOkgS2FIz6vNysn1WWSI12zVYL/EmvEG5jEAcwvhk/Rxm13NWIof+6XDM+cyhk1yztlIVAAa6tPPL++Wht7Bo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780065902; c=relaxed/simple;
-	bh=zdJO+zZEzsLby2yiiaTorWcznz9CLqIQq6bb6Lyhy/s=;
+	s=arc-20240116; t=1780065903; c=relaxed/simple;
+	bh=TCbPuelZQalWyWRyEio9w/7ygp+vdU+hVQlhlKu+ORI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=KWThukpAnQ4kPoWeuWHNSiWq7FrZ6HD5Mt8xhJqk5EHDWEi8oZTRQojMfLC127EFGnajfeWE0DFzR6m8LoGOVsRfZDx3Q65E4zroeBWL8KwXKiY3E4w3n7N25OEGsnUAfekbvrXT2p+b36fj6XJk+YS5EfE7KGeppTao+1UQR+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gzER2GmV; arc=none smtp.client-ip=209.85.214.201
+	 To:Cc:Content-Type; b=JmZw5qXL/CqTu5i/4Cl4NMQmh8RhHRu/aeSr1eTcUmRq5u5MVbasdl56iouQZ1SNEatPbuY+YQ12z2idZ7usWNUo8vrf+9YlCLCw+oTzHRwr1PTZmRKE7cx2BF4sGcghtfzGzE8oZzCCIdCHP+f+8Z0byKrU4Nl4KI77Hd65XKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bpUzH+6l; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2b4530a90fdso104583235ad.1
-        for <linux-hyperv@vger.kernel.org>; Fri, 29 May 2026 07:44:59 -0700 (PDT)
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-365fd467cf6so11601901a91.0
+        for <linux-hyperv@vger.kernel.org>; Fri, 29 May 2026 07:45:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780065899; x=1780670699; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=fwFQzI2jeVi8q9emUB9u5qsW4Gj215t9UPhq3t/oEkw=;
-        b=gzER2GmVZz5VH4DkuV4aq5aIIqKCatiTUK1xuGH/zTy8jeXuYTKlkmjCnKFJwWhWJk
-         /vgtpNzlhj7OI0SUNdBiyeWE1sT/cJcD+sTQNZc9lpHCCmZ2Px31JPYH5eVUP4MBwN8f
-         5LfpkTd8qOxchVTYBfZO6pHlZMMhh7Qhc5KbqH1bQu3WAgRjNVNnUqQQxSiLm8jElzTW
-         bKluUVAMKnVfCx6xP9bkPUt0/bvKHUeY/oirC9h2JerzhpBWgdvWsUylPZbIBK/oCp5h
-         2Vbwo4gHktOTb5EdshO+EEFQZr1BVc7+01V2IVoUoGINDe4ZKkyDvPnwqq72od041Axh
-         xIyQ==
+        d=google.com; s=20251104; t=1780065900; x=1780670700; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:reply-to:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DaZwo5N6cl7Wcn+YII8G1Z7wxMBnsUseTYI23WvaSW8=;
+        b=bpUzH+6lpZOXCUyIBllZi+K/+40L4iZvUFF7eaFwmjG6AGK1McyoffILx3Cy7ysUxo
+         bmTlD61bZITjdFEdwtaKhIdTnl54YCd5N6GYc7NXbvls73PfIGYJD1tccAbKkDIYujtn
+         ezPB33hPGtHvT8v/jTIYrhHqpXooBsnr7b+0V65ZsGJa6e/fvyGEKHshdn+8AoIeCD8a
+         +Y4ywktQYXnfAIqS+3OP5elViyVTj0qNAXuNBbUlT9Ji393lCyxWkzvpFQC7M9YmbUxF
+         AWhr1PFfvHAQViFoeCps1f/7SGgqs9ZehuEQswq1SkYTaQS7XRNW6fUUOTNKnS9Fc24t
+         OZHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780065899; x=1780670699;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fwFQzI2jeVi8q9emUB9u5qsW4Gj215t9UPhq3t/oEkw=;
-        b=Xe5z/P6E/jQguYfuKUUyuv5IfZPb/k4yWbefCAvF/Z0Hq6fNghNouu1Rdy2m7OHPSP
-         4zYEzcJPITxdQgZOGPpuYv/4gXSrt6bt77RQnCUy/YGpSK1CVgs9AT3MyXA9WluN3Z9d
-         6yI+7WqBp+D9saBR08b7nKhDf+HOjxqpBfMgEHOB/YuWrGQdYNh8A8wPAWd5L23i2f3P
-         cpnW53/eKlQW2g0ixLPMfOIQ9klBMC5IzCHBYMuWJD9pGKuu8lbK1WPouaXzxILVzj8G
-         k0uRVmftk5CsEngIFk4cjfgxWmPVf8mdiCCL0MVckuuJo8GpLlY8XJd2iUy7Kjjnkfu2
-         fnDQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9udRY3uNoo/xFZ5b0zEkbOUvJEOc/fspSFApiU8LB4snr5A4GYHc6kuci8mhmr6qtdVa+pS+LvuhgqVJk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmmSzkyIS1M69bUTIuTFjwC4VCyz8Rjx0CC9MMR0oSNVHOEGls
-	y0nZLqN4bfUhsArzVQIE1s7G1fvOdZMKonZydGfxS7dbwsHQDaI3ALPQhZi0iW0F+ssgG/9Q2Z9
-	zzBnz0A==
-X-Received: from plble15.prod.google.com ([2002:a17:902:fb0f:b0:2bf:aa7:47b9])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:c94c:b0:2b0:bebb:1081
- with SMTP id d9443c01a7336-2bf368698abmr864185ad.28.1780065898563; Fri, 29
- May 2026 07:44:58 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1780065900; x=1780670700;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:reply-to:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=DaZwo5N6cl7Wcn+YII8G1Z7wxMBnsUseTYI23WvaSW8=;
+        b=kfe6UPfheEQmBdx/W8RC4BGr/tfLnsanVVmMIfYrCurL5Nzl1UZ8p7vL0gHeUPJZAq
+         AI9CfjK8z0PRGfBNSSjddr2HSGmz9izU0Cxu/AFl2IEpdQFapyWrtztJ0LFGMNDGPImg
+         il+LFZqp1QmRy5NjOCSgRzwK84jMNeNtn2KcM1A3AN37WYkE794OWJerAcPKDqReHfVe
+         chG12Ny/dXpnlfGaI2u1XzoEKmGSXEW3S2vxXJ+y6D4qSV6nkbmH18W+dSJDuILbGgFJ
+         xr6g7L8Gung8u765n1e5C7BkLER2ucCeEoBGDFAdzcQ3sV9UarAzABTr/Ctk/BC5nFk1
+         y83w==
+X-Forwarded-Encrypted: i=1; AFNElJ+xY8jABRfbf6BJQi+P8p+hXLuB23rKWgCRazR1LMEZw1Y0XEy/ri47GHqNUn60ckAockUgBNfEiOJdFhg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVnTgXRV7BeyCnFssXrkreK3YSlnC4PTNq5lN7t5MMQ4gq4Bjo
+	7hNJVd//yfJ9A269v4bySz0/9c+kraNn3OAWKjG/ov25uwnCUJXYbebcdvRaOLxAZPpt2ZejfaU
+	rhcKOlw==
+X-Received: from pjte5.prod.google.com ([2002:a17:90a:c205:b0:36b:7748:4e7a])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3606:b0:36b:e109:1e63
+ with SMTP id 98e67ed59e1d1-36be10928f2mr708703a91.27.1780065899626; Fri, 29
+ May 2026 07:44:59 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 29 May 2026 07:43:53 -0700
+Date: Fri, 29 May 2026 07:43:54 -0700
 In-Reply-To: <20260529144435.704127-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -78,9 +79,9 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260529144435.704127-1-seanjc@google.com>
 X-Mailer: git-send-email 2.54.0.823.g6e5bcc1fc9-goog
-Message-ID: <20260529144435.704127-7-seanjc@google.com>
-Subject: [PATCH v4 06/47] x86/sev: Shove SNP's secure/trusted TSC frequency
- directly into "calibration"
+Message-ID: <20260529144435.704127-8-seanjc@google.com>
+Subject: [PATCH v4 07/47] x86/tdx: Force TSC frequency with CPUID-based info
+ provided by the TDX-Module
 From: Sean Christopherson <seanjc@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
 	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
@@ -102,6 +103,7 @@ Cc: "H. Peter Anvin" <hpa@zytor.com>, Rick Edgecombe <rick.p.edgecombe@intel.com
 	David Woodhouse <dwmw2@infradead.org>, Michael Kelley <mhklinux@outlook.com>, 
 	Thomas Gleixner <tglx@linutronix.de>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
@@ -113,7 +115,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11328-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11329-lists,linux-hyperv=lfdr.de];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -131,155 +133,130 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	REPLYTO_EQ_FROM(0.00)[]
-X-Rspamd-Queue-Id: 74F01603FCF
+X-Rspamd-Queue-Id: 40F43603FEC
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-As a first step towards dropping .calibrate_{cpu,tsc}() and explicitly
-defining precedence/priority for "calibration" routines, pass the secure
-TSC frequency obtained from SNP firmware directly to
-determine_cpu_tsc_frequencies() instead of overriding the .calibrate_tsc()
-hook.
+When running as a TDX guest, explicitly set the TSC frequency to a known
+value, using CPUID-based information, instead of potentially relying on a
+hypervisor-controlled PV routine.  For TDX guests, CPUID.0x15 is always
+emulated by the TDX-Module, i.e. the information from CPUID is more
+trustworthy than the information provided by the hypervisor.
 
-Unlike the native calibration routines, all of the paravirtual overrides,
-including SNP and TDX, are constant in the sense that the frequency
-provided by the hypervisor or trusted firmware is fixed, known, and always
-available during early boot.  More importantly, for CoCo (SNP and TDX) VMs,
-it's imperative that the kernel uses the frequency provided by the trusted
-firmware, not by the untrusted hypervisor.  Enforcing the priority between
-sources by carefully ordering seemingly unrelated init calls, so that the
-trusted override "wins", is brittle and all but impossible to follow.
+To maintain backwards compatibility with TDX guest kernels that use native
+calibration, and because it's the least awful option, retain
+native_calibrate_tsc()'s stuffing of the local APIC bus period using the
+core crystal frequency.  While it's entirely possible for the hypervisor
+to emulate the APIC timer at a different frequency than the core crystal
+frequency, the commonly accepted interpretation of Intel's SDM is that APIC
+timer runs at the core crystal frequency when that latter is enumerated via
+CPUID:
 
-While it's rather weird, deliberately prioritize tsc_early_khz over all
-else to maintain existing behavior.
+  The APIC timer frequency will be the processor=E2=80=99s bus clock or cor=
+e
+  crystal clock frequency (when TSC/core crystal clock ratio is enumerated
+  in CPUID leaf 0x15).
+
+If the hypervisor is malicious and deliberately runs the APIC timer at the
+wrong frequency, nothing would stop the hypervisor from modifying the
+frequency at any time, i.e. attempting to manually calibrate the frequency
+out of paranoia would be futile.
+
+Deliberately leave CPU frequency calibration as is, since the TDX-Module
+doesn't provide any guarantees with respect to CPUID.0x16.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/coco/sev/core.c   | 14 ++++----------
- arch/x86/include/asm/sev.h |  4 ++--
- arch/x86/kernel/tsc.c      | 19 ++++++++++++-------
- 3 files changed, 18 insertions(+), 19 deletions(-)
+ arch/x86/coco/tdx/tdx.c    | 20 +++++++++++++++++---
+ arch/x86/include/asm/tdx.h |  2 ++
+ arch/x86/kernel/tsc.c      |  3 +++
+ 3 files changed, 22 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index 403dcea86452..bc5ae9ef74da 100644
---- a/arch/x86/coco/sev/core.c
-+++ b/arch/x86/coco/sev/core.c
-@@ -99,7 +99,6 @@ static const char * const sev_status_feat_names[] = {
-  */
- static u64 snp_tsc_scale __ro_after_init;
- static u64 snp_tsc_offset __ro_after_init;
--static unsigned long snp_tsc_freq_khz __ro_after_init;
- 
- DEFINE_PER_CPU(struct sev_es_runtime_data*, runtime_data);
- DEFINE_PER_CPU(struct sev_es_save_area *, sev_vmsa);
-@@ -2014,15 +2013,10 @@ void __init snp_secure_tsc_prepare(void)
- 	pr_debug("SecureTSC enabled");
+diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
+index 29b6f1ed59ec..5d7976359220 100644
+--- a/arch/x86/coco/tdx/tdx.c
++++ b/arch/x86/coco/tdx/tdx.c
+@@ -8,6 +8,7 @@
+ #include <linux/export.h>
+ #include <linux/io.h>
+ #include <linux/kexec.h>
++#include <asm/apic.h>
+ #include <asm/coco.h>
+ #include <asm/tdx.h>
+ #include <asm/vmx.h>
+@@ -1123,9 +1124,6 @@ void __init tdx_early_init(void)
+=20
+ 	setup_force_cpu_cap(X86_FEATURE_TDX_GUEST);
+=20
+-	/* TSC is the only reliable clock in TDX guest */
+-	setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
+-
+ 	cc_vendor =3D CC_VENDOR_INTEL;
+=20
+ 	/* Configure the TD */
+@@ -1195,3 +1193,19 @@ void __init tdx_early_init(void)
+=20
+ 	tdx_announce();
  }
- 
--static unsigned long securetsc_get_tsc_khz(void)
--{
--	return snp_tsc_freq_khz;
--}
--
--void __init snp_secure_tsc_init(void)
-+unsigned int __init snp_secure_tsc_init(void)
- {
-+	unsigned long snp_tsc_freq_khz, tsc_freq_mhz;
- 	struct snp_secrets_page *secrets;
--	unsigned long tsc_freq_mhz;
- 	void *mem;
- 
- 	mem = early_memremap_encrypted(sev_secrets_pa, PAGE_SIZE);
-@@ -2043,7 +2037,7 @@ void __init snp_secure_tsc_init(void)
- 
- 	snp_tsc_freq_khz = SNP_SCALE_TSC_FREQ(tsc_freq_mhz * 1000, secrets->tsc_factor);
- 
--	x86_platform.calibrate_tsc = securetsc_get_tsc_khz;
--
- 	early_memunmap(mem, PAGE_SIZE);
 +
-+	return snp_tsc_freq_khz;
- }
-diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-index 594cfa19cbd4..05ebf0b73ef4 100644
---- a/arch/x86/include/asm/sev.h
-+++ b/arch/x86/include/asm/sev.h
-@@ -530,7 +530,7 @@ int snp_send_guest_request(struct snp_msg_desc *mdesc, struct snp_guest_req *req
- int snp_svsm_vtpm_send_command(u8 *buffer);
- 
- void __init snp_secure_tsc_prepare(void);
--void __init snp_secure_tsc_init(void);
-+unsigned int snp_secure_tsc_init(void);
- enum es_result savic_register_gpa(u64 gpa);
- enum es_result savic_unregister_gpa(u64 *gpa);
- u64 savic_ghcb_msr_read(u32 reg);
-@@ -637,7 +637,7 @@ static inline int snp_send_guest_request(struct snp_msg_desc *mdesc,
- 					 struct snp_guest_req *req) { return -ENODEV; }
- static inline int snp_svsm_vtpm_send_command(u8 *buffer) { return -ENODEV; }
- static inline void __init snp_secure_tsc_prepare(void) { }
--static inline void __init snp_secure_tsc_init(void) { }
-+static inline unsigned int __init snp_secure_tsc_init(void) { return 0; }
- static inline void sev_evict_cache(void *va, int npages) {}
- static inline enum es_result savic_register_gpa(u64 gpa) { return ES_UNSUPPORTED; }
- static inline enum es_result savic_unregister_gpa(u64 *gpa) { return ES_UNSUPPORTED; }
++unsigned int __init tdx_tsc_init(void)
++{
++	struct cpuid_tsc_info info;
++
++	if (WARN_ON_ONCE(cpuid_get_tsc_freq(&info)))
++		return 0;
++
++	lapic_timer_period =3D info.crystal_khz * 1000 / HZ;
++
++	/* TSC is the only reliable clock in TDX guest */
++	setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
++	setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
++
++	return info.tsc_khz;
++}
+diff --git a/arch/x86/include/asm/tdx.h b/arch/x86/include/asm/tdx.h
+index e5a9cf656c07..1d841d464aa4 100644
+--- a/arch/x86/include/asm/tdx.h
++++ b/arch/x86/include/asm/tdx.h
+@@ -67,6 +67,7 @@ struct ve_info {
+ #ifdef CONFIG_INTEL_TDX_GUEST
+=20
+ void __init tdx_early_init(void);
++unsigned int __init tdx_tsc_init(void);
+=20
+ void tdx_get_ve_info(struct ve_info *ve);
+=20
+@@ -88,6 +89,7 @@ void __init tdx_dump_td_ctls(u64 td_ctls);
+ #else
+=20
+ static inline void tdx_early_init(void) { };
++static inline unsigned int tdx_tsc_init(void) { return 0; }
+ static inline void tdx_halt(void) { };
+=20
+ static inline bool tdx_early_handle_ve(struct pt_regs *regs) { return fals=
+e; }
 diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-index 833eed5c048a..2b8f94c3fcc7 100644
+index 2b8f94c3fcc7..2603f136e29b 100644
 --- a/arch/x86/kernel/tsc.c
 +++ b/arch/x86/kernel/tsc.c
-@@ -1474,15 +1474,16 @@ static int __init init_tsc_clocksource(void)
-  */
- device_initcall(init_tsc_clocksource);
- 
--static bool __init determine_cpu_tsc_frequencies(bool early)
-+static bool __init determine_cpu_tsc_frequencies(bool early,
-+						 unsigned int known_tsc_khz)
- {
- 	/* Make sure that cpu and tsc are not already calibrated */
- 	WARN_ON(cpu_khz || tsc_khz);
- 
- 	if (early) {
- 		cpu_khz = x86_platform.calibrate_cpu();
--		if (tsc_early_khz)
--			tsc_khz = tsc_early_khz;
-+		if (known_tsc_khz)
-+			tsc_khz = known_tsc_khz;
- 		else
- 			tsc_khz = x86_platform.calibrate_tsc();
- 	} else {
-@@ -1537,16 +1538,20 @@ static void __init tsc_enable_sched_clock(void)
- 
- void __init tsc_early_init(void)
- {
-+	unsigned int known_tsc_khz = 0;
-+
- 	if (!boot_cpu_has(X86_FEATURE_TSC))
+@@ -34,6 +34,7 @@
+ #include <asm/topology.h>
+ #include <asm/uv/uv.h>
+ #include <asm/sev.h>
++#include <asm/tdx.h>
+=20
+ unsigned int __read_mostly cpu_khz;	/* TSC clocks / usec, not used here */
+ EXPORT_SYMBOL(cpu_khz);
+@@ -1550,6 +1551,8 @@ void __init tsc_early_init(void)
+ 		known_tsc_khz =3D tsc_early_khz;
+ 	else if (cc_platform_has(CC_ATTR_GUEST_SNP_SECURE_TSC))
+ 		known_tsc_khz =3D snp_secure_tsc_init();
++	else if (boot_cpu_has(X86_FEATURE_TDX_GUEST))
++		known_tsc_khz =3D tdx_tsc_init();
+=20
+ 	if (!determine_cpu_tsc_frequencies(true, known_tsc_khz))
  		return;
- 	/* Don't change UV TSC multi-chassis synchronization */
- 	if (is_early_uv_system())
- 		return;
- 
--	if (cc_platform_has(CC_ATTR_GUEST_SNP_SECURE_TSC))
--		snp_secure_tsc_init();
-+	if (tsc_early_khz)
-+		known_tsc_khz = tsc_early_khz;
-+	else if (cc_platform_has(CC_ATTR_GUEST_SNP_SECURE_TSC))
-+		known_tsc_khz = snp_secure_tsc_init();
- 
--	if (!determine_cpu_tsc_frequencies(true))
-+	if (!determine_cpu_tsc_frequencies(true, known_tsc_khz))
- 		return;
- 	tsc_enable_sched_clock();
- }
-@@ -1567,7 +1572,7 @@ void __init tsc_init(void)
- 
- 	if (!tsc_khz) {
- 		/* We failed to determine frequencies earlier, try again */
--		if (!determine_cpu_tsc_frequencies(false)) {
-+		if (!determine_cpu_tsc_frequencies(false, 0)) {
- 			mark_tsc_unstable("could not calculate TSC khz");
- 			setup_clear_cpu_cap(X86_FEATURE_TSC_DEADLINE_TIMER);
- 			return;
--- 
+--=20
 2.54.0.823.g6e5bcc1fc9-goog
 
 
