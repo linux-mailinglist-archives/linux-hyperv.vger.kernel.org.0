@@ -1,74 +1,74 @@
-Return-Path: <linux-hyperv+bounces-11356-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11357-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wHtqLBOvGWpyyQgAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11356-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 May 2026 17:21:55 +0200
+	id wM6yNiSxGWqiyQgAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11357-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 29 May 2026 17:30:44 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC6BF604913
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 May 2026 17:21:54 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E37A604BC3
+	for <lists+linux-hyperv@lfdr.de>; Fri, 29 May 2026 17:30:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id A247E3030D93
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 May 2026 15:10:48 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id D5E6F320C5DD
+	for <lists+linux-hyperv@lfdr.de>; Fri, 29 May 2026 15:11:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D0333F788A;
-	Fri, 29 May 2026 15:08:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03E7F3F9268;
+	Fri, 29 May 2026 15:08:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lqp2CYJm"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u3wQ4poY"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 043283F6C22
-	for <linux-hyperv@vger.kernel.org>; Fri, 29 May 2026 15:08:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9BBE3F8EB5
+	for <linux-hyperv@vger.kernel.org>; Fri, 29 May 2026 15:08:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780067285; cv=none; b=OJ2jsHRxLhpi7Q1MCxWbcHcPKXwU0gezYA0PG5DDndENM0OM5KmpVYCK7URxG3Gexf1lM/o8CFUdaKDYV1T/jfm07JClZeR7+KcWmap0hav+qgk6nh0FDAq1aXJD6THmeWmwXnszpko+/pRDfFTvH+x0R5d861CgxIG5dg/QGPo=
+	t=1780067288; cv=none; b=EwuDuCGNW0AXOPrmz0YrzLO8TZIGmlcy/4/xJ7/S3mcviAxSrPEADUhqncXsF0d47O0ePB3byAFpjjikUAYtZpuetIgW0FUrgd7tCvPPWmiPRW0Bgqu1WHXCBe6wqLJY8YVPayxGO/2xu4MfmUT62D5vkLP86VP4RNC6obi8NLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780067285; c=relaxed/simple;
-	bh=oQBeCKjjhNFtUPINo6soUvc55PJ7W+tEXERwbtHRNX4=;
+	s=arc-20240116; t=1780067288; c=relaxed/simple;
+	bh=he0WfZWWdERYD7ChG87MeYfoSX2HSFZ+ZmjDHyI6dIA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=pmG2kVm7Jn09c1kjtkb6ljEW/mmjseoGehvE2RDXSao0PLihwiUpbNZnK6BGppa0nQKU/LdFlJB0zmzdX4HD9FSDC6jiq3OEfRQX2D0ZdglCsltkrnmluL+1EdIdlnVGYN5V7uUxj99gnI8f6Un6+dNpIdWAuqLYTz70jlVjA2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lqp2CYJm; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=OVNC+CopLO8gB/j3BLu6QOyuRKa91LjqlUTg3D/44TSbYCI05NHNlI8tSWZzUZeMSTKjmKAk36KZgHYnTsYlHesWVCSvwELwEdPoMbPwU381bX3iMYok5udTsuKoohXf6uxGozcwKSz7dFde31hiypNzIeT0QHlFODr8oRQNT24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=u3wQ4poY; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2bf1845bddfso12995945ad.1
-        for <linux-hyperv@vger.kernel.org>; Fri, 29 May 2026 08:08:03 -0700 (PDT)
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2b4530a90fdso105002485ad.1
+        for <linux-hyperv@vger.kernel.org>; Fri, 29 May 2026 08:08:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780067283; x=1780672083; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780067287; x=1780672087; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=A0LUKgY7WdUW5/UN6qkumXlSSdA1avjLrzVcdpZcOlg=;
-        b=lqp2CYJmssk1RuLJX/mLS36NjPkh8dSyMyaYyiLxF8gyoolSyUw1RDGNq4Va+tmNRG
-         gTbF9b3a09tzBLpNXjQoz6ITzti8Fq/d4NSLsSAG/kWQxTU28xlFxZ+ady/tgiUEv9s8
-         eKs9xU844Mmdv7ziPeVgzs2q0b/0I1AjfAd0hkuXNrbfU7PCxyV+0TYyCqdj2TVNBdhl
-         1pz1jFFW45uBiVUTNNCGqpqBalru/fp4qGdkMKbgJ/XSgpP8lkt6iRdpRy7lOMF0Mn3w
-         6DE5at9FsWzfH0aDNDtfETLAzLv/98YC5qjJ+1KsxrOBGCESEpC58Rb8z1trJe3zmXOq
-         P2IQ==
+        bh=juhHvibOKBbL5R/8TYL0oDxVwG80NiQFMLoZ+aO+Nyo=;
+        b=u3wQ4poYP2eSyy1zEVjY0WHILnDf1cSwHDndkUc7IvC/yCRmr2YBGSs8oNtQBEs1cP
+         Vf21HPDas7ZFNepSdMVYgkFhXqS6lPxlxJqUK36CwJvgz+nskIpSIxOkbx6g6izn/A6X
+         Yjrszv/vE7z/P3kzocBh1R0QG16IwLr9Iz6X9EGr+Wd+4vzZulRSWG8EuJeTM5EPwbHv
+         lE37h0CnR0DES0ojJtVtMXCKNV8+QV2ctneAXeIqK9Fpn/PMvCRgVd2sNAPH1c1t0SLN
+         j4tbZefDK3OnstUvTwVHuqNBUxCbHFJJVL3t2xJBEK6gKO+pMGb2M6jOK0i15Cqsz5Bi
+         8Ckg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780067283; x=1780672083;
+        d=1e100.net; s=20251104; t=1780067287; x=1780672087;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=A0LUKgY7WdUW5/UN6qkumXlSSdA1avjLrzVcdpZcOlg=;
-        b=krhgEhdkwGXcdOrKHUB1edbNDW9+xxkpYeu+jZUfHbPBlmgdqtQC0/2drBq/GzLkh0
-         DSZHgyMU0te6ndcpY8ZNh/H4YK4ebMAiY3O0Scu+jP9Da4TSFLA/FpNY1tfH04BVtBYX
-         QtmxMUJv8N8ZGuFKP+xw5j5Akv4GuKUCHQMNQcT6DgdGUynrulI+ipkgDYUMW1EtNO3r
-         Lmi0gPEwGA98RrgcEw6B06y86rNRqy4XGOYH5hGcoPTA6oCCE8jU5ULi4vkj00WzLcg2
-         6lup/RiLTLs0BIqnR92mZCcLLAnyOCjskTT64GVs5sKPj2lNBcy6oWMIhc7iAm0ALsV7
-         ZRBQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+WL+XxQGkvM6aNtjONU4QhqFC+06O4KwtWK7N0L42d36xA4mI+jJAtiVbykWrQvKmnqZA0TN/zwPFXfbQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8oguddUz1eSWG3VL5ATwKMnbIC0eHIrad5lcsBaChuQtE7D+Z
-	KW7/HxzJgVR4kfvLU7G0X78Wzn8FmfOz+0u8PBgyDSjsrGBh9r4wiyhuvly7SKZhhq+POGy2EXB
-	xFf86pw==
-X-Received: from pldt15.prod.google.com ([2002:a17:903:40cf:b0:2bd:a5da:7a51])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:da84:b0:2bc:8f62:990b
- with SMTP id d9443c01a7336-2bf368d7531mr1933905ad.41.1780067283075; Fri, 29
- May 2026 08:08:03 -0700 (PDT)
+        bh=juhHvibOKBbL5R/8TYL0oDxVwG80NiQFMLoZ+aO+Nyo=;
+        b=mixsolrvLiNZVfPHh1Qdgqm8Fzk+9Ux9tMODWtTDeC3dP4oQZV/RNsrFc5k6BB+92p
+         mFTSMRh5ktBv9lNQcoPMGfA+6xsgkE/8UFr4X1sCrc9anqvrQ4X33MFH6VlYSvIR45GX
+         Iuu2Ead1Pf9DULAYKAWXODQJAhI5gcvafg2A9QOoafrMR3n7N79oJsUMT3jt8rf6F2WV
+         UdmAUy+2JD7Bxw8cNUOLTSTti7L00JYyMvBfMsgoIB0gTqeJBhV8OouS+Yi5a1NDfG1y
+         rINGQbBhijyYbWuHQRgzPuuXPdKUnh3yrn0uip0fzlh15nyzL2ZKISFMLKhUr3Pl4m9J
+         C6Cw==
+X-Forwarded-Encrypted: i=1; AFNElJ/aKM5zs22QSGWzgebtmwjtcx/MVIZ0gZkDnP9qzBDAkNYdAoAcMTqQQIUfck+hyExIMmxqRS7FFCSr+Qk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywtoa935Z82pOSLd9Rvu4faO+RNJOkewCceFay9OqM5454ZyFku
+	ZvwRXQ7GREk9s2WnLGPpZ+MJtbXiDd021LJniTS0Ps5t0BPnYEm/SB9bmIle2wil/BB5mI5JS3R
+	HYlT9IA==
+X-Received: from plrf5.prod.google.com ([2002:a17:902:ab85:b0:2b0:5538:b55b])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:e88c:b0:2bf:2188:a90f
+ with SMTP id d9443c01a7336-2bf3687a3f3mr2296425ad.32.1780067286623; Fri, 29
+ May 2026 08:08:06 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 29 May 2026 08:08:00 -0700
+Date: Fri, 29 May 2026 08:08:03 -0700
 In-Reply-To: <20260529144435.704127-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -78,8 +78,8 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260529144435.704127-1-seanjc@google.com>
 X-Mailer: git-send-email 2.54.0.823.g6e5bcc1fc9-goog
-Message-ID: <20260529150800.714453-1-seanjc@google.com>
-Subject: [PATCH v4 34/47] x86/kvmclock: Move kvm_sched_clock_init() down in kvmclock.c
+Message-ID: <20260529150803.714504-1-seanjc@google.com>
+Subject: [PATCH v4 35/47] x86/xen/time: Mark xen_setup_vsyscall_time_info() as __init
 From: Sean Christopherson <seanjc@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
 	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
@@ -107,13 +107,13 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MV_CASE(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
 	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11356-lists,linux-hyperv=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[amazon.co.uk:email,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo];
+	TAGGED_FROM(0.00)[bounces-11357-lists,linux-hyperv=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[amazon.co.uk:email];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -128,76 +128,35 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	PRECEDENCE_BULK(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	REPLYTO_EQ_FROM(0.00)[]
-X-Rspamd-Queue-Id: AC6BF604913
+X-Rspamd-Queue-Id: 7E37A604BC3
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Move kvm_sched_clock_init() "down" so that it can reference the global
-kvm_clock structure without needing a forward declaration.
-
-Opportunistically mark the helper as "__init" instead of "inline" to make
-its usage more obvious; modern compilers don't need a hint to inline a
-single-use function, and an extra CALL+RET pair during boot is a complete
-non-issue.  And, if the compiler ignores the hint and does NOT inline the
-function, the resulting code may not get discarded after boot due lack of
-an __init annotation.
-
-No functional change intended.
+Annotate xen_setup_vsyscall_time_info() as being used only during kernel
+initialization; it's called only by xen_time_init(), which is already
+tagged __init.
 
 Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kernel/kvmclock.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ arch/x86/xen/time.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/kvmclock.c b/arch/x86/kernel/kvmclock.c
-index 05bca2be0df3..6372b4dc7b0c 100644
---- a/arch/x86/kernel/kvmclock.c
-+++ b/arch/x86/kernel/kvmclock.c
-@@ -134,20 +134,6 @@ static void kvm_restore_sched_clock_state(void)
- 	kvm_register_clock("primary cpu clock, resume");
+diff --git a/arch/x86/xen/time.c b/arch/x86/xen/time.c
+index 91ef83b1e540..8f4511f91d16 100644
+--- a/arch/x86/xen/time.c
++++ b/arch/x86/xen/time.c
+@@ -454,7 +454,7 @@ void xen_restore_time_memory_area(void)
+ 	xen_sched_clock_offset = xen_clocksource_read() - xen_clock_value_saved;
  }
  
--static inline void kvm_sched_clock_init(bool stable)
--{
--	kvm_sched_clock_offset = kvm_clock_read();
--	__paravirt_set_sched_clock(kvm_sched_clock_read, stable,
--				   kvm_save_sched_clock_state,
--				   kvm_restore_sched_clock_state);
--
--	pr_info("kvm-clock: using sched offset of %llu cycles",
--		kvm_sched_clock_offset);
--
--	BUILD_BUG_ON(sizeof(kvm_sched_clock_offset) >
--		sizeof(((struct pvclock_vcpu_time_info *)NULL)->system_time));
--}
--
- void kvmclock_cpu_action(enum kvm_guest_cpu_action action)
+-static void xen_setup_vsyscall_time_info(void)
++static void __init xen_setup_vsyscall_time_info(void)
  {
- 	/*
-@@ -303,6 +289,20 @@ static int kvmclock_setup_percpu(unsigned int cpu)
- 	return p ? 0 : -ENOMEM;
- }
- 
-+static __init void kvm_sched_clock_init(bool stable)
-+{
-+	kvm_sched_clock_offset = kvm_clock_read();
-+	__paravirt_set_sched_clock(kvm_sched_clock_read, stable,
-+				   kvm_save_sched_clock_state,
-+				   kvm_restore_sched_clock_state);
-+
-+	pr_info("kvm-clock: using sched offset of %llu cycles",
-+		kvm_sched_clock_offset);
-+
-+	BUILD_BUG_ON(sizeof(kvm_sched_clock_offset) >
-+		sizeof(((struct pvclock_vcpu_time_info *)NULL)->system_time));
-+}
-+
- void __init kvmclock_init(bool prefer_tsc)
- {
- 	u8 flags;
+ 	struct vcpu_register_time_memory_area t;
+ 	struct pvclock_vsyscall_time_info *ti;
 -- 
 2.54.0.823.g6e5bcc1fc9-goog
 
