@@ -1,150 +1,191 @@
-Return-Path: <linux-hyperv+bounces-11376-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11377-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YAfbCD/DGWqyywgAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11376-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 May 2026 18:47:59 +0200
+	id +ImMKG3SGWodzQgAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11377-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 29 May 2026 19:52:45 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A113605EBC
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 May 2026 18:47:58 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEE83606DE7
+	for <lists+linux-hyperv@lfdr.de>; Fri, 29 May 2026 19:52:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 07B98301E6D5
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 May 2026 16:40:22 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id DC5A736AAE66
+	for <lists+linux-hyperv@lfdr.de>; Fri, 29 May 2026 16:59:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0237F3EDAD5;
-	Fri, 29 May 2026 16:40:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 082A53F8712;
+	Fri, 29 May 2026 16:59:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eGkKy2zW"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VgiUGXrj"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA60B3EBF35;
-	Fri, 29 May 2026 16:40:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB32D3F86E7
+	for <linux-hyperv@vger.kernel.org>; Fri, 29 May 2026 16:59:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780072820; cv=none; b=AN+x/A5OKkml1dicFdDpYjOR8hN5HoXnczHFTwUDVKkY3rOgy0688U8bO5a06ZEzfKv3IYs38Fz8Qi840nmOYYKUtndyle6AxcXo0VLlkeSOSX2HkeprFWNk3FJaDl9um6XZ9UK7wtsmYeYpCbboAkrfmijtxPCevc3t55wDmA4=
+	t=1780073978; cv=none; b=QWgjnxE7tveczPr68zFW6DbmU5Y+JyLa+DgH0lR3FXBMW7Z1JMYAyiYZqspvbsHg5NJCUj5nIvnR2GVBqCpezP4z9tdBbmujYFKL7mNmD+2tsL6thDqrMe/70oJXBfYqihXnUgfZkIzeS4IUMWA/2IAwC6zQbvVmKlEJ1GJnV+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780072820; c=relaxed/simple;
-	bh=RLCMblZAmO9z8lqczvJS97ibYbLBIdR04Q/p2oNSLf0=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=n5o22ulQYFMoOE6SxAs+/LWUtoxOfA9iSRB4OaG3DDHJwgj+zrRUDnESLudLatceyz/L9xCtCnFmPReGurk1Ysg2rHS1So/ohhptQcpku6X43jPJgAeQcZ81HhiGngIbXP88038qP6pUdBejefJ5x0wcqfkqnxMJ7UYxVA8L8YM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eGkKy2zW; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 519101F00899;
-	Fri, 29 May 2026 16:40:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780072819;
-	bh=P+/SyUCoUE5/t/HWSx8+Y8GgHzZUz0dCGkswepvYttI=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=eGkKy2zWjzfTC8a5uRbZ1yVlD15PB2mkm6EwMj65ERCPoZsqZF1iJwq6HW6um+9wb
-	 I8InSk+H++UAzQCA71Pg3cuN4HBpu6uHZsEjtBHHL2D4zeN/ZAWHiwsPJ8Nr1YvTq/
-	 A+MQT5kFXPYTzd5iGPI7F2fFLfqEda6dT8mQ7meCJ8lOJKtvJPLAxNCeB+o5FIgeUr
-	 GEnTNmmuBK+WwDqVckpyFnYUEQuQ2zd/SLxxs5F/EVaatc/NckaL8OUnXc+bRNDLG1
-	 BkJRy6EDfIYJuugBCa4e+DkOWMfFHb5pbv297gcoeDzod1HIWBXFM9q+ZfnjLuh7gi
-	 2+jv+SOvqViRA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 09/47] x86/acrn: Mark TSC frequency as known when
- using ACRN for calibration
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Sean Christopherson" <seanjc@google.com>
-Cc: kvm@vger.kernel.org, linux-hyperv@vger.kernel.org
-In-Reply-To: <20260529144435.704127-10-seanjc@google.com>
-References: <20260529144435.704127-10-seanjc@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 29 May 2026 16:40:18 +0000
-Message-Id: <20260529164019.519101F00899@smtp.kernel.org>
+	s=arc-20240116; t=1780073978; c=relaxed/simple;
+	bh=QxzH5176QV1Z3ehduHKIGQu/MHoL+J9s1KmhHLaMQYY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=KSqkw2GnszXPhfPWOzUhibo0u7lbDC0e0HKgXakyqCwctT0Ofq7e143cfwiMNY8FtLPVgspfvx3s6lZq5c6mwqW/BYH2W9aVK8Bt7qslGbFITTCf8OXc9U5oCPYtqekyA3HUp+8QKTCs44ztk97Sl4M8n/EKvlAH0cGnlW48Upo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VgiUGXrj; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2bc763c7256so293067485ad.3
+        for <linux-hyperv@vger.kernel.org>; Fri, 29 May 2026 09:59:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1780073977; x=1780678777; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EIfZI+15eXnt1VS1ntObygvWhZxyllpwUaeyj935Nek=;
+        b=VgiUGXrj0kd28rwfhj/jVylcMGnXjPfEfylZt/hA39rn478ou6knrVrt9+G1CcG2wi
+         Z1xmQSMlMziHsQjtrthewzgojDF6zTRCIt7HoqbduDWNOlX05oYqnYchpHDHCXscYs26
+         UzzXbT2YLco6l34+wacQU5tbfnCen22Oq+pbXKITzmvEAWX4+baJY7sY9j5uNcOTt9Fj
+         n4PMhfGLlFJjZwNu7tXT0LT6SXBcx5lJC9ScHfh8I9Gz8LKWS85sldtvMuzO5eij9Iqr
+         uG6x6W+aeP/hZdySoAYRXe2QQtiBJ2/uSnZz2jkR7R0r/pGmtBJmh4qXb4yBSUjNbmvB
+         gdiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780073977; x=1780678777;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EIfZI+15eXnt1VS1ntObygvWhZxyllpwUaeyj935Nek=;
+        b=S/62WzQAnKXnxPYfLN6OJ1/AZyI/18PG0I4/LB3Wf+/Is2sQxFANnsrctvXWoi6P15
+         lKlUnpZcH7Ug0zJIi219vLFP/T8dpzwPfGIceNAWS2QyI+fGh+kF4XvBQYzvnLU+DPRR
+         CWku0cplZ0IR/WJneRKvye47nYzqR1tISDJfD5lMFy3EFF07T5KZ7gYdKI4BeLWCGWhV
+         9v4sSeHGjmVgf7xyViNx5orBaQPx30h7AQ9j8FSAE/+U7QXUhjnaLuAEL5RRrl/jwASW
+         EtZrhtoxxjQAEeh5NFQiUI2OjTvtO+ja61K5PHIhInA+eqUhFx4YPnfJaJ3DCepVru8J
+         KR1A==
+X-Gm-Message-State: AOJu0YzkfIJkB1Q7CkS4TKbFRLjnODZtw9fPL5AbymqWKn9mvt4DM+OI
+	7iCKj3DmZwHe2HEhsBleDY7UzYiEX2KLxZtNBf/McGUAySScgOvYtiC8EVpIjO32kKpS3QzWARm
+	o7AS3VA==
+X-Received: from plry22.prod.google.com ([2002:a17:902:b496:b0:2bd:9e64:2df1])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:e78e:b0:2b4:5cea:f61c
+ with SMTP id d9443c01a7336-2bf3679355bmr9901385ad.4.1780073976883; Fri, 29
+ May 2026 09:59:36 -0700 (PDT)
+Date: Fri, 29 May 2026 09:59:36 -0700
+In-Reply-To: <20260529162111.990441F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	MISSING_MIME_VERSION(2.00)[];
+Mime-Version: 1.0
+References: <20260529144435.704127-8-seanjc@google.com> <20260529162111.990441F00893@smtp.kernel.org>
+Message-ID: <ahnF-FehodVd474X@google.com>
+Subject: Re: [PATCH v4 07/47] x86/tdx: Force TSC frequency with CPUID-based
+ info provided by the TDX-Module
+From: Sean Christopherson <seanjc@google.com>
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-hyperv@vger.kernel.org, kvm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
+	MV_CASE(0.50)[];
+	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11376-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11377-lists,linux-hyperv=lfdr.de];
+	DKIM_TRACE(0.00)[google.com:+];
 	RCPT_COUNT_THREE(0.00)[3];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TO_DN_NONE(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[seanjc@google.com,linux-hyperv@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_NO_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[smtp.kernel.org:mid,lists.linux.dev:replyto,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 1A113605EBC
+	MIME_TRACE(0.00)[0:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: EEE83606DE7
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] Unconditionally setting X86_FEATURE_TSC_KNOWN_FREQ skips TSC ref=
-inement even if the hypervisor fails to provide a valid TSC frequency.
---
+On Fri, May 29, 2026, sashiko-bot@kernel.org wrote:
+> > diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+> > index 2b8f94c3fcc7f..2603f136e29bd 100644
+> > --- a/arch/x86/kernel/tsc.c
+> > +++ b/arch/x86/kernel/tsc.c
+> 
+> [ ... ]
+> 
+> > @@ -1550,6 +1551,8 @@ void __init tsc_early_init(void)
+> >  		known_tsc_khz = tsc_early_khz;
+> >  	else if (cc_platform_has(CC_ATTR_GUEST_SNP_SECURE_TSC))
+> >  		known_tsc_khz = snp_secure_tsc_init();
+> > +	else if (boot_cpu_has(X86_FEATURE_TDX_GUEST))
+> > +		known_tsc_khz = tdx_tsc_init();
+> 
+> [Severity: Medium]
+> Does this structure accidentally bypass the TDX APIC timer and TSC capability
+> initializations if the user provides the tsc_early_khz boot parameter?
+> 
+> Previously, setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE) was executed
+> unconditionally in tdx_early_init() for TDX guests. With this change, 
+> tdx_tsc_init() is skipped entirely when tsc_early_khz is provided due to
+> the if/else if chain.
 
-commit 44594dfd95dd7a3adcfc1b7f3c8d37e15ed4e143
-Author: Sean Christopherson <seanjc@google.com>
+Drat.  But this isn't benign.  I don't see a better option than biting the bullet
+and ignoring tsc_early_khz for Coco guests, e.g. in the SNP patch do:
 
-x86/acrn: Mark TSC frequency as known when using ACRN for calibration
+	if (cc_platform_has(CC_ATTR_GUEST_SNP_SECURE_TSC))
+		known_tsc_khz = snp_secure_tsc_init();
 
-This commit marks the TSC frequency as known when using ACRN's PV CPUID
-information, assuming the hypervisor explicitly provides it.
+	if (!known_tsc_khz)
+		known_tsc_khz = tsc_early_khz;
+	else if (tsc_early_khz)
+		pr_err("Ignoring 'tsc_early_khz' in favor of trusted firmware\n");
 
-> diff --git a/arch/x86/kernel/cpu/acrn.c b/arch/x86/kernel/cpu/acrn.c
-> index ad8f2da8003b3..0303fe6a2efa7 100644
-> --- a/arch/x86/kernel/cpu/acrn.c
-> +++ b/arch/x86/kernel/cpu/acrn.c
-> @@ -33,6 +33,8 @@ static void __init acrn_init_platform(void)
->  {
->  	/* Install system interrupt handler for ACRN hypervisor callback */
->  	sysvec_install(HYPERVISOR_CALLBACK_VECTOR, sysvec_acrn_hv_callback);
-> +
-> +	setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
+and then this becomes:
 
-[Severity: Medium]
-Does this unconditionally skip TSC refinement even if the hypervisor fails
-to provide a valid TSC frequency?
+	if (cc_platform_has(CC_ATTR_GUEST_SNP_SECURE_TSC))
+		known_tsc_khz = snp_secure_tsc_init();
+	else if (boot_cpu_has(X86_FEATURE_TDX_GUEST))
+		known_tsc_khz = tdx_tsc_init();
 
-ACRN TSC frequency is obtained via acrn_get_tsc_khz(), which queries
-cpuid_eax(ACRN_CPUID_TIMING_INFO). If the hypervisor does not support this
-leaf or returns 0, the kernel falls back to early hardware calibration
-(e.g., PIT/HPET via x86_platform.calibrate_tsc()).
+	if (!known_tsc_khz)
+		known_tsc_khz = tsc_early_khz;
+	else if (tsc_early_khz)
+		pr_err("Ignoring 'tsc_early_khz' in favor of trusted firmware\n");
 
-Because X86_FEATURE_TSC_KNOWN_FREQ is unconditionally forced here,
-init_tsc_clocksource() will assume the frequency is known and skip the
-refined calibration phase. This regression locks in the imprecise early
-calibration and could cause time drift.
+At that point, I think it makes sense to double down and ignore tsc_early_khz if
+the hypervisor provides the frequency.  It'll yield cleaner code overall, and
+will be easy enough to document, e.g. to end up with:
 
-I see this regression was addressed in a later commit b0e7d8e1edd52
-("x86/tsc: Consolidate forcing of X86_FEATURE_TSC_KNOWN_FREQ for PV code")
-which correctly gates the capability setting on known_tsc_khz !=3D 0.
+	if (cc_platform_has(CC_ATTR_GUEST_SNP_SECURE_TSC))
+		known_tsc_khz = snp_secure_tsc_init();
+	else if (boot_cpu_has(X86_FEATURE_TDX_GUEST))
+		known_tsc_khz = tdx_tsc_init();
 
->  }
-> =20
->  static bool acrn_x2apic_available(void)
+	/*
+	 * If the TSC frequency wasn't provided by trusted firmware, try to get
+	 * it from the hypervisor (which is untrusted when running as a CoCo guest).
+	 */
+	if (!known_tsc_khz && x86_init.hyper.get_tsc_khz)
+		known_tsc_khz = x86_init.hyper.get_tsc_khz();
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260529144435.7041=
-27-1-seanjc@google.com?part=3D9
+	/*
+	 * Mark the TSC frequency as known if it was obtained from a hypervisor
+	 * or trusted firmware.  Don't mark the frequency as known if the user
+	 * specified the frequency, as the user-provided frequency is intended
+	 * as a "starting point", not a known, guaranteed frequency.
+	 */
+	if (known_tsc_khz)
+		setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
+
+	if (!known_tsc_khz)
+		known_tsc_khz = tsc_early_khz;
+	else if (tsc_early_khz)
+		pr_err("Ignoring 'tsc_early_khz' in favor of trusted firmware or hypervisor\n");
 
