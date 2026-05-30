@@ -1,61 +1,61 @@
-Return-Path: <linux-hyperv+bounces-11394-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11395-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OCeoIKOCGmr84wgAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11394-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sat, 30 May 2026 08:24:35 +0200
+	id oC/6DVyFGmrN5AgAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11395-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sat, 30 May 2026 08:36:12 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C86CD60B6E4
-	for <lists+linux-hyperv@lfdr.de>; Sat, 30 May 2026 08:24:34 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B0AC60B733
+	for <lists+linux-hyperv@lfdr.de>; Sat, 30 May 2026 08:36:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C9D1C3040D80
-	for <lists+linux-hyperv@lfdr.de>; Sat, 30 May 2026 06:24:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AABFA3047BCC
+	for <lists+linux-hyperv@lfdr.de>; Sat, 30 May 2026 06:35:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6067E36A377;
-	Sat, 30 May 2026 06:24:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5676A25B0A3;
+	Sat, 30 May 2026 06:35:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A2jGWcNO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zbtxln74"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5848336A017;
-	Sat, 30 May 2026 06:24:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FBEA351C2D;
+	Sat, 30 May 2026 06:35:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780122272; cv=none; b=OdbyffAZEJ06nioAQXDwk4lo2ozVEnBSdekD9nH55YvafKdZdKxy/YQ8f3KPnEohEkYXoOdDd+KfwZABbHXcYltuTMCNDqHFV0jvUyKMxbSvQ9ZylGsAnqgbMdRVW1xpaUh231es6s+S/yUPyKJGDbr6y9dpVa8/gQhwF7VQOj0=
+	t=1780122933; cv=none; b=V893kN7xvlkSjyRupwTGkEelHOJScZb8YoP0ctigsDEAUSWe9n89liCxinXTgFi2P5loPsnoiuLfPtQru2DuCse8PweO3b1HuRvW71Gjwo96swrrDczOP+C0wcPtub4XDac3dcc1uhd3/lF2JaZqwn//c8peMRMwpQk0wYT9L4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780122272; c=relaxed/simple;
-	bh=5yHsplQGGFheIIw532as+DJtPgtcSJKorPP2NxE+O/U=;
+	s=arc-20240116; t=1780122933; c=relaxed/simple;
+	bh=evkKFr7mv9iYdH86E3P7Xtwu7LwE+GwQsTpUOJHgA8k=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=UBaA2/ZDXSEcglDfeM8ElIyzQhuXdj5MJP17K3aUnymOwEZlnZ+vwA46WVeYXDLR0GGPwEdsoiaomjfzJM67utRZvGyirLelwyfbOMjTvggqb01z3YoIVvMPyXelQ9pf+pa2uHwRQAXGlHPqWd2p2znStbD16gdawYoHu78ZQIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A2jGWcNO; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF9A31F00893;
-	Sat, 30 May 2026 06:24:30 +0000 (UTC)
+	 Message-Id; b=GZMFIQT+GZHpWliZfTaO5rf+HLVhHKwhH7/Gm2+yike4yD6sIVGHN4Y2Xla8V0KmytjMbzIPMv3Bc9c0zNiPZjoNqLB1pMBMd3ivyP2d/j+SdZZjsBH/jeK2j443TbLB98PLxYBpwnBZYYDORfV5c2Fj28P0GPSId1R9l651loY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zbtxln74; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D034A1F00898;
+	Sat, 30 May 2026 06:35:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780122270;
-	bh=FfzJZFF7HoUBZuzlW9jgD2vEus+hPA2d+RKT5/1A4GA=;
+	s=k20260515; t=1780122932;
+	bh=C0G61IoecwdmJolD9R17vEIOzA8/YNqCGA9j58RPA80=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=A2jGWcNOIEbKMEb50Herd7fgAXCPH4xYM2JQIPNz51iIY2Dmx617q5sv2Sd571tHl
-	 MQZDrTTvgyBeUdRCJ3V32Kv/VVvPOjd3fmeU0n4ZyIkqII/mE9CN2MvuilTaf92/dS
-	 p16gj+/cLgg3gyeURIl5h4sRyRp62JUTeOrGnoy7YIcgwzkZtCo0C59oYGoEoEscHo
-	 DxtJP3B88VBkx6JRtKC1dym0IkyoXfoYsLYCs5ZsVHmBl4S8iXe40yxX4YgxhuF7yP
-	 rad2ofNi1Dv8DDZuF/TrtVcBF/pWbZBkV3C2DDtVblp1VXK0Mya0s8jUplaGT5Ck2O
-	 wc+QI70lPMBGQ==
+	b=Zbtxln74h4kQh/EkLyp9Y5TOkjuHvY8mq6wd+HO8iaascBq9PZScIL0vqSPnximVl
+	 5oCo8AqO4GDhRQ3UTgEl2j4kyR0ef3UDpQask+h3fkTank/uFmwkD7+15KPK/+xWr4
+	 tbFQfsvvhHVVWhJ/zSYEo73/305qNHqeWPOMLgCG5vzwzqehGN8YZaJMT2B1hkqIdB
+	 /fcJCfzPfnVh1R/zqWzYhtTB7yTvzeZYa3O4yDSmgFUS7A562T3M+PYhS6n43G7qH6
+	 k6rqB/zfu0dVr4aoNmHBAGrIjZUHBSFimlcVrdbcNhnp2c4zA+SoTu/yomgnyhSmug
+	 zpxn9W6JqIdFg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 20/47] x86/kvm: Get CPU base frequency from CPUID
- when it's available
+Subject: Re: [PATCH v4 21/47] x86/xen: Obtain TSC frequency from CPUID if
+ present
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Sean Christopherson" <seanjc@google.com>
-Cc: linux-hyperv@vger.kernel.org, kvm@vger.kernel.org
-In-Reply-To: <20260529144435.704127-21-seanjc@google.com>
-References: <20260529144435.704127-21-seanjc@google.com>
+Cc: kvm@vger.kernel.org, linux-hyperv@vger.kernel.org
+In-Reply-To: <20260529144435.704127-22-seanjc@google.com>
+References: <20260529144435.704127-22-seanjc@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 30 May 2026 06:24:30 +0000
-Message-Id: <20260530062430.AF9A31F00893@smtp.kernel.org>
+Date: Sat, 30 May 2026 06:35:31 +0000
+Message-Id: <20260530063531.D034A1F00898@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -66,14 +66,14 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11394-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11395-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
@@ -89,79 +89,74 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FROM_NO_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,lists.linux.dev:replyto]
-X-Rspamd-Queue-Id: C86CD60B6E4
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,sashiko.dev:url,smtp.kernel.org:mid,lists.linux.dev:replyto,amazon.co.uk:email]
+X-Rspamd-Queue-Id: 8B0AC60B733
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] The KVM patch attempts to decouple the virtual CPU base frequenc=
-y from the TSC frequency by explicitly reading CPUID.0x16, but this intent =
-is defeated by the core x86 timekeeping code that forcibly clamps `cpu_khz`=
- to `tsc_khz` if they differ by more than 10%.
+- [High] Missing Out-of-Bounds CPUID Leaf Check in xen_tsc_khz()
 --
 
-commit 399b0f26d4487d316fd05edb4e7df98c8da6205f
-Author: Sean Christopherson <seanjc@google.com>
+commit 7f8bc6380ca7c0fd31cb0c2bf54c9ef13654964c
+Author: David Woodhouse <dwmw@amazon.co.uk>
 
-x86/kvm: Get CPU base frequency from CPUID when it's available
+x86/xen: Obtain TSC frequency from CPUID if present
 
-This commit uses CPUID.0x16 to retrieve the CPU base frequency in KVM inste=
-ad
-of assuming it matches the TSC frequency. It introduces kvm_get_cpu_khz and
-hooks it into x86_init.hyper.get_cpu_khz during platform initialization.
+This commit updates the Xen timekeeping code to try reading the guest
+TSC frequency directly from Xen CPUID leaf 3, sub-leaf 0, ECX. If the
+value is present, it uses it instead of reverse-calculating the frequency
+from the pvclock multiplier and shift.
 
-> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> --- a/arch/x86/kernel/kvm.c
-> +++ b/arch/x86/kernel/kvm.c
-
-[ ... ]
-
-> @@ -1049,6 +1055,14 @@ static void __init kvm_init_platform(void)
->  #endif
->  	}
-> =20
-> +	/*
-> +	 * Prefer CPUID.0x16 over KVM's PV CPUID when possible, as the base CPU
-> +	 * frequency isn't necessarily the same as the TSC frequency.
-> +	 */
-> +	kvm_cpu_khz_cpuid =3D __cpu_khz_from_cpuid();
-> +	if (kvm_cpu_khz_cpuid)
-> +		x86_init.hyper.get_cpu_khz =3D kvm_get_cpu_khz;
+> diff --git a/arch/x86/xen/time.c b/arch/x86/xen/time.c
+> index 487ad838c4418..36d66abf53796 100644
+> --- a/arch/x86/xen/time.c
+> +++ b/arch/x86/xen/time.c
+> @@ -42,6 +42,17 @@ static unsigned int __init xen_tsc_khz(void)
+>  {
+>  	struct pvclock_vcpu_time_info *info =3D
+>  		&HYPERVISOR_shared_info->vcpu_info[0].time;
+> +	u32 base =3D xen_cpuid_base();
+> +	u32 eax, ebx, ecx, edx;
 > +
+> +	/*
+> +	 * If Xen provides the guest TSC frequency directly in CPUID
+> +	 * (leaf 3, sub-leaf 0, ECX), use that instead of reverse-
+> +	 * calculating from the pvclock mul/shift.
+> +	 */
+> +	cpuid_count(base + 3, 0, &eax, &ebx, &ecx, &edx);
+> +	if (ecx)
+> +		return ecx;
 
-[Severity: Medium]
-Will the CPU frequency actually remain decoupled from the TSC frequency when
-they diverge significantly?
+[Severity: High]
+Is it possible for the hypervisor to support a maximum leaf of base + 2,
+resulting in an out-of-bounds CPUID query here?
 
-During early boot, tsc_early_init() calls this hook and passes the value
-down to determine_cpu_tsc_frequencies() in arch/x86/kernel/tsc.c. Inside
-determine_cpu_tsc_frequencies(), there is a clamp that forces cpu_khz to
-match tsc_khz if they differ by more than 10%:
+Looking at xen_cpuid_base(), it calls cpuid_base_hypervisor(XEN_SIGNATURE, =
+2)
+which only guarantees that the hypervisor supports up to leaf base + 2.
 
-arch/x86/kernel/tsc.c:determine_cpu_tsc_frequencies() {
-        ...
-        else if (abs(cpu_khz - tsc_khz) * 10 > tsc_khz)
-                cpu_khz =3D tsc_khz;
-        ...
-}
+If the hypervisor does not support base + 3, this CPUID query could be out
+of bounds. Processors handling out-of-bounds CPUID requests typically return
+data from the maximum basic leaf.
 
-If the CPU base frequency from CPUID.0x16 and the TSC frequency differ by
-more than 10%, doesn't this unconditional clamp silently overwrite the newly
-populated cpu_khz, reverting to the old behavior that this patch aims to fi=
-x?
+Since the ECX register of the maximum basic leaf frequently contains non-ze=
+ro
+data (such as a bus or crystal clock frequency), would the if (ecx) check
+blindly accept this unintended data as the guest's TSC frequency?
 
->          /*
->           * If the TSC counts at a constant frequency across P/T states, =
-counts
->           * in deep C-states, and the TSC hasn't been marked unstable, tr=
-eat the
+Using a drastically incorrect TSC frequency could break timekeeping, timers,
+and the scheduler during boot.
+
+> =20
+>  	return pvclock_tsc_khz(info);
+>  }
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260529144435.7041=
-27-1-seanjc@google.com?part=3D20
+27-1-seanjc@google.com?part=3D21
 
