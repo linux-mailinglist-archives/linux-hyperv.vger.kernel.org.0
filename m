@@ -1,61 +1,61 @@
-Return-Path: <linux-hyperv+bounces-11411-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11412-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uJnQCtg1G2oXAQkAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11411-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sat, 30 May 2026 21:09:12 +0200
+	id OHhdCww2G2oXAQkAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11412-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sat, 30 May 2026 21:10:04 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D87D612FB2
-	for <lists+linux-hyperv@lfdr.de>; Sat, 30 May 2026 21:09:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 98BCF612FBA
+	for <lists+linux-hyperv@lfdr.de>; Sat, 30 May 2026 21:10:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 99809301F4A2
-	for <lists+linux-hyperv@lfdr.de>; Sat, 30 May 2026 19:09:10 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 9966C301E988
+	for <lists+linux-hyperv@lfdr.de>; Sat, 30 May 2026 19:10:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A0AE1427A;
-	Sat, 30 May 2026 19:09:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85945248F66;
+	Sat, 30 May 2026 19:10:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W41Ubj0n"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Em4IdOfh"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D08F1FBC8E
-	for <linux-hyperv@vger.kernel.org>; Sat, 30 May 2026 19:09:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B1BC1427A
+	for <linux-hyperv@vger.kernel.org>; Sat, 30 May 2026 19:09:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780168149; cv=none; b=RWkk/sTWStNl1BaVfDxRvcmIrTZCghuLPT0uCFzXBHzE6ytbw/lroQkSjXLy9Cw5//+mgjLW6AZFZQjZZ3qqI1EkVSpUWVxq93OjSAIr4tKazRhpsSyjHyToFb1lwcv/uDOGDdHwTgMVVHHKMKl60BDuMUygrKYqmU41hFMq/4g=
+	t=1780168200; cv=none; b=pfMBlAAoDbhsJRbBv4ascm/BLumT0NN3R8D05w5XnIhkIDHPWXhvwHZM4DEpWEYkL4HC1pH7iaSp6nIv3NGLfjrUSF0Q7ySCE56NhRISsl98f0hJTBV2uLNxz5w9A5Nb76E83/pILwbUztH27XJIV99JVw0kmKs3aZum5biakpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780168149; c=relaxed/simple;
-	bh=gdJb23LBIAqAbg1eZZEhThKUIpPmuU9VUbljv0Qp9bI=;
+	s=arc-20240116; t=1780168200; c=relaxed/simple;
+	bh=qZD2g5XbN9AQK11MYDJdlS9oCACvhhnZB0EAqF8cTPo=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=GBkU6yBpR8dn0H7RAcB3xAPbC/La6hHSCa09XFF0IeBaKv/8uSbG7EQgXcfc12Z/OaMtAPAc1wy10SM4peQKpAaczDpFIEcaVHZv73YRZvaaXuiNCd1V+kXc0nxWLoYrlMIZ9RSUox3FsW9z+XEqukTCuJeIkXcdurEX3V3//P4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W41Ubj0n; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CC991F00893;
-	Sat, 30 May 2026 19:09:07 +0000 (UTC)
+	 Message-Id; b=Liu1o5y4TWKkzQC/kueiWTxEubzDF4p7P2UN8W0JqEL8C6k+s2rroriX3Kqp5+Zz9+wcaNsqbhCWu6KRI5iZYeu34ynHyKvs0idkgi0vgTFoTjLpa9z4HdQLsfFhgq756oQyPfk9z1dMLeKAYOG9L2nmmJ3P5XfC5tZKHRKrIlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Em4IdOfh; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D22AF1F00893;
+	Sat, 30 May 2026 19:09:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780168147;
-	bh=h+d3nV2MHTCE8LtH0/Ha56jzUVHSVwiIZIL9Z2iZT5M=;
+	s=k20260515; t=1780168199;
+	bh=ZDqFr6sudmLp+G+1/FtX5EivrjYuHA8cloRtffT9SkM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=W41Ubj0nzv0su8SfnuDOPV6vQlLTLGND5IxonfUgSqU8GmgGgVNBUL9P08Y3C7Sze
-	 3T70aJJ5tbRTnmh++BxzxGyHehWSiXSDmmveceBO2zTWJHJGj4NfzsRUaYQvWd+tvE
-	 20qVQmr7tgtFl5CO+FtnE4yMvu1FivurHfaFtT6m/jlf0ylaHXpGXJ9p5NzFpbKE5V
-	 ZorJwyU9nRx5cLykxfmLr3aPwpaYdpdqKJFAOmrfGYc9EZ66mR7+6TUjwcn1g1UTCO
-	 OE4tLXrcjCbdJw7do/Qud5F8M6/Ed9XmErNoRQPA/K8HlhckrWjRgaewR+l+E2/1HD
-	 C0j/ZbIvZqB3Q==
+	b=Em4IdOfhvdjYz7+40mmheyN3QxWvYDnIde+LxAlCR7edLVyBEVt9oc4U6D1C816iX
+	 VWUVQu74WoBNwHQxj/iY8j35pVO0M1Ls64mUUX1P2t4Zxd8STLAP4E53rzXy9CSIII
+	 tHWAy8I1+kFrBY7ib0TjmQ54MOqq6UbhuW7g5NzLz6/YRIqPX2jL7VGVbdfT2x6Fkx
+	 v9NI2RyLzAcwbEAppzxrW/6BElVMEvpKLDS+XXCz2O6r2kEj4ttMVzpLegOjf+57+r
+	 3AxD6mpmaAjsKq6rRTAF8oUUFLGgRjQjgndCgC2ebPIDrN4pQI0XhrnOEtTH1wMDyb
+	 55yPjViAN34HA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 06/10] drm/damage-helper: Test src coord in
- drm_atomic_helper_check_plane_damage()
+Subject: Re: [PATCH v4 04/10] drm/appletbdrm: Allocate request/response
+ buffers in begin_fb_access
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Thomas Zimmermann" <tzimmermann@suse.de>
 Cc: linux-hyperv@vger.kernel.org
-In-Reply-To: <20260530185716.65688-7-tzimmermann@suse.de>
-References: <20260530185716.65688-7-tzimmermann@suse.de>
+In-Reply-To: <20260530185716.65688-5-tzimmermann@suse.de>
+References: <20260530185716.65688-5-tzimmermann@suse.de>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 30 May 2026 19:09:07 +0000
-Message-Id: <20260530190907.8CC991F00893@smtp.kernel.org>
+Date: Sat, 30 May 2026 19:09:58 +0000
+Message-Id: <20260530190958.D22AF1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -72,7 +72,7 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	HAS_LIST_UNSUB(-0.01)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11411-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11412-lists,linux-hyperv=lfdr.de];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCPT_COUNT_TWO(0.00)[2];
@@ -92,85 +92,116 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	TO_DN_SOME(0.00)[];
 	FROM_NO_DN(0.00)[];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
-X-Rspamd-Queue-Id: 9D87D612FB2
+X-Rspamd-Queue-Id: 98BCF612FBA
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] Accessor functions `drm_plane_get_damage_clips()` and `drm_plane_g=
-et_damage_clips_count()` return outdated partial clips instead of forcing a=
- full update when `ignore_damage_clips` is set, causing drivers to skip ful=
-l plane updates during modesets and `src` coordinate changes.
+
+New issues:
+- [Critical] Passing `NULL` as the `old_state` parameter to `drm_atomic_hel=
+per_damage_iter_init()` causes a kernel panic due to a NULL pointer derefer=
+ence.
+
+Pre-existing issues:
+- [Critical] Accumulating damage clip sizes in `frames_size` can overflow o=
+n 32-bit platforms, causing an undersized buffer allocation and a subsequen=
+t heap buffer overflow.
 --
 
-commit 18363d38b23996b07f12d04823d811d72b0f24d4
+commit 72afced3e1b6baa294269874c7c4d9d05230889c
 Author: Thomas Zimmermann <tzimmermann@suse.de>
 
-drm/damage-helper: Test src coord in drm_atomic_helper_check_plane_damage()
+drm/appletbdrm: Allocate request/response buffers in begin_fb_access
 
-This commit updates drm_atomic_helper_check_plane_damage() to evaluate if
-the source coordinates change across atomic commits. If they do, it sets the
-ignore_damage_clips flag in the plane state to force a full update, and
-removes this check from drm_atomic_helper_damage_iter_init().
+In atomic_check, damage handling is not fully evaluated. Another
+atomic_check helper could trigger a full modeset and thus invalidate
+damage clips.
 
-> diff --git a/drivers/gpu/drm/drm_damage_helper.c b/drivers/gpu/drm/drm_da=
-mage_helper.c
-> index 945fac8dc27b6..f492a59edbeb5 100644
-> --- a/drivers/gpu/drm/drm_damage_helper.c
-> +++ b/drivers/gpu/drm/drm_damage_helper.c
+Allocation of the request/response buffers in appletbdrm depends on
+correct damage information. Otherwise it might allocate incorrectly
+sized buffers. Allocate the buffers in the driver's begin_fb_access
+helper. It runs early during the commit when damage clipping has been
+fully evaluated.
+
+> diff --git a/drivers/gpu/drm/tiny/appletbdrm.c b/drivers/gpu/drm/tiny/app=
+letbdrm.c
+> index cdd35af498920..b683dcb35b0be 100644
+> --- a/drivers/gpu/drm/tiny/appletbdrm.c
+> +++ b/drivers/gpu/drm/tiny/appletbdrm.c
+> @@ -315,33 +315,16 @@ static const u32 appletbdrm_primary_plane_formats[]=
+ =3D {
 
 [ ... ]
 
-> @@ -67,19 +68,23 @@ static void convert_clip_rect_to_rect(const struct dr=
-m_clip_rect *src,
->   * &drm_plane_state.src as damage.
->   */
->  void drm_atomic_helper_check_plane_damage(struct drm_atomic_commit *stat=
-e,
-> -					  struct drm_plane_state *plane_state)
-> +					  const struct drm_plane_state *old_plane_state,
-> +					  struct drm_plane_state *new_plane_state)
->  {
->  	struct drm_crtc_state *crtc_state;
-> =20
-> -	if (plane_state->crtc) {
-> +	if (!drm_rect_equals(&new_plane_state->src, &old_plane_state->src))
-> +		new_plane_state->ignore_damage_clips =3D true;
-> +
+> -	drm_atomic_helper_damage_iter_init(&iter, old_plane_state, new_plane_st=
+ate);
+> +	drm_atomic_helper_damage_iter_init(&iter, NULL, new_plane_state);
 
-[Severity: High]
-Will this cause display corruption in drivers that manually read the damage
-clips?
+[Severity: Critical]
+Does passing NULL as the old_state parameter to
+drm_atomic_helper_damage_iter_init() cause a kernel panic?
 
-The accessors drm_plane_get_damage_clips_count() and
-__drm_plane_get_damage_clips() in drivers/gpu/drm/drm_plane.c do not check
-the ignore_damage_clips flag.=20
+If userspace has provided damage clips,
+drm_atomic_helper_damage_iter_init() evaluates
+!drm_rect_equals(&state->src, &old_state->src) to check if the source
+coordinates changed:
 
-If a driver calls them directly, such as AMDGPU in fill_dc_dirty_rects():
+drivers/gpu/drm/drm_damage_helper.c:drm_atomic_helper_damage_iter_init() {
+    ...
+	if (!iter->clips || state->ignore_damage_clips ||
+	    !drm_rect_equals(&state->src, &old_state->src)) {
+    ...
+}
 
-    num_clips =3D drm_plane_get_damage_clips_count(new_plane_state);
-    clips =3D drm_plane_get_damage_clips(new_plane_state);
+This appears to pass the address of src offset from the NULL pointer to
+drm_rect_equals(), which would immediately dereference it and trigger an
+oops. This could allow any userspace process with display access to
+trivially crash the system by attaching a damage clip.
 
-won't it receive the stale or partial user-provided damage clips instead of
-performing a full update when the src coordinates change or during a full
-modeset?=20
+I found the fix for this regression later in the patch series in the
+commit 'drm/damage-helper: Remove old state from
+drm_atomic_helper_damage_iter_init()', but I am reporting it here since
+it breaks at this step in the git history.
 
-> +	if (new_plane_state->crtc) {
->  		crtc_state =3D drm_atomic_get_new_crtc_state(state,
-> -							   plane_state->crtc);
-> +							   new_plane_state->crtc);
-> =20
->  		if (WARN_ON(!crtc_state))
->  			return;
-> =20
->  		if (drm_atomic_crtc_needs_modeset(crtc_state))
-> -			plane_state->ignore_damage_clips =3D true;
-> +			new_plane_state->ignore_damage_clips =3D true;
+>  	drm_atomic_for_each_plane_damage(&iter, &damage) {
+>  		frames_size +=3D struct_size((struct appletbdrm_frame *)0, buf, rect_s=
+ize(&damage));
+
+[Severity: Critical]
+This is a pre-existing issue, but can this unchecked accumulation overflow
+frames_size on 32-bit platforms?
+
+Because userspace can submit an arbitrary number of overlapping damage
+clips up to the maximum property blob size, this unchecked addition could
+wrap around a 32-bit size_t counter, causing kvzalloc() to allocate an
+undersized buffer.
+
+During appletbdrm_flush_damage(), the driver loops over the same clips
+and uses drm_fb_memcpy() to write the full, un-overflowed volume of pixel
+data into the undersized allocation:
+
+drivers/gpu/drm/tiny/appletbdrm.c:appletbdrm_flush_damage() {
+    ...
+		switch (fb->format->format) {
+		case DRM_FORMAT_XRGB8888:
+			drm_fb_xrgb8888_to_bgr888(&dst, NULL, &shadow_plane_state->data[0], fb, =
+&damage, &shadow_plane_state->fmtcnv_state);
+			break;
+		default:
+			drm_fb_memcpy(&dst, NULL, &shadow_plane_state->data[0], fb, &damage);
+			break;
+		}
+    ...
+}
+
+This causes an out-of-bounds heap write, which could potentially be exploit=
+ed.
+
 >  	}
->  }
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260530185716.6568=
-8-1-tzimmermann@suse.de?part=3D6
+8-1-tzimmermann@suse.de?part=3D4
 
