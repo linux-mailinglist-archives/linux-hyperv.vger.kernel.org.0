@@ -1,201 +1,242 @@
-Return-Path: <linux-hyperv+bounces-11416-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11417-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WHHAKohrHGoSNwkAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11416-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sun, 31 May 2026 19:10:32 +0200
+	id yCbwApWSHGpdPQkAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11417-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sun, 31 May 2026 21:57:09 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 496196174B0
-	for <lists+linux-hyperv@lfdr.de>; Sun, 31 May 2026 19:10:32 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66F82617C84
+	for <lists+linux-hyperv@lfdr.de>; Sun, 31 May 2026 21:57:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id F2C9B3015718
-	for <lists+linux-hyperv@lfdr.de>; Sun, 31 May 2026 17:10:27 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3B430300229C
+	for <lists+linux-hyperv@lfdr.de>; Sun, 31 May 2026 19:51:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 905683911CD;
-	Sun, 31 May 2026 17:10:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 388403033EA;
+	Sun, 31 May 2026 19:51:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cd5xFtLc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GuwATMbl"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 814DB233722;
-	Sun, 31 May 2026 17:10:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 120B121ADC7
+	for <linux-hyperv@vger.kernel.org>; Sun, 31 May 2026 19:51:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780247427; cv=none; b=BQ8GJxj4ezkVuCShsOT6IxL8VDxhPtmiAX7piwiNFmScOkCrAZ+WKeX+MO+6BX7h7440gPNi4gf/ggPwgU6lAmRDBYjcM9c++P3ws0xVwOGlGOQ3oD/k9Q275AbkDmuUaAzT787C66Ics4+cJAgBHp5mt9x8Ncy0+1gxXaJEzsw=
+	t=1780257086; cv=none; b=nVi6eIA+51VBFunmfV3GML8YLES2/kT64Uz/v8tDUroiIYQWT/VRPlhfAmewph+LFc2mRNbkhwKzRZcZZfpX3FiicQGH+wfBBdYEG2Q1W9Age0a2/Y8QXVW8tznlg39H93p8f5br5RtRQh/DUJotE7miXz0teIjmWCD60wWON7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780247427; c=relaxed/simple;
-	bh=7s+Z1GjBiJnzLS3yQ/OP+PEtPzvXo5vnALcX9NwWwEo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RWaiZy3vr9di0Kfbk6mkCXlUDI5hquiaXbtekhj/42H8B7NqVfjOUFsPmd29hc6A0wcl6wBoXK37diTxud9mnoHzkewiIH86waj571SRcBEO/id4UVJLfQ9/HWyts649vQLewyX3mN2QFkrxkvA5LQVuUndOmzqeDp2IWz7OqWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cd5xFtLc; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34B131F00893;
-	Sun, 31 May 2026 17:10:15 +0000 (UTC)
+	s=arc-20240116; t=1780257086; c=relaxed/simple;
+	bh=Sd5HPj8rIdm8/0zq33UmmS0ovKWIyIvX+BKk/ZXA9Zc=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=Yap5T5hOOelFBvU0g4Gm949yj7392fGvjFF1rXOzV+HwsKjUULGIJzXE+cWcbkoNRJsmWuN7qpk8oWb9VktBspXyu66DodJ0v4n5mLmQPxWskWqLb1Y76LijSam68EvmflfBiWuFx2J6WbOEAHDo/MS4qAU7puP/T72goHrMaMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GuwATMbl; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B1641F00893;
+	Sun, 31 May 2026 19:51:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780247426;
-	bh=WLye1OeGSvGfRb8KDc6cQsEQJDuu8/tX64BsRlEPQ/8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=cd5xFtLc8CgSUAo5VbGm+pKIlSN5dodN7UW+f0GhB53myIoxNH6p+dDCuSowwLt1M
-	 tn6pbkJrs6TvruipRFHl17aKPzkzwwClUW3OCw2kaVqtuO8SCeKbwrz+glC8UeZEHr
-	 GtexD/nJZv5cqchIGk9LPD0u7HqxLjrc8lVMZ8tUA9w35qyh8ltsFucDy0MxNZ9tZU
-	 d2U6RyTtMK1CdN+Cj8hhy00WNDZZe6O2rSmmW7KgtJNLz+pYi9BC6RF5u4rlYqXqdK
-	 OLXNC8wRdf5z8eAJSKbI+sKv+ylMD/5luOBySRgN6a7aVGyuVCVVx7szWKIZv4EWX4
-	 cUVPlWHqBfd5Q==
-Date: Sun, 31 May 2026 20:10:11 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Jork Loeser <jloeser@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-mm@kvack.org,
-	kexec@lists.infradead.org, "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Alexander Graf <graf@amazon.com>, Jason Miu <jasonmiu@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>, Baoquan He <bhe@redhat.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Kees Cook <kees@kernel.org>,
-	Ran Xiaokai <ran.xiaokai@zte.com.cn>,
-	Justinien Bouron <jbouron@amazon.com>,
-	Sourabh Jain <sourabhjain@linux.ibm.com>,
-	Pingfan Liu <piliu@redhat.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	linux-arm-kernel@lists.infradead.org, x86@kernel.org,
-	linux-kernel@vger.kernel.org, Michael Kelley <mhklinux@outlook.com>
-Subject: Re: [RFC PATCH 00/20] mshv: enable kexec with Hyper-V donated pages
- and partitions
-Message-ID: <ahxrc4pTvVU20RTX@kernel.org>
-References: <20260528004204.1484584-1-jloeser@linux.microsoft.com>
+	s=k20260515; t=1780257084;
+	bh=Xyej+ZojtR5z/Pq1pFKou/3kmTn7/FHvEplhZExRoU8=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=GuwATMbl3h3WTafbu9wZNGLTB/cWqhHyRHssHYkxkwQQq2ADusVkbU+kHaCT9lHRA
+	 JmHnvWq4+5SFaYvYMmH4YLqxHGM3RXL87R6aiV3gXsgWEpbDGUoz938bhbRzWKRAPc
+	 VlXA2bDuz/rGHzfag99EzkgJXI1w4GMKVwxkq2lxvorknTLLgwkRTuiLhLiu2vdvlO
+	 gUnkA86Fz3WpU5ZNA+lwc0mpI+NtHAOc7HAnFtsehT7l4yV12CdkbAcYC1LiNnIiTe
+	 A9jqqRtoIDmvGC+4t6pkyDPzeFlOn7KrDqFlf1fJF3iJqHtetqUXNGRCNs4sO1Nq+t
+	 H9wEGwstpEoUw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH net-next] net: mana: Add Interrupt Moderation support
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Haiyang Zhang" <haiyangz@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org
+In-Reply-To: <20260530194957.1690459-1-haiyangz@linux.microsoft.com>
+References: <20260530194957.1690459-1-haiyangz@linux.microsoft.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 31 May 2026 19:51:24 +0000
+Message-Id: <20260531195124.8B1641F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260528004204.1484584-1-jloeser@linux.microsoft.com>
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,kvack.org,lists.infradead.org,microsoft.com,kernel.org,soleen.com,amazon.com,google.com,linux-foundation.org,linux.dev,suse.de,redhat.com,arm.com,alien8.de,linux.intel.com,zytor.com,zte.com.cn,linux.ibm.com,intel.com,amd.com,outlook.com];
-	TAGGED_FROM(0.00)[bounces-11416-lists,linux-hyperv=lfdr.de];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11417-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
+	RCPT_COUNT_TWO(0.00)[2];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[36];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
 	NEURAL_HAM(-0.00)[-0.999];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rppt@kernel.org,linux-hyperv@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 496196174B0
+	FROM_NO_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.linux.dev:replyto,smtp.kernel.org:mid,sashiko.dev:url,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 66F82617C84
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Jork,
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+s) to consider:
 
-Only had time to skim through the patches.
-I have a couple of high level questions for now.
+New issues:
+- [High] Static CQ moderation is silently disabled if only one parameter is=
+ configured.
+- [High] Unconditional use of `GDMA_MESSAGE_V3` may break queue creation on=
+ older firmware.
+- [High] Data race in DIM updates due to calling net_dim() after napi_compl=
+ete_done().
 
-On Wed, May 27, 2026 at 05:41:42PM -0700, Jork Loeser wrote:
-> When Linux runs as an L1 Virtual Host (L1VH) under Hyper-V, the MSHV
-> root partition driver deposits pages to the hypervisor and creates
-> partitions for guest VMs. Prior patches enabled kexec for L1VH, but
-> only when no partitions had been created and no memory had been donated.
-> 
-> This series lifts that limitation. It uses KHO (Kexec Handover) to:
-> 
->  - Track all pages deposited to the hypervisor in a KHO radix tree
->    and preserve them across kexec so the new kernel knows which pages
->    are owned by the hypervisor.
-> 
->  - Freeze running partitions before kexec, record their IDs in the
->    KHO FDT, and vacuum (tear down + reclaim memory) stale partitions
->    after kexec.
-> 
->  - In case of a crash, exclude hypervisor-owned pages from crash
->    dump collection by passing the radix tree root PA via Hyper-V
->    crash MSR P2 to the crash kernel.
-> 
-> Dependency on Pratyush's KHO series
-> ===================================
-> 
-> Patches 1-12 are cherry-picked from Pratyush Yadav's v1 series
-> "kho: make boot time huge page allocation work nicely with KHO" [1],
-> which is still under discussion. This series uses functionality from
-> those patches -- specifically the meta-data page enumeration via table
-> callbacks and the restructured radix tree API. It also extends the
-> KHO radix tree with:
-> 
->  - A freeze mechanism to lock the tree before serializing for kexec
->    (patch 13).
+Pre-existing issues:
+- [High] ethtool coalesce change can leave the interface permanently detach=
+ed/down on failure.
+--
 
-There were a lot of effort to make KHO stateless and drop the requirement
-for finalization/freeze.
+commit ed18c14aae7553debe324941814e80fe58d99fe0
+Author: Haiyang Zhang <haiyangz@microsoft.com>
 
-Why is this necessary to add a freeze mechanism to kho_radix_tree?
-If it's a hard requirement of mshv maybe the freeze part should be handled
-there?
- 
->  - A crash-kernel-safe variant that memremaps radix nodes for use
->    outside the direct map (patch 14).
-> 
-> Patch overview
-> ==============
-> 
-> Patches 1-12:  KHO radix tree and memblock changes (from [1])
-> Patch 13:      Radix tree freeze and del_key() error reporting
+net: mana: Add Interrupt Moderation support
 
-del_key() error reporting sounds like something we'd want to avoid.
-del_key() is called on "freeing" path and during error handling, it would
-be hard if at all possible to deal with errors from del_key().
+Add Static and Dynamic Interrupt Moderation (DIM) support for Rx and Tx.
+Update queue creation procedure with new data struct with the related
+settings. Update ethtool handler to get/set the moderation settings.
 
-> Patch 14:      Crash-kernel-safe radix tree presence check
-> Patch 15:      Page tracker using KHO radix tree for deposited pages
-> Patch 16:      Debugfs interface for page tracker
-> Patches 17-18: Crash MSR reshuffling + crash dump page exclusion
-> Patch 19:      Export kexec_in_progress for modules
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/=
+ethernet/microsoft/mana/mana_en.c
+> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> @@ -1551,6 +1551,9 @@ int mana_create_wq_obj(struct mana_port_context *ap=
+c,
+> =20
+>  	mana_gd_init_req_hdr(&req.hdr, MANA_CREATE_WQ_OBJ,
+>  			     sizeof(req), sizeof(resp));
+> +
+> +	req.hdr.req.msg_version =3D GDMA_MESSAGE_V3;
+> +	req.hdr.resp.msg_version =3D GDMA_MESSAGE_V2;
 
-Isn't there another way to differentiate kexec reboot?
+[Severity: High]
+Could this unconditional upgrade to GDMA_MESSAGE_V3 break queue creation on
+older firmware?
 
-> Patch 20:      Freeze and vacuum partitions across kexec
-> 
-> Feedback
-> ========
-> 
-> This is an RFC. I am looking for feedback on the overall approach as
-> well as the KHO changes (patches 13-14).
-> 
-> [1] https://lore.kernel.org/linux-mm/20260429133928.850721-1-pratyush@kernel.org/
-> 
-> Based-on: linux-next/master (next-20260527)
+If the driver is loaded on an older host where the hardware firmware does
+not support V3 messages (for example, lacking DIM capabilities), it seems
+the hardware might reject the MANA_CREATE_WQ_OBJ request. Would it be
+safer to conditionally apply this message version upgrade based on hardware
+capabilities?
 
--- 
-Sincerely yours,
-Mike.
+[ ... ]
+
+> @@ -2271,7 +2337,13 @@ static int mana_cq_handler(void *context, struct g=
+dma_queue *gdma_queue)
+>  	if (w < cq->budget) {
+>  		mana_gd_ring_cq(gdma_queue, SET_ARM_BIT);
+>  		cq->work_done_since_doorbell =3D 0;
+> -		napi_complete_done(&cq->napi, w);
+> +
+> +		if (napi_complete_done(&cq->napi, w)) {
+> +			if (cq->type =3D=3D MANA_CQ_TYPE_RX)
+> +				mana_update_rx_dim(cq);
+> +			else
+> +				mana_update_tx_dim(cq);
+> +		}
+
+[Severity: High]
+Does calling net_dim() after napi_complete_done() introduce a data race?
+
+Since napi_complete_done() clears the NAPI_STATE_SCHED bit and
+relinquishes the NAPI polling context, and the hardware interrupt
+was already armed via mana_gd_ring_cq() just above, a new interrupt
+could fire immediately.
+
+If another CPU schedules NAPI and executes mana_cq_handler() concurrently,
+it seems internal state in net_dim() could be corrupted. Additionally,
+could this lead to torn reads of 64-bit queue statistics on 32-bit systems
+since they are read outside NAPI protection?
+
+[ ... ]
+
+> @@ -2780,6 +2862,10 @@ static struct mana_rxq *mana_create_rxq(struct man=
+a_port_context *apc,
+>  	cq_spec.queue_size =3D cq->gdma_cq->queue_size;
+>  	cq_spec.modr_ctx_id =3D 0;
+>  	cq_spec.attached_eq =3D cq->gdma_cq->cq.parent->id;
+> +	cq_spec.req_cq_moderation =3D apc->rx_dim_enabled ||
+> +		(apc->intr_modr_rx_usec && apc->intr_modr_rx_comp);
+> +	cq_spec.cq_moderation_usec =3D apc->intr_modr_rx_usec;
+> +	cq_spec.cq_moderation_comp =3D apc->intr_modr_rx_comp;
+
+[Severity: High]
+Does this logic silently disable static moderation if only one parameter is
+configured?
+
+If a user disables adaptive moderation and requests timer-based moderation
+without a frame limit (e.g. adaptive-rx off rx-usecs 50 rx-frames 0), the
+logical AND evaluates to false. This appears to cause the driver to silently
+disable hardware moderation completely instead of applying the requested
+rx-usecs.
+
+(Note: The same pattern appears in mana_create_txq() for TX).
+
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers=
+/net/ethernet/microsoft/mana/mana_ethtool.c
+> --- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+> +++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+[ ... ]
+> @@ -447,10 +517,46 @@ static int mana_set_coalesce(struct net_device *nde=
+v,
+[ ... ]
+> +	if (modr_changed || dim_changed) {
+> +		err =3D mana_detach(ndev, false);
+> +		if (err) {
+> +			netdev_err(ndev, "mana_detach failed: %d\n", err);
+> +			goto restore_modr;
+> +		}
+> +
+> +		err =3D mana_attach(ndev);
+> +		if (err) {
+> +			netdev_err(ndev, "mana_attach failed: %d\n", err);
+> +			goto restore_modr;
+> +		}
+> +	}
+> +
+>  	return err;
+> =20
+> +restore_modr:
+> +	apc->cqe_coalescing_enable =3D saved_cqe_coalescing_enable;
+
+[Severity: High]
+This is a pre-existing issue, but does this error path leave the interface
+permanently detached?
+
+If mana_detach() succeeds but mana_attach() fails (for example, due to an
+allocation failure), the function jumps to restore_modr. This restores the
+software tracking variables but does not appear to revert the hardware stat=
+e.
+
+This could leave the network interface completely broken and detached from
+the system until it is manually brought down and up again.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260530194957.1690=
+459-1-haiyangz@linux.microsoft.com?part=3D1
 
