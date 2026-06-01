@@ -1,99 +1,99 @@
-Return-Path: <linux-hyperv+bounces-11428-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11429-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SB1mG5BfHWojZwkAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11428-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 01 Jun 2026 12:31:44 +0200
+	id 0BwvAqVfHWo/ZwkAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11429-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 01 Jun 2026 12:32:05 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1299261D7AD
-	for <lists+linux-hyperv@lfdr.de>; Mon, 01 Jun 2026 12:31:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9FB8C61D7E7
+	for <lists+linux-hyperv@lfdr.de>; Mon, 01 Jun 2026 12:32:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 1A38A3013BBD
-	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Jun 2026 10:29:39 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 7EC8930170BB
+	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Jun 2026 10:30:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28CF3394EA7;
-	Mon,  1 Jun 2026 10:29:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BD1839A806;
+	Mon,  1 Jun 2026 10:30:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VVzTeCBB";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="QXYVmeg4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZX6x9eiB";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="S9Dw3W0J"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA667395AE1
-	for <linux-hyperv@vger.kernel.org>; Mon,  1 Jun 2026 10:29:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DBB539A047
+	for <linux-hyperv@vger.kernel.org>; Mon,  1 Jun 2026 10:30:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780309778; cv=none; b=Us/YTAtOUvVPHHnVUzKs108Dsih61zIy26UcGDREJxE3sccLiOwOsCionzT047UCVZ9mM5dAjByXcS0UJ1kX4z2K5YIeFPNFvHM42HxAB9hANQK+7R2cZsq4Ss1A2SM1Wv8bef5HYVVBZNGTa7BfV/uF9EOHVGwX+3l4+rZG4BU=
+	t=1780309805; cv=none; b=LHkV0JA559OtYVv9Y+53Ey0dWdQyOvQCA5otCo7Ipm4bvzhz+ZpHPAc5wpVrI/YKilM5BOCyQN3UXX00/VoJ6bN/wzhV4zNq7G9BkBTakp10jUc15RdjaD/kgdiJ56AHiSQ1630WrttPQzxt2cfAQ4SXZYenSgiBnEG/QXKzVaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780309778; c=relaxed/simple;
-	bh=4dKLYO7/xzvYtKg4HAIvf2hSPWCkn9FdTg30Var8HtI=;
+	s=arc-20240116; t=1780309805; c=relaxed/simple;
+	bh=VfA7dbz78GZzA6BAgS32l4U/g1vSTa0ShMBVln3jJHQ=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=W0fiJrWKJv1CryAaEm2dPQe3DvkaFszv4u+GDYp1XoEGZDqRtbErvBk0ChDagYb07nruh2CIzK5ZiSaDNQ8OpBi4vzXEf9Bj7mqI3BCOjlxMsPjKXUFzNJ+2lRiwExsTmoym5Q6uR0Mhonux0D+MnGhTtdV+bMhGpQPYisEL5F8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VVzTeCBB; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=QXYVmeg4; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=JvsU5440t7VTPbnWHuQUAj63gExv2w8rKbVXWmiMxpMsIB0kRb15SmcLzYeJ7Gh71g6OdumczkLZnp+V0bnzNoZrWT0TTYTXllR59H41kjVNRahUcRey2gr1tz9jaDkJSyRcx4FvqE+eQjxhstuKRH4XeqrXBIIkDkVP9kBycCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZX6x9eiB; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=S9Dw3W0J; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1780309776;
+	s=mimecast20190719; t=1780309803;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=NR4sOBYtM0bZ0iqX/XjOc3nz+SGcL1hWjzs/0wJdl4Y=;
-	b=VVzTeCBB+XKcHZMgzGwahCNp4+EYzp+4+IpGFwTNzk7IwCk4FqTbvmEs1YZ4CEm8zm14N5
-	KmXILOGcEGk9mrcL9y2SYs3x5W9xSpAN6CDAOgqBbovGIgqiJyK/ZQ05qVEAYAeTBYJpCB
-	+6BJ+BR60bf73BeAxGsepS3tG2ZMIp8=
+	bh=Wi97KWGdJTdWq3IdYpsAWLx4xopc99EofOMqrefmH9Q=;
+	b=ZX6x9eiBPV38y8Bjz6hiGqz3TItoF+lCpb9j6fw+st8riYtmvSsQRYg4OF3YhGc+reI/Xa
+	348RIHXwT5aIiala50ZB8/GarJFHxjeF16d22Kpbt/FXc+euOfsA53i0Wfv7rAqYmfVuyB
+	eR0zxHGFKuRt8YreH7uy9/zLCDPEbBk=
 Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
  [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-185-v6ieVJdWPh-thpbWLV0cmQ-1; Mon, 01 Jun 2026 06:29:34 -0400
-X-MC-Unique: v6ieVJdWPh-thpbWLV0cmQ-1
-X-Mimecast-MFC-AGG-ID: v6ieVJdWPh-thpbWLV0cmQ_1780309774
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-45efa12a788so1030394f8f.2
-        for <linux-hyperv@vger.kernel.org>; Mon, 01 Jun 2026 03:29:34 -0700 (PDT)
+ us-mta-467-bmWGwwCMMUG-HJob_yJu3g-1; Mon, 01 Jun 2026 06:30:02 -0400
+X-MC-Unique: bmWGwwCMMUG-HJob_yJu3g-1
+X-Mimecast-MFC-AGG-ID: bmWGwwCMMUG-HJob_yJu3g_1780309801
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-45eebc943bfso1906426f8f.0
+        for <linux-hyperv@vger.kernel.org>; Mon, 01 Jun 2026 03:30:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1780309773; x=1780914573; darn=vger.kernel.org;
+        d=redhat.com; s=google; t=1780309801; x=1780914601; darn=vger.kernel.org;
         h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
          :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NR4sOBYtM0bZ0iqX/XjOc3nz+SGcL1hWjzs/0wJdl4Y=;
-        b=QXYVmeg4NI0e20bldneH0n9wiwEo41apYLCGqBo5zUcXIWFQdZZlpJLEY9PS15oioA
-         bw2Q8BL129icciY8B0XSkgwNcAbp22Er8jAM/PKxI3mEUc0uJwmDACnTG8t58xiXTOtR
-         4sX5ruP4oqjBR5XAa7dkNeYIXUdDnX3IEcdKz6c63Gt5XNSG9H2zRPPFyw8na5ujQZfK
-         7vlDVBjogRoO2leLi0GjnZFqfJ2Bvs1bpBYXjhBa23L7OWztLhLSd2X6lximby2cdhD7
-         /hjdiSG4d7/YEiHM1rcAeFn6Fzrfw0AhuX/gntfC2GG/DCxCWIoD29h5k+LJO+RFmX8H
-         yEbA==
+        bh=Wi97KWGdJTdWq3IdYpsAWLx4xopc99EofOMqrefmH9Q=;
+        b=S9Dw3W0JcfrlJ8BjI0Fq3cY6Kg4KVkTsK/lHUGHmx2oc2gvQsjtafLuODOlsQjdCFi
+         qUgk07Yic/Tl7HzOFJegSDlDFR1q1kt8p9CZ/V11nZ0aoMA//pXG003w7mewVf8x/fLK
+         zzUv3lBPqi76mXmzWyXW6Y/iBjvfjruRvdtNDjzHnr0vx8GVhvkoTLGfc7fS6um7XaS7
+         HPQbjvtUdOx3Y0sQYXKhUs4QIdnaXDH/hTfdm9+w5bUlOa/iZoq9/yQoa08GpLv+Lsbk
+         Mgfzk2A8czL0itpRRboii5PAL6WlTDCjo6GzFgcJ8vh5KiFxX/mNdSp/fu1CtsjKRdKm
+         F0rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780309773; x=1780914573;
+        d=1e100.net; s=20251104; t=1780309801; x=1780914601;
         h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
          :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=NR4sOBYtM0bZ0iqX/XjOc3nz+SGcL1hWjzs/0wJdl4Y=;
-        b=ZrONRZGhFWMdB06L0vvSL9d/P+O9JbN4yY/U4nRLzrcRI/Q0Zko2HDHYr9D9w5eW1H
-         8amI3/PCpr60n4LHY3IJSR/89P9g2vpVaDEaEs34vae3QX9y6Wha6bGJ8Zz2gsvfbWRa
-         3r332vivXqxCPmCCumQb919wXBX8sbWF6DktfYd0Q+LySaTofesGZm1ci8CKTyJ8P0Qa
-         /OipY+OrBc81E8wMJpqOTgVaOWP4CwUyAHNAGxH232aHWWNgFDzzPwPPe73DvuC5+MZY
-         5zCPzIfr/WPwpFA/LPKS/sjmZB8NCi4BHUJAHLsFaIqvtJpXFtaLSsdHpTyHEZw+2m/k
-         fFmg==
-X-Forwarded-Encrypted: i=1; AFNElJ9OkrCMPOtFhW4UZXgzD6tXF/HufnHbiVO6GryodIywyKfXUNT1mqKKLgN6M7RWPXA1mT/rboihqo2VtrE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBhv8LmvHwiIthqT9Lj7jKtnqZjlt3zPGYgJ95y/Nzcb2eNrca
-	XRGH0JDtKMW/xH7q0zNP/8ODh7RVtjLGv6iOlU+MoJjFzJEnJaxoETihyDsboruP9JtnWGnvLFS
-	L3juvFY5QkdwOOTCA/Qx/do+MBCnfTjWjg/rzxnZmOv/s1/c/eO0wOif2AnQkCvy37A==
-X-Gm-Gg: Acq92OHxKJCOLQgNw1QMd9y+9Z/eJQpR6EAYe87UPNDUyVKbqX9Dh9YBwzyu6J5kBtR
-	WER2pOOQWkAXRs0O0G2C4AVAI9GeNI+Oa3tUteFTyM7KgtGQKjHTgw7VI1F30caaCsIvMbxF6DA
-	0KiR85zSpWA07z4G+67tAWJ1hnRx6DyIvomIba1Mge03FSC6K2QaW3e5FlA4f/FpKjmf+FAhPP3
-	xKTtXL2sYDJsCxO4Q5adSoxNcr3sO54g9bpdrFbsGn100KutNbdR1X3N1TWobJHr075yeUJz4K1
-	rKu2yC7IO7uWF3Z3+1pKILmIVeVb4mX05mUxs6mCZqAgpgSHhvQOheqWOv253s/536xMIWy0Awr
-	gQeZw2ShTGMTTyewOU7ilKgwI0LZWQt5VDr+GfAOJSVSWTBH5MXbgyKCDXfoiu2LQx/uHxYM4c7
-	OrP5eCf/I12vjaNnA=
-X-Received: by 2002:a05:600d:8444:20b0:490:44eb:c1d9 with SMTP id 5b1f17b1804b1-490a2947c86mr142088405e9.28.1780309773578;
-        Mon, 01 Jun 2026 03:29:33 -0700 (PDT)
-X-Received: by 2002:a05:600d:8444:20b0:490:44eb:c1d9 with SMTP id 5b1f17b1804b1-490a2947c86mr142087935e9.28.1780309773155;
-        Mon, 01 Jun 2026 03:29:33 -0700 (PDT)
+        bh=Wi97KWGdJTdWq3IdYpsAWLx4xopc99EofOMqrefmH9Q=;
+        b=ihZAqSQEtaMlpKjLbpkBGxMDw6Wrssy9qcTMD+9kgdYhkAQz5H7YfWVabB9zzWeQbZ
+         6ds/CX8sWTNooumjQWAgKZLPw12e0K/oC+D2J6OcEQx8fGDPNsW4VNlow/VeMEGmsrwV
+         zhZvKnMJaPSKtA0bs/Ql/t0c1tSZaaavGgzKdRwUYhRZrC9kl6AzZxgka03mcb5MowTA
+         94wgeXhZB+Ir2eScua9AK937FSNqWk+nTkJgwxawVVNi+/eIBEgn6PKOUuIl+J+Ad8j5
+         TlsFZqcB1MBJizA0fL/L0ulnRUW7atMfspc49AaZdEW3sGONrTKNg7U7NfGH+lTJYXMN
+         A6zg==
+X-Forwarded-Encrypted: i=1; AFNElJ+h3UsUNPKuXjOBMd5N9d3AIxvU11QpYXPRcibWDBrNg8OSaTLDmvW85yAIzlRucAYyrwTWwHO3/cULNeU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztftBq7oFvfBLccmEhFQz+NRrqw6xlaGtGMcC9JDCC8Fc43juf
+	6DjLW4gfacz+2UA1rvBtzRj2AVyr3iITd6KsNY3um4KX0HVFIoL4BAFeFSUY2iUnsu87zSEQW3S
+	P9v6J7uAMXfH+3NsVcnPooP9iv57sSKbrQnQz8ETlEZEY1EYHN1/EwKbr9LabAbyQFA==
+X-Gm-Gg: Acq92OEWHgWYO7wl3vsdoHRwBJYcb+gzzxY5i7vLOFhJTv7ptyyCaPPGaKQ7KcjtERB
+	9OT211MkgqnSH9cKgqg/sq7jgXp6HQgGoXu4E6uCbFkVq3AsnjIBMFkmh21rXsFrUr0pwQfaupu
+	Eggnwy3B2zEzzL1PiMTBRlhPGmdoDtR7ygKSJapCvOP0bwHnrCFGvwmhH9tBVs9FAkhfN4Njnf4
+	PZVLrCzvBII6LAMsYeE9oxC7rXQd9Hwyaeu7ss9/3twUInDX6vJ/mtNIIqCmmNcAkyU9/kfv6xc
+	kpYBblwc7TOom5BorQy2wyxA9xQLZQRm0cCqY2BUuDOih6mf1CC2QBrCeZWI8luZgn9S/j3agdn
+	ejSpkZXCJ3iBqMBBbsbOiY2DycMlRZikhGHBbV/mSFhaT4ABJyS5rgHorz4MARcNeARbQ7/mbKz
+	zcbg7hVBzmol5E/lI=
+X-Received: by 2002:a05:600c:1d0f:b0:489:32b:ac0b with SMTP id 5b1f17b1804b1-490a2a22bb4mr148349775e9.6.1780309800979;
+        Mon, 01 Jun 2026 03:30:00 -0700 (PDT)
+X-Received: by 2002:a05:600c:1d0f:b0:489:32b:ac0b with SMTP id 5b1f17b1804b1-490a2a22bb4mr148349225e9.6.1780309800553;
+        Mon, 01 Jun 2026 03:30:00 -0700 (PDT)
 Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45ef34a037fsm25007994f8f.4.2026.06.01.03.29.32
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490af0babdcsm4375085e9.0.2026.06.01.03.29.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2026 03:29:32 -0700 (PDT)
+        Mon, 01 Jun 2026 03:30:00 -0700 (PDT)
 From: Javier Martinez Canillas <javierm@redhat.com>
 To: Thomas Zimmermann <tzimmermann@suse.de>, mripard@kernel.org,
  maarten.lankhorst@linux.intel.com, airlied@redhat.com, airlied@gmail.com,
@@ -104,13 +104,13 @@ Cc: dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
  intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
  linux-mips@vger.kernel.org, virtualization@lists.linux.dev, Thomas
  Zimmermann <tzimmermann@suse.de>
-Subject: Re: [PATCH v4 08/10] drm/damage-helper: Remove old state from
- drm_atomic_helper_damage_merged()
-In-Reply-To: <20260530185716.65688-9-tzimmermann@suse.de>
+Subject: Re: [PATCH v4 09/10] drm/damage-helper: Rename state parameters in
+ damage helpers
+In-Reply-To: <20260530185716.65688-10-tzimmermann@suse.de>
 References: <20260530185716.65688-1-tzimmermann@suse.de>
- <20260530185716.65688-9-tzimmermann@suse.de>
-Date: Mon, 01 Jun 2026 12:29:31 +0200
-Message-ID: <87eciqlfjo.fsf@ocarina.mail-host-address-is-not-set>
+ <20260530185716.65688-10-tzimmermann@suse.de>
+Date: Mon, 01 Jun 2026 12:29:59 +0200
+Message-ID: <87bjdulfiw.fsf@ocarina.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -128,7 +128,7 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11428-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11429-lists,linux-hyperv=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[20];
 	MIME_TRACE(0.00)[0:+];
 	RECEIVED_HELO_LOCALHOST(0.00)[];
@@ -146,18 +146,15 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,ocarina.mail-host-address-is-not-set:mid,broadcom.com:email,suse.de:email]
-X-Rspamd-Queue-Id: 1299261D7AD
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,suse.de:email,broadcom.com:email,ocarina.mail-host-address-is-not-set:mid]
+X-Rspamd-Queue-Id: 9FB8C61D7E7
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 Thomas Zimmermann <tzimmermann@suse.de> writes:
 
-> Nothing in drm_atomic_helper_damage_merged() requires the old
-> plane state. Remove the parameter and mass-convert callers.
->
-> Most callers now no longer require the old plane state in their plane's
-> atomic_update helper. Remove it as well.
+> Rename some of the state parameters of the damage-helper functions to
+> align them with each other and other helpers. No functional changes.
 >
 > Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
 > Acked-by: Zack Rusin <zack.rusin@broadcom.com>
