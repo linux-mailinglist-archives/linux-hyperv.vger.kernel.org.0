@@ -1,56 +1,56 @@
-Return-Path: <linux-hyperv+bounces-11441-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11442-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mFAMLkoAHmrDgQkAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11441-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 01 Jun 2026 23:57:30 +0200
+	id qJSmF48BHmqfgQkAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11442-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 02 Jun 2026 00:02:55 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1ADA3625B5B
-	for <lists+linux-hyperv@lfdr.de>; Mon, 01 Jun 2026 23:57:30 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4AEB625BAA
+	for <lists+linux-hyperv@lfdr.de>; Tue, 02 Jun 2026 00:02:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 32A0D3046D54
-	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Jun 2026 21:53:46 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 7D41E300F5D5
+	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Jun 2026 22:02:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 903EA3451C6;
-	Mon,  1 Jun 2026 21:53:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07C0F347515;
+	Mon,  1 Jun 2026 22:02:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C2JoFp8p"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gLXgZ+EI"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E487D282F10;
-	Mon,  1 Jun 2026 21:53:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB026340407;
+	Mon,  1 Jun 2026 22:02:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780350825; cv=none; b=Plou4EKARgualUhmCGZwKdk0w8d2/2nJwyVNYL00SX+PkmGJWEGmoV35CixakrEwC6M9FfVmv9E4TPOZ5clvz3X++da99lWyRDJbRl5dS6D4dl1d7KEp0ON8MNL7/89Ef+qL2678bBVTp3HGhKQ4erW9Vzajw8DkI5WIe/+AnjQ=
+	t=1780351370; cv=none; b=XIitKJiQuVjq5AN7vmWCcGjlD7e9Y27+uzTqv7iW7SkID4QM2m5bQvzjZzzRk4SiOuzMx1wvbesGZO3ZVDjgaV1S5vqQi3lPN2nOGy0aDahwEv6UA9L8Qd/0UgO5Zqxsrt3jov0thhM82j3RSG5fQKQg6xsaBOOekm1Dbe4Nj+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780350825; c=relaxed/simple;
-	bh=GoanKxmvTohkZisXqmeG1dBKj46gfnWDhnG4X856XEo=;
+	s=arc-20240116; t=1780351370; c=relaxed/simple;
+	bh=2A2/50CIpR0IO/GkCIq4zHDSYFB1EOLJ6Zfiv0C9IF4=;
 	h=Message-ID:Subject:From:To:Cc:Date:in-reply-to:Content-Type:
-	 MIME-Version; b=JYlLBElPPBRyihwxqyHITp5ROJxlhf0+t1CTrETtMIWF+kA4/MZzqBRsAZBCZZ9IjlhUCEwQjX9UtGcSj7gcEMskl35vdxjiGGda9xUZ1S6T8+oVF2I9alDJBUO7BcSS3SPHD88UdEr+tgQjNrGLtd9P+lLRE9IXOfK5ix0ny/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=C2JoFp8p; arc=none smtp.client-ip=90.155.50.34
+	 MIME-Version; b=Q9Ov4i7TrgCsqO+RGWhvxz0xuVs9hzriCV/x9KzdEYONyftizIPteVeFxMMeWLfPoiGfCgwEnH7GBt7tCdY43Bfobihj24FfsaDoSsh3Kunfj7RX5LCqGxvZedsXJkgsefsVBGFwP8JCVsR0bYcVNvVLCjksxvxrN5xzi7urX24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gLXgZ+EI; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:in-reply-to:
 	Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:References;
-	bh=GoanKxmvTohkZisXqmeG1dBKj46gfnWDhnG4X856XEo=; b=C2JoFp8poaNsTCrcpFtLNwLCKG
-	wlJ53Hs31wEF4MLSrgTHLegESScCH3j2KSzQID+DxfDFMc7g3OT38Sjg23UekiP+kvJwH9C8DRHLL
-	XqW3eMcbKncMohB8HMonDlksq+o9yElY9eFTeKO6DuSITsi+vn9dlYKFS72YgjcpIEemQ+EnIRoOb
-	bESIyqt5G0WE2eIV7I3jk0/pk91ilPeErY4i9kGFkfiBnDaC+EDlRN9ELTA3wLQ/bRbL5zFX4FJTQ
-	7c7UJi/9rAKzyBhdRzxxHw9Tabr8jMoe4X429xo5C8f2ci+3fMMW3HQeZB3SamjWf9g+qHvZOaBZG
-	615G1OhQ==;
+	bh=YMtAUyyHU1vX6B9UP1RiyOa1m3GMSAdDk5Oub0dmiXc=; b=gLXgZ+EIer010zqfWvK04DOLCY
+	zEKZA4v0jFQapNFzT8sXvPdJQLBPlpZXWawYAan48r1VMg+CKaLW+Ux5H+6UOjKJ+Z84OZn6GSokw
+	d7xsVLZ/zg0Aar/XcHsCtZugOG7CWvdahBg6B1DKmnVzGD7UO00y7Qmn6Ka1GJH9PDlv4wMAPp5Mt
+	OoQ2tgSiyjbObhsbVvEZpSaTFxFOFRAmMEThIx/1z7Qn7v9Qc/qO/BGyxG38wjYIEjhx4bjejy3uq
+	u7IeskRA9SuJ7cSa7OCD7DHta3/+e5kR1xsLIT4lSjOtW+uOzZ+ggP6aDut1U0m33RSoZKVBY6wTp
+	NxoFVYEw==;
 Received: from [2001:8b0:10b:5:5b40:b57d:669c:36f4] (helo=u09cd745991455d.ant.amazon.com)
 	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUAZh-00000000pPV-10Il;
-	Mon, 01 Jun 2026 21:53:33 +0000
-Message-ID: <0f9966f6992be461e5ba0e6378a5ce86b17ee66e.camel@infradead.org>
-Subject: Re: [PATCH v4 14/47] x86/kvmclock: Rename kvm_get_tsc_khz() to
- kvmclock_get_tsc_khz()
+	id 1wUAiR-00000000q8s-2rmz;
+	Mon, 01 Jun 2026 22:02:36 +0000
+Message-ID: <58abd0584ce23d4d2f65be68c2d36351326c955f.camel@infradead.org>
+Subject: Re: [PATCH v4 17/47] x86/kvm: Mark TSC as reliable when it's
+ constant and nonstop
 From: David Woodhouse <dwmw2@infradead.org>
 To: seanjc@google.com
 Cc: pbonzini@redhat.com, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, 
@@ -66,11 +66,11 @@ Cc: pbonzini@redhat.com, tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
  linux-hyperv@vger.kernel.org,  virtualization@lists.linux.dev,
  xen-devel@lists.xenproject.org,  dwmw@amazon.co.uk,
  thomas.lendacky@amd.com, nikunj@amd.com, dwmw2@infradead.org, 
- mhklinux@outlook.com, tglx@linutronix.de
-Date: Mon, 01 Jun 2026 22:53:32 +0100
-in-reply-to: <20260529144435.704127-15-seanjc@google.com>
+ mhklinux@outlook.com, tglx@linutronix.de, sashiko-reviews@lists.linux.dev
+Date: Mon, 01 Jun 2026 23:02:35 +0100
+in-reply-to: <ahnhnjvfIblFxTFX@google.com>
 Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-9faS21P7Idptdc1OVeaT"
+	boundary="=-UCq5TPNq7HWqnoTOeAX/"
 User-Agent: Evolution 3.52.3-0ubuntu1.1 
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -83,21 +83,21 @@ X-Spamd-Result: default: False [-4.26 / 15.00];
 	SIGNED_SMIME(-2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[infradead.org:s=casper.20170209];
 	MIME_GOOD(-0.20)[multipart/signed,text/plain];
 	MAILLIST(-0.15)[generic];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11441-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11442-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[39];
+	RCPT_COUNT_TWELVE(0.00)[40];
 	FREEMAIL_CC(0.00)[redhat.com,kernel.org,alien8.de,linux.intel.com,microsoft.com,broadcom.com,siemens.com,infradead.org,suse.com,google.com,zytor.com,intel.com,oracle.com,vger.kernel.org,lists.linux.dev,lists.xenproject.org,amazon.co.uk,amd.com,outlook.com,linutronix.de];
 	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[infradead.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_NONE(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
@@ -107,29 +107,74 @@ X-Spamd-Result: default: False [-4.26 / 15.00];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,amazon.co.uk:email,infradead.org:mid,infradead.org:dkim]
-X-Rspamd-Queue-Id: 1ADA3625B5B
+	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:mid,infradead.org:dkim,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,amazon.co.uk:email]
+X-Rspamd-Queue-Id: E4AEB625BAA
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 
---=-9faS21P7Idptdc1OVeaT
+--=-UCq5TPNq7HWqnoTOeAX/
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 29 May 2026 07:44:01 -0700, Sean Christopherson wrote:
-> Rename kvm_get_tsc_khz() to kvmclock_get_tsc_khz() in anticipation of
-> adding support for getting TSC info from PV CPUID, i.e. in a KVM specific
-> way, but without non-kvmclock.
->
-> No functional change intended.
->
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+On Fri, 29 May 2026 11:57:34 -0700, Sean Christopherson wrote:
+> On Fri, May 29, 2026, sashiko-bot@kernel.org wrote:
+> > > diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+> > > index 909d3e5e5bcd5..4fe9c69bf40b3 100644
+> > > --- a/arch/x86/kernel/kvm.c
+> > > +++ b/arch/x86/kernel/kvm.c
+> > [ ... ]
+> > > @@ -1040,7 +1041,20 @@ static void __init kvm_init_platform(void)
+> > [ ... ]
+> > > -	kvmclock_init();
+> > > +        /*
+> > > +         * If the TSC counts at a constant frequency across P/T stat=
+es, counts
+> > > +         * in deep C-states, and the TSC hasn't been marked unstable=
+, treat the
+> > > +         * TSC reliable, as guaranteed by KVM.  Note, the TSC unstab=
+le check
+> > > +         * exists purely to honor the TSC being marked unstable via =
+command
+> > > +         * line, any runtime detection of an unstable will happen af=
+ter this.
+> > > +         */
+> > > +	tsc_is_reliable =3D boot_cpu_has(X86_FEATURE_CONSTANT_TSC) &&
+> > > +			  boot_cpu_has(X86_FEATURE_NONSTOP_TSC) &&
+> > > +			  !check_tsc_unstable();
+> >=20
+> > [Severity: High]
+> > Does this evaluate check_tsc_unstable() too early to catch the command =
+line
+> > parameter?
+>=20
+> Huh, it does indeed.
+>=20
+> > It looks like kvm_init_platform() is called from setup_arch(), but the
+> > tsc=3Dunstable kernel parameter is parsed via __setup() later during
+> > parse_args() in start_kernel().
+> >=20
+> > If check_tsc_unstable() evaluates to 0 here because the parameter hasn'=
+t
+> > been parsed yet, wouldn't it incorrectly force X86_FEATURE_TSC_RELIABLE
+> > and set prefer_tsc to true?
+>=20
+> Yep, but this is a pre-existing problem that goes all the way back to the=
+ original
+> commit 7539b174aef4 ("x86: kvmguest: use TSC clocksource if invariant TSC=
+ is exposed").
+>=20
+> We could try to fix that, but I'm _very_ strongly inclined to add (yet an=
+other)
+> patch to simply drop the check_tsc_unstable() since it has always been de=
+ad code.
+
+Yeah, kill it with fire.
 
 Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
 
 
---=-9faS21P7Idptdc1OVeaT
+--=-UCq5TPNq7HWqnoTOeAX/
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -208,22 +253,22 @@ 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
-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
+ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI2MDYwMTIyMDIz
+NVowLwYJKoZIhvcNAQkEMSIEIKBm6ajC7RcOXC7t5vZvHSGBZYpyi47wdtAkxJaD6hJLMGQGCSsG
 AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
 cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
 VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
-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
+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
 
 
---=-9faS21P7Idptdc1OVeaT--
+--=-UCq5TPNq7HWqnoTOeAX/--
 
