@@ -1,56 +1,56 @@
-Return-Path: <linux-hyperv+bounces-11437-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11438-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YDZMImL+HWqfgQkAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11437-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 01 Jun 2026 23:49:22 +0200
+	id iL0lA/f+HWqfgQkAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11438-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 01 Jun 2026 23:51:51 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05296625A1B
-	for <lists+linux-hyperv@lfdr.de>; Mon, 01 Jun 2026 23:49:21 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 09E80625A62
+	for <lists+linux-hyperv@lfdr.de>; Mon, 01 Jun 2026 23:51:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 604BA304A780
-	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Jun 2026 21:49:20 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 6F0103014B15
+	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Jun 2026 21:51:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE5E52FD1DA;
-	Mon,  1 Jun 2026 21:49:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88F0C340A6B;
+	Mon,  1 Jun 2026 21:51:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UP9RiNMG"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eroRDVBr"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F83327A47F;
-	Mon,  1 Jun 2026 21:49:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47623282F10;
+	Mon,  1 Jun 2026 21:51:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780350558; cv=none; b=tEx9vsoPfsh7Hsu1aJm9Hdg3cMxOlnoHLawMgL70ZHehp7vI7UCG6DMKYec/3Z6fpv4QmzdG760ey3pv5x0CRtp6vGbAJ2hbuDRgOkd96RCXBQ053pxII97AsHxjt/WOKFrfhBDks6W3ae/hqdQuYvefocfGGoysYS6DEX3RXkg=
+	t=1780350705; cv=none; b=GkzpoiRihtaubhYDXVJYKBq+ce1AoEXOI0tpkQzGa75zt84m0QdPQLSrkmhY0mYPdAiwLiJix9R2t/YHgrgB6jhQjY9zgFRtZbahKbFfYGgNTH3Yl9JGvvTPv1riSzfEL8jUECV6t6ZuGYW7p3Ti4v4Opin3icUWYdz3902yMO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780350558; c=relaxed/simple;
-	bh=pzYOc1WctnHJWbfi6MuvhZlFBL2ub6scSoq92qAqslw=;
+	s=arc-20240116; t=1780350705; c=relaxed/simple;
+	bh=lwry1he+8OJvgoBJeo44MHuPWDlhZxEWinaMzdC8X8o=;
 	h=Message-ID:Subject:From:To:Cc:Date:in-reply-to:Content-Type:
-	 MIME-Version; b=FlJYklpevQBPfpPthEPRo3zahnJDl4uhFzR/LV3yHUUR3iolf9wLhFbxgJ5vJSkCdDfefEl8Zoqe2FjhXGvWnpUI1uvA3ijeSMIkors2lBvaW2fSbMHaOxWDdlIxKp0EdVO2pD7afoez+nDJOZdEVXPVn/+ptXMUg0pSV4i+Ob0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UP9RiNMG; arc=none smtp.client-ip=90.155.50.34
+	 MIME-Version; b=H1m1nrWOOwaT5qfCxPS6oDRc7kJw0xCo/39U/JlO5fza5FOJEGdmcRbmfeMoBDA83tEvgMwrCVFHX9p7cljWlU810Uk14HAj6V3h2Z/S3G9smtU6uvgvY4rSrmM8BSGeBRnUUNW903o/vDMGHvSij51uUSzuG/Hsifgamo8gED4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eroRDVBr; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:in-reply-to:
 	Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:References;
-	bh=7F3/Z3S4Ohu4+WmzhSzzI4cWIlxfQO/JOD7SKgruhD0=; b=UP9RiNMGxszqf6cpNGmSpW/Olq
-	wJCrrH93bWGbwyG9cYajFAiiCq/1OnvoCwvP5y8IyiqNChPfpbNocauWGNoZJHRzTimocBwlg+xN4
-	UGdN0zGR9eeBYY8not2P3zM54tWs0T+YrQMBA14yqi5EQTAsUELxepenYbY8VkK/+pZki/ZQL/ak9
-	0wqejZMgSkMwtnEMnPfYAI2mfzFi1VHTwpom+eH7Lm3rd3apkI84PW0CdNTnmdj3IbjVZMMR3WyVW
-	XEKglOeWdelUYadOr7i6d8QrJiUFKyU1lFiFPKaV3HEys7SiEkVI5RFpmOsOTmnEBxeDL53HFXx/U
-	hNHFj76g==;
+	bh=i/q9oty+Eonp7d3m/kL5UxZl+/pPOtywMBfWg64cLbI=; b=eroRDVBrUa4AX6ZSI/rtoi6ltm
+	NYzIziCvtUj2ynNDO9uaZzQ2um2suQc+CUv7ty2HzpSTm3o8Ob4F7J/JtazHbeTO8Wjh30MFsN6Tp
+	UsqNehuqNBHu7M24slkct+8kcQEl3z9E4kuKNhTaK97mb3+o7MsFVmRg/XivQVtvCZae5wr0qxgjB
+	QuONNCk2cMqDtfgXi8pEVtDP6XcU8c927/RukEQrzji7wAAxi+XDcauf9yyLbAF6Mu/dOX9Shy0MU
+	5zE7lbijwLtYzr7wlCXSHXQZ8jISvsdo5BBHrQN46M9ijHqZtNA1lpdR/LgCmZIq619J14SABWDFo
+	9SMnfdLQ==;
 Received: from [2001:8b0:10b:5:5b40:b57d:669c:36f4] (helo=u09cd745991455d.ant.amazon.com)
 	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUAVL-00000000p2a-2TBZ;
-	Mon, 01 Jun 2026 21:49:04 +0000
-Message-ID: <edb1eea1bb6e45560fde15a58575c628750ecdbb.camel@infradead.org>
-Subject: Re: [PATCH v4 8/47] x86/tsc: Add dedicated hypervisor hooks for
- getting known TSC/CPU frequencies
+	id 1wUAXj-00000000pIO-36dh;
+	Mon, 01 Jun 2026 21:51:32 +0000
+Message-ID: <2e8e83f5794614cd7ff9c85af8ee8b7a5ad14736.camel@infradead.org>
+Subject: Re: [PATCH v4 11/47] x86/tsc: Kill off
+ x86_platform_ops.calibrate_{cpu,tsc}() hooks
 From: David Woodhouse <dwmw2@infradead.org>
 To: seanjc@google.com
 Cc: pbonzini@redhat.com, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, 
@@ -67,10 +67,10 @@ Cc: pbonzini@redhat.com, tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
  xen-devel@lists.xenproject.org,  dwmw@amazon.co.uk,
  thomas.lendacky@amd.com, nikunj@amd.com, dwmw2@infradead.org, 
  mhklinux@outlook.com, tglx@linutronix.de
-Date: Mon, 01 Jun 2026 22:49:02 +0100
-in-reply-to: <20260529144435.704127-9-seanjc@google.com>
+Date: Mon, 01 Jun 2026 22:51:31 +0100
+in-reply-to: <20260529144435.704127-12-seanjc@google.com>
 Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-KfGeQos5ntguCu9qjbbK"
+	boundary="=-MYxfinUr1CNAnjjVqHHC"
 User-Agent: Evolution 3.52.3-0ubuntu1.1 
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -83,12 +83,12 @@ X-Spamd-Result: default: False [-4.26 / 15.00];
 	SIGNED_SMIME(-2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[infradead.org:s=casper.20170209];
 	MIME_GOOD(-0.20)[multipart/signed,text/plain];
 	MAILLIST(-0.15)[generic];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11437-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11438-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -97,7 +97,7 @@ X-Spamd-Result: default: False [-4.26 / 15.00];
 	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[infradead.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_NONE(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
@@ -107,33 +107,33 @@ X-Spamd-Result: default: False [-4.26 / 15.00];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:email,infradead.org:mid,infradead.org:dkim,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,amazon.co.uk:email]
-X-Rspamd-Queue-Id: 05296625A1B
+	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:mid,infradead.org:dkim,amazon.co.uk:email,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 09E80625A62
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 
---=-KfGeQos5ntguCu9qjbbK
+--=-MYxfinUr1CNAnjjVqHHC
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 29 May 2026 07:43:55 -0700, Sean Christopherson wrote:
-> Add dedicated hypervisor hooks for getting known TSC/CPU frequencies
-> instead of overriding seemingly generic platform hooks, and explicitly
-> priotize hypervisor-provided frequencies over native methods, but do NOT
-> clobber the frequency obtained from trusted firmware.  While shuffling th=
-e
-> hooks around is arguably "six of one, half dozen of the other", scoping
-> them to x86_hyper_init makes their purpose more obvious, and allows for
-> explicitly defining the priority of sources (as is done here).
+On Fri, 29 May 2026 07:43:58 -0700, Sean Christopherson wrote:
+> Now that getting the CPU and/or TSC frequencies from the hypervisor uses
+> dedicated hooks, drop x86_platform_ops.calibrate_{cpu,tsc}() and instead
+> directly invoke the correct helper at each phase of (re)calibration.  In
+> addition to eliminating unnecessary code, this makes it a bit more obviou=
+s
+> when the "late" path invokes pit_hpet_ptimer_calibrate_cpu() instead of
+> x86_platform_ops.calibrate_cpu().
 >
-> Cc: David Woodhouse <dwmw2@infradead.org>
+> No functional change intended.
+>
 > Signed-off-by: Sean Christopherson <seanjc@google.com>
 
 Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
 
 
---=-KfGeQos5ntguCu9qjbbK
+--=-MYxfinUr1CNAnjjVqHHC
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -212,22 +212,22 @@ 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
-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
+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
-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
+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
 
 
---=-KfGeQos5ntguCu9qjbbK--
+--=-MYxfinUr1CNAnjjVqHHC--
 
