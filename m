@@ -1,231 +1,522 @@
-Return-Path: <linux-hyperv+bounces-11446-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11447-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8OkDLEEEHmpRggkAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11446-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 02 Jun 2026 00:14:25 +0200
+	id eIfVLz8OHmocgwkAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11447-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 02 Jun 2026 00:57:03 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A12B625D0A
-	for <lists+linux-hyperv@lfdr.de>; Tue, 02 Jun 2026 00:14:23 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 216A9626243
+	for <lists+linux-hyperv@lfdr.de>; Tue, 02 Jun 2026 00:57:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6B63730166E8
-	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Jun 2026 22:10:08 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AD5873005774
+	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Jun 2026 22:51:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D15236D9EC;
-	Mon,  1 Jun 2026 22:10:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CE7A36215E;
+	Mon,  1 Jun 2026 22:51:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Us1Lvq/u"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="coiFFKM9"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5263612E0;
-	Mon,  1 Jun 2026 22:10:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95A4F3321AA;
+	Mon,  1 Jun 2026 22:51:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780351807; cv=none; b=GLxN9lrfIAxyAikQ2Y3xvvd9BbzQH2xrS2zkkbCFF68w3DK06qCgzdEya8J94LQqGZ/3Xvm3xswaCCSjQdwe8lhWrSmsD6InoJU1A/qqLkgZT4+mj5wZJQQtxi1lP+EZRIi0pGXTCa9Hw0nKjs9y2qaOLvdQ2vrhRtg6IeTX5EE=
+	t=1780354293; cv=none; b=IL3YiS+DW0Ug289glaVc+Mf9rKx6wlN2CI75E2HaJcNYIudIcfj9AUd2qZ00iqm6yI8/RTfmzK5MhXiwkEucyuHwpVmXosG4NfKBPwNaZXiSkL5LkoGhDT3nOX9zbPChRjmVcOb56gOtK5PRY2offx7vJiy7G5xTK6JE6DUWk/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780351807; c=relaxed/simple;
-	bh=pIe+OJXYuJeGkgK2k/VQNaXpbdi89OoicEUWJQAKxak=;
-	h=Message-ID:Subject:From:To:Cc:Date:in-reply-to:Content-Type:
-	 MIME-Version; b=Aj63yH8IpaEJaiYlUsTRXvpZOfAGlLizbLnJ0WMB9s8PCl8jnLt4lDPRUtC/BGyE1JTT1LupdDsVSw+T5nsixTOzB7OCc+K6LabP40LiVPeJEBBXUkbug8hox3vlcQTiceaeT+y6lBrcOjzpvXDdGkls6Rf7YDDrZZqAm0i872E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Us1Lvq/u; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:in-reply-to:
-	Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:References;
-	bh=pIe+OJXYuJeGkgK2k/VQNaXpbdi89OoicEUWJQAKxak=; b=Us1Lvq/urUfwXo4Ybi8aHRNnhn
-	ZaPAVbdiH21JBQbdcf8eyTyhLH8//Zz31I7IKC1Kj2o9qr8KWenqFCrovvNjnMn3s5VJrmIoTsAT5
-	sA8BMxyzI6R24BioKNf83PkmkF3A9ws01J+0GEiGcft9R9EbdW7Vu+i4RFeSuaP1nHJLwKZ3blKTe
-	cm1o/JU+JHtZL/d2N8wlC/6FwpaNUG9l0IvOlw3ojAsgBdR/dziJt9uXFGFkJASy9v0/63otCOgQU
-	UBftvz7iTyUINzJNk5JIPAYjvQY8/RcImpuTUKjO6Ol/tZo4lp1yZWocMYX77UTXg/TzLic42tnQ2
-	Cqfcncwg==;
-Received: from [2001:8b0:10b:5:5b40:b57d:669c:36f4] (helo=u09cd745991455d.ant.amazon.com)
-	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUApV-00000000qeX-1g8w;
-	Mon, 01 Jun 2026 22:09:54 +0000
-Message-ID: <34dffc37bbbb50e4f91ff74a039d273f7e64a155.camel@infradead.org>
-Subject: Re: [PATCH v4 46/47] x86/kvmclock: Plumb in AP-online and
- BSP-resume to kvmlock, for documentation
-From: David Woodhouse <dwmw2@infradead.org>
-To: seanjc@google.com
-Cc: pbonzini@redhat.com, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, 
- dave.hansen@linux.intel.com, x86@kernel.org, kas@kernel.org,
- kys@microsoft.com,  haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com,  longli@microsoft.com, ajay.kaher@broadcom.com,
- alexey.makhalov@broadcom.com,  jan.kiszka@siemens.com, luto@kernel.org,
- peterz@infradead.org, jgross@suse.com,  daniel.lezcano@kernel.org,
- jstultz@google.com, hpa@zytor.com,  rick.p.edgecombe@intel.com,
- vkuznets@redhat.com,  bcm-kernel-feedback-list@broadcom.com,
- boris.ostrovsky@oracle.com,  sboyd@kernel.org, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org,  linux-coco@lists.linux.dev,
- linux-hyperv@vger.kernel.org,  virtualization@lists.linux.dev,
- xen-devel@lists.xenproject.org,  dwmw@amazon.co.uk,
- thomas.lendacky@amd.com, nikunj@amd.com, dwmw2@infradead.org, 
- mhklinux@outlook.com, tglx@linutronix.de
-Date: Mon, 01 Jun 2026 23:09:52 +0100
-in-reply-to: <20260529150833.715042-1-seanjc@google.com>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-+aOorv8156Qtfhs3MTBs"
-User-Agent: Evolution 3.52.3-0ubuntu1.1 
+	s=arc-20240116; t=1780354293; c=relaxed/simple;
+	bh=aowAKuC927XyKla1NTkJRrP+xo9K2yrNGaxKEzA2Uh4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sIBika5wLfN7e3hAEFu6uKbcDF+F527G1aYPnF4+JD9cSqFpDXdWIrtprCROQT2Ioeu/Wmk2tX/JoIGnyrnwO8io0qnXeaY1GcL+fLB3vNQp1FQC0SnaY8DozTs+O+9tvtqprd8ubj+RWtYXHLF0djNrqsFke4TqRveVmazG+bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=coiFFKM9; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from mrdev.corp.microsoft.com (unknown [40.78.13.173])
+	by linux.microsoft.com (Postfix) with ESMTPSA id CDBBE20B7166;
+	Mon,  1 Jun 2026 15:51:16 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CDBBE20B7166
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1780354277;
+	bh=A5z8cl1aV61bZJ+4TbXhQ8peh3dndKSm6w6zHxOjY6w=;
+	h=From:To:Cc:Subject:Date:From;
+	b=coiFFKM94TF/uPLpIwcooKQXCC2FDaDgV3rwrCBZUgB9TcKVcmru68ubCa4uBkJCU
+	 iLIjJ3qu7B3Kv0KFxsZC6ZGQ0Kogg5tczWeKEXvGXnqxeWhwEXeLT8mXLo0A4ZtlPR
+	 rrvrkKhBZjy+hubda1szC/jyotfDw3YSnbBMkALA=
+From: Mukesh R <mrathor@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: wei.liu@kernel.org
+Subject: [PATCH] x86/hyperv: Cosmetic changes in irqdomain.c for readability
+Date: Mon,  1 Jun 2026 15:51:16 -0700
+Message-ID: <20260601225116.956392-1-mrathor@linux.microsoft.com>
+X-Mailer: git-send-email 2.51.2.vfs.0.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
-X-Spamd-Result: default: False [-4.26 / 15.00];
-	SIGNED_SMIME(-2.00)[];
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[infradead.org:s=casper.20170209];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11446-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[39];
-	FREEMAIL_CC(0.00)[redhat.com,kernel.org,alien8.de,linux.intel.com,microsoft.com,broadcom.com,siemens.com,infradead.org,suse.com,google.com,zytor.com,intel.com,oracle.com,vger.kernel.org,lists.linux.dev,lists.xenproject.org,amazon.co.uk,amd.com,outlook.com,linutronix.de];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[infradead.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_FROM(0.00)[bounces-11447-lists,linux-hyperv=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_NONE(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mrathor@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	RCPT_COUNT_THREE(0.00)[3];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dwmw2@infradead.org,linux-hyperv@vger.kernel.org];
-	HAS_ATTACHMENT(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-0.978];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[amazon.co.uk:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,infradead.org:mid,infradead.org:dkim]
-X-Rspamd-Queue-Id: 8A12B625D0A
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MIME_TRACE(0.00)[0:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[anirudhrb.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,checkpatch.pl:url]
+X-Rspamd-Queue-Id: 216A9626243
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+Make cosmetic changes:
+ o Rename struct pci_dev *dev to *pdev since there are cases of
+   struct device *dev in the file and all over the kernel
+ o Rename hv_build_pci_dev_id to hv_build_devid_type_pci in anticipation
+   of building different types of device ids
+ o Fix checkpatch.pl issues with return and extraneous printk
+ o Replace spaces with tabs
+ o Rename struct hv_devid *xxx to struct hv_devid *hv_devid given code
+   paths involve many types of device ids
+ o Fix indentation in a large if block by using goto.
 
---=-+aOorv8156Qtfhs3MTBs
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+There are no functional changes.
 
-On Fri, 29 May 2026 08:08:33 -0700, Sean Christopherson wrote:
-> Invoke kvmclock_cpu_action() with AP_ONLINE and BSP_RESUME, even though
-> kvmclock doesn't need to do anything in either case, so that the asymmetr=
-y
-> of kvmclock is a detail buried in kvmclock, and to explicitly document
-> that doing nothing during those phases is intentional and correct.
->
-> For all intents and purposes, no functional change intended.
->
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+Reviewed-by: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+Reviewed-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+Signed-off-by: Mukesh R <mrathor@linux.microsoft.com>
+---
+ arch/x86/hyperv/irqdomain.c | 198 +++++++++++++++++++-----------------
+ 1 file changed, 104 insertions(+), 94 deletions(-)
 
-Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
+diff --git a/arch/x86/hyperv/irqdomain.c b/arch/x86/hyperv/irqdomain.c
+index 365e364268d9..b3ad50a874dc 100644
+--- a/arch/x86/hyperv/irqdomain.c
++++ b/arch/x86/hyperv/irqdomain.c
+@@ -1,5 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0
+-
+ /*
+  * Irqdomain for Linux to run as the root partition on Microsoft Hypervisor.
+  *
+@@ -14,8 +13,8 @@
+ #include <linux/irqchip/irq-msi-lib.h>
+ #include <asm/mshyperv.h>
+ 
+-static int hv_map_interrupt(union hv_device_id device_id, bool level,
+-		int cpu, int vector, struct hv_interrupt_entry *entry)
++static int hv_map_interrupt(union hv_device_id hv_devid, bool level,
++		int cpu, int vector, struct hv_interrupt_entry *ret_entry)
+ {
+ 	struct hv_input_map_device_interrupt *input;
+ 	struct hv_output_map_device_interrupt *output;
+@@ -32,7 +31,7 @@ static int hv_map_interrupt(union hv_device_id device_id, bool level,
+ 	intr_desc = &input->interrupt_descriptor;
+ 	memset(input, 0, sizeof(*input));
+ 	input->partition_id = hv_current_partition_id;
+-	input->device_id = device_id.as_uint64;
++	input->device_id = hv_devid.as_uint64;
+ 	intr_desc->interrupt_type = HV_X64_INTERRUPT_TYPE_FIXED;
+ 	intr_desc->vector_count = 1;
+ 	intr_desc->target.vector = vector;
+@@ -44,7 +43,7 @@ static int hv_map_interrupt(union hv_device_id device_id, bool level,
+ 
+ 	intr_desc->target.vp_set.valid_bank_mask = 0;
+ 	intr_desc->target.vp_set.format = HV_GENERIC_SET_SPARSE_4K;
+-	nr_bank = cpumask_to_vpset(&(intr_desc->target.vp_set), cpumask_of(cpu));
++	nr_bank = cpumask_to_vpset(&intr_desc->target.vp_set, cpumask_of(cpu));
+ 	if (nr_bank < 0) {
+ 		local_irq_restore(flags);
+ 		pr_err("%s: unable to generate VP set\n", __func__);
+@@ -61,7 +60,7 @@ static int hv_map_interrupt(union hv_device_id device_id, bool level,
+ 
+ 	status = hv_do_rep_hypercall(HVCALL_MAP_DEVICE_INTERRUPT, 0, var_size,
+ 			input, output);
+-	*entry = output->interrupt_entry;
++	*ret_entry = output->interrupt_entry;
+ 
+ 	local_irq_restore(flags);
+ 
+@@ -71,21 +70,19 @@ static int hv_map_interrupt(union hv_device_id device_id, bool level,
+ 	return hv_result_to_errno(status);
+ }
+ 
+-static int hv_unmap_interrupt(u64 id, struct hv_interrupt_entry *old_entry)
++static int hv_unmap_interrupt(u64 id, struct hv_interrupt_entry *irq_entry)
+ {
+ 	unsigned long flags;
+ 	struct hv_input_unmap_device_interrupt *input;
+-	struct hv_interrupt_entry *intr_entry;
+ 	u64 status;
+ 
+ 	local_irq_save(flags);
+ 	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
+ 
+ 	memset(input, 0, sizeof(*input));
+-	intr_entry = &input->interrupt_entry;
+ 	input->partition_id = hv_current_partition_id;
+ 	input->device_id = id;
+-	*intr_entry = *old_entry;
++	input->interrupt_entry = *irq_entry;
+ 
+ 	status = hv_do_hypercall(HVCALL_UNMAP_DEVICE_INTERRUPT, input, NULL);
+ 	local_irq_restore(flags);
+@@ -115,67 +112,71 @@ static int get_rid_cb(struct pci_dev *pdev, u16 alias, void *data)
+ 	return 0;
+ }
+ 
+-static union hv_device_id hv_build_pci_dev_id(struct pci_dev *dev)
++static union hv_device_id hv_build_devid_type_pci(struct pci_dev *pdev)
+ {
+-	union hv_device_id dev_id;
++	int pos;
++	union hv_device_id hv_devid;
+ 	struct rid_data data = {
+ 		.bridge = NULL,
+-		.rid = PCI_DEVID(dev->bus->number, dev->devfn)
++		.rid = PCI_DEVID(pdev->bus->number, pdev->devfn)
+ 	};
+ 
+-	pci_for_each_dma_alias(dev, get_rid_cb, &data);
++	pci_for_each_dma_alias(pdev, get_rid_cb, &data);
+ 
+-	dev_id.as_uint64 = 0;
+-	dev_id.device_type = HV_DEVICE_TYPE_PCI;
+-	dev_id.pci.segment = pci_domain_nr(dev->bus);
++	hv_devid.as_uint64 = 0;
++	hv_devid.device_type = HV_DEVICE_TYPE_PCI;
++	hv_devid.pci.segment = pci_domain_nr(pdev->bus);
+ 
+-	dev_id.pci.bdf.bus = PCI_BUS_NUM(data.rid);
+-	dev_id.pci.bdf.device = PCI_SLOT(data.rid);
+-	dev_id.pci.bdf.function = PCI_FUNC(data.rid);
+-	dev_id.pci.source_shadow = HV_SOURCE_SHADOW_NONE;
++	hv_devid.pci.bdf.bus = PCI_BUS_NUM(data.rid);
++	hv_devid.pci.bdf.device = PCI_SLOT(data.rid);
++	hv_devid.pci.bdf.function = PCI_FUNC(data.rid);
++	hv_devid.pci.source_shadow = HV_SOURCE_SHADOW_NONE;
+ 
+-	if (data.bridge) {
+-		int pos;
++	if (data.bridge == NULL)
++		goto out;
+ 
+-		/*
+-		 * Microsoft Hypervisor requires a bus range when the bridge is
+-		 * running in PCI-X mode.
+-		 *
+-		 * To distinguish conventional vs PCI-X bridge, we can check
+-		 * the bridge's PCI-X Secondary Status Register, Secondary Bus
+-		 * Mode and Frequency bits. See PCI Express to PCI/PCI-X Bridge
+-		 * Specification Revision 1.0 5.2.2.1.3.
+-		 *
+-		 * Value zero means it is in conventional mode, otherwise it is
+-		 * in PCI-X mode.
+-		 */
++	/*
++	 * Microsoft Hypervisor requires a bus range when the bridge is
++	 * running in PCI-X mode.
++	 *
++	 * To distinguish conventional vs PCI-X bridge, we can check
++	 * the bridge's PCI-X Secondary Status Register, Secondary Bus
++	 * Mode and Frequency bits. See PCI Express to PCI/PCI-X Bridge
++	 * Specification Revision 1.0 5.2.2.1.3.
++	 *
++	 * Value zero means it is in conventional mode, otherwise it is
++	 * in PCI-X mode.
++	 */
+ 
+-		pos = pci_find_capability(data.bridge, PCI_CAP_ID_PCIX);
+-		if (pos) {
+-			u16 status;
++	pos = pci_find_capability(data.bridge, PCI_CAP_ID_PCIX);
++	if (pos) {
++		u16 status;
+ 
+-			pci_read_config_word(data.bridge, pos +
+-					PCI_X_BRIDGE_SSTATUS, &status);
++		pci_read_config_word(data.bridge, pos + PCI_X_BRIDGE_SSTATUS,
++				     &status);
+ 
+-			if (status & PCI_X_SSTATUS_FREQ) {
+-				/* Non-zero, PCI-X mode */
+-				u8 sec_bus, sub_bus;
++		if (status & PCI_X_SSTATUS_FREQ) {
++			/* Non-zero, PCI-X mode */
++			u8 sec_bus, sub_bus;
+ 
+-				dev_id.pci.source_shadow = HV_SOURCE_SHADOW_BRIDGE_BUS_RANGE;
++			hv_devid.pci.source_shadow =
++					     HV_SOURCE_SHADOW_BRIDGE_BUS_RANGE;
+ 
+-				pci_read_config_byte(data.bridge, PCI_SECONDARY_BUS, &sec_bus);
+-				dev_id.pci.shadow_bus_range.secondary_bus = sec_bus;
+-				pci_read_config_byte(data.bridge, PCI_SUBORDINATE_BUS, &sub_bus);
+-				dev_id.pci.shadow_bus_range.subordinate_bus = sub_bus;
+-			}
++			pci_read_config_byte(data.bridge, PCI_SECONDARY_BUS,
++					     &sec_bus);
++			hv_devid.pci.shadow_bus_range.secondary_bus = sec_bus;
++			pci_read_config_byte(data.bridge, PCI_SUBORDINATE_BUS,
++					     &sub_bus);
++			hv_devid.pci.shadow_bus_range.subordinate_bus = sub_bus;
+ 		}
+ 	}
+ 
+-	return dev_id;
++out:
++	return hv_devid;
+ }
+ 
+-/**
+- * hv_map_msi_interrupt() - "Map" the MSI IRQ in the hypervisor.
++/*
++ * hv_map_msi_interrupt() - Map the MSI IRQ in the hypervisor.
+  * @data:      Describes the IRQ
+  * @out_entry: Hypervisor (MSI) interrupt entry (can be NULL)
+  *
+@@ -188,22 +189,23 @@ int hv_map_msi_interrupt(struct irq_data *data,
+ {
+ 	struct irq_cfg *cfg = irqd_cfg(data);
+ 	struct hv_interrupt_entry dummy;
+-	union hv_device_id device_id;
++	union hv_device_id hv_devid;
+ 	struct msi_desc *msidesc;
+-	struct pci_dev *dev;
++	struct pci_dev *pdev;
+ 	int cpu;
+ 
+ 	msidesc = irq_data_get_msi_desc(data);
+-	dev = msi_desc_to_pci_dev(msidesc);
+-	device_id = hv_build_pci_dev_id(dev);
++	pdev = msi_desc_to_pci_dev(msidesc);
++	hv_devid = hv_build_devid_type_pci(pdev);
+ 	cpu = cpumask_first(irq_data_get_effective_affinity_mask(data));
+ 
+-	return hv_map_interrupt(device_id, false, cpu, cfg->vector,
++	return hv_map_interrupt(hv_devid, false, cpu, cfg->vector,
+ 				out_entry ? out_entry : &dummy);
+ }
+ EXPORT_SYMBOL_GPL(hv_map_msi_interrupt);
+ 
+-static inline void entry_to_msi_msg(struct hv_interrupt_entry *entry, struct msi_msg *msg)
++static void entry_to_msi_msg(struct hv_interrupt_entry *entry,
++			     struct msi_msg *msg)
+ {
+ 	/* High address is always 0 */
+ 	msg->address_hi = 0;
+@@ -211,17 +213,19 @@ static inline void entry_to_msi_msg(struct hv_interrupt_entry *entry, struct msi
+ 	msg->data = entry->msi_entry.data.as_uint32;
+ }
+ 
+-static int hv_unmap_msi_interrupt(struct pci_dev *dev, struct hv_interrupt_entry *old_entry);
++static int hv_unmap_msi_interrupt(struct pci_dev *pdev,
++				  struct hv_interrupt_entry *irq_entry);
++
+ static void hv_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ {
+ 	struct hv_interrupt_entry *stored_entry;
+ 	struct irq_cfg *cfg = irqd_cfg(data);
+ 	struct msi_desc *msidesc;
+-	struct pci_dev *dev;
++	struct pci_dev *pdev;
+ 	int ret;
+ 
+ 	msidesc = irq_data_get_msi_desc(data);
+-	dev = msi_desc_to_pci_dev(msidesc);
++	pdev = msi_desc_to_pci_dev(msidesc);
+ 
+ 	if (!cfg) {
+ 		pr_debug("%s: cfg is NULL", __func__);
+@@ -240,7 +244,7 @@ static void hv_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 		stored_entry = data->chip_data;
+ 		data->chip_data = NULL;
+ 
+-		ret = hv_unmap_msi_interrupt(dev, stored_entry);
++		ret = hv_unmap_msi_interrupt(pdev, stored_entry);
+ 
+ 		kfree(stored_entry);
+ 
+@@ -249,10 +253,8 @@ static void hv_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 	}
+ 
+ 	stored_entry = kzalloc_obj(*stored_entry, GFP_ATOMIC);
+-	if (!stored_entry) {
+-		pr_debug("%s: failed to allocate chip data\n", __func__);
++	if (!stored_entry)
+ 		return;
+-	}
+ 
+ 	ret = hv_map_msi_interrupt(data, stored_entry);
+ 	if (ret) {
+@@ -262,18 +264,21 @@ static void hv_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 
+ 	data->chip_data = stored_entry;
+ 	entry_to_msi_msg(data->chip_data, msg);
+-
+-	return;
+ }
+ 
+-static int hv_unmap_msi_interrupt(struct pci_dev *dev, struct hv_interrupt_entry *old_entry)
++static int hv_unmap_msi_interrupt(struct pci_dev *pdev,
++				  struct hv_interrupt_entry *irq_entry)
+ {
+-	return hv_unmap_interrupt(hv_build_pci_dev_id(dev).as_uint64, old_entry);
++	union hv_device_id hv_devid;
++
++	hv_devid = hv_build_devid_type_pci(pdev);
++	return hv_unmap_interrupt(hv_devid.as_uint64, irq_entry);
+ }
+ 
+-static void hv_teardown_msi_irq(struct pci_dev *dev, struct irq_data *irqd)
++/* NB: during map, hv_interrupt_entry is saved via data->chip_data */
++static void hv_teardown_msi_irq(struct pci_dev *pdev, struct irq_data *irqd)
+ {
+-	struct hv_interrupt_entry old_entry;
++	struct hv_interrupt_entry irq_entry;
+ 	struct msi_msg msg;
+ 
+ 	if (!irqd->chip_data) {
+@@ -281,13 +286,13 @@ static void hv_teardown_msi_irq(struct pci_dev *dev, struct irq_data *irqd)
+ 		return;
+ 	}
+ 
+-	old_entry = *(struct hv_interrupt_entry *)irqd->chip_data;
+-	entry_to_msi_msg(&old_entry, &msg);
++	irq_entry = *(struct hv_interrupt_entry *)irqd->chip_data;
++	entry_to_msi_msg(&irq_entry, &msg);
+ 
+ 	kfree(irqd->chip_data);
+ 	irqd->chip_data = NULL;
+ 
+-	(void)hv_unmap_msi_interrupt(dev, &old_entry);
++	(void)hv_unmap_msi_interrupt(pdev, &irq_entry);
+ }
+ 
+ /*
+@@ -302,7 +307,8 @@ static struct irq_chip hv_pci_msi_controller = {
+ };
+ 
+ static bool hv_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
+-				 struct irq_domain *real_parent, struct msi_domain_info *info)
++				 struct irq_domain *real_parent,
++				 struct msi_domain_info *info)
+ {
+ 	struct irq_chip *chip = info->chip;
+ 
+@@ -317,7 +323,8 @@ static bool hv_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
+ }
+ 
+ #define HV_MSI_FLAGS_SUPPORTED	(MSI_GENERIC_FLAGS_MASK | MSI_FLAG_PCI_MSIX)
+-#define HV_MSI_FLAGS_REQUIRED	(MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS)
++#define HV_MSI_FLAGS_REQUIRED	(MSI_FLAG_USE_DEF_DOM_OPS |	\
++				 MSI_FLAG_USE_DEF_CHIP_OPS)
+ 
+ static struct msi_parent_ops hv_msi_parent_ops = {
+ 	.supported_flags	= HV_MSI_FLAGS_SUPPORTED,
+@@ -329,14 +336,14 @@ static struct msi_parent_ops hv_msi_parent_ops = {
+ 	.init_dev_msi_info	= hv_init_dev_msi_info,
+ };
+ 
+-static int hv_msi_domain_alloc(struct irq_domain *d, unsigned int virq, unsigned int nr_irqs,
+-			       void *arg)
++/* Allocate nr_irqs IRQs for the given irq domain */
++static int hv_msi_domain_alloc(struct irq_domain *d, unsigned int virq,
++			       unsigned int nr_irqs, void *arg)
+ {
+ 	/*
+-	 * TODO: The allocation bits of hv_irq_compose_msi_msg(), i.e. everything except
+-	 * entry_to_msi_msg() should be in here.
++	 * TODO: The allocation bits of hv_irq_compose_msi_msg(), i.e.
++	 *	 everything except entry_to_msi_msg() should be in here.
+ 	 */
+-
+ 	int ret;
+ 
+ 	ret = irq_domain_alloc_irqs_parent(d, virq, nr_irqs, arg);
+@@ -344,13 +351,15 @@ static int hv_msi_domain_alloc(struct irq_domain *d, unsigned int virq, unsigned
+ 		return ret;
+ 
+ 	for (int i = 0; i < nr_irqs; ++i) {
+-		irq_domain_set_info(d, virq + i, 0, &hv_pci_msi_controller, NULL,
+-				    handle_edge_irq, NULL, "edge");
++		irq_domain_set_info(d, virq + i, 0, &hv_pci_msi_controller,
++				    NULL, handle_edge_irq, NULL, "edge");
+ 	}
++
+ 	return 0;
+ }
+ 
+-static void hv_msi_domain_free(struct irq_domain *d, unsigned int virq, unsigned int nr_irqs)
++static void hv_msi_domain_free(struct irq_domain *d, unsigned int virq,
++			       unsigned int nr_irqs)
+ {
+ 	for (int i = 0; i < nr_irqs; ++i) {
+ 		struct irq_data *irqd = irq_domain_get_irq_data(d, virq);
+@@ -362,6 +371,7 @@ static void hv_msi_domain_free(struct irq_domain *d, unsigned int virq, unsigned
+ 
+ 		hv_teardown_msi_irq(to_pci_dev(desc->dev), irqd);
+ 	}
++
+ 	irq_domain_free_irqs_top(d, virq, nr_irqs);
+ }
+ 
+@@ -394,25 +404,25 @@ struct irq_domain * __init hv_create_pci_msi_domain(void)
+ 
+ int hv_unmap_ioapic_interrupt(int ioapic_id, struct hv_interrupt_entry *entry)
+ {
+-	union hv_device_id device_id;
++	union hv_device_id hv_devid;
+ 
+-	device_id.as_uint64 = 0;
+-	device_id.device_type = HV_DEVICE_TYPE_IOAPIC;
+-	device_id.ioapic.ioapic_id = (u8)ioapic_id;
++	hv_devid.as_uint64 = 0;
++	hv_devid.device_type = HV_DEVICE_TYPE_IOAPIC;
++	hv_devid.ioapic.ioapic_id = (u8)ioapic_id;
+ 
+-	return hv_unmap_interrupt(device_id.as_uint64, entry);
++	return hv_unmap_interrupt(hv_devid.as_uint64, entry);
+ }
+ EXPORT_SYMBOL_GPL(hv_unmap_ioapic_interrupt);
+ 
+ int hv_map_ioapic_interrupt(int ioapic_id, bool level, int cpu, int vector,
+ 		struct hv_interrupt_entry *entry)
+ {
+-	union hv_device_id device_id;
++	union hv_device_id hv_devid;
+ 
+-	device_id.as_uint64 = 0;
+-	device_id.device_type = HV_DEVICE_TYPE_IOAPIC;
+-	device_id.ioapic.ioapic_id = (u8)ioapic_id;
++	hv_devid.as_uint64 = 0;
++	hv_devid.device_type = HV_DEVICE_TYPE_IOAPIC;
++	hv_devid.ioapic.ioapic_id = (u8)ioapic_id;
+ 
+-	return hv_map_interrupt(device_id, level, cpu, vector, entry);
++	return hv_map_interrupt(hv_devid, level, cpu, vector, entry);
+ }
+ EXPORT_SYMBOL_GPL(hv_map_ioapic_interrupt);
+-- 
+2.51.2.vfs.0.1
 
-
---=-+aOorv8156Qtfhs3MTBs
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
-ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
-AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
-BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
-MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
-a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
-jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
-GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
-aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
-nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
-8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
-HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
-IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
-KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
-BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
-QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
-QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
-ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
-/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
-uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
-xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
-W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
-c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
-VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
-NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
-DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
-sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
-w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
-i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
-kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
-0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
-ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
-blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
-hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
-VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
-HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
-ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
-AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
-cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
-cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
-AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
-aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
-hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
-iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
-8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
-JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
-xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
-EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
-B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
-MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
-KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
-Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
-nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
-WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
-W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
-nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
-g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
-9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
-9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
-sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
-a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
-ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
-AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
-dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
-Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
-Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
-MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
-YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
-4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
-6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
-QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
-nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
-MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
-VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
-ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI2MDYwMTIyMDk1
-MlowLwYJKoZIhvcNAQkEMSIEIOui92Q09s3RqSCKJLJfaKRt6cshQkdB1+7Thlc+UB5aMGQGCSsG
-AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
-cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
-VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
-cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIAeKlaeMXuImTM
-sf3TbGNaC9G9/UwO/K4ThMbNkuiyHJjNfr0VPty1kv9rDYcpFhuzmTATQ9BNajO35PxfHaXCzheU
-43O+G6XlGiQr9tPHHyQko61LMqAwdobKDj8vMQ5cwaHCHRhZnn9RW2H+govPo7be3WkMN+bFseaY
-hGNiRt0i5RyBzTI3YrtFkuLe7jQNrtP1gO6i7fUiJ/I63XpwdjIXZLVkTWCK6OrPFBdyova5n0Fa
-azBcGjXSKyWOTcAHpbDagakmREmhaoqDvzwEBYI7agrnnodHfGiOY1KGhGvIgs84gCt9wkodFdDF
-s3MYYiPppEy/xUloVvnzV2n8rpy+ewR/5yr242JnYUw+T2+nNjhcV+DAwcKf/FFfkdGuz7En8PKd
-MpFzyaDzhGZpBreU6VezeAWzxgKLPn0eYVKZOSBmBf2OBOu4DkdIOCrx6IozAikAyKoVoDXhLwOi
-/JERUeF0a7FfPQcYVRbua/Q3u077s6tdeIpzCe7hRQev2/Lr8LD8DvJkVvbfW7lBLX/5D5LQleNz
-91aHkJ1FGPYs1youAKuVH/o2pNiF6I2pZDns3PVEBwF+I2g7JHzW4oW7txynq3HVwcPFx1gvKoJ2
-mzquaozHcZs5KG+A//Z/FWryK3vBgu5yBJEdg9RFI6UqkK3EPEwRDysLmSLvuSQAAAAAAAA=
-
-
---=-+aOorv8156Qtfhs3MTBs--
 
