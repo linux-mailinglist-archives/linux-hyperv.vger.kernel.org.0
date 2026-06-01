@@ -1,522 +1,179 @@
-Return-Path: <linux-hyperv+bounces-11447-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11448-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eIfVLz8OHmocgwkAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11447-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 02 Jun 2026 00:57:03 +0200
+	id uBO2GUYPHmocgwkAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11448-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 02 Jun 2026 01:01:26 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 216A9626243
-	for <lists+linux-hyperv@lfdr.de>; Tue, 02 Jun 2026 00:57:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C136562628B
+	for <lists+linux-hyperv@lfdr.de>; Tue, 02 Jun 2026 01:01:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AD5873005774
-	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Jun 2026 22:51:33 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 06DB23007C9B
+	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Jun 2026 22:59:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CE7A36215E;
-	Mon,  1 Jun 2026 22:51:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB536356777;
+	Mon,  1 Jun 2026 22:59:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="coiFFKM9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dmk0rX/Z"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95A4F3321AA;
-	Mon,  1 Jun 2026 22:51:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B41F199949
+	for <linux-hyperv@vger.kernel.org>; Mon,  1 Jun 2026 22:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780354293; cv=none; b=IL3YiS+DW0Ug289glaVc+Mf9rKx6wlN2CI75E2HaJcNYIudIcfj9AUd2qZ00iqm6yI8/RTfmzK5MhXiwkEucyuHwpVmXosG4NfKBPwNaZXiSkL5LkoGhDT3nOX9zbPChRjmVcOb56gOtK5PRY2offx7vJiy7G5xTK6JE6DUWk/U=
+	t=1780354794; cv=none; b=SB4euaQCOt3tGlF3RC1Z41tfNFH0PrTJJoDWlOoEy+5+egvhAsXwbnOlFNtycXZhyzOsA4QXuFAX1LHihKtpnZT2vBK/wI24H95Gwv3gySBrKHCOqPEYGfTN+/t9pd/VcDPy2s80Tb+peZE3nfvlWed7v5Madcd7VH/sZeDPE80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780354293; c=relaxed/simple;
-	bh=aowAKuC927XyKla1NTkJRrP+xo9K2yrNGaxKEzA2Uh4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sIBika5wLfN7e3hAEFu6uKbcDF+F527G1aYPnF4+JD9cSqFpDXdWIrtprCROQT2Ioeu/Wmk2tX/JoIGnyrnwO8io0qnXeaY1GcL+fLB3vNQp1FQC0SnaY8DozTs+O+9tvtqprd8ubj+RWtYXHLF0djNrqsFke4TqRveVmazG+bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=coiFFKM9; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from mrdev.corp.microsoft.com (unknown [40.78.13.173])
-	by linux.microsoft.com (Postfix) with ESMTPSA id CDBBE20B7166;
-	Mon,  1 Jun 2026 15:51:16 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CDBBE20B7166
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1780354277;
-	bh=A5z8cl1aV61bZJ+4TbXhQ8peh3dndKSm6w6zHxOjY6w=;
-	h=From:To:Cc:Subject:Date:From;
-	b=coiFFKM94TF/uPLpIwcooKQXCC2FDaDgV3rwrCBZUgB9TcKVcmru68ubCa4uBkJCU
-	 iLIjJ3qu7B3Kv0KFxsZC6ZGQ0Kogg5tczWeKEXvGXnqxeWhwEXeLT8mXLo0A4ZtlPR
-	 rrvrkKhBZjy+hubda1szC/jyotfDw3YSnbBMkALA=
-From: Mukesh R <mrathor@linux.microsoft.com>
-To: linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: wei.liu@kernel.org
-Subject: [PATCH] x86/hyperv: Cosmetic changes in irqdomain.c for readability
-Date: Mon,  1 Jun 2026 15:51:16 -0700
-Message-ID: <20260601225116.956392-1-mrathor@linux.microsoft.com>
-X-Mailer: git-send-email 2.51.2.vfs.0.1
+	s=arc-20240116; t=1780354794; c=relaxed/simple;
+	bh=vDxO/oN+LmIS6KJzwXnLwjf4J+KB0ni4e8rB8lC8wBU=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=oPCgmgWwJSoosPcbr42EIARxICLgBAgJzydXu8AQpFW4Ob7Fu3GqTlC+l/Yp3OjDX7LOi9ZPb0vukW8kSHF6svVN0I0xLwPAmNC5oz4UT1h2mFApg2J0DvrlvLsnbOQmZh9rig85VbkFkiSFFkEQVWlUiXKZfB0catcp/AZC3JA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dmk0rX/Z; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42B4D1F00893;
+	Mon,  1 Jun 2026 22:59:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780354793;
+	bh=j/fjeu5jhpYd+TyEyrQ3iAl6XuVTDxZ8MFnqUsDcxMM=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Dmk0rX/ZiA0S0aUuhL7Vy7f9todFd3HEGrDw2mD7dUVsUa0LcrE2iBiNjF1HNnGf/
+	 94lVei7ynbJxZ0AAmL9GojkknR4glYbNVXQw0qUXatRHgtiSWD42PDXj35dG0ZKCzD
+	 FqOPcQRMvv4TK7QeByM2IQ52UYobyjaFOVSgF92yj1V2wNJqtEmcnURaU5Nc4wCR31
+	 CqwgUxS2PIuxb4o4OrT/oXshblAAyPuxdkab+RaA0OFsVW+ZnhgUhjbFM1k0SrLZbR
+	 xAgOVjmVh+2lH32rxMdS4J8Ank/0t6HD9ZzNB/Io5c2+y262dzMOrLspcScKoDH+19
+	 Kk4y/pQNpbj/w==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] x86/hyperv: Cosmetic changes in irqdomain.c for
+ readability
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Mukesh R" <mrathor@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org
+In-Reply-To: <20260601225116.956392-1-mrathor@linux.microsoft.com>
+References: <20260601225116.956392-1-mrathor@linux.microsoft.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 01 Jun 2026 22:59:52 +0000
+Message-Id: <20260601225953.42B4D1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11448-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11447-lists,linux-hyperv=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_NONE(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FROM_HAS_DN(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
+	RCPT_COUNT_TWO(0.00)[2];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mrathor@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	RCPT_COUNT_THREE(0.00)[3];
-	PRECEDENCE_BULK(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	NEURAL_HAM(-0.00)[-0.978];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_COUNT_THREE(0.00)[4];
+	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[anirudhrb.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,checkpatch.pl:url]
-X-Rspamd-Queue-Id: 216A9626243
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	NEURAL_HAM(-0.00)[-0.999];
+	PRECEDENCE_BULK(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NO_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,lists.linux.dev:replyto,smtp.kernel.org:mid,sashiko.dev:url]
+X-Rspamd-Queue-Id: C136562628B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Make cosmetic changes:
- o Rename struct pci_dev *dev to *pdev since there are cases of
-   struct device *dev in the file and all over the kernel
- o Rename hv_build_pci_dev_id to hv_build_devid_type_pci in anticipation
-   of building different types of device ids
- o Fix checkpatch.pl issues with return and extraneous printk
- o Replace spaces with tabs
- o Rename struct hv_devid *xxx to struct hv_devid *hv_devid given code
-   paths involve many types of device ids
- o Fix indentation in a large if block by using goto.
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-There are no functional changes.
+Pre-existing issues:
+- [Critical] Allocation or mapping failure in `hv_irq_compose_msi_msg()` ca=
+uses the function to return without initializing the caller-provided `msg` =
+structure, potentially leading to uncontrolled MSI writes by the device.
+- [High] The `hv_msi_domain_free` function fails to iterate through allocat=
+ed IRQs for multi-vector MSI, leading to leaked memory and stale hypervisor=
+ mappings.
+--
 
-Reviewed-by: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
-Reviewed-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
-Signed-off-by: Mukesh R <mrathor@linux.microsoft.com>
----
- arch/x86/hyperv/irqdomain.c | 198 +++++++++++++++++++-----------------
- 1 file changed, 104 insertions(+), 94 deletions(-)
+commit 042e553a37dead023377268bdb9c0d43c5394d75
+Author: Mukesh R <mrathor@linux.microsoft.com>
 
-diff --git a/arch/x86/hyperv/irqdomain.c b/arch/x86/hyperv/irqdomain.c
-index 365e364268d9..b3ad50a874dc 100644
---- a/arch/x86/hyperv/irqdomain.c
-+++ b/arch/x86/hyperv/irqdomain.c
-@@ -1,5 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--
- /*
-  * Irqdomain for Linux to run as the root partition on Microsoft Hypervisor.
-  *
-@@ -14,8 +13,8 @@
- #include <linux/irqchip/irq-msi-lib.h>
- #include <asm/mshyperv.h>
- 
--static int hv_map_interrupt(union hv_device_id device_id, bool level,
--		int cpu, int vector, struct hv_interrupt_entry *entry)
-+static int hv_map_interrupt(union hv_device_id hv_devid, bool level,
-+		int cpu, int vector, struct hv_interrupt_entry *ret_entry)
- {
- 	struct hv_input_map_device_interrupt *input;
- 	struct hv_output_map_device_interrupt *output;
-@@ -32,7 +31,7 @@ static int hv_map_interrupt(union hv_device_id device_id, bool level,
- 	intr_desc = &input->interrupt_descriptor;
- 	memset(input, 0, sizeof(*input));
- 	input->partition_id = hv_current_partition_id;
--	input->device_id = device_id.as_uint64;
-+	input->device_id = hv_devid.as_uint64;
- 	intr_desc->interrupt_type = HV_X64_INTERRUPT_TYPE_FIXED;
- 	intr_desc->vector_count = 1;
- 	intr_desc->target.vector = vector;
-@@ -44,7 +43,7 @@ static int hv_map_interrupt(union hv_device_id device_id, bool level,
- 
- 	intr_desc->target.vp_set.valid_bank_mask = 0;
- 	intr_desc->target.vp_set.format = HV_GENERIC_SET_SPARSE_4K;
--	nr_bank = cpumask_to_vpset(&(intr_desc->target.vp_set), cpumask_of(cpu));
-+	nr_bank = cpumask_to_vpset(&intr_desc->target.vp_set, cpumask_of(cpu));
- 	if (nr_bank < 0) {
- 		local_irq_restore(flags);
- 		pr_err("%s: unable to generate VP set\n", __func__);
-@@ -61,7 +60,7 @@ static int hv_map_interrupt(union hv_device_id device_id, bool level,
- 
- 	status = hv_do_rep_hypercall(HVCALL_MAP_DEVICE_INTERRUPT, 0, var_size,
- 			input, output);
--	*entry = output->interrupt_entry;
-+	*ret_entry = output->interrupt_entry;
- 
- 	local_irq_restore(flags);
- 
-@@ -71,21 +70,19 @@ static int hv_map_interrupt(union hv_device_id device_id, bool level,
- 	return hv_result_to_errno(status);
- }
- 
--static int hv_unmap_interrupt(u64 id, struct hv_interrupt_entry *old_entry)
-+static int hv_unmap_interrupt(u64 id, struct hv_interrupt_entry *irq_entry)
- {
- 	unsigned long flags;
- 	struct hv_input_unmap_device_interrupt *input;
--	struct hv_interrupt_entry *intr_entry;
- 	u64 status;
- 
- 	local_irq_save(flags);
- 	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
- 
- 	memset(input, 0, sizeof(*input));
--	intr_entry = &input->interrupt_entry;
- 	input->partition_id = hv_current_partition_id;
- 	input->device_id = id;
--	*intr_entry = *old_entry;
-+	input->interrupt_entry = *irq_entry;
- 
- 	status = hv_do_hypercall(HVCALL_UNMAP_DEVICE_INTERRUPT, input, NULL);
- 	local_irq_restore(flags);
-@@ -115,67 +112,71 @@ static int get_rid_cb(struct pci_dev *pdev, u16 alias, void *data)
- 	return 0;
- }
- 
--static union hv_device_id hv_build_pci_dev_id(struct pci_dev *dev)
-+static union hv_device_id hv_build_devid_type_pci(struct pci_dev *pdev)
- {
--	union hv_device_id dev_id;
-+	int pos;
-+	union hv_device_id hv_devid;
- 	struct rid_data data = {
- 		.bridge = NULL,
--		.rid = PCI_DEVID(dev->bus->number, dev->devfn)
-+		.rid = PCI_DEVID(pdev->bus->number, pdev->devfn)
- 	};
- 
--	pci_for_each_dma_alias(dev, get_rid_cb, &data);
-+	pci_for_each_dma_alias(pdev, get_rid_cb, &data);
- 
--	dev_id.as_uint64 = 0;
--	dev_id.device_type = HV_DEVICE_TYPE_PCI;
--	dev_id.pci.segment = pci_domain_nr(dev->bus);
-+	hv_devid.as_uint64 = 0;
-+	hv_devid.device_type = HV_DEVICE_TYPE_PCI;
-+	hv_devid.pci.segment = pci_domain_nr(pdev->bus);
- 
--	dev_id.pci.bdf.bus = PCI_BUS_NUM(data.rid);
--	dev_id.pci.bdf.device = PCI_SLOT(data.rid);
--	dev_id.pci.bdf.function = PCI_FUNC(data.rid);
--	dev_id.pci.source_shadow = HV_SOURCE_SHADOW_NONE;
-+	hv_devid.pci.bdf.bus = PCI_BUS_NUM(data.rid);
-+	hv_devid.pci.bdf.device = PCI_SLOT(data.rid);
-+	hv_devid.pci.bdf.function = PCI_FUNC(data.rid);
-+	hv_devid.pci.source_shadow = HV_SOURCE_SHADOW_NONE;
- 
--	if (data.bridge) {
--		int pos;
-+	if (data.bridge == NULL)
-+		goto out;
- 
--		/*
--		 * Microsoft Hypervisor requires a bus range when the bridge is
--		 * running in PCI-X mode.
--		 *
--		 * To distinguish conventional vs PCI-X bridge, we can check
--		 * the bridge's PCI-X Secondary Status Register, Secondary Bus
--		 * Mode and Frequency bits. See PCI Express to PCI/PCI-X Bridge
--		 * Specification Revision 1.0 5.2.2.1.3.
--		 *
--		 * Value zero means it is in conventional mode, otherwise it is
--		 * in PCI-X mode.
--		 */
-+	/*
-+	 * Microsoft Hypervisor requires a bus range when the bridge is
-+	 * running in PCI-X mode.
-+	 *
-+	 * To distinguish conventional vs PCI-X bridge, we can check
-+	 * the bridge's PCI-X Secondary Status Register, Secondary Bus
-+	 * Mode and Frequency bits. See PCI Express to PCI/PCI-X Bridge
-+	 * Specification Revision 1.0 5.2.2.1.3.
-+	 *
-+	 * Value zero means it is in conventional mode, otherwise it is
-+	 * in PCI-X mode.
-+	 */
- 
--		pos = pci_find_capability(data.bridge, PCI_CAP_ID_PCIX);
--		if (pos) {
--			u16 status;
-+	pos = pci_find_capability(data.bridge, PCI_CAP_ID_PCIX);
-+	if (pos) {
-+		u16 status;
- 
--			pci_read_config_word(data.bridge, pos +
--					PCI_X_BRIDGE_SSTATUS, &status);
-+		pci_read_config_word(data.bridge, pos + PCI_X_BRIDGE_SSTATUS,
-+				     &status);
- 
--			if (status & PCI_X_SSTATUS_FREQ) {
--				/* Non-zero, PCI-X mode */
--				u8 sec_bus, sub_bus;
-+		if (status & PCI_X_SSTATUS_FREQ) {
-+			/* Non-zero, PCI-X mode */
-+			u8 sec_bus, sub_bus;
- 
--				dev_id.pci.source_shadow = HV_SOURCE_SHADOW_BRIDGE_BUS_RANGE;
-+			hv_devid.pci.source_shadow =
-+					     HV_SOURCE_SHADOW_BRIDGE_BUS_RANGE;
- 
--				pci_read_config_byte(data.bridge, PCI_SECONDARY_BUS, &sec_bus);
--				dev_id.pci.shadow_bus_range.secondary_bus = sec_bus;
--				pci_read_config_byte(data.bridge, PCI_SUBORDINATE_BUS, &sub_bus);
--				dev_id.pci.shadow_bus_range.subordinate_bus = sub_bus;
--			}
-+			pci_read_config_byte(data.bridge, PCI_SECONDARY_BUS,
-+					     &sec_bus);
-+			hv_devid.pci.shadow_bus_range.secondary_bus = sec_bus;
-+			pci_read_config_byte(data.bridge, PCI_SUBORDINATE_BUS,
-+					     &sub_bus);
-+			hv_devid.pci.shadow_bus_range.subordinate_bus = sub_bus;
- 		}
- 	}
- 
--	return dev_id;
-+out:
-+	return hv_devid;
- }
- 
--/**
-- * hv_map_msi_interrupt() - "Map" the MSI IRQ in the hypervisor.
-+/*
-+ * hv_map_msi_interrupt() - Map the MSI IRQ in the hypervisor.
-  * @data:      Describes the IRQ
-  * @out_entry: Hypervisor (MSI) interrupt entry (can be NULL)
-  *
-@@ -188,22 +189,23 @@ int hv_map_msi_interrupt(struct irq_data *data,
- {
- 	struct irq_cfg *cfg = irqd_cfg(data);
- 	struct hv_interrupt_entry dummy;
--	union hv_device_id device_id;
-+	union hv_device_id hv_devid;
- 	struct msi_desc *msidesc;
--	struct pci_dev *dev;
-+	struct pci_dev *pdev;
- 	int cpu;
- 
- 	msidesc = irq_data_get_msi_desc(data);
--	dev = msi_desc_to_pci_dev(msidesc);
--	device_id = hv_build_pci_dev_id(dev);
-+	pdev = msi_desc_to_pci_dev(msidesc);
-+	hv_devid = hv_build_devid_type_pci(pdev);
- 	cpu = cpumask_first(irq_data_get_effective_affinity_mask(data));
- 
--	return hv_map_interrupt(device_id, false, cpu, cfg->vector,
-+	return hv_map_interrupt(hv_devid, false, cpu, cfg->vector,
- 				out_entry ? out_entry : &dummy);
- }
- EXPORT_SYMBOL_GPL(hv_map_msi_interrupt);
- 
--static inline void entry_to_msi_msg(struct hv_interrupt_entry *entry, struct msi_msg *msg)
-+static void entry_to_msi_msg(struct hv_interrupt_entry *entry,
-+			     struct msi_msg *msg)
- {
- 	/* High address is always 0 */
- 	msg->address_hi = 0;
-@@ -211,17 +213,19 @@ static inline void entry_to_msi_msg(struct hv_interrupt_entry *entry, struct msi
- 	msg->data = entry->msi_entry.data.as_uint32;
- }
- 
--static int hv_unmap_msi_interrupt(struct pci_dev *dev, struct hv_interrupt_entry *old_entry);
-+static int hv_unmap_msi_interrupt(struct pci_dev *pdev,
-+				  struct hv_interrupt_entry *irq_entry);
-+
- static void hv_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- {
- 	struct hv_interrupt_entry *stored_entry;
- 	struct irq_cfg *cfg = irqd_cfg(data);
- 	struct msi_desc *msidesc;
--	struct pci_dev *dev;
-+	struct pci_dev *pdev;
- 	int ret;
- 
- 	msidesc = irq_data_get_msi_desc(data);
--	dev = msi_desc_to_pci_dev(msidesc);
-+	pdev = msi_desc_to_pci_dev(msidesc);
- 
- 	if (!cfg) {
- 		pr_debug("%s: cfg is NULL", __func__);
-@@ -240,7 +244,7 @@ static void hv_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 		stored_entry = data->chip_data;
- 		data->chip_data = NULL;
- 
--		ret = hv_unmap_msi_interrupt(dev, stored_entry);
-+		ret = hv_unmap_msi_interrupt(pdev, stored_entry);
- 
- 		kfree(stored_entry);
- 
-@@ -249,10 +253,8 @@ static void hv_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 	}
- 
- 	stored_entry = kzalloc_obj(*stored_entry, GFP_ATOMIC);
--	if (!stored_entry) {
--		pr_debug("%s: failed to allocate chip data\n", __func__);
-+	if (!stored_entry)
- 		return;
--	}
- 
- 	ret = hv_map_msi_interrupt(data, stored_entry);
- 	if (ret) {
-@@ -262,18 +264,21 @@ static void hv_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 
- 	data->chip_data = stored_entry;
- 	entry_to_msi_msg(data->chip_data, msg);
--
--	return;
- }
- 
--static int hv_unmap_msi_interrupt(struct pci_dev *dev, struct hv_interrupt_entry *old_entry)
-+static int hv_unmap_msi_interrupt(struct pci_dev *pdev,
-+				  struct hv_interrupt_entry *irq_entry)
- {
--	return hv_unmap_interrupt(hv_build_pci_dev_id(dev).as_uint64, old_entry);
-+	union hv_device_id hv_devid;
-+
-+	hv_devid = hv_build_devid_type_pci(pdev);
-+	return hv_unmap_interrupt(hv_devid.as_uint64, irq_entry);
- }
- 
--static void hv_teardown_msi_irq(struct pci_dev *dev, struct irq_data *irqd)
-+/* NB: during map, hv_interrupt_entry is saved via data->chip_data */
-+static void hv_teardown_msi_irq(struct pci_dev *pdev, struct irq_data *irqd)
- {
--	struct hv_interrupt_entry old_entry;
-+	struct hv_interrupt_entry irq_entry;
- 	struct msi_msg msg;
- 
- 	if (!irqd->chip_data) {
-@@ -281,13 +286,13 @@ static void hv_teardown_msi_irq(struct pci_dev *dev, struct irq_data *irqd)
- 		return;
- 	}
- 
--	old_entry = *(struct hv_interrupt_entry *)irqd->chip_data;
--	entry_to_msi_msg(&old_entry, &msg);
-+	irq_entry = *(struct hv_interrupt_entry *)irqd->chip_data;
-+	entry_to_msi_msg(&irq_entry, &msg);
- 
- 	kfree(irqd->chip_data);
- 	irqd->chip_data = NULL;
- 
--	(void)hv_unmap_msi_interrupt(dev, &old_entry);
-+	(void)hv_unmap_msi_interrupt(pdev, &irq_entry);
- }
- 
- /*
-@@ -302,7 +307,8 @@ static struct irq_chip hv_pci_msi_controller = {
- };
- 
- static bool hv_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
--				 struct irq_domain *real_parent, struct msi_domain_info *info)
-+				 struct irq_domain *real_parent,
-+				 struct msi_domain_info *info)
- {
- 	struct irq_chip *chip = info->chip;
- 
-@@ -317,7 +323,8 @@ static bool hv_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
- }
- 
- #define HV_MSI_FLAGS_SUPPORTED	(MSI_GENERIC_FLAGS_MASK | MSI_FLAG_PCI_MSIX)
--#define HV_MSI_FLAGS_REQUIRED	(MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS)
-+#define HV_MSI_FLAGS_REQUIRED	(MSI_FLAG_USE_DEF_DOM_OPS |	\
-+				 MSI_FLAG_USE_DEF_CHIP_OPS)
- 
- static struct msi_parent_ops hv_msi_parent_ops = {
- 	.supported_flags	= HV_MSI_FLAGS_SUPPORTED,
-@@ -329,14 +336,14 @@ static struct msi_parent_ops hv_msi_parent_ops = {
- 	.init_dev_msi_info	= hv_init_dev_msi_info,
- };
- 
--static int hv_msi_domain_alloc(struct irq_domain *d, unsigned int virq, unsigned int nr_irqs,
--			       void *arg)
-+/* Allocate nr_irqs IRQs for the given irq domain */
-+static int hv_msi_domain_alloc(struct irq_domain *d, unsigned int virq,
-+			       unsigned int nr_irqs, void *arg)
- {
- 	/*
--	 * TODO: The allocation bits of hv_irq_compose_msi_msg(), i.e. everything except
--	 * entry_to_msi_msg() should be in here.
-+	 * TODO: The allocation bits of hv_irq_compose_msi_msg(), i.e.
-+	 *	 everything except entry_to_msi_msg() should be in here.
- 	 */
--
- 	int ret;
- 
- 	ret = irq_domain_alloc_irqs_parent(d, virq, nr_irqs, arg);
-@@ -344,13 +351,15 @@ static int hv_msi_domain_alloc(struct irq_domain *d, unsigned int virq, unsigned
- 		return ret;
- 
- 	for (int i = 0; i < nr_irqs; ++i) {
--		irq_domain_set_info(d, virq + i, 0, &hv_pci_msi_controller, NULL,
--				    handle_edge_irq, NULL, "edge");
-+		irq_domain_set_info(d, virq + i, 0, &hv_pci_msi_controller,
-+				    NULL, handle_edge_irq, NULL, "edge");
- 	}
-+
- 	return 0;
- }
- 
--static void hv_msi_domain_free(struct irq_domain *d, unsigned int virq, unsigned int nr_irqs)
-+static void hv_msi_domain_free(struct irq_domain *d, unsigned int virq,
-+			       unsigned int nr_irqs)
- {
- 	for (int i = 0; i < nr_irqs; ++i) {
- 		struct irq_data *irqd = irq_domain_get_irq_data(d, virq);
-@@ -362,6 +371,7 @@ static void hv_msi_domain_free(struct irq_domain *d, unsigned int virq, unsigned
- 
- 		hv_teardown_msi_irq(to_pci_dev(desc->dev), irqd);
- 	}
-+
- 	irq_domain_free_irqs_top(d, virq, nr_irqs);
- }
- 
-@@ -394,25 +404,25 @@ struct irq_domain * __init hv_create_pci_msi_domain(void)
- 
- int hv_unmap_ioapic_interrupt(int ioapic_id, struct hv_interrupt_entry *entry)
- {
--	union hv_device_id device_id;
-+	union hv_device_id hv_devid;
- 
--	device_id.as_uint64 = 0;
--	device_id.device_type = HV_DEVICE_TYPE_IOAPIC;
--	device_id.ioapic.ioapic_id = (u8)ioapic_id;
-+	hv_devid.as_uint64 = 0;
-+	hv_devid.device_type = HV_DEVICE_TYPE_IOAPIC;
-+	hv_devid.ioapic.ioapic_id = (u8)ioapic_id;
- 
--	return hv_unmap_interrupt(device_id.as_uint64, entry);
-+	return hv_unmap_interrupt(hv_devid.as_uint64, entry);
- }
- EXPORT_SYMBOL_GPL(hv_unmap_ioapic_interrupt);
- 
- int hv_map_ioapic_interrupt(int ioapic_id, bool level, int cpu, int vector,
- 		struct hv_interrupt_entry *entry)
- {
--	union hv_device_id device_id;
-+	union hv_device_id hv_devid;
- 
--	device_id.as_uint64 = 0;
--	device_id.device_type = HV_DEVICE_TYPE_IOAPIC;
--	device_id.ioapic.ioapic_id = (u8)ioapic_id;
-+	hv_devid.as_uint64 = 0;
-+	hv_devid.device_type = HV_DEVICE_TYPE_IOAPIC;
-+	hv_devid.ioapic.ioapic_id = (u8)ioapic_id;
- 
--	return hv_map_interrupt(device_id, level, cpu, vector, entry);
-+	return hv_map_interrupt(hv_devid, level, cpu, vector, entry);
- }
- EXPORT_SYMBOL_GPL(hv_map_ioapic_interrupt);
--- 
-2.51.2.vfs.0.1
+x86/hyperv: Cosmetic changes in irqdomain.c for readability
 
+This commit makes various cosmetic changes to irqdomain.c, such as renaming
+variables, fixing indentation, replacing spaces with tabs, and resolving
+checkpatch warnings, with no functional changes intended.
+
+> diff --git a/arch/x86/hyperv/irqdomain.c b/arch/x86/hyperv/irqdomain.c
+> index 365e364268d9a..b3ad50a874dca 100644
+> --- a/arch/x86/hyperv/irqdomain.c
+> +++ b/arch/x86/hyperv/irqdomain.c
+
+[ ... ]
+
+> @@ -249,10 +253,8 @@ static void hv_irq_compose_msi_msg(struct irq_data *=
+data, struct msi_msg *msg)
+>  	}
+> =20
+>  	stored_entry =3D kzalloc_obj(*stored_entry, GFP_ATOMIC);
+> -	if (!stored_entry) {
+> -		pr_debug("%s: failed to allocate chip data\n", __func__);
+> +	if (!stored_entry)
+>  		return;
+> -	}
+> =20
+>  	ret =3D hv_map_msi_interrupt(data, stored_entry);
+>  	if (ret) {
+>  		kfree(stored_entry);
+>  		return;
+>  	}
+
+[Severity: High]
+This is a pre-existing issue, but does returning early here leave the
+caller-provided msg structure uninitialized?
+
+If kzalloc_obj() or hv_map_msi_interrupt() fails in hv_irq_compose_msi_msg(=
+),
+the function returns without populating msg. Because the callback returns
+void, the error is swallowed and the caller might write the uninitialized
+contents of msg to the device's MSI address/data registers, potentially
+causing the device to perform DMA writes to arbitrary or null physical
+addresses when an interrupt fires.
+
+[ ... ]
+
+> -static void hv_msi_domain_free(struct irq_domain *d, unsigned int virq, =
+unsigned int nr_irqs)
+> +static void hv_msi_domain_free(struct irq_domain *d, unsigned int virq,
+> +			       unsigned int nr_irqs)
+>  {
+>  	for (int i =3D 0; i < nr_irqs; ++i) {
+>  		struct irq_data *irqd =3D irq_domain_get_irq_data(d, virq);
+
+[Severity: High]
+This is a pre-existing issue, but does this loop process the same base IRQ
+on every iteration?
+
+By calling irq_domain_get_irq_data() with virq rather than virq + i inside
+hv_msi_domain_free(), subsequent iterations will skip the remaining
+interrupts in a multi-vector MSI scenario. This could leave them unfreed
+and potentially lead to leaked kernel memory and stale hypervisor mappings.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260601225116.9563=
+92-1-mrathor@linux.microsoft.com?part=3D1
 
