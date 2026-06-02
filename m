@@ -1,201 +1,121 @@
-Return-Path: <linux-hyperv+bounces-11451-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11452-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id tK3MNdj9Hmr6bwAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11451-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 02 Jun 2026 17:59:20 +0200
+	id fEfOCXo8H2oDjAAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11452-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 02 Jun 2026 22:26:34 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3617E630085
-	for <lists+linux-hyperv@lfdr.de>; Tue, 02 Jun 2026 17:59:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D477631B8F
+	for <lists+linux-hyperv@lfdr.de>; Tue, 02 Jun 2026 22:26:33 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=D0wZVm+y;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11451-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11451-lists+linux-hyperv=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b="Tq/GPlrP";
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11452-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11452-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AD0EB309E548
-	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Jun 2026 15:52:15 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5C84F301DCD9
+	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Jun 2026 20:21:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E0ED3F1ACE;
-	Tue,  2 Jun 2026 15:52:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BC793630B9;
+	Tue,  2 Jun 2026 20:21:30 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761BB3E5A2E
-	for <linux-hyperv@vger.kernel.org>; Tue,  2 Jun 2026 15:52:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 280B31FCFFC;
+	Tue,  2 Jun 2026 20:21:28 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780415534; cv=none; b=hzv9LcSZGmXBTX9jh3KqwQF0Rnz/KIBgbyYbWW/bJ2rYwOLfvvKBicBX54CDfJy/Zvl2iXd2oEGfpxhvwsnYghiZpIpSA46s4csJ0O9gnQSTlGjCI/whlD+9l/8CcehXkAkQRsAQHjw2LRWstXZ7WG8RtpTF7WZFQRAVo79pmIM=
+	t=1780431690; cv=none; b=CvlgWOWaaNGMKHBw7+Lq2c/GlZ1LPH9AuvFgnEayKvT40UHX2Ie4KYJZ1EkM6/qWFLEDYB2u07Y5/YKq81TfoE+xBEgrgVdJspgJ9v1nJk38V6L1iQXiLBYC7KfYwjM1uEA+ILrqcsWjSRaumV/59jf+fcRBtvOpR/77ZavZhzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780415534; c=relaxed/simple;
-	bh=RAL3ZX7gX3Qwt4a6LoAFqg4/b9gWA2A+ezozkGYu5v4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fEZZZmSBbTHenFySDbrXi3z726I5/wgatE44j1pYfTc64w4ogHavh9NSTr8pYi79AAQneCSGEPnuMmEqvMVhvDz5GQTrI7m2VNigMAIVd7ZTg+c5hdMm/lBHmtP7CaKE/khrF1DwlglZKYBUV4GyzTETRxegX+g3cGtQ8jSWJL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D0wZVm+y; arc=none smtp.client-ip=209.85.128.49
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-490b4a8e28bso2216495e9.1
-        for <linux-hyperv@vger.kernel.org>; Tue, 02 Jun 2026 08:52:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780415532; x=1781020332; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fcSYq5CNRe914+kh+MhUoX6E3CbZbAlZ8MDYAoh0zI0=;
-        b=D0wZVm+yPCQCUkDlqARJFBllvw1zfPTP3YXy460qUBOs+SkuKaLPX0+4G2Fhj3UIE9
-         +GVh0dZmh6tY0zokqQFa8q8y06ssjwhSTJQ5Xpf2rfMB5/EDHv2MnCg3EDg3grmEj01Q
-         DU37Re78vyEQLlfePfrySp0K89hJ3JIekz2yXvBdsXsMsQ5EuTsnS2Z2kZtZrpiL3aQc
-         0/S4/CHuNf93ZE/uEcP/aOLM4rpmKDkgVa+ueHsihYHhX8xLEr5NY10bG9MfrJwaQb9J
-         DGbgiph62Mf48FlLvlYm8OFWqF2pSzVA6FmNglM5FLcs2mFMyP9r1fHY3Gh+MTVZCa7u
-         MIIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780415532; x=1781020332;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fcSYq5CNRe914+kh+MhUoX6E3CbZbAlZ8MDYAoh0zI0=;
-        b=CYU+KUHK6ifmPRL7b7dwjqacorJA3OzYJp3wo+qMStIzlQOFN31ELU8BNXQ6bp+BH8
-         Vm2ywMwmT0Xkcs1mZU1jf47maHuH8XhKs9W/Z/36LyeXNt1v5K8T/uebZb6h7icp0R4r
-         YXtzwwgRjmOWZJIO/CXWQo4dSU043tuDrfh74KyVM0PwVFfHKUIkOmqeqxsbZwRShK3e
-         C5lPKiL1BV/7iU9kp3q0f6YDSMmO7TzyQAfG5YkyLz0VmCQqIrT2+o2xGNo9rw0Tvfwu
-         DthT5ewxYUcM0R0gZDbv6ed3oz9rqc/Qe8dnnjw6NPtNxwkJlxfkITWeMAcnK8ZS70Lh
-         ohqg==
-X-Gm-Message-State: AOJu0YzcYRV+FzWm+x4C8Rtg3aDnyqmFeFM6zo+VA372vnGI68PE1d/4
-	RlD+qWnq5dgpEv8z/wMvgvEBeBfZE4hg1x1ZNVxEqI+FgMuRt6jUcSqD
-X-Gm-Gg: Acq92OFOPa0zkVOw7FqtkoDciYh1BPATJe7FHjLBysSY+69oqpbC7HD4t09XWLWQKLJ
-	9sTKYN+SEs/n0WAH1XPgCoDtkTMaS8PWgI9nFf7dx+/tWrOBtHyUPjzwHWl+SiKG6S5PtJxeSPZ
-	DfHO4Vs0LTHxIWCuXg2eQEy9gDCGeafipXm7TNWytDmanwLhKc5GkZOyr8BuE420R87s2ATdbtr
-	/+7mhSz19lkAE05/iCKRSqGCOf9SwflSo40wa56Lk9kPWG4sJ0RGkwsVlJ7lb684BGxK2WJLOAl
-	MaduDCtZi+7hDpIuTt0VSR6PqrSRrRWq4tRy/jbbIjnUPyOrPViMfoOniH6IYNoLVqRP+rtscX0
-	qmq6+lLY6imzwReW6TUXQco434UR+MI34uXElijCaHmm169nf4VlJ7geMa3hLLLgjCA+aYabnkI
-	nmGuk/6lL39zVpvy/leJtDASA3kgvM8Cn5pvEDc5a2LoiL1lqTrzl6Q8hRooytSNMxBg==
-X-Received: by 2002:a05:600c:8b2e:b0:490:48df:2793 with SMTP id 5b1f17b1804b1-490b50c634cmr4713175e9.26.1780415531774;
-        Tue, 02 Jun 2026 08:52:11 -0700 (PDT)
-Received: from localhost.localdomain ([5.165.242.139])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490b55fda1dsm108445e9.1.2026.06.02.08.52.07
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 02 Jun 2026 08:52:10 -0700 (PDT)
-From: LeantionX <leontyevantony@gmail.com>
-X-Google-Original-From: LeantionX <leontyevanton1995@gmail.com>
-To: netdev@vger.kernel.org
-Cc: linux-hyperv@vger.kernel.org,
-	kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	longli@microsoft.com,
-	andrew+netdev@lunn.ch,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	edumazet@google.com,
-	davem@davemloft.net,
-	stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Anton Leontev <leontyevantony@gmail.com>
-Subject: [PATCH net] hv_netvsc: use kmap_local_page in netvsc_copy_to_send_buf
-Date: Tue,  2 Jun 2026 18:52:10 +0300
-Message-ID: <20260602155210.90987-1-leontyevanton1995@gmail.com>
-X-Mailer: git-send-email 2.54.0
+	s=arc-20240116; t=1780431690; c=relaxed/simple;
+	bh=3/i1pydAaLW5HRp1XQJvOXNtw6c4Pe+vnJtHoHVROao=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OLEtLc2k1dPebjHNkMX8yxMg+/oDELJRhuKx3DHhr58+c88gN4/E2DU9p4892ogHM4GniHUDks5mWSsI2JbSjP2VM55LiE4imZR3IFqYkiDXV8hIzXo+jEUnXeQdWjCaXxpf6v7HsIr5Csau9J0ln/ic70/ZUPuKBo5REwPqSIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tq/GPlrP; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1276F1F00893;
+	Tue,  2 Jun 2026 20:21:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780431688;
+	bh=3/i1pydAaLW5HRp1XQJvOXNtw6c4Pe+vnJtHoHVROao=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=Tq/GPlrPlaZa/Zo3OrrpAhvAp6Fybd27rxyHvAOkF02e3R4LB6RwB1INaWZLdE6y9
+	 hPUpEIvO+xOI8CCvKUdBffQKZPXSyqaTLZ6TVsVmA3Z9Yke4Dce9/GL1mxY68byYbs
+	 FDWcyjnYbp0JYrByxUJUk38DnaCWQ39DfpfTjyk6c4YnzZGnTaCV4lifyHyW4JbbU+
+	 QlaDF+LMjNh9VlJALl+5bMYZrEBTVyW7OzGaH3eEMLfDav8UBYKmcJWfbHlG0zsD9m
+	 ozDMlrRAH87qdhtKX2Y55Vvo5gsXjJCPIANim86HnI+UCeUyrNtvRO8fMMltDUpF/Q
+	 7oEERAgZGUO4w==
+Date: Tue, 2 Jun 2026 13:21:27 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, longli@microsoft.com, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+ kotaranov@microsoft.com, horms@kernel.org, dipayanroy@linux.microsoft.com,
+ kees@kernel.org, linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH net-next] net: mana: Cache MANA_QUERY_LINK_CONFIG result
+ to avoid repeated HWC queries
+Message-ID: <20260602132127.25fc27ee@kernel.org>
+In-Reply-To: <20260528180757.1536640-1-ernis@linux.microsoft.com>
+References: <20260528180757.1536640-1-ernis@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	TAGGED_FROM(0.00)[bounces-11451-lists,linux-hyperv=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[15];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:netdev@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:andrew+netdev@lunn.ch,m:kuba@kernel.org,m:pabeni@redhat.com,m:edumazet@google.com,m:davem@davemloft.net,m:stable@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:leontyevantony@gmail.com,m:andrew@lunn.ch,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11452-lists,linux-hyperv=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:ernis@linux.microsoft.com,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:andrew+netdev@lunn.ch,m:davem@davemloft.net,m:edumazet@google.com,m:pabeni@redhat.com,m:kotaranov@microsoft.com,m:horms@kernel.org,m:dipayanroy@linux.microsoft.com,m:kees@kernel.org,m:linux-hyperv@vger.kernel.org,m:netdev@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:andrew@lunn.ch,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[kuba@kernel.org,linux-hyperv@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER(0.00)[leontyevantony@gmail.com,linux-hyperv@vger.kernel.org];
-	FREEMAIL_CC(0.00)[vger.kernel.org,microsoft.com,kernel.org,lunn.ch,redhat.com,google.com,davemloft.net,gmail.com];
 	FORWARDED(0.00)[lists@lfdr.de];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[leontyevantony@gmail.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
 	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[kuba@kernel.org,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 3617E630085
+X-Rspamd-Queue-Id: 6D477631B8F
 
-From: Anton Leontev <leontyevantony@gmail.com>
+On Thu, 28 May 2026 11:07:51 -0700 Erni Sri Satya Vennela wrote:
+> mana_query_link_cfg() sends an HWC command to firmware on every call,
+> but the link speed and QoS values it returns only change when the
+> driver explicitly calls mana_set_bw_clamp(). This function is called
+> not only by userspace via ethtool get_link_ksettings, but also
+> periodically by hv_netvsc through netvsc_get_link_ksettings and by
+> the sysfs speed_show attribute via dev_attr_show, resulting in
+> unnecessary HWC traffic every few minutes.
 
-netvsc_copy_to_send_buf() copies skb fragment pages into the shared
-VMBus send buffer using phys_to_virt() on the fragment PFN. On 32-bit
-x86 with CONFIG_HIGHMEM=y, phys_to_virt() (i.e. __va()) is only valid
-for LOWMEM addresses below 896 MiB. For a HIGHMEM page it returns an
-address that has no kernel page table entry and lies outside the
-kernel direct map, so the subsequent memcpy() faults. As this happens
-on the transmit softirq path, the fault is fatal.
+mana is ops-locked, right? Because you support net shapers
 
-A HIGHMEM fragment reaches this path whenever the page backing an skb
-fragment lives above the LOWMEM boundary, which is common on a 32-bit
-guest with several GiB of RAM (for example when the in-kernel NFS
-server splices page cache pages directly into the reply skb).
-
-Map the fragment page on demand with kmap_local_page()/kunmap_local()
-instead. Using pfn_to_page() on pb[i].pfn maps exactly the page
-described by the page buffer entry. On configurations without HIGHMEM
-(amd64, i386 without CONFIG_HIGHMEM) kmap_local_page() reduces to
-page_address(), so this is a no-op there.
-
-Fixes: c25aaf814a63 ("hyperv: Enable sendbuf mechanism on the send path")
-Cc: stable@vger.kernel.org
-Signed-off-by: Anton Leontev <leontyevantony@gmail.com>
----
- drivers/net/hyperv/netvsc.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-index 59e95341f9b1..6984f6c97257 100644
---- a/drivers/net/hyperv/netvsc.c
-+++ b/drivers/net/hyperv/netvsc.c
-@@ -12,6 +12,7 @@
- #include <linux/sched.h>
- #include <linux/wait.h>
- #include <linux/mm.h>
-+#include <linux/highmem.h>
- #include <linux/delay.h>
- #include <linux/io.h>
- #include <linux/slab.h>
-@@ -965,11 +966,13 @@ static void netvsc_copy_to_send_buf(struct netvsc_device *net_device,
- 	}
- 
- 	for (i = 0; i < page_count; i++) {
--		char *src = phys_to_virt(pb[i].pfn << HV_HYP_PAGE_SHIFT);
-+		struct page *page = pfn_to_page(pb[i].pfn);
-+		char *src = kmap_local_page(page);
- 		u32 offset = pb[i].offset;
- 		u32 len = pb[i].len;
- 
- 		memcpy(dest, (src + offset), len);
-+		kunmap_local(src);
- 		dest += len;
- 	}
- 
--- 
-2.43.0
-
+Could you instead take the netdev_lock() in the work?
+It's already held around the user space originated calls.
 
