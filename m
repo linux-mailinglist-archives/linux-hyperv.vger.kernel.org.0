@@ -1,138 +1,134 @@
-Return-Path: <linux-hyperv+bounces-11457-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11458-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id OjczF69dH2qIlAAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11457-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 03 Jun 2026 00:48:15 +0200
+	id ruPcDo5gH2qalQAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11458-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 03 Jun 2026 01:00:30 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEBD46328DB
-	for <lists+linux-hyperv@lfdr.de>; Wed, 03 Jun 2026 00:48:14 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CFADC632BC2
+	for <lists+linux-hyperv@lfdr.de>; Wed, 03 Jun 2026 01:00:29 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=microsoft.com header.s=selector2 header.b="H/CvHp9l";
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11457-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11457-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=microsoft.com header.s=selector2 header.b="XeBuQBJ/";
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11458-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11458-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=reject) header.from=microsoft.com;
 	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DA65C30134AF
-	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Jun 2026 22:48:10 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D69C530B5F5A
+	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Jun 2026 22:54:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBC1D36CE1E;
-	Tue,  2 Jun 2026 22:48:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2F993C7DF5;
+	Tue,  2 Jun 2026 22:54:47 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11021104.outbound.protection.outlook.com [40.93.194.104])
+Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11020084.outbound.protection.outlook.com [52.101.61.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F31F32ABCA;
-	Tue,  2 Jun 2026 22:48:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68E483BC69D;
+	Tue,  2 Jun 2026 22:54:46 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780440489; cv=fail; b=j1KndQHCewx1+LLcfHSNkeHSpBtDyUv5m2eBc+LpJ62wPscfYewzFiWT9jOUmwumStIVycAO0VSSQlp2P9I0tL8njApFVmSO+jAiPp+jec4TEaNKWkouZLIuOiVVN2pVjSUnBejvwG0OZ8W6UiZY5c3E8nw+jx7Lud0SyP/KfXE=
+	t=1780440887; cv=fail; b=qqrk4pg8Gr8nv60rKMCJPb4f5Wc9Z4aavIu8NK/eNKyQKWrlABU7AZf3TITaH4jL9T2ihDMTTdxylRwXCMIKNjTbarvj65a+ho3GQ9IOWMGGfiRaMqqGN63/8Lz337ikgtH2O19ZTAK/9sr45Y2VzxvLi8+gzmwclh8rvypjTS8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780440489; c=relaxed/simple;
-	bh=16HoGVDRMUYMeuY1iSdt3BvVbpIU8GMGhgr9N3mdxZI=;
+	s=arc-20240116; t=1780440887; c=relaxed/simple;
+	bh=Xpdk9TaTHorm9HlXjyCoC58kfnqqOoQcrnrDOkPNRm8=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=XZK+c7lfew3XzaiPMeZ0CKMt9sjyxUBUFNiRUhEpn5eAO399VIVeUrIav97xQ7EFXM8RoYgMgDadZPWWH0PaDb2RCjz3hj3PqGIDQQ4j/3vo6zOchNjvF/ZtBOR1aEWVsWmp7NYz/EpetHux0Cq14CkLJxKcx/fDzyKF6yBv/lU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=H/CvHp9l; arc=fail smtp.client-ip=40.93.194.104
+	 Content-Type:MIME-Version; b=hA36sTUEP+ABn9chy03GiywiTSj2TxIKkjMagkJ594kmMnmtjWb9d0kFDhe6ZDINMnh1TyDmRy9TnyyYY8N2+FOmH0fIybAdE/K82EQVC4QbNEbazZRoHXwjMnq123fjHDRwWntfALKIyZcYro2PG1VB+M9nka8Qksrqwaz20Bw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=XeBuQBJ/; arc=fail smtp.client-ip=52.101.61.84
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=T5gQeEjfKkMJ3hMsTVsN954baCa9bEiKbRnF3hjku4Dw2oiC+sANLfPJ+deAnsfEeQ9eyhCbVWBWRYmHYr3ryMsR2MrL20Kg/Qo/XSSZ3MBq4r838VV5HX/KnrxPVUfJCDXzLl8ys+F4TbUCr3Zm/Hf9PPwmmOPH3APA5TYppz7LFUD8g8kcgM10Y0Mc3aRcQ2A9RO8jkR1EID2Lovd3k0BIC3XUwPSm3Yll1WhvLfJuVCqntvvY/mY/0yc7PWru08EiBl5yF39DajU+M+6FAa3rpo2ByMfgEoBSfG3LX4S5rQmlDwsFLPamLXESOv5ruTHoXpiLzdZ2Af2s5A14Tw==
+ b=XQzqmC/7rMTc1Oo/7Mj2ZdlNIjQiAU4jsO02iYZDZSXT62ZaVe9smVWM2MDWBnrEAJz9Xv4BOdDg5XzxaaGvwEl1dO8s/XxuXLwKC8k9d0atcI1lS76D6FJR9SLN0jOFI6Sj00ql5fuZtK7b0QM6Z8AQez7YVGhDZLm4OQGbbPsG+9Z3txsueC0i5lCYyYwUOHAGm8F0dBzVTCSFWyDfWIPg7fs3VONywg2VkLJSaiQjnamhIDXKJMwsLa0vSknnYCGcWE2LxpcIp1OdbtxZNkVa4D3pOfwsY2jokwC7zi15fWnrzBd3VUzdDbO0q6kC6LuTlUMhQ0SDZN318O4UBg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KEW0I5HuxP+R1RUE9ouXyit4Hv0S/kk1fDDAKGQZzMM=;
- b=bMtVzDIaFWHXaXbLUoELSCobvVWg+xqzcXeDeSLJvqG3ptbkLQsC1ncMA3/Rf8BUMVHxmBhgcKOPNX1KgmOV7LqmgSDUPa/HZ/MdRvLT9JRfIXKYelsQ5RMLtuYsZK7f/HaDy7NWQMvn7Qp4+Lq1WjO2J48FJ+euk3ve/9vGqVYEHJhkSon/Ya9CFz6sBxvwxBbUhRp9000EgvSg4z8NKdU+aqAgOSI/Rqgvsnj9a6LX3Xq/9DPWwqqRGrqn6z0RbGnrnqgKqzDw0AM7JyQfKEZ/A6lTCBng8yaw1UmVveilYXCBnOvtFegSVak3S0lkfe6urz1Nj8/+7hgpDKgG5w==
+ bh=Xpdk9TaTHorm9HlXjyCoC58kfnqqOoQcrnrDOkPNRm8=;
+ b=pdE0+ONekArjfRXA6PSCuPU2xe7EN3MAoIQCEu1quNpOKWNQcQUx+s4ZoDdirbjJR20rEMwlSMwMiVQ1qNAWRG5E9cUxhX5cw8sSFjcnwONFJeILdRo273ekcAS1SAUvATFgr2KDjhpqHDBHbl2YnCtIGDNA3Klr+0twWjVHnUbArjROs4rD+cPOfjdcEIGtnzSsffCd+jkM+5a0gEHccvMl1ESt4520EGquBRUImpYGA1XmXltci37KQdgRMsgD1RToyHqiSigpn7ztUx2ORAWNuKGyB/6ZgMtpGNSHJbKWaoMWG0doM2WdaidvXFGYl1uS7rj1WdIRMp5ZK2txJg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KEW0I5HuxP+R1RUE9ouXyit4Hv0S/kk1fDDAKGQZzMM=;
- b=H/CvHp9lt4bvQhUdf5sX1xLoNBkMYwmYv+PX/3ox2ycvMFRKXJS3XxLHyCaU17pYCGDgsMzXIMj8HOeTh5nKWfip6P4Z9qO7D+lM2WEcZrNcTUdwMfsQ/kOyt3yyPgwTyN1x5+0v5BiHW5nI4roqThdwtvahvNO8rSbcYwg+zq0=
-Received: from SA1PR21MB6683.namprd21.prod.outlook.com (2603:10b6:806:4a4::6)
- by SA3PR21MB5845.namprd21.prod.outlook.com (2603:10b6:806:492::12) with
+ bh=Xpdk9TaTHorm9HlXjyCoC58kfnqqOoQcrnrDOkPNRm8=;
+ b=XeBuQBJ/eZ6i4nvkJyVm+50cTDRXG2EGhjJTWRtM01XQkVqKMw+eqP/fgOWy5+ffeJbw0BpwAc5HPXcsVVN8trBQ6Hj1PeJEAJX6yaCZhzqIGqjr+MgVlWvO4BEfIUcpHSeSRq+sBdgUn451OxAYw1saGkAX92p9VV0Ziqi2OSo=
+Received: from BY1PR21MB3870.namprd21.prod.outlook.com (2603:10b6:a03:525::7)
+ by LV9PR21MB4685.namprd21.prod.outlook.com (2603:10b6:408:2e6::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.6; Tue, 2 Jun 2026
- 22:48:05 +0000
-Received: from SA1PR21MB6683.namprd21.prod.outlook.com
- ([fe80::8bad:6294:8a07:fe18]) by SA1PR21MB6683.namprd21.prod.outlook.com
- ([fe80::8bad:6294:8a07:fe18%3]) with mapi id 15.21.0092.004; Tue, 2 Jun 2026
- 22:48:05 +0000
-From: Long Li <longli@microsoft.com>
-To: Jakub Kicinski <kuba@kernel.org>
-CC: Konstantin Taranov <kotaranov@microsoft.com>, "David S . Miller"
-	<davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>, Eric Dumazet
-	<edumazet@google.com>, Andrew Lunn <andrew+netdev@lunn.ch>, Jason Gunthorpe
-	<jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, Haiyang Zhang
-	<haiyangz@microsoft.com>, KY Srinivasan <kys@microsoft.com>, Wei Liu
-	<wei.liu@kernel.org>, Dexuan Cui <DECUI@microsoft.com>,
-	"shradhagupta@linux.microsoft.com" <shradhagupta@linux.microsoft.com>, Simon
- Horman <horms@kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.5; Tue, 2 Jun 2026
+ 22:54:43 +0000
+Received: from BY1PR21MB3870.namprd21.prod.outlook.com
+ ([fe80::9faa:4fb0:486b:8267]) by BY1PR21MB3870.namprd21.prod.outlook.com
+ ([fe80::9faa:4fb0:486b:8267%4]) with mapi id 15.21.0071.007; Tue, 2 Jun 2026
+ 22:54:43 +0000
+From: Haiyang Zhang <haiyangz@microsoft.com>
+To: LeantionX <leontyevantony@gmail.com>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>
+CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, KY
+ Srinivasan <kys@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
+	Dexuan Cui <DECUI@microsoft.com>, Long Li <longli@microsoft.com>,
+	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>, "kuba@kernel.org"
+	<kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>,
+	"edumazet@google.com" <edumazet@google.com>, "davem@davemloft.net"
+	<davem@davemloft.net>, "stable@vger.kernel.org" <stable@vger.kernel.org>,
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [EXTERNAL] Re: [PATCH net-next v11 0/6] net: mana: Per-vPort EQ
- and MSI-X management
-Thread-Topic: [EXTERNAL] Re: [PATCH net-next v11 0/6] net: mana: Per-vPort EQ
- and MSI-X management
-Thread-Index: AQHc6lhTyIkZh41VFEGbRGEZk/VnV7YivmWAgAFG0OCAB+hzAA==
-Date: Tue, 2 Jun 2026 22:48:05 +0000
+Subject: RE: [EXTERNAL] [PATCH net] hv_netvsc: use kmap_local_page in
+ netvsc_copy_to_send_buf
+Thread-Topic: [EXTERNAL] [PATCH net] hv_netvsc: use kmap_local_page in
+ netvsc_copy_to_send_buf
+Thread-Index: AQHc8qfKB0BXHB9Pzk62Qp6U9hmxR7Yr3puA
+Date: Tue, 2 Jun 2026 22:54:43 +0000
 Message-ID:
- <SA1PR21MB6683230E973519C12E2AB797CE122@SA1PR21MB6683.namprd21.prod.outlook.com>
-References: <20260523020258.1107742-1-longli@microsoft.com>
- <20260527192735.34a794cf@kernel.org>
- <SA1PR21MB6683A7B2415BEAF17BD0EB4ECE092@SA1PR21MB6683.namprd21.prod.outlook.com>
-In-Reply-To:
- <SA1PR21MB6683A7B2415BEAF17BD0EB4ECE092@SA1PR21MB6683.namprd21.prod.outlook.com>
+ <BY1PR21MB38709E89497445EECE3C931DCA122@BY1PR21MB3870.namprd21.prod.outlook.com>
+References: <20260602155210.90987-1-leontyevanton1995@gmail.com>
+In-Reply-To: <20260602155210.90987-1-leontyevanton1995@gmail.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b6f8d270-dfd8-4186-906b-7ff7b9b59e84;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2026-05-28T21:57:17Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=002d5649-d222-4e97-97ee-254e4c322d46;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2026-06-02T22:48:41Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
  3, 0, 1;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR21MB6683:EE_|SA3PR21MB5845:EE_
-x-ms-office365-filtering-correlation-id: 8c39bf8c-392b-4631-a9f8-08dec0f90264
+x-ms-traffictypediagnostic: BY1PR21MB3870:EE_|LV9PR21MB4685:EE_
+x-ms-office365-filtering-correlation-id: 5babe118-683e-4e03-6573-08dec0f9ef9a
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700021|18002099003|22082099003|6133799003|4143699003|11063799006|4133799003|56012099006;
+ BCL:0;ARA:13230040|1800799024|7416014|376014|366016|38070700021|7053199004|6133799003|18002099003|22082099003|11063799006|56012099006;
 x-microsoft-antispam-message-info:
- Y4UhRbS9wiIHwxoYbaiyzUXLtvTHmjFfXtmpS4VFcQI6iS4cFkhwRKBkj5HPg+h0sMIWBLkA+jOUQsFOqjFVDAo2LCt0Dm13OWNLXiDyG960iylW0vngjuIo7DGEPuDbS/a7a29esrI8sENCiLYyO2Bg6PsLJzUXD5thVl/N/BYuhRTUXB7PkjUf3YY4HVawcJil6CuV4L4G25E6CRVA8nYmVdMMQdJjdm2RNqgtaEaZtRSru1ZX9tfryGoSO0yiLTjHNOQ3KvKNjT36U+gygESO+YXq42jrgQEsKiAHUIJR5ix/O6sE6KTnXaJHNxtPPWWLnk6Id0xUej1igJI+s4vocQt2ib36X16WGnZrwIGM3qqBDBXFQq6W4x2VuxSFv3YMnFw8q1vR2Z5pne3OKUIc1/XAO9a7gOdcg50gvVicEr3cHEQC0LUzs7gFy1ksa4am8Z+L+H9QZEJkK7EB8z2YWWRcJ/1Gsx6pfPaoPJhkIFuYgJnNPRFLlcZoWWxEF1GBZrB8S2KWjKnLwpjk8NipRp+H+IpIQ4p+8BK24uyr1EApAbar8tn9VUenan8tqMyNhdqWdP2VZYFKBrNljUODCMldlJuvoNpDeAp+jpmq5jmUOINmI6jk4oC6OCiAH1R72J0smioJH1lnSj4R3znUATs84jLRd3xL/SXjJk0ghtVHnfhMMtpQczEKKFIgWVtHAqLWugK+7ZN5JiFFcOU8cSlji0JFqIao4AHJ30CJ6CyFVJAXh8SGa1YnS8lp
+ I2q0f90AQZITeugzb1pxZi3oG7c3uj5hUGRK6QzlZW1YEdn2K0fvxijjB0sOcVlzjGfwUjZHWP147oBNpQXCUW0h+xQubkaS+z1F8dTe5oMloRaTGJMIP6DcIjDHAHjnPpRCZR6KufkrfZxahNtxwDG5H9F5ekPii2/BuyDGTPL2lvmI7Mypw7dVfMImlTNrEmS2rq/ddHqRKgXbp5/VSKqRgpqN4J0ypsJdaC2I4sV3tKZymho018+ebA+zeTMc3uHgLa+BsztSCdhzEoaj3qfJXQCwWtZ43UOBFjPPPl5Io0V3f4LwJnuBaL5toQD6nGXTIqTIENj118ygjTin1zXkUQvxSqaLH6JRM/NqhXmD6rTxKa2+OZG6+hXfR5QxFJvnspvCAQ1ZTVo8m3uxVBJQrSk+/fLZZUk5jymdVGvwui06crCaxGWvhpQepGCvxuU7OGIVoQP9YaJOpRTOoEJsiC6pesE92+HCWvMagcCPCQ2JpfEjlIe3oJCQWEF9Bhkz6H6FLxzLslGD7z2O9P54h8NDbmG0AUw2o6NOT6vZ+t7II1aApxLgO+rt9r6Lcfsr3u1A9OUW1Xy6wqYDtkEFRJzpYtwCDi6hOkGvdKMOmb1uk6mj3ngqudbpySPx4FjQgrNBXnlKv4+mtKO8XwCCTiH8YoCNXPn2IjxvZ2n/4pYVvsLSwjcUnUHH6wZUVBvNnqWlqJJBLHDecXkY1cfoiiCjuvD3XoGcB1LyT+xRBcTjOSGZIFOtD/neGze4
 x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB6683.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700021)(18002099003)(22082099003)(6133799003)(4143699003)(11063799006)(4133799003)(56012099006);DIR:OUT;SFP:1102;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY1PR21MB3870.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(38070700021)(7053199004)(6133799003)(18002099003)(22082099003)(11063799006)(56012099006);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?iWeGtQ/WpWQjPD4Ed4aqvfa3/Jb6JKbhTDK1xuy2K/uwGky1JYF6dDypJ64f?=
- =?us-ascii?Q?2mYIbpamxS2vPYiTfjoVgO1TAt4suFKg6MAvkHgcc7VW+AoVVpatIuFoApDV?=
- =?us-ascii?Q?ID58DsKGERt7nnEuWhAunHzTy+Jt2e9VmONgXcXsJ/x63B5qDdGIksYmF/oM?=
- =?us-ascii?Q?iIbcc18z/T6wpWDwAvw4FnUZz00aBywgySeKcYer4v/DYQFIkkR/HLKCxOss?=
- =?us-ascii?Q?xvgFCWees3cpwRltQP3E02WK8cN8gs4wfEgdeiqLuAsV5uFAWV1Kg9OfEuGV?=
- =?us-ascii?Q?lyMTTY63Z4GSY0CcL1eSLpnTl+G5CPmetqpR4zyM7XZDNqSDw/60fv6zsHJJ?=
- =?us-ascii?Q?AElAKQ/3sPcOnrFSKdCwqnVYWzczZn4TFHQlZ7jhmduDihALL9pl/l8KVkH+?=
- =?us-ascii?Q?b/s2GyBYQKW03mnVx021z24snWquFOPzuqUO3UUnCPQBm+M1KB4Vf7r70iwX?=
- =?us-ascii?Q?n9F5ctuaQl3lhw0jhteRa5DYXzDWdlJ+dupLlZFL0wQjAMn2TNAQMp1/dq9d?=
- =?us-ascii?Q?FeAeY33g65Mn8s46NND1RKbOcixpU+ae6RPgFhec4wQhFSitasxvKqWYTmhS?=
- =?us-ascii?Q?s9IEsLou+FDs+N4dAi8ra9amGeJWLZE3SuDKTRvuLKGiE9Y0uo1K52eKvgsv?=
- =?us-ascii?Q?QPuFHINtCGvfLW4smV4EmJ9133sD97M1m08gx5CwngQRzV9NaPSpcj+QfAMn?=
- =?us-ascii?Q?92wgMtjpF0kebZhYGK7WCq611ak5d534OwXAF8ROkY6pM8sfs4rCcIw8A9db?=
- =?us-ascii?Q?OJ4R5s1HDAl4zlWIYaj3NtSEc4zSUcAF/mkC5GPLal4EeBtuv2g6a9US+8R1?=
- =?us-ascii?Q?OtW6uAk0hk0f9F/U62CqioVo5V3Dyx1QMp1/bOl6Eq1AC7UV0oOdfWEXjwID?=
- =?us-ascii?Q?g//5vltNZNpS3UJlR4zfYGB2/w+OhZH7mfMyuPb8VQlRSrw763mOypDtiVGc?=
- =?us-ascii?Q?ebq/zPb9n6v5qZP5vVfj+UtoIbmnigUTUlgFik3grZcOy+NnHONB+a1M5BZJ?=
- =?us-ascii?Q?CxE/JkAgMTj2iHon0C3zAWzOhyPPSO6YcZARGl9rSUUg0zmxfuLy8ImHAaFH?=
- =?us-ascii?Q?lyjBEZ/rslE0mMCc+Qsjd5misr1KoIGV0OmteLea5KHtrNUBAhOyJBmoNT4D?=
- =?us-ascii?Q?9/IClHTJgWGz9a/B60eLKCOlxvBwcszNV4FstA7NN8+SZYeCYNaR3I7VrGxr?=
- =?us-ascii?Q?dEugAbrOd6WMnOzMGoVICZWEZSFOpDreB/ki16+aG9IYdYO5c+gp1HKznc4G?=
- =?us-ascii?Q?9dmzhdh3t36UFFKa0Yn6DTmGjCYFNrni+mSeocs/vOzLnUoFMBaStShwqOHO?=
- =?us-ascii?Q?FheRj6HCTZ1ARQDninv4J/cRRElXMdJow3tRv7wAvZhOOYLUCPvoGmI/t5xb?=
- =?us-ascii?Q?Z1nPQJxjcChsmCOtMU3ryNb62w+Ts7xrqZ3DCe8mrwsWda1S25rRKvbt501/?=
- =?us-ascii?Q?EiRu19lVg/9n8ARiC0J1U6Yfs9xFpsPYWBY0W4tRsDsB+KT5CxjJ8mYbySTm?=
- =?us-ascii?Q?9KxgUVXQl+75w3c1/f8Rm+bTd0Mp8KbfByiR+xHDjI0NsbbkY6eEwrR9AgFu?=
- =?us-ascii?Q?vSDH62jN38wWwV2gtGoDJOrz02o8HZJV44qQzJTYzSUALdhoX8bTqNsNFN4c?=
- =?us-ascii?Q?mdnNJxqXuNTFqO2i4cBwdUhCbijrmrfoXCiET8eknTHRpluP1Ss/pz5qWOFO?=
- =?us-ascii?Q?FBzUxe+5/K/G2XhHsuMs7c2Sx+xRwm2w+PT9JlLpaOp1nSGv?=
+ =?us-ascii?Q?/pYa252eFFRrG3d2Fra3pCSJBfFm3nasV5h6MYxyZPeSBmBBeg4Qv44/FD6X?=
+ =?us-ascii?Q?iD/SFhodz5OEsdaV7wON7Ba6f0jxYePYlx7LFh5md0HCQoGZxejQuE8bJzzM?=
+ =?us-ascii?Q?NNq2D5neYxqYOVGpu633u4+1+5SzrUdYXAbW3zjzqlKo27/eQOTpUXcd2O2j?=
+ =?us-ascii?Q?hVhoBMnGwAlSrTfOcIa075thG0+UY4HtCdU0pF1w+VwXKC3ujaQW8jVr7aA1?=
+ =?us-ascii?Q?rO+rqDgJS3fJJm8ya6RTwZxzWg7sKwIFxpMi9OhVfaCGN9ykFeXFbTJsFnkD?=
+ =?us-ascii?Q?9OOG7kGUkv3Am/EPxH9IATWOdq7Kxp5A0JnzrtTuqRrVVOWGzI1+gxwOWq/c?=
+ =?us-ascii?Q?V04Lb00DEx81RpR1lxQgPFOFR1rDN31eRpZRHQeG00k4HFV8GieGdKDJfOr8?=
+ =?us-ascii?Q?abtA9mQ5PzhmBj/7G8y4/aQZ/WAxxyRI/gLkRSDGEneIDcemOy+UVKM3DIXx?=
+ =?us-ascii?Q?sWuUEi7ar/i/kcY7PU5ITY+eJ7o7ardGF0je805Isacojxim0LvUpodyvU8E?=
+ =?us-ascii?Q?pPPMIDF41hTgqLiP9Hk5iRTycBZMSoYOM8JjqFr8WJAMzCykw/8vuc2vyXSG?=
+ =?us-ascii?Q?mw0x0WRVFd4Kzuqu62aZT69DhVqzyJqw/GafibHMkMUqyDnFZeLw6VtJk0Be?=
+ =?us-ascii?Q?nPktSeFn7xeE+QF1K1D/RiHT8tsbv6TIWaG5uA8ilvmuuUac1fVv3EVpMjG/?=
+ =?us-ascii?Q?NQOTszyf10VQK/76CsVkNsBm/11CdPqEuKd0hLNadWJVkqRxvdaJ/fGQl+/2?=
+ =?us-ascii?Q?XpyHLkOmgCpENeAxHI7R8xaYUSU8R+JE1IcOl861Hb/fo0YFNKk5rR17WTLb?=
+ =?us-ascii?Q?F2IINkjtnRhlB2NnZsHoUJbOz0q1+DWIJGj831NIrPp5vVld+FeyIkNvNCzo?=
+ =?us-ascii?Q?9R8zA9x8edEvdVfjyup6ft9HkfMCQ0gRjrrgOJArjM7nYhFIkqdwc4y3hHAp?=
+ =?us-ascii?Q?QlCIjDtGCwsXTpwz9fm5ifApnPQw9qELaoorOaZYVDQ7DyTTbGiO7U4QNNsh?=
+ =?us-ascii?Q?qFzhLSWCa56KMK8z1J7AEEPy2V15yQ296tl1AGOv3sxQ40JohNr+jIt2QrJ0?=
+ =?us-ascii?Q?wFbwTmhj+X5TaDSBIFIZP26iBIB5k8/SstUDMMO7Ms2gqYDYMdZu979ExlK6?=
+ =?us-ascii?Q?dC94F5D/TGYtPmBHJkuBLyTNsAzi9ENbB1xMtHNILzz35IA2Z/JPKFwMG6uI?=
+ =?us-ascii?Q?+fTdP++ClCAZA0m5NbeeZKImoPG/2g0xhAJQHhrncrW+bD6tpNbzQSPBQ+5D?=
+ =?us-ascii?Q?O/2iE0AuUXMy8zB7lt7PtnglzAdWuO+QfR0ZzPzXejCcg6KBzlEYy7/hciS6?=
+ =?us-ascii?Q?RgYGfgyD4CNqkCBazIOP952Ez5mk8OUqwHOvn3L2fyd6HG9Bqth1PjwwpHNO?=
+ =?us-ascii?Q?Mr5ZNIrdKnvmJ7QO1OhIZa1hAMk51Al8LFeWNVTdijt2a3O2wAzpWOs8s89E?=
+ =?us-ascii?Q?cNQIdi66sN7aeWCBUl3fXeGLaA4VZMXNcIMevhn2vyxvyDogd7meJlgWWkkO?=
+ =?us-ascii?Q?mAUD3YR5CuaIag5Js3SegBpVndW1xRQwuf3Q0h2xBx4lR4rx/kFk6F/pMGxM?=
+ =?us-ascii?Q?ORwjDlADzZ+dcuDgFpTBqmmYfSAbdTVO41oIgdS4cJTFHfigBPwWKse4QfB1?=
+ =?us-ascii?Q?qLonZBVPvJE+/pslVmHITIRLfvbgltJ+Ma65katpzwMc73Bg3VnjcuIMCkqM?=
+ =?us-ascii?Q?EWynQxfy4hhuhcnUQ2+3eKM4tekdhIEqO0Yi77pn0zlk+SOGECEmrosl59ug?=
+ =?us-ascii?Q?Hfxyzjcnog=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -143,134 +139,96 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB6683.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c39bf8c-392b-4631-a9f8-08dec0f90264
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jun 2026 22:48:05.2228
+X-MS-Exchange-CrossTenant-AuthSource: BY1PR21MB3870.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5babe118-683e-4e03-6573-08dec0f9ef9a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jun 2026 22:54:43.1867
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5Nlm6uVVP9nVRzMz6Rp51TvBshCe+5Jp271sV6UeZEgMZZi0KiLzqSQ7QO6WEWg+KbTdI20urmFGA/Ze1I46fA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR21MB5845
+X-MS-Exchange-CrossTenant-userprincipalname: xViHl3BtpW5JSGSvIhd4pPFxlhTFkTgHgUeJKvASfjUjuZAjXAO6CPQEGfJSkVhL8gH+ogv4iefFdx5Sl2sXkQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV9PR21MB4685
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [1.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	DMARC_POLICY_ALLOW(-0.50)[microsoft.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[microsoft.com:s=selector2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11457-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:kuba@kernel.org,m:kotaranov@microsoft.com,m:davem@davemloft.net,m:pabeni@redhat.com,m:edumazet@google.com,m:andrew+netdev@lunn.ch,m:jgg@ziepe.ca,m:leon@kernel.org,m:haiyangz@microsoft.com,m:kys@microsoft.com,m:wei.liu@kernel.org,m:DECUI@microsoft.com,m:shradhagupta@linux.microsoft.com,m:horms@kernel.org,m:netdev@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:andrew@lunn.ch,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11458-lists,linux-hyperv=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:leontyevantony@gmail.com,m:netdev@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:kys@microsoft.com,m:wei.liu@kernel.org,m:DECUI@microsoft.com,m:longli@microsoft.com,m:andrew+netdev@lunn.ch,m:kuba@kernel.org,m:pabeni@redhat.com,m:edumazet@google.com,m:davem@davemloft.net,m:stable@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:andrew@lunn.ch,s:lists@lfdr.de];
+	FREEMAIL_TO(0.00)[gmail.com,vger.kernel.org];
 	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	FORGED_SENDER(0.00)[longli@microsoft.com,linux-hyperv@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	FORGED_SENDER(0.00)[haiyangz@microsoft.com,linux-hyperv@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[longli@microsoft.com,linux-hyperv@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[microsoft.com:+];
 	RCVD_COUNT_FIVE(0.00)[5];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[haiyangz@microsoft.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[microsoft.com:+];
 	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,outlook.com:url,vger.kernel.org:from_smtp]
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	REDIRECTOR_URL(0.00)[aka.ms];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[BY1PR21MB3870.namprd21.prod.outlook.com:mid,lunn.ch:email,vger.kernel.org:from_smtp,aka.ms:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: EEBD46328DB
+X-Rspamd-Queue-Id: CFADC632BC2
 
+
+
+> -----Original Message-----
+> From: LeantionX <leontyevantony@gmail.com>
+> Sent: Tuesday, June 2, 2026 11:52 AM
+> To: netdev@vger.kernel.org
+> Cc: linux-hyperv@vger.kernel.org; KY Srinivasan <kys@microsoft.com>;
+> Haiyang Zhang <haiyangz@microsoft.com>; wei.liu@kernel.org; Dexuan Cui
+> <DECUI@microsoft.com>; Long Li <longli@microsoft.com>;
+> andrew+netdev@lunn.ch; kuba@kernel.org; pabeni@redhat.com;
+> edumazet@google.com; davem@davemloft.net; stable@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Anton Leontev <leontyevantony@gmail.com>
+> Subject: [EXTERNAL] [PATCH net] hv_netvsc: use kmap_local_page in
+> netvsc_copy_to_send_buf
 >=20
-> > On Fri, 22 May 2026 19:02:50 -0700 Long Li wrote:
-> > > The following changes since commit
-> > 95fab46aea57d6d7b76b319341acbefe8a9293c8:
-> > >
-> > >   Merge branch
-> > > 'net-convert-atm-xdp-af_iucv-l2tp_ppp-rxrpc-tipc-to-getsockopt_iter'
-> > > (2026-05-22 11:11:12 -0700)
-> > >
-> > > are available in the Git repository at:
-> > >
-> > >
-> > >
-> > https://nam06.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgit=
-h
-> > >
-> > ub.com%2Flonglimsft%2Flinux.git&data=3D05%7C02%7Clongli%40microsoft.co
-> > m%
-> > >
-> > 7C36237239bb6949843c7508debc60af6c%7C72f988bf86f141af91ab2d7c
-> > d011db47%
-> > >
-> > 7C1%7C0%7C639155320616840917%7CUnknown%7CTWFpbGZsb3d8eyJF
-> > bXB0eU1hcGkiO
-> > >
-> > nRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoy
-> > fQ%
-> > >
-> > 3D%3D%7C0%7C%7C%7C&sdata=3D43aUwSeHYaOhd%2Bmd1lwfmCqmrAObg
-> > MWJoDRpKDhmCt8
-> > > %3D&reserved=3D0 tags/mana-eq-msi-v11
-> > >
-> > > for you to fetch changes up to
-> > a26d11135abba51e81ae8b9689e288718af95088:
-> > >
-> > >   RDMA/mana_ib: Allocate interrupt contexts on EQs (2026-05-22
-> > > 20:35:43 +0000)
-> >
-> > The branch is no good, it needs to be your patches applied on top of a
-> > commit already in Linus's tree. The current branch is on top of
-> > net-next, RDMA would have to pull in 100s of networking commits togethe=
-r
-> with your changes.
+> [You don't often get email from leontyevantony@gmail.com. Learn why this
+> is important at https://aka.ms/LearnAboutSenderIdentification ]
 >=20
-> Hi Jakub,
+> From: Anton Leontev <leontyevantony@gmail.com>
 >=20
-> Thanks for looking into this. Since the RDMA patch (patch 6) depends on t=
-he
-> networking changes in patches 1-5, could this series go through net-next?=
- I've
-> verified that the tag pulls cleanly into the latest net-next.
+> netvsc_copy_to_send_buf() copies skb fragment pages into the shared
+> VMBus send buffer using phys_to_virt() on the fragment PFN. On 32-bit
+> x86 with CONFIG_HIGHMEM=3Dy, phys_to_virt() (i.e. __va()) is only valid
+> for LOWMEM addresses below 896 MiB. For a HIGHMEM page it returns an
+> address that has no kernel page table entry and lies outside the
+> kernel direct map, so the subsequent memcpy() faults. As this happens
+> on the transmit softirq path, the fault is fatal.
+Please include the stack trace in patch description.
+
+> A HIGHMEM fragment reaches this path whenever the page backing an skb
+> fragment lives above the LOWMEM boundary, which is common on a 32-bit
+> guest with several GiB of RAM (for example when the in-kernel NFS
+> server splices page cache pages directly into the reply skb).
 >=20
-> Leon, Jason - could you provide an Acked-by for patch 6 ("RDMA/mana_ib:
-> Allocate interrupt contexts on EQs") so it can be taken through the netwo=
-rking
-> tree?
->=20
-> Thanks,
-> Long
+> Map the fragment page on demand with kmap_local_page()/kunmap_local()
+> instead. Using pfn_to_page() on pb[i].pfn maps exactly the page
+> described by the page buffer entry. On configurations without HIGHMEM
+> (amd64, i386 without CONFIG_HIGHMEM) kmap_local_page() reduces to
+> page_address(), so this is a no-op there.
 
-Hi Jakub,
-
-Thank you for the feedback. Since the RDMA patch builds on the networking c=
-hanges, would it be possible to take this series through net-next? I've con=
-firmed the tag merges cleanly into the current net-next head.
-
-Leon has acked patch 6 on v2 [1]. There are no significant structural chang=
-es to the RDMA driver since then - the differences are minor:
-
-Changes in patch 6 from v2 to v11:
-
- - Error handling updated from NULL/-ENOMEM to IS_ERR()/PTR_ERR() for mana_=
-gd_get_gic() return values
- - Added mdev->eqs[i]->eq.irq =3D gic->irq to populate the irq field on all=
- RDMA EQs for consistency with the Ethernet path
- - Introduced a separate msi variable instead of modifying spec.eq.msix_ind=
-ex directly
- - Commit message updated
-
-The gdma.h changes are identical to v2.
-
-[1] https://lore.kernel.org/all/20260304145923.GE12611@unreal/
+So, on 64bit kernel, it has no performance impact?
 
 Thanks,
-Long
+- Haiyang
+
 
