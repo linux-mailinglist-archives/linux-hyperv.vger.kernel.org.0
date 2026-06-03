@@ -1,231 +1,206 @@
-Return-Path: <linux-hyperv+bounces-11469-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11470-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id IMIoHKdvIGrA3QAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11469-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 03 Jun 2026 20:17:11 +0200
+	id J48gGSiPIGo65AAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11470-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 03 Jun 2026 22:31:36 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F14F63A777
-	for <lists+linux-hyperv@lfdr.de>; Wed, 03 Jun 2026 20:17:11 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF17B63B20E
+	for <lists+linux-hyperv@lfdr.de>; Wed, 03 Jun 2026 22:31:35 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=Nvidia.com header.s=selector2 header.b="Ui/YnjY5";
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11469-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11469-lists+linux-hyperv=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=reject) header.from=nvidia.com;
-	arc=reject ("cv is fail on i=2")
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=l6fAziPK;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11470-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11470-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id D1492300D363
-	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Jun 2026 18:17:05 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 254C4303DAB8
+	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Jun 2026 20:28:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D387B38944D;
-	Wed,  3 Jun 2026 18:17:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 035CD401A16;
+	Wed,  3 Jun 2026 20:28:49 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010028.outbound.protection.outlook.com [52.101.56.28])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714223E7BB6;
-	Wed,  3 Jun 2026 18:16:58 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780510622; cv=fail; b=aP6AIJIkQoM0vYLuepHhXIYgEy8S25NzSxaMbs2IgAR8Iq5yPc1rj2YkMm0P/Cq/H2AfR6sW7dOBRldl1skd7NsREq7QHmL8qlIy6DjcYJhIlUlcCbK+iYmBP4B9X4ff4IFlS7cPJsTAbdq3ctH3xReF4BrS3/bFciZVOJtzDVY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780510622; c=relaxed/simple;
-	bh=ijBLADMgOOXLecMBzVW9sKaDslkv5938+hzEBEZBaM0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=nzl51ugljb66mq70mRahCq7b9un+l55LkEHSimCBDxLCsG6wStPMlu1oEHn81UTUzdXWwDitRMJV5SvAy2MxVh1ZQvZPNuBl2S6yKIkOWpJLnoQhhPq8uO+QlWyXnxY4C9E7ypkQBw2HfaBIdqDc1STivju0/9/PRLGEXZASl3k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Ui/YnjY5; arc=fail smtp.client-ip=52.101.56.28
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=X7I9tt+/n1ZQXXquJf0hG4qKyjkaJFQj8/VwGafz/E8hFzn6s/kXE8vcinntcWjXtWru8GP9Yqk+oEqW16fhLa4K3YgrZWlfmSK5lq2LjVcfIiPlEe1VVCRL5l0/XKxxgDK02SA/xtShSlkIu9P5+ZXAgkJkxRaf2iMT2oZ3Q7ldjZlfvhIoUPyrUdIMPTXG4NUSrURgFIefw7M4e93Gf93PBLTzACPbNZ3OmWngjU4Rpq6OIu9wjbGCIOnFrelDC6DuPy+c2SwY3CRO1DQ7hAiaaC1fTJDFbgJPM8B58zAn1ds6GJtpGAnufXU7Jf96mSFDUuXyqhLW80wF+nCxqQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3ykSQ12H+LVCf/TWaSgyc7Rr5beSwg9oowSYL7bB250=;
- b=i7rQsP5zTGJ6txVmmT096rzzaTpMojVhQGz2Qy703n8I4kpp3qw7WtcCL7he724unFKKQmV+GrlRrF580L8wIzY3O4GXCNfF1DDgaNLWP4+D07Illw5Ym7MetX++Xf8usmOm2T3Xmb0bCmKTBKpsh0an8PrjT4kTJvsJqazcSuk5Z96MZ3IONfb+ZhzNClRawOCr32xCEvholsZQu/7C7ynUzRtzB/GRQqhGfeHZ0+Rf3fBCM2JD0g4DcJJT1zfD3w1ICEzaDvw/PCxSgV5HLvvdnZOMCyanGixn+fSXURh6PurXj3belcI+UmWTkKxrop4AoDVIdysm1f9D+UZYGg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3ykSQ12H+LVCf/TWaSgyc7Rr5beSwg9oowSYL7bB250=;
- b=Ui/YnjY5+40blF9rd90NZYM6EMbxxMhMyN8PJyaRmu/ujB3MNQ+kDBQ+RQk64xi5JwycnGT61gUCb58IabXCLuabzBgzZ6z7U5VsOhVDeB4WeFKB8/3szsg0LwWHUOTWS1fz7gyJx6vQtNpAhSBPHlmWtbOrTQK6mVgRjlDuWOVEsRdgeGOn0TqrNwrXnvz8/fins3g7jViwcUtlPsn6h6nDvlMLgoS69Rj8hramP3X+jId1y4Fshd+wEUQA0xsPZcy2iAf0lM5Xq/FhmAOXhY/f+QrEXkrAWKvWq811QsDhQpYVqbDeoGoCXHSh2Vs+r/UYyWPWf0YgKUdafJyYhg==
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
- by SN7PR12MB8601.namprd12.prod.outlook.com (2603:10b6:806:26e::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.7; Wed, 3 Jun 2026
- 18:16:53 +0000
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::299d:f5e0:3550:1528]) by LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::299d:f5e0:3550:1528%4]) with mapi id 15.21.0092.006; Wed, 3 Jun 2026
- 18:16:53 +0000
-Date: Wed, 3 Jun 2026 15:16:52 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Abhijit Gangurde <abhijit.gangurde@amd.com>,
-	Allen Hubbe <allen.hubbe@amd.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Bernard Metzler <bernard.metzler@linux.dev>,
-	Potnuri Bharat Teja <bharat@chelsio.com>,
-	Bryan Tan <bryan-bt.tan@broadcom.com>,
-	Cheng Xu <chengyou@linux.alibaba.com>,
-	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-	Junxian Huang <huangjunxian6@hisilicon.com>,
-	Kai Shen <kaishen@linux.alibaba.com>,
-	Kalesh AP <kalesh-anakkur.purayil@broadcom.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Krzysztof Czurylo <krzysztof.czurylo@intel.com>,
-	Leon Romanovsky <leon@kernel.org>, linux-hyperv@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Long Li <longli@microsoft.com>,
-	Michal Kalderon <mkalderon@marvell.com>,
-	Nelson Escobar <neescoba@cisco.com>,
-	Satish Kharat <satishkh@cisco.com>,
-	Selvin Xavier <selvin.xavier@broadcom.com>,
-	Chengchang Tang <tangchengchang@huawei.com>,
-	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
-	Vishnu Dasa <vishnu.dasa@broadcom.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>
-Cc: Leon Romanovsky <leonro@nvidia.com>, patches@lists.linux.dev
-Subject: Re: [PATCH 0/2] Remove stack ib_udata's
-Message-ID: <20260603181652.GC1568873@nvidia.com>
-References: <0-v1-922fa8e828ba+f7-ib_udata_stack_jgg@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0-v1-922fa8e828ba+f7-ib_udata_stack_jgg@nvidia.com>
-X-ClientProxiedBy: BN9PR03CA0050.namprd03.prod.outlook.com
- (2603:10b6:408:fb::25) To LV8PR12MB9620.namprd12.prod.outlook.com
- (2603:10b6:408:2a1::19)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51143E4C98;
+	Wed,  3 Jun 2026 20:28:47 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780518528; cv=none; b=S7nNEL4wT2N9XM65Q45LLquc8uXP9POhs6wgBbaJ3JbPUZ2mKzndMzVfY6YEsg6e7M06kLbPQgagGFsoYmQg1N1qqpqVf+kgd1jxBgj7cXBg4e8F3olHuvAPBzswXjmwy9+t+kkerKGjeysOIm8e3KWrQjqvMO59/nkrj+VQxzA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780518528; c=relaxed/simple;
+	bh=ISjCl5c5Cx6ds0zGhdTFigzZgDuQY0AM3UQUCrhiB3s=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=t9eHDNsxzxe9eLLkv5l/dVajIpsBKSfTQ5x01Fb9H3rZg7nvtO7EIGbSfQiddeoNS3IOKRmK1v0u7bNr4r6QQQRSDzZGZNYc3RjkY4jrvl4syC/4xvdawTiW5C+vrUVNzunu8s3YQ0SzuqMCoqniEXkXT+saCRRtowsaZqtivIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l6fAziPK; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 523F91F00893;
+	Wed,  3 Jun 2026 20:28:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780518527;
+	bh=FmDbDJFXJN7UzGQmOFzTUSdYjNQ1F/mppcHPImRrsCs=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=l6fAziPKFozSHeljUpLHMNx6FN/CcSbR35SA9pn+njTLBJ2E57RODiq9NX8yM1J2V
+	 qqhmxUsxQyTl8fdTFRvYW/Dht6DF2I4fZ9LagvyO0/Bs0JrUiGzvuQMO0T0V3G9iSZ
+	 vjkFKEmSbg88WxIBpVHQoo/1jPxFPGmLsFhWzCFUdnQvsbzpWsHRBtKJUgYTZfRPos
+	 5NB+W+C81N/vvKZ6u1oEql/aE4Oc8YOz8zWXUjJaKDpzRKzQrNwc8RRieWnXXEAfBD
+	 x6mAcuLAKVt8uqSV8HrmxevwJTbee24d3TK6R+oafqF/hyrTOMK15Yx2AnOqfYOxjj
+	 Kt6Jdo9NSxPOA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH net-next v10 2/2] net: mana: force full-page RX buffers
+ via ethtool private flag
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Dipayaan Roy" <dipayanroy@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, bpf@vger.kernel.org
+In-Reply-To: <20260602202801.1873742-3-dipayanroy@linux.microsoft.com>
+References: <20260602202801.1873742-3-dipayanroy@linux.microsoft.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 03 Jun 2026 20:28:46 +0000
+Message-Id: <20260603202847.523F91F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|SN7PR12MB8601:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1e376455-7a30-46bd-e944-08dec19c49f0
-X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|921020|18002099003|22082099003|11063799006|56012099006;
-X-Microsoft-Antispam-Message-Info:
-	eM8M0aNZbMlVN/6YdvRtY8/FHuaHSauLabINxtNCmBo/6CX4UbdIkvoddlZFkTKSqR1JFxMtliydjTA+etFmWYuNI8AObP/DVlrNCL8IicM5LxyAeZZ+7MeJcVBKE7LU57IMoT0OwAWC84yiOdamJcztuySHSBqBzb64oyQBEZhn18ewFF7HXPj+uEwbBjSoZfRiEftQaa4UinQaC5QfN3/o+JL3+nB9AiVXLpFgkIod87lfWCebLymg1VVqZf0+6+omLOXz60RhZpDn5VULaO3jyM3dOls2peHx3fIo2u0PpDTDTwo9U4xYikik4Noicjf7tnl7CG03yyw6PFotwmvMNsDWwTVTlPD+SVkUT2uJI1P9Eh6S7oM40sck3LUP+WHl773FWRBlwqyU7/MYro+LTYKKom+5HFE8zrDOTy17znT6XihZ2An9G5xkt3wTN5T2FrDCjf0hiIKmhNHym14OMpYVH/XpKKC1HZfJKlSt2L6YDQOC5SwYOJ8uPI8Lx0P6lGbpKQaHAb9+9tyfcxVZCHj4xkw+/1wfVFLreqf5NLq5uSktN7sFaRS5uO5npIg0kUCYfvcovN3YtfWcLEavKe9PbNXlzoMwTb/L/RVCrYH0DsAFNuNtie2xZebboSwV59k6549ACHthYl29V/bBdFCGxpkcddmRvsKdtyoXi+EVyYJKQuTjmaPcsiZjUM5MPumnwoH+2HqYfeOxgWDyemdfnHak4+CDestgud4=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(921020)(18002099003)(22082099003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?9JTjqH7clZ821uWUgGsCaMBgKZHnXH8LHRJ+yib0M01dVHbtf6XqtgvXZ8ds?=
- =?us-ascii?Q?4k4DzNNLqMa9Es2yezjINgAESm51vhbJZcu/N0PXIiuPkUxnGPqXLyvAhGps?=
- =?us-ascii?Q?ucHkjtfCnItQImgjL/iI08BAlhvn5cgJFSBQbtAaM2Of37jJxoErTt4mGwDE?=
- =?us-ascii?Q?43TVhPDmRw5Y3i2O+if8BkxfGDw8TJd25Z/6MkGMII2Wd+GDu24D1nGEIn3+?=
- =?us-ascii?Q?hhLdkgk5b3ZWA89Cn9/e5fq2JED8dH8R09hu7oAcQChatBaNH4iZi31oynoZ?=
- =?us-ascii?Q?FbRQtQhPWdLv2xoygh0xGkvek2ggE9DzooUrQpJYyMj12R4TYSiUi3dHGMis?=
- =?us-ascii?Q?Qv2bZZ8F5oddWYYrUCU54k0ckkMy/B56U2BPc2l+osWELUtGMWIKjNEWpD0f?=
- =?us-ascii?Q?EMIQK02XkfVPfStDXctMj3u2+AHYNGn/DRP72gxa4TqrDQmNP4liE/PUycjJ?=
- =?us-ascii?Q?oEpOkXIHCkIgAEY9n0bU3ErJpsKh68vLgNMruW6JCfR1ybd3sLagPQ9aFyiZ?=
- =?us-ascii?Q?ehjcBKnwTSzMT/Jg4F90h8kX6NbjdVYn0S/qK97d8+f0pScuO9wT2+jU0JJT?=
- =?us-ascii?Q?BAmY43VptTPvqd5Z4DBeqZFwSbd6U7UzrXPtmLwxnYES9ESzjlfMUa3XKK/V?=
- =?us-ascii?Q?se4Vx0DF6Hborn1DBPTxEYBGy7Z6qOOBMLPOxwceWdZlQOkCEfhvw86C1z0+?=
- =?us-ascii?Q?vdyYex4o0mdt0T/bA/74evkVga3RtOlYDr7f1SxD6lZxxiHwGR7HHilOSpqG?=
- =?us-ascii?Q?jker79jR7yHcoUsoerBvGrsMGvt4+6A9/N3SfpBrjiJ4xKqRGwFd8kX63WeY?=
- =?us-ascii?Q?JEbjErOYqsMbKklSMWblRXxEp6vlyrSmf2wZxoYHgFLJvnDHHtSK+Pua43VI?=
- =?us-ascii?Q?Wf2e4yzEhVGIVFNxuf+9UyuSKl3RcjMvmg1iNlkcmM3ojkmsOzSVWhUmboc/?=
- =?us-ascii?Q?Vs2T/jOM96rb1ZKVsxSgEfhr2KHTlLPB76n1+sCd1pOPmpUHp+JHoe09BP0q?=
- =?us-ascii?Q?BcP9EyDUsISt0Bz/lZTnnY5XcRtQKGVmjYI4osKpNd1a1Y3FSWtQwnkQhgkg?=
- =?us-ascii?Q?9KTtKDXOoWE3L2jA5SfVUwT50AZXcKeD8MW/dtT0gbnjQ3asJjbn1tn14Vjv?=
- =?us-ascii?Q?mlhEf+9P3df4b9IWB0AWm6VqS77PXeG4R3gK0pAYk6Ov6YJBprYLx+TnxaaZ?=
- =?us-ascii?Q?oS1xkwVLE97hpVyxzQOuMCD7KKSnutmO+n5jXEXZsPhvnUIh+jvrLBwuT/R1?=
- =?us-ascii?Q?4ws4oqDL9eTxFTXYrOK4JTj/kQ3Z8Oql+nv8SZ4eX30OTRe+Rdu9v9pgVTRf?=
- =?us-ascii?Q?om/ciBXZ26fBpsEkq3OsUl0wc/p2RhY+KV4TkC5wtK+REPGcO96Vqs6i7wj/?=
- =?us-ascii?Q?CqaDc5wk1U5iHZPclY2isFv8iAfdjcW/UlP+i+7RO7ncOrlIrrJYkKTMpAci?=
- =?us-ascii?Q?0xHciPFzAEoegwNIIzm5cWWZY5rZQqrMA6eNAg1vr8o6D3RwtLauDjwMOgen?=
- =?us-ascii?Q?3DU/AgKjKnail9GulK06EM7aC3CZriB6J4x6L+uWdH1ZxYEnX96PomQgtqvb?=
- =?us-ascii?Q?d7ZjLzajSD6rtM/KQWSqPvD3sdF4Ya7o9KU+xQQcT4hqDX3lqX+Kloa0ycga?=
- =?us-ascii?Q?dQw3OcS/y9nf8YooqHMg1dOtwdJBOw2sTXoE/L7XvDTCbfHVdIEbH74fza7Y?=
- =?us-ascii?Q?T74NqRj/hioiG07l+ylcy+ftz0l/Lt0m6XbtqAJe7drTNN8V?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1e376455-7a30-46bd-e944-08dec19c49f0
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2026 18:16:53.5077
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4+VckiTjY1WvVCaDfvAbVh/A3JWbQhIZU+uRvWQNIeuqVmtNp6isEy1qG9fWahYy
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8601
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-0.16 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[nvidia.com,reject];
-	R_DKIM_ALLOW(-0.20)[Nvidia.com:s=selector2];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	MISSING_MIME_VERSION(2.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11469-lists,linux-hyperv=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[28];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:abhijit.gangurde@amd.com,m:allen.hubbe@amd.com,m:bcm-kernel-feedback-list@broadcom.com,m:bernard.metzler@linux.dev,m:bharat@chelsio.com,m:bryan-bt.tan@broadcom.com,m:chengyou@linux.alibaba.com,m:dennis.dalessandro@cornelisnetworks.com,m:huangjunxian6@hisilicon.com,m:kaishen@linux.alibaba.com,m:kalesh-anakkur.purayil@broadcom.com,m:kotaranov@microsoft.com,m:krzysztof.czurylo@intel.com,m:leon@kernel.org,m:linux-hyperv@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:longli@microsoft.com,m:mkalderon@marvell.com,m:neescoba@cisco.com,m:satishkh@cisco.com,m:selvin.xavier@broadcom.com,m:tangchengchang@huawei.com,m:tatyana.e.nikolova@intel.com,m:vishnu.dasa@broadcom.com,m:yishaih@nvidia.com,m:zyjzyj2000@gmail.com,m:leonro@nvidia.com,m:patches@lists.linux.dev,s:lists@lfdr.de];
-	FREEMAIL_TO(0.00)[amd.com,broadcom.com,linux.dev,chelsio.com,linux.alibaba.com,cornelisnetworks.com,hisilicon.com,microsoft.com,intel.com,kernel.org,vger.kernel.org,marvell.com,cisco.com,huawei.com,nvidia.com,gmail.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[jgg@nvidia.com,linux-hyperv@vger.kernel.org];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-11470-lists,linux-hyperv=lfdr.de];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
+	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jgg@nvidia.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[Nvidia.com:+];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	FORGED_RECIPIENTS(0.00)[m:dipayanroy@linux.microsoft.com,m:linux-hyperv@vger.kernel.org,m:bpf@vger.kernel.org,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,nvidia.com:from_mime,nvidia.com:mid,Nvidia.com:dkim]
+	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NO_DN(0.00)[];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,smtp.kernel.org:mid,lists.linux.dev:replyto]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 0F14F63A777
+X-Rspamd-Queue-Id: AF17B63B20E
 
-On Tue, May 26, 2026 at 01:15:04PM -0300, Jason Gunthorpe wrote:
-> Sashiko pointed out these are dangerous, and the create_qp() one is in
-> fact a bug. The query_device is just ugly old code.
-> 
-> Remove the stack ib_udata's from both places.
-> 
-> Jason Gunthorpe (2):
->   RDMA/core: Don't make a dummy ib_udata on the stack in create_qp
->   RDMA: Update the query_device() op
-> 
->  drivers/infiniband/core/core_priv.h           |  2 +-
->  drivers/infiniband/core/device.c              |  3 +--
->  drivers/infiniband/core/ib_core_uverbs.c      | 12 +++++++++++
->  drivers/infiniband/core/rdma_core.h           |  7 +++++++
->  drivers/infiniband/core/uverbs_cmd.c          | 14 +------------
->  drivers/infiniband/core/uverbs_std_types_qp.c |  3 +--
->  drivers/infiniband/core/verbs.c               | 20 ++++++++++---------
->  drivers/infiniband/hw/bnxt_re/ib_verbs.c      |  5 ++++-
->  drivers/infiniband/hw/cxgb4/provider.c        |  8 +++++---
->  drivers/infiniband/hw/erdma/erdma_verbs.c     |  9 +++++++--
->  drivers/infiniband/hw/hns/hns_roce_main.c     |  7 ++++++-
->  drivers/infiniband/hw/ionic/ionic_ibdev.c     |  7 ++++++-
->  drivers/infiniband/hw/irdma/verbs.c           |  8 +++++---
->  drivers/infiniband/hw/mana/main.c             |  7 ++++++-
->  drivers/infiniband/hw/mlx4/main.c             | 13 ++++++------
->  drivers/infiniband/hw/mthca/mthca_provider.c  | 13 +++++++-----
->  drivers/infiniband/hw/ocrdma/ocrdma_verbs.c   |  8 +++++---
->  drivers/infiniband/hw/qedr/verbs.c            |  7 ++++++-
->  drivers/infiniband/hw/usnic/usnic_ib_verbs.c  |  8 +++++---
->  .../infiniband/hw/vmw_pvrdma/pvrdma_verbs.c   |  8 +++++---
->  drivers/infiniband/sw/rdmavt/vt.c             |  9 ++++++---
->  drivers/infiniband/sw/rxe/rxe_verbs.c         | 14 ++++---------
->  drivers/infiniband/sw/siw/siw_verbs.c         |  8 +++++---
->  23 files changed, 124 insertions(+), 76 deletions(-)
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [High] Forcing `apc->port_is_up =3D true` on the `mana_attach` error path=
+ causes a double-destroy of the hardware vport when the interface is later =
+brought down.
+- [Medium] Latent bug: Changes to future private flags will be silently ign=
+ored if MANA_PRIV_FLAG_USE_FULL_PAGE_RXBUF is not simultaneously toggled.
+--
 
-Applied to for-next
+commit d7983f6668f209a0b7bfb427c64d5517b326c7b1
+Author: Dipayaan Roy <dipayanroy@linux.microsoft.com>
 
-Jason
+net: mana: force full-page RX buffers via ethtool private flag
+
+Adds an ethtool private flag full-page-rx to bypass page_pool fragment
+allocation and force one RX buffer per page. Includes logic in
+mana_set_priv_flags to dynamically reconfigure the port on flag change.
+
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers=
+/net/ethernet/microsoft/mana/mana_ethtool.c
+> --- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+> +++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+
+[ ... ]
+
+> +static int mana_set_priv_flags(struct net_device *ndev, u32 priv_flags)
+> +{
+> +	struct mana_port_context *apc =3D netdev_priv(ndev);
+> +	u32 changed =3D apc->priv_flags ^ priv_flags;
+> +	u32 old_priv_flags =3D apc->priv_flags;
+> +	bool schedule_port_reset =3D false;
+> +	int err =3D 0;
+> +
+> +	if (!changed)
+> +		return 0;
+> +
+> +	/* Reject unknown bits */
+> +	if (priv_flags & ~GENMASK(MANA_PRIV_FLAG_MAX - 1, 0))
+> +		return -EINVAL;
+> +
+> +	if (changed & BIT(MANA_PRIV_FLAG_USE_FULL_PAGE_RXBUF)) {
+> +		apc->priv_flags =3D priv_flags;
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+[Severity: Medium]
+When additional private flags are added in the future, will changes to those
+new flags be silently ignored if MANA_PRIV_FLAG_USE_FULL_PAGE_RXBUF isn't
+also toggled?
+
+Since this assignment is nested inside the FULL_PAGE_RXBUF check, changing
+only a future new flag will bypass this assignment and the function will
+return success while discarding the new flag state.
+
+Should this assignment be moved outside the flag-specific conditional block?
+
+> +
+> +		if (!apc->port_is_up) {
+
+[ ... ]
+
+> +		err =3D mana_attach(ndev);
+> +		if (err) {
+> +			netdev_err(ndev, "mana_attach failed: %d\n", err);
+> +			apc->priv_flags =3D old_priv_flags;
+> +
+> +			/* Restore 'port_is_up' so the reset work handler
+> +			 * can properly detach/attach. Without this,
+> +			 * the handler sees port_is_up=3Dfalse and skips
+> +			 * queue allocation, leaving the port dead.
+> +			 */
+> +			apc->port_is_up =3D true;
+                        ^^^^^^^^^^^^^^^^^^^^^^
+
+[Severity: High]
+Does forcing port_is_up to true here cause a double-destroy of the hardware
+vport when the interface is later brought down?
+
+If mana_attach fails, it cleans up any partial state by destroying the vpor=
+t.
+
+Leaving the port artificially marked as up means a subsequent interface down
+event or reset worker will see apc->port_is_up as true and call
+mana_detach with from_close set to true.
+
+This bypasses the netif_device_present check and triggers a second call to
+mana_destroy_vport, which could drop apc->vport_use_count below zero and
+send a duplicate deregister message to the firmware for the already-freed
+hw_vport_handle.
+
+> +			schedule_port_reset =3D true;
+> +		}
+> +	}
+> +
+> +out:
+> +	mana_pre_dealloc_rxbufs(apc);
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260602202801.1873=
+742-1-dipayanroy@linux.microsoft.com?part=3D2
 
