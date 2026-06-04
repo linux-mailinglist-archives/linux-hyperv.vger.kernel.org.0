@@ -1,55 +1,55 @@
-Return-Path: <linux-hyperv+bounces-11486-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11483-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id B2oEBotNIWp9CwEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11486-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 04 Jun 2026 12:03:55 +0200
+	id uaoPIjVNIWpiCwEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11483-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 04 Jun 2026 12:02:29 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5B9563EC6E
-	for <lists+linux-hyperv@lfdr.de>; Thu, 04 Jun 2026 12:03:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 234E463EC48
+	for <lists+linux-hyperv@lfdr.de>; Thu, 04 Jun 2026 12:02:29 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=infradead.org header.s=desiato.20200630 header.b=Yx7F8uK4;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11486-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11486-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=infradead.org header.s=desiato.20200630 header.b=c3PNVjQt;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11483-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11483-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=infradead.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id B64D030875C7
-	for <lists+linux-hyperv@lfdr.de>; Thu,  4 Jun 2026 09:59:16 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 8189630CE415
+	for <lists+linux-hyperv@lfdr.de>; Thu,  4 Jun 2026 09:58:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D31993FE66C;
-	Thu,  4 Jun 2026 09:58:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E310F3E024A;
+	Thu,  4 Jun 2026 09:58:17 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC672F7F0A;
-	Thu,  4 Jun 2026 09:58:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEAAC3AF64E;
+	Thu,  4 Jun 2026 09:58:15 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780567098; cv=none; b=Bmw13Am5v4u90y8tYNKOsbzna5Brh2NICBh69Hu253qS/XKgDt+ebqCZkpBhjE6pFD1KnxhZcImhd/RFLz7q/E1SNvRTSdKm3aG861Eh8FldUhexioVLJEbwMRDdcghEFHgxRVL9gnHO0e5N1w6wP0CiAJ3mcPGQ2Zoq2sk1GYQ=
+	t=1780567097; cv=none; b=sb/3VWK1SCU2Az4ydA2KvH1RT1TvHwLSop5lTTctvvarNB40HIbsZPqBlZoo6UbJVyzsWBKESiHg9qhJV5MqGB0l+0UBncLsL9hvGk4IPUolz4H/PGT4BxqSGhoBJkNeHyXnMFPYsx/kD/7SW2QeqlmT/QvFuiE9m2k3pd1ZnYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780567098; c=relaxed/simple;
-	bh=B8796QuyddTOOJ87NCI4jbabmwrkPHns7USFWAaZl2Y=;
+	s=arc-20240116; t=1780567097; c=relaxed/simple;
+	bh=HOpVztT8DOAo7KVM/MAVNPDfMWFbaLZEj1Jd1WUkhMo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eY25YZt7b0yIo0ETbXtaKN/bhxBOzjYu55RfF0FY0JAung3G16ucMGIsTuNeVWRkbjh2Zl3ERjeUZvUt4/LjZAXsBWDOYSCvzRV/lCowdZhBNGEqH/CyoUp4PcOwNtruK3EiZfN4mxK8l083cngdTSCP0Ae6DSpKmEBqbLPKJzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Yx7F8uK4; arc=none smtp.client-ip=90.155.92.199
+	 MIME-Version; b=O4ICbtJ7RAfvp/LG8MMrNx1oiOrZFX+yZvgJxa2aidXLco90R5cmS6C7eUZPtthMHq5Kikt5WiOriYWBfXgHwWao6Z92cjMIXn3Evyl6zofcMFUzus4JayNJyzR1dJ3ayNFGASpNZfrRljs1jZgtLdD1s9U7QhFaYXoORvLvAYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=c3PNVjQt; arc=none smtp.client-ip=90.155.92.199
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=gSKjiLbNkQCnWmrLULhPaz2f+CKpev4YmPlvbfnECWs=; b=Yx7F8uK4DtIsTGe8z5OuUeH1r0
-	EQ/AhIXUsyCEuHEz4QaGhmUAIkfmfQXABfh0p7LnODrTeBFoYMVmuceN4fNAH/Uitri6g/vXxNxTx
-	FeOlpY6iGVRnld4QMRoq9RL5dAx/+8zSyVvbhp2mrQuLPe5VCMiauiFAcffzXNJVJshquplsfhEkA
-	3nZq1sardow2OAPnLe8qpYVJhEPncBiJG1gjOT2uZ3M322LU+kuvSU3ynHCO3GgrxQObWrK8cdINA
-	ZvEfh6NhmfFs7gAnvPNXwWCFojYF4S+hfBMJrLbYh1eDGPFm4T9BT3jh8lDn6jgysCjpOfMraKfb7
-	w/S32+PA==;
+	bh=HAwxsEb++hynAZSBM/ZWsQB/kPejZeakWzLcrT4MuRE=; b=c3PNVjQt2UzKlsR7+/YYu1G/zu
+	tifba7YBIOWV2G70UsP9TIMKEwFYCzaOHtKrKQDFWnam17TKSzmfuaM0YbpXFVa/sH0CFYMTPCaI/
+	5Q3XHI+ogRdglNA1WlcQ3WQjAYDz7XwoFTmYoIXOs3kWFE+IoZxJzaTsTBXAyOxwt8+rznp75okRN
+	Y1iyr/f0ib6kePQ4i58xPshOjln+zJ4/eU71q0cJ/EooKaf/ES9qR7l5Ie9YUeR9FA6JNKTo8F3g2
+	x/F86PuxYc/5G38XWoahPBE/G0Q/GJdEUeDeeztAfDHBDc5AbPKfHgKsyKXg1+HQeFOopfM/Q3nha
+	3aeQZtJQ==;
 Received: from i7.infradead.org ([2001:8b0:10b:1:21e:67ff:fecb:7a92])
 	by desiato.infradead.org with esmtpsa (Exim 4.99.2 #2 (Red Hat Linux))
-	id 1wV4pr-0000000EAMa-0wTu;
+	id 1wV4pr-0000000EAMb-0wS1;
 	Thu, 04 Jun 2026 09:57:59 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.99.2 #2 (Red Hat Linux))
-	id 1wV4pq-00000000H0o-2prI;
+	id 1wV4pq-00000000H0r-32Aw;
 	Thu, 04 Jun 2026 10:57:58 +0100
 From: David Woodhouse <dwmw2@infradead.org>
 To: Thomas Gleixner <tglx@kernel.org>
@@ -78,9 +78,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	linux-hyperv@vger.kernel.org,
 	netdev@vger.kernel.org
-Subject: [PATCH v2 1/3] clocksource/hyperv: Implement read_snapshot() for TSC page clocksource
-Date: Thu,  4 Jun 2026 10:35:16 +0100
-Message-ID: <20260604095755.64849-2-dwmw2@infradead.org>
+Subject: [PATCH v2 2/3] x86/kvmclock: Implement read_snapshot() for kvmclock clocksource
+Date: Thu,  4 Jun 2026 10:35:17 +0100
+Message-ID: <20260604095755.64849-3-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260604095755.64849-1-dwmw2@infradead.org>
 References: <20260604095755.64849-1-dwmw2@infradead.org>
@@ -108,7 +108,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	RCPT_COUNT_TWELVE(0.00)[26];
 	FREEMAIL_CC(0.00)[redhat.com,outlook.com,alien8.de,linux.intel.com,kernel.org,zytor.com,microsoft.com,infradead.org,gmail.com,lunn.ch,davemloft.net,google.com,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-11486-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11483-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -127,89 +127,84 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[amazon.co.uk:email,vger.kernel.org:from_smtp,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,infradead.org:mid,infradead.org:from_mime,infradead.org:dkim,outlook.com:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,infradead.org:mid,infradead.org:from_mime,infradead.org:dkim]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: C5B9563EC6E
+X-Rspamd-Queue-Id: 234E463EC48
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
-Implement the read_snapshot() callback for the Hyper-V TSC page
-clocksource. This returns the derived 10MHz reference time (for
-timekeeping) while also providing the raw TSC value that was used
-to compute it.
+Implement the read_snapshot() callback for the kvmclock clocksource.
+This returns the kvmclock nanosecond value (for timekeeping) while
+also providing the raw TSC value that was used to compute it.
 
-When the TSC page is valid, hv_read_tsc_page_tsc() atomically
-captures both values from a single RDTSC inside the sequence-counter
-protected read. When the TSC page is invalid (sequence == 0), the
-hw_csid and hw_cycles are set to zero indicating no value is available.
+The TSC is read inside the pvclock seqlock-protected region, ensuring
+the raw TSC and derived kvmclock value are atomically paired.
 
 This enables ktime_get_snapshot_id() to provide the raw TSC to consumers
-like KVM's master clock when running nested guests under Hyper-V.
+like the vmclock PTP driver, which currently has to do a separate call
+to get_cycles() to obtain a value at *approximately* the same time, to
+feed through the vmclock calculation.
 
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 Assisted-by: Kiro:claude-opus-4.6-1m
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
 ---
- drivers/clocksource/hyperv_timer.c | 37 ++++++++++++++++++++++--------
- 1 file changed, 27 insertions(+), 10 deletions(-)
+ arch/x86/kernel/kvmclock.c | 36 +++++++++++++++++++++++++++++-------
+ 1 file changed, 29 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-index e9f5034a1bc8..df567795d175 100644
---- a/drivers/clocksource/hyperv_timer.c
-+++ b/drivers/clocksource/hyperv_timer.c
-@@ -444,6 +444,22 @@ static u64 notrace read_hv_clock_tsc_cs(struct clocksource *arg)
- 	return read_hv_clock_tsc();
+diff --git a/arch/x86/kernel/kvmclock.c b/arch/x86/kernel/kvmclock.c
+index b5991d53fc0e..cb3d0ca1fa22 100644
+--- a/arch/x86/kernel/kvmclock.c
++++ b/arch/x86/kernel/kvmclock.c
+@@ -87,6 +87,27 @@ static u64 kvm_clock_get_cycles(struct clocksource *cs)
+ 	return kvm_clock_read();
  }
  
-+static u64 notrace read_hv_clock_tsc_cs_snapshot(struct clocksource *arg,
-+						  struct clocksource_hw_snapshot *chs)
++static u64 kvm_clock_get_cycles_snapshot(struct clocksource *cs,
++					 struct clocksource_hw_snapshot *chs)
 +{
-+	u64 time;
++	struct pvclock_vcpu_time_info *src;
++	unsigned version;
++	u64 ret, tsc;
 +
-+	if (hv_read_tsc_page_tsc(tsc_page, &chs->hw_cycles, &time)) {
-+		chs->hw_csid = CSID_X86_TSC;
-+	} else {
-+		chs->hw_cycles = 0;
-+		chs->hw_csid = CSID_GENERIC;
-+		time = read_hv_clock_msr();
-+	}
++	preempt_disable_notrace();
++	src = this_cpu_pvti();
++	do {
++		version = pvclock_read_begin(src);
++		tsc = rdtsc_ordered();
++		ret = __pvclock_read_cycles(src, tsc);
++	} while (pvclock_read_retry(src, version));
++	preempt_enable_notrace();
 +
-+	return time;
++	chs->hw_cycles = tsc;
++	chs->hw_csid = CSID_X86_TSC;
++	return ret;
 +}
 +
- static u64 noinstr read_hv_sched_clock_tsc(void)
+ static noinstr u64 kvm_sched_clock_read(void)
  {
- 	return (read_hv_clock_tsc() - hv_sched_clock_offset) *
-@@ -492,18 +508,19 @@ static int hv_cs_enable(struct clocksource *cs)
- #endif
+ 	return pvclock_clocksource_read_nowd(this_cpu_pvti()) - kvm_sched_clock_offset;
+@@ -156,13 +177,14 @@ static int kvm_cs_enable(struct clocksource *cs)
+ }
  
- static struct clocksource hyperv_cs_tsc = {
--	.name	= "hyperv_clocksource_tsc_page",
--	.rating	= 500,
--	.read	= read_hv_clock_tsc_cs,
+ static struct clocksource kvm_clock = {
+-	.name	= "kvm-clock",
+-	.read	= kvm_clock_get_cycles,
+-	.rating	= 400,
 -	.mask	= CLOCKSOURCE_MASK(64),
 -	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
--	.suspend= suspend_hv_clock_tsc,
--	.resume	= resume_hv_clock_tsc,
-+	.name			= "hyperv_clocksource_tsc_page",
-+	.rating			= 500,
-+	.read			= read_hv_clock_tsc_cs,
-+	.read_snapshot		= read_hv_clock_tsc_cs_snapshot,
-+	.mask			= CLOCKSOURCE_MASK(64),
-+	.flags			= CLOCK_SOURCE_IS_CONTINUOUS,
-+	.suspend		= suspend_hv_clock_tsc,
-+	.resume			= resume_hv_clock_tsc,
- #ifdef HAVE_VDSO_CLOCKMODE_HVCLOCK
--	.enable = hv_cs_enable,
--	.vdso_clock_mode = VDSO_CLOCKMODE_HVCLOCK,
-+	.enable			= hv_cs_enable,
-+	.vdso_clock_mode	= VDSO_CLOCKMODE_HVCLOCK,
- #else
--	.vdso_clock_mode = VDSO_CLOCKMODE_NONE,
-+	.vdso_clock_mode	= VDSO_CLOCKMODE_NONE,
- #endif
+-	.id     = CSID_X86_KVM_CLK,
+-	.enable	= kvm_cs_enable,
++	.name		= "kvm-clock",
++	.read		= kvm_clock_get_cycles,
++	.read_snapshot	= kvm_clock_get_cycles_snapshot,
++	.rating		= 400,
++	.mask		= CLOCKSOURCE_MASK(64),
++	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
++	.id		= CSID_X86_KVM_CLK,
++	.enable		= kvm_cs_enable,
  };
  
+ static void kvm_register_clock(char *txt)
 -- 
 2.54.0
 
