@@ -1,194 +1,232 @@
-Return-Path: <linux-hyperv+bounces-11489-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11490-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id xaAnCHqsIWogLAEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11489-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 04 Jun 2026 18:48:58 +0200
+	id Q99KJOWwIWpSLQEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11490-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 04 Jun 2026 19:07:49 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE966642081
-	for <lists+linux-hyperv@lfdr.de>; Thu, 04 Jun 2026 18:48:57 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C9016422F7
+	for <lists+linux-hyperv@lfdr.de>; Thu, 04 Jun 2026 19:07:49 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=EklmzvgY;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11489-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11489-lists+linux-hyperv=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=l3azZzTf;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11490-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11490-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id ED39D3009F7E
-	for <lists+linux-hyperv@lfdr.de>; Thu,  4 Jun 2026 16:39:03 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 1B16F304069F
+	for <lists+linux-hyperv@lfdr.de>; Thu,  4 Jun 2026 16:59:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4392334F462;
-	Thu,  4 Jun 2026 16:39:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 073443BB137;
+	Thu,  4 Jun 2026 16:59:39 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DEAD3793CA
-	for <linux-hyperv@vger.kernel.org>; Thu,  4 Jun 2026 16:39:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A1D385539
+	for <linux-hyperv@vger.kernel.org>; Thu,  4 Jun 2026 16:59:37 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780591142; cv=none; b=QiykqZQnOCYHoY+pZuJCZCt18bGFLdQD+oo49q0770gQpriEyL/kqlC+EkIpS57hdzKtgj2oK7tGEMVkGRh1uFR3y6ZkD02TGxaP/ON90cv3phQxDhRJwjJaT6LZkBCM3a/6Zmvb1i5cm7Am/ejOl0ix+JoDqIYh4vGB45C6Muc=
+	t=1780592378; cv=none; b=LJ9PudLrPvoskcMt3FaH4ptHmrAN/xAVszlsExvCa3G6f2FcU22WElShldDNDjVOoAylnasViGi5sHRSYGfQSF9eYIeOphABrA32fi43/lhNKV2z9K6DN3o42bTxG14/VJGBU2sIdwkUTZN+it4oBVRvW2FqrmKO/0cXB+gFd+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780591142; c=relaxed/simple;
-	bh=N/n8f5zx63/qgfV9MQSDly+ncWtFofsKvFotapU8gxs=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=EQhnyD+8V6iKBZ0Q4tyOe6wq8w0N0Nx5Ur0+NWI0UtfVk491sXgRZnDABoFN1Et5XQWOZBFoqED81ZIJPfEJEIiMUQbDq/BYIieMWySngJKpaudFLmD9beVVIgdUTbmmLUuVah1qj1DE4VXrg4y/ALGSZji0vCg59Wl63vyjxqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EklmzvgY; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A09211F00893;
-	Thu,  4 Jun 2026 16:39:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780591140;
-	bh=pauzITUSxH4H713K1gRMfgmzZW3Zmn56Gy1tIV3gCCU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=EklmzvgYFnCNAIKSHd4nCwk5D5PxqA5uZqYRMjNbbnojpmaltlvnqES/V8ZXee+cM
-	 zZfIoMAuOMYHu+hm9Hj6v+0sVyAKBjvcDwZThGeqK41NT7l0jQEWGeZN1Sq6JM2lKt
-	 YTT8u59BmwtPNqGSCEh4U22Ddx48hP6Bba5mJnkJAxJnZ2rftUH2ufv1pGd+zH9UQk
-	 vD59hvc9hcYR0VIYqkE7JadN1glOs0T98Zao+zqQxTgZsB6vLlkMyLVa/gbuV3CZZT
-	 BXkzbBIrbpSUFvekSqkmEYh+EW5JKP8w+rlWO5xYzyuxG+bdBlY6N+FZ5KVlq1Xbz3
-	 g8GQq8fP5oGjg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH net v2] hv_netvsc: use kmap_local_page in
- netvsc_copy_to_send_buf
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Anton Leontev" <leontyevantony@gmail.com>
-Cc: linux-hyperv@vger.kernel.org
-In-Reply-To: <20260603163851.18058-1-leontyevantony@gmail.com>
-References: <20260603163851.18058-1-leontyevantony@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 04 Jun 2026 16:39:00 +0000
-Message-Id: <20260604163900.A09211F00893@smtp.kernel.org>
+	s=arc-20240116; t=1780592378; c=relaxed/simple;
+	bh=yUtTpJHdzEWbgTjsiuCj893qdVCNtyL0l8/2vu8sS4E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GaGx83Tskw3KXuSy0WR40lDmacj8mHblH08kR6LsSj65MwQDa+dTHWZkGhgvonhQ0fZaEGJ+eKUPXGN1GF5+KEe92ZajEQKZHI+cwdzOn8Hx9ReqcXg0/Sbq7FqvPh3SsQfQj6qBW+aCbPR4UKWKrIbN/pxvNtvp8F2NYMxYa08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l3azZzTf; arc=none smtp.client-ip=209.85.221.47
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-45ef189aa1cso727828f8f.0
+        for <linux-hyperv@vger.kernel.org>; Thu, 04 Jun 2026 09:59:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780592376; x=1781197176; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5pGoeEOr9RRtwxMbbZF4kryR7MSLvpeOOpDT4EcPNUk=;
+        b=l3azZzTf4EZCVX985MITEzwnHVrxpYoDZ+7GeOT75J6Yl7pzlRp9z8FUksGklfxSfO
+         FbyEgSyOH78cyvMnipX1G3pn16hEUjqzmp4K6lQ6+zxb4N3jp23zpFsE1dencmxyCm/V
+         jlLMQ/efXxRDXqhKS3khhnx02Oe4IqWSOFe9Oh5sWnQ0lnY0oOUFaX7qShd4hd9Ua/8/
+         /nACZ9JrUUSq5exUxtua1rkY09rzwdoVhnEyoKR46+KxmEM3CsSPfsH+U4oA8mttTjnf
+         4eh8J+T6uf3wTdxC8XE5fCV/PjNLBrTuM1dobmKR8diC3jADYl0Ihh2aLSkYC4k9tt6r
+         e/CA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780592376; x=1781197176;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5pGoeEOr9RRtwxMbbZF4kryR7MSLvpeOOpDT4EcPNUk=;
+        b=MYZ7tcpvhRVFz0g/gUmyPoM6qKAW7LVY27H2ARIH61VMWzgd6tdGdkzZGhMaPPe9Nj
+         QvlgVPJDoHVTfN6+MnblT6h6KruBEHA942v1sQXM6/A9CaXLnjG//bRYQyEWzTdUSnfs
+         MIAR+w3IkN7xySFtdcCIRyMycYjiTzVvfEskffp5pq4zwAMw5Bvoq+EzvyJYjutS+7vc
+         alBPhORYSzd0R9gIwZuFxsQDEMlAjKKBqEgfCo/hK4HMdYf+qg8yvAE0Xlz9K305lNNc
+         eix0JYulumGG5SaN8jWSokU0aWkHUQYT22bk3V+/ETuyvdxYb7lr5iJVgoeOFfL2bSDF
+         Xlrg==
+X-Gm-Message-State: AOJu0Yx3Ww9jkY5fBG2TD/Ild4zm38k/KXDb90XtlHZ1OXcHqlFMA+/E
+	NbYot+Ewkqwpo/R+cQEYFFsUpXvITdfSr+Xz9UI+aYx2zGWmGPM3wgrx
+X-Gm-Gg: Acq92OH8JsN15fZyu6wKDXlKDDEsMWKI4ldXyUeIDdhj9rwJ1FCm3clJV3e5RDix8Ss
+	GI7oFr5SFHwrNtFBZE+ELaABuYDChDCOmhDkX2+uE5GcAjNVDLX12u9uXk9tUpspZXMqN8lT6Ys
+	Whh5jOPTPAgYd9hzIzZzG/ToDVuWT5K/0uf+XrTxXwlpej/+KNWRhCbvH8SsK3nSPZYo2rJ6oP+
+	bXX2h29E93AUbkTxPCzcm2jx5Mx3FCpWhZUBT57dieNDjjvcawXbqWw4ojob8D2Yec2PTPvjZU5
+	LExF88OTUb4cQ71+McnL5MQ/vUVr+9wJtIfn5R4aA3S0GKaCnz6ccaWgbNwT109F+sZLbxO+83b
+	CLhXbWBCOtov8zzB98SxKCZUenKZEIistgAULbf35iqQVLskNrsPsuRnOUxDm4vmMaxyblGte7o
+	YqI18d5MYOzlqpCXNsL762+tOnHPymm1mdKcxlQXvmYt8hPrAxP3X7eS7MavkVAQfnLD8=
+X-Received: by 2002:adf:ef0a:0:b0:43d:7c1b:b8c7 with SMTP id ffacd0b85a97d-4602183267cmr11729522f8f.21.1780592375658;
+        Thu, 04 Jun 2026 09:59:35 -0700 (PDT)
+Received: from localhost.localdomain ([5.165.242.139])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f34413csm17376308f8f.21.2026.06.04.09.59.33
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 04 Jun 2026 09:59:35 -0700 (PDT)
+From: Anton Leontev <leontyevantony@gmail.com>
+To: netdev@vger.kernel.org
+Cc: linux-hyperv@vger.kernel.org,
+	haiyangz@microsoft.com,
+	kys@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	longli@microsoft.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	edumazet@google.com,
+	davem@davemloft.net,
+	stable@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Anton Leontev <leontyevantony@gmail.com>
+Subject: [PATCH net v3] hv_netvsc: use kmap_local_page in netvsc_copy_to_send_buf
+Date: Thu,  4 Jun 2026 19:59:38 +0300
+Message-ID: <20260604165938.32033-1-leontyevantony@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	MISSING_MIME_VERSION(2.00)[];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:leontyevantony@gmail.com,m:linux-hyperv@vger.kernel.org,s:lists@lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11489-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWO(0.00)[2];
-	MIME_TRACE(0.00)[0:+];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FREEMAIL_TO(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[vger.kernel.org,microsoft.com,kernel.org,redhat.com,google.com,davemloft.net,gmail.com];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-11490-lists,linux-hyperv=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	ALIAS_RESOLVED(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:netdev@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:haiyangz@microsoft.com,m:kys@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:edumazet@google.com,m:davem@davemloft.net,m:stable@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:leontyevantony@gmail.com,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER(0.00)[leontyevantony@gmail.com,linux-hyperv@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_NO_DN(0.00)[];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[leontyevantony@gmail.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,vger.kernel.org:from_smtp,smtp.kernel.org:mid]
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ALIAS_RESOLVED(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: BE966642081
+X-Rspamd-Queue-Id: 0C9016422F7
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Critical] The patch replaces `phys_to_virt()` with `kmap_local_page()` i=
-n `netvsc_copy_to_send_buf()` to support HIGHMEM SKB fragments. However, `k=
-map_local_page()` maps exactly one page (e.g., 4096 bytes). SKB fragments (=
-such as those from TCP sends using `sk_page_frag()` or NFS) can be backed b=
-y compound pages where the fragment size (`len`) exceeds a single page, or =
-where `offset + len` crosses a page boundary. The `pb` array populated by `=
-init_page_array()` contains exactly one entry per fragment, meaning `pb[i].=
-len` can exceed `PAGE_SIZE`. When `memcpy(dest, src + offset, len)` is call=
-ed, it will read past the 4KB window mapped by `kmap_local_page()`. On 32-b=
-it HIGHMEM systems, this accesses adjacent unmapped or unrelated fixmap slo=
-ts, causing a fatal page fault or memory leakage.
---
+netvsc_copy_to_send_buf() copies page buffer entries into the VMBus
+send buffer using phys_to_virt() on the entry PFN. Entries for the
+RNDIS header and the skb linear data come from kmalloc'd memory and
+are always in the kernel direct map, but entries for skb fragments
+reference page cache or user pages, which on 32-bit x86 with
+CONFIG_HIGHMEM=y can live above the LOWMEM boundary. For such a page
+phys_to_virt() returns an address outside the direct map and the
+subsequent memcpy() faults on the transmit softirq path, which is
+fatal.
 
-commit dfe36312b193784583b28a894f895984d7d0ebba
-Author: Anton Leontev <leontyevantony@gmail.com>
+Map the pages with kmap_local_page() instead, handling two properties
+of the page buffer entries:
 
-hv_netvsc: use kmap_local_page in netvsc_copy_to_send_buf
+ - pb[i].pfn is a Hyper-V PFN at HV_HYP_PAGE_SIZE (4K) granularity,
+   not a native PFN. Reconstruct the physical address first and derive
+   the native page from it, so the mapping stays correct where
+   PAGE_SIZE > HV_HYP_PAGE_SIZE (e.g. arm64 with 64K pages).
 
-This patch replaces phys_to_virt() with kmap_local_page() to support HIGHMEM
-SKB fragments that are beyond the LOWMEM boundary on 32-bit systems.
+ - Since commit 41a6328b2c55 ("hv_netvsc: Preserve contiguous PFN
+   grouping in the page buffer array"), an entry describes a full
+   physically contiguous fragment and pb[i].len can exceed PAGE_SIZE,
+   while kmap_local_page() maps a single page. Copy page by page,
+   splitting at native page boundaries.
 
-> diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-> index 59e95341f9b1e..2038d9f5c9f9a 100644
-> --- a/drivers/net/hyperv/netvsc.c
-> +++ b/drivers/net/hyperv/netvsc.c
-[ ... ]
-> @@ -965,11 +966,14 @@ static void netvsc_copy_to_send_buf(struct netvsc_d=
-evice *net_device,
->  	}
-> =20
->  	for (i =3D 0; i < page_count; i++) {
-> -		char *src =3D phys_to_virt(pb[i].pfn << HV_HYP_PAGE_SHIFT);
-> -		u32 offset =3D pb[i].offset;
-> +		phys_addr_t paddr =3D pb[i].pfn << HV_HYP_PAGE_SHIFT;
-> +		struct page *page =3D phys_to_page(paddr);
-> +		u32 offset =3D offset_in_page(paddr) + pb[i].offset;
->  		u32 len =3D pb[i].len;
-> +		char *src =3D kmap_local_page(page);
-> =20
->  		memcpy(dest, (src + offset), len);
+The copy path only handles packets smaller than the send section size
+(6144 bytes by default); larger packets take the cp_partial path where
+only the RNDIS header is copied. So entries here are bounded by the
+section size and a copy is split at most once on 4K-page systems. On
+!CONFIG_HIGHMEM configs kmap_local_page() folds to page_address() and
+no mapping work is added.
 
-[Severity: Critical]
-Will this memcpy() read beyond the 1-page mapping established by
-kmap_local_page()?
+Fixes: c25aaf814a63 ("hyperv: Enable sendbuf mechanism on the send path")
+Cc: stable@vger.kernel.org
+Signed-off-by: Anton Leontev <leontyevantony@gmail.com>
+---
+v3:
+ - Copy page by page: since 41a6328b2c55 a pb entry describes a full
+   contiguous fragment and pb[i].len can exceed PAGE_SIZE, while
+   kmap_local_page() maps a single page. Split copies at native page
+   boundaries.
+v2:
+ - Derive the native page and in-page offset from the physical
+   address instead of passing the Hyper-V 4K PFN to pfn_to_page(),
+   correct where PAGE_SIZE > 4K (e.g. arm64 64K pages).
 
-If the fragment size (len) plus offset exceeds PAGE_SIZE, it seems memcpy()
-will read past the locally mapped window. SKB fragments can be backed by
-compound pages where the fragment size exceeds a single page, and
-init_page_array() assigns the full fragment size to pb[i].len:
+I do not have a 32-bit HIGHMEM Hyper-V setup to exercise this path;
+testing help from the Hyper-V folks would be much appreciated.
+ drivers/net/hyperv/netvsc.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
-drivers/net/hyperv/netvsc_drv.c:init_page_array() {
-	...
-	cur_pb->offset =3D offset_in_hvpage(offset);
-	cur_pb->len =3D skb_frag_size(frag);
-	cur_pb->pfn =3D pfn + (offset >> HV_HYP_PAGE_SHIFT);
-	...
-}
+diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
+index 59e95341f9b1..4d319c50955e 100644
+--- a/drivers/net/hyperv/netvsc.c
++++ b/drivers/net/hyperv/netvsc.c
+@@ -12,6 +12,7 @@
+ #include <linux/sched.h>
+ #include <linux/wait.h>
+ #include <linux/mm.h>
++#include <linux/highmem.h>
+ #include <linux/delay.h>
+ #include <linux/io.h>
+ #include <linux/slab.h>
+@@ -965,12 +966,22 @@ static void netvsc_copy_to_send_buf(struct netvsc_device *net_device,
+ 	}
+ 
+ 	for (i = 0; i < page_count; i++) {
+-		char *src = phys_to_virt(pb[i].pfn << HV_HYP_PAGE_SHIFT);
+-		u32 offset = pb[i].offset;
++		phys_addr_t paddr = (pb[i].pfn << HV_HYP_PAGE_SHIFT) +
++				    pb[i].offset;
+ 		u32 len = pb[i].len;
+ 
+-		memcpy(dest, (src + offset), len);
+-		dest += len;
++		while (len) {
++			struct page *page = phys_to_page(paddr);
++			u32 off = offset_in_page(paddr);
++			u32 chunk = min_t(u32, len, PAGE_SIZE - off);
++			char *src = kmap_local_page(page);
++
++			memcpy(dest, src + off, chunk);
++			kunmap_local(src);
++			dest += chunk;
++			paddr += chunk;
++			len -= chunk;
++		}
+ 	}
+ 
+ 	if (padding)
+-- 
+2.43.0
 
-Other parts of the subsystem also document that a pb entry can cross page
-boundaries:
-
-drivers/net/hyperv/netvsc.c:netvsc_build_mpb_array() {
-	...
-	/* Each entry in the input "pb" array must describe a contiguous range
-	 * of guest physical memory so that the pfns are sequential if the range
-	 * crosses a page boundary. */
-	...
-	for (j =3D 0; j < HVPFN_UP(offset + len); j++)
-		mpb_entry->pfnArray[j] =3D pb[i].pfn + j;
-	...
-}
-
-Could this regression cause a fatal page fault on 32-bit HIGHMEM guests when
-an SKB fragment crosses a page boundary, or leak unrelated fixmap memory if
-the adjacent slot happens to be mapped?
-
-> +		kunmap_local(src);
->  		dest +=3D len;
->  	}
->
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260603163851.1805=
-8-1-leontyevantony@gmail.com?part=3D1
 
