@@ -1,162 +1,188 @@
-Return-Path: <linux-hyperv+bounces-11503-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11504-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 2+YCCSNhImq5VgEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11503-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 05 Jun 2026 07:39:47 +0200
+	id TPN+CFGFImqbZgEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11504-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 05 Jun 2026 10:14:09 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 688D2645319
-	for <lists+linux-hyperv@lfdr.de>; Fri, 05 Jun 2026 07:39:46 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C33C6464DE
+	for <lists+linux-hyperv@lfdr.de>; Fri, 05 Jun 2026 10:14:08 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linux.microsoft.com header.s=default header.b=kCFlTesH;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11503-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11503-lists+linux-hyperv=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=linux.microsoft.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=nPFRoWIF;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11504-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11504-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 10A09300B129
-	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Jun 2026 05:39:45 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 44C9A3006B6D
+	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Jun 2026 08:02:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFEF738BF97;
-	Fri,  5 Jun 2026 05:39:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB95E48B37E;
+	Fri,  5 Jun 2026 08:02:09 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB2142AD2C;
-	Fri,  5 Jun 2026 05:39:42 +0000 (UTC)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCDB647ECD1
+	for <linux-hyperv@vger.kernel.org>; Fri,  5 Jun 2026 08:02:08 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780637983; cv=none; b=IEaYmcdiFovK/4ECa5/mccw/7RybzFRFWN0DyU0PrXyn6mzjS0Gi5SQaSFLz6g66BZzoIfxbp1ilDFIuuLJZ0cGIqAGvoCrmZ6hRoDXfjx4V+kLjXR9F6WAA54d6UIGP/0aqwsJYjJfzCadJmxsjoQxLcLkIqd/mwkBuNZhIG/c=
+	t=1780646529; cv=none; b=jg3wPj+spGoLY9T9ifdNLj+CIMUVSS1HaK1tKEOuj1Z2I2wa8IDk/1oO1gAS40TfuU//gHgxlciTKIYRXkyTw2N5e2URv/xQyyosk5sqcySkokMJsh2YP1xOQPkZwAgXdJXiANNP/npsh2ohTxI3zETgQh+8Eb6EOsmcyv0ltsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780637983; c=relaxed/simple;
-	bh=OtzFLoaL6YRibt5cWxU3Bh1ybqbe+mB6LqicVDYoSVk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rr4pkLA6xuIPAYSFkcPHYDS6YDHUrOoQKWQfrxlK1kZRyudiCpNj1DKtR4id5QKQrCU64QMTg3dEE/hEwXDY388dfYRmKoLgG03MpduwYpYTqMnoI4B8ss+CYrKKaLG6H9iRct6d4OBSZ/KTwzinjo4B72wkyYiXCeRzWUhVzwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=kCFlTesH; arc=none smtp.client-ip=13.77.154.182
-Received: by linux.microsoft.com (Postfix, from userid 1173)
-	id BB02520B7169; Thu,  4 Jun 2026 22:29:29 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BB02520B7169
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1780637369;
-	bh=qIO/sBp81IBMRVL//sPxD46ntAHHAdA/+qb5LsOMY8c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kCFlTesHtfd61rL4g6Pk2Gf9tPjaIQvHUm8+WvC9ONeLMpNzq74ueTfVx+or9v5vv
-	 i1BXiC6LmO5lem0eSeF2ac6gFBq4SoHHuxkTr/k7U+vLYWHs9daeBo9qR+YwUCTxqE
-	 ITX8nLq26F57iawXJOMbSFnOTQtZUFCFpRzqXi3k=
-Date: Thu, 4 Jun 2026 22:29:29 -0700
-From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, longli@microsoft.com, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
-	kotaranov@microsoft.com, horms@kernel.org,
-	dipayanroy@linux.microsoft.com, kees@kernel.org,
-	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH net-next] net: mana: Cache MANA_QUERY_LINK_CONFIG result
- to avoid repeated HWC queries
-Message-ID: <aiJeuU3DLKL7JcPN@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <20260528180757.1536640-1-ernis@linux.microsoft.com>
- <20260602132127.25fc27ee@kernel.org>
+	s=arc-20240116; t=1780646529; c=relaxed/simple;
+	bh=X7A6lIB2SDPcikgyEWPFmrxrDn+vcl+vPxaZSubUAPk=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=MFE9PnzHKZ+a5pnpIKZW4lqfYWs2/14ZsBWkyJNU7Nu0iJifYpyX2Xt1IA4kKG2UsPp13khfVqJyiaizosRyx5fAdpDtFJvHcVU60C0JVYR2Z6lZ7V62VcrED26mB76RDxCwBM55RPMc8ZnbgQ0WOMCMS6FHa1+69k+1GT6k1h0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nPFRoWIF; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 283311F00893;
+	Fri,  5 Jun 2026 08:02:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780646528;
+	bh=3c2Rmt7T4i+TG48UjHMBdsdpSpIpS0On4iK17jXoDjo=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=nPFRoWIFOq07XT5Jxn1BRvcKlA9zQzEDXawiPq+tgFunlmknLB9Sjw+7uROx86/Yk
+	 imtQLkqPsFVzBaGpGL9mdY3UXm3CQFeUPg1aR7fF4bzMSofZixDfotWsQ8p3jRe0JO
+	 y8B9NXXdqel7B974MXI/tkdMWiXTWASzn1BQUqi2tamqrvqkjp8jhWrzcpAhwI8/+x
+	 OT8GViU07FeqK5HOLjo0oa1tRVhA93iIgATBFzuPsRisnZoXCs6nO0ePrmMgXa97PF
+	 4vP0A+Oixo0nW2ve7VJTsqAKNvxix1uGlzzwNo7Ipm1J1QLtIyjcs8/rnDUmoQj0vX
+	 Lr1KDl+aBdhXQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH net 2/2] net: mana: guard TX wq object destroy with
+ INVALID_MANA_HANDLE check
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Aditya Garg" <gargaditya@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org
+In-Reply-To: <20260604080137.1995269-3-gargaditya@linux.microsoft.com>
+References: <20260604080137.1995269-3-gargaditya@linux.microsoft.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 05 Jun 2026 08:02:07 +0000
+Message-Id: <20260605080208.283311F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260602132127.25fc27ee@kernel.org>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-11503-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11504-lists,linux-hyperv=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:gargaditya@linux.microsoft.com,m:linux-hyperv@vger.kernel.org,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER(0.00)[ernis@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	FORGED_RECIPIENTS(0.00)[m:kuba@kernel.org,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:andrew+netdev@lunn.ch,m:davem@davemloft.net,m:edumazet@google.com,m:pabeni@redhat.com,m:kotaranov@microsoft.com,m:horms@kernel.org,m:dipayanroy@linux.microsoft.com,m:kees@kernel.org,m:linux-hyperv@vger.kernel.org,m:netdev@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:andrew@lunn.ch,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
+	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ernis@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	RCPT_COUNT_TWO(0.00)[2];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
 	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NO_DN(0.00)[];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.microsoft.com:from_mime,linux.microsoft.com:dkim]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.linux.dev:replyto,sashiko.dev:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,smtp.kernel.org:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 688D2645319
+X-Rspamd-Queue-Id: 6C33C6464DE
 
-On Tue, Jun 02, 2026 at 01:21:27PM -0700, Jakub Kicinski wrote:
-> On Thu, 28 May 2026 11:07:51 -0700 Erni Sri Satya Vennela wrote:
-> > mana_query_link_cfg() sends an HWC command to firmware on every call,
-> > but the link speed and QoS values it returns only change when the
-> > driver explicitly calls mana_set_bw_clamp(). This function is called
-> > not only by userspace via ethtool get_link_ksettings, but also
-> > periodically by hv_netvsc through netvsc_get_link_ksettings and by
-> > the sysfs speed_show attribute via dev_attr_show, resulting in
-> > unnecessary HWC traffic every few minutes.
-> 
-> mana is ops-locked, right? Because you support net shapers
-> 
-> Could you instead take the netdev_lock() in the work?
-> It's already held around the user space originated calls.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-Hi Jakub,
+Pre-existing issues:
+- [High] In `mana_create_vport()`, if `mana_create_txq()` fails, the functi=
+on returns the error directly without unwinding the previously successful `=
+mana_cfg_vport()` and `mana_pf_register_hw_vport()`. Similarly, if `mana_cf=
+g_vport()` fails, it returns the error without unwinding `mana_pf_register_=
+hw_vport()`. This leaks firmware vPort registrations and leaves `apc->vport=
+_use_count > 0`, leading to a permanent `-EBUSY` error on all future attemp=
+ts to open the device.
+--
 
-I tried two netdev_lock-based variants. 
+commit 22337dc3f6a86510c8d8b1e096424ad2f6000592
+Author: Aditya Garg <gargaditya@linux.microsoft.com>
 
-mana_query_link_cfg() has four callers:
+net: mana: guard TX wq object destroy with INVALID_MANA_HANDLE check
 
-1 ethtool ioctl/netlink			- has RTNL	- has netdev->lock
-2 sysfs speed_show/duplex_show		- has RTNL	- no netdev->lock
-3 netvsc_get_link_ksettings VF forward	- has RTNL	- no netdev->lock
-4 mana_shaper_set			- no RTNL	- has netdev->lock
+This commit fixes an issue where mana_destroy_txq() attempts to destroy a
+WQ object using INVALID_MANA_HANDLE if allocation fails earlier. It adds
+a check to verify the handle is valid before calling mana_destroy_wq_obj().
 
-No existing lock covers all four.
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/=
+ethernet/microsoft/mana/mana_en.c
+> index db14357d3732e..4a2cd800111e7 100644
+> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> @@ -2351,7 +2351,8 @@ static void mana_destroy_txq(struct mana_port_conte=
+xt *apc)
+>  			netif_napi_del_locked(napi);
+>  			apc->tx_qp[i]->txq.napi_initialized =3D false;
+>  		}
+> -		mana_destroy_wq_obj(apc, GDMA_SQ, apc->tx_qp[i]->tx_object);
+> +		if (apc->tx_qp[i]->tx_object !=3D INVALID_MANA_HANDLE)
+> +			mana_destroy_wq_obj(apc, GDMA_SQ, apc->tx_qp[i]->tx_object);
+> =20
+>  		mana_deinit_cq(apc, &apc->tx_qp[i]->tx_cq);
+> =20
 
-A. netdev_assert_locked() in the mana_query_link_cfg() :
-Lockdep WARN on every sysfs cat /sys/class/net/eth*/speed and every
-periodic netvsc_get_link_ksettings() poll since callers 2 and 3 hold
-RTNL only.
-A slow firmware reply on callers 2/3 can land after mana_shaper_set
-(caller 4) has changed the rate and invalidated the cache,
-publishing a stale apc->speed / apc->max_speed as "cached valid". 
-Because the value is cached, the staleness then persists until the next
-shaper change
+[Severity: High]
+This is a pre-existing issue, but while reviewing the error paths that lead
+to mana_destroy_txq(), I noticed a potential resource leak in
+mana_create_vport().
 
-B. ASSERT_RTNL() + netdev_lock_ops() inside mana_query_link_cfg():
-Self-deadlocks on #1 (__dev_ethtool already holds it) and #4
-(mana_shaper_set already holds it and calls mana_query_link_cfg() before
-the clamp).
-ASSERT_RTNL() also WARNs from #4 — shaper genl ops don't take RTNL.
+If mana_create_txq() fails, the function returns the error directly without
+unwinding the previously successful mana_cfg_vport() and
+mana_pf_register_hw_vport():
 
-Eg. Deadlock scenario:
-__dev_ethtool()
-  netdev_lock_ops(dev)              ← held
-    ops->get_link_ksettings()
-      mana_get_link_ksettings()
-        mana_query_link_cfg()
-          netdev_lock_ops(ndev)     ← DEADLOCK
+drivers/net/ethernet/microsoft/mana/mana_en.c:mana_create_vport() {
+    ...
+	err =3D mana_cfg_vport(apc, gd->pdid, gd->doorbell);
+	if (err)
+		return err;
 
-Can we consider private link_cfg_mutex which is orthogonal to RTNL and
-netdev->lock and covers all four callers?
+	return mana_create_txq(apc, net);
+}
 
-Thanks,
-Vennela
+The same applies if mana_cfg_vport() fails, as it returns the error without
+unwinding mana_pf_register_hw_vport().
+
+Because mana_alloc_queues() propagates this error without calling
+mana_destroy_vport() or unwinding the partial initialization:
+
+drivers/net/ethernet/microsoft/mana/mana_en.c:mana_alloc_queues() {
+    ...
+	err =3D mana_create_vport(apc, ndev);
+	if (err) {
+		netdev_err(ndev, "Failed to create vPort %u : %d\n", apc->port_idx, err);
+		return err;
+	}
+    ...
+}
+
+Does this leak firmware vPort registrations and leave apc->vport_use_count =
+> 0,
+leading to a permanent -EBUSY error on all future attempts to open the devi=
+ce?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260604080137.1995=
+269-1-gargaditya@linux.microsoft.com?part=3D2
 
