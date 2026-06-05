@@ -1,40 +1,40 @@
-Return-Path: <linux-hyperv+bounces-11497-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11500-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id +vEwLXwfImreSgEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11497-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 05 Jun 2026 02:59:40 +0200
+	id DZ8DHD0gImojSwEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11500-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 05 Jun 2026 03:02:53 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B9A9644301
-	for <lists+linux-hyperv@lfdr.de>; Fri, 05 Jun 2026 02:59:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C9AF864438F
+	for <lists+linux-hyperv@lfdr.de>; Fri, 05 Jun 2026 03:02:52 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
 	dkim=none;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11497-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11497-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11500-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11500-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	dmarc=fail reason="SPF not aligned (relaxed), No valid DKIM" header.from=microsoft.com (policy=reject);
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 33C3E304E6E4
-	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Jun 2026 00:57:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9A3EB30985C7
+	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Jun 2026 00:57:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 819FE257ACF;
-	Fri,  5 Jun 2026 00:57:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E124325392C;
+	Fri,  5 Jun 2026 00:57:45 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3DFE24A076;
-	Fri,  5 Jun 2026 00:57:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92AF0258CCC;
+	Fri,  5 Jun 2026 00:57:39 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780621060; cv=none; b=ruET6nhs4m8zKgGisGxelAiorK1w9zRqlHnYQXqRX2i+NPNo3XXnvTwqIcVyoP+MdgYh0hlIYZn9S3Yz8KHePxrG9ax4prnUqMRO99uv+AAZPe+CjaetlpTLwUosoYvxHAFy2rNp8MF55AgwyiyxA97oQ+Qo3PrWda8Sk2jy24s=
+	t=1780621065; cv=none; b=mv0ISH88j8WQX2tQCZBzc2Qloy7RzC2taoMUB1aDtR3uovk+XvIeJ4N71KhZPplgGzEaxiei+d0BO+WyGS7lk0K5LRD5IukOijEAXFuWQZl1Wq03kO+nzS6pFSnQT+QOSlspcDT19fVTuWxPPbg/9dwvsLxwakFt292R9FODOs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780621060; c=relaxed/simple;
-	bh=4sfAK9TIcQUN17kqynjYaQpFa0avRyhteNDPM6rE2rE=;
+	s=arc-20240116; t=1780621065; c=relaxed/simple;
+	bh=+4sEAB4CFoBUMN1b8RV4miIwtuV8Irb33yvm4n9RQ8g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ra+qLFxQowzmChMdGqV+mYkjyxxQhsjxi/FHxcuzoNkIGxf40iplzHekCWN6U5GABDVlvNPiQXubRkM2X9/SQDYgAGJslfGe5JRe4Pcks/0zYkuPWT+DG+zPcRKuBMaHVxo3la+eSm4dFwz3zboGfUxVJee+w2e8gOO4lyil8nE=
+	 MIME-Version; b=ON/U1g3ZUUKVIyk/2mn0urCgp/dSMUAjz0lN2oOVxPW29FXKiSHz3lpBy0cxkW66K9tvyHD2C9V3F/Btk44Od4Ygj46SHj2ZSxNPZBax5+HrDWqW6BYWYri/3aAkUCGpCBe9EYpObCI922GFgVmkPc7qED2axxDgjHUlh1lag0o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; arc=none smtp.client-ip=13.77.154.182
 Received: by linux.microsoft.com (Postfix, from userid 1202)
-	id EEB1520B716B; Thu,  4 Jun 2026 17:57:23 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EEB1520B716B
+	id 9D59720B7169; Thu,  4 Jun 2026 17:57:24 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9D59720B7169
 From: Long Li <longli@microsoft.com>
 To: Long Li <longli@microsoft.com>,
 	Konstantin Taranov <kotaranov@microsoft.com>,
@@ -55,9 +55,9 @@ Cc: Simon Horman <horms@kernel.org>,
 	linux-rdma@vger.kernel.org,
 	linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v12 2/6] net: mana: Query device capabilities and configure MSI-X sharing for EQs
-Date: Thu,  4 Jun 2026 17:57:11 -0700
-Message-ID: <20260605005717.2059954-3-longli@microsoft.com>
+Subject: [PATCH net-next v12 3/6] net: mana: Introduce GIC context with refcounting for interrupt management
+Date: Thu,  4 Jun 2026 17:57:12 -0700
+Message-ID: <20260605005717.2059954-4-longli@microsoft.com>
 X-Mailer: git-send-email 2.43.7
 In-Reply-To: <20260605005717.2059954-1-longli@microsoft.com>
 References: <20260605005717.2059954-1-longli@microsoft.com>
@@ -80,15 +80,15 @@ X-Spamd-Result: default: False [3.54 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER(0.00)[longli@microsoft.com,linux-hyperv@vger.kernel.org];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
-	RCVD_COUNT_THREE(0.00)[4];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp];
 	FORGED_RECIPIENTS(0.00)[m:longli@microsoft.com,m:kotaranov@microsoft.com,m:kuba@kernel.org,m:davem@davemloft.net,m:pabeni@redhat.com,m:edumazet@google.com,m:andrew+netdev@lunn.ch,m:jgg@ziepe.ca,m:leon@kernel.org,m:haiyangz@microsoft.com,m:kys@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:shradhagupta@linux.microsoft.com,m:horms@kernel.org,m:netdev@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:andrew@lunn.ch,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[19];
-	TAGGED_FROM(0.00)[bounces-11497-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11500-lists,linux-hyperv=lfdr.de];
 	FROM_NEQ_ENVFROM(0.00)[longli@microsoft.com,linux-hyperv@vger.kernel.org];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
@@ -101,327 +101,258 @@ X-Spamd-Result: default: False [3.54 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5B9A9644301
+X-Rspamd-Queue-Id: C9AF864438F
 
-When querying the device, adjust the max number of queues to allow
-dedicated MSI-X vectors for each vPort. The per-vPort queue count is
-clamped towards MANA_DEF_NUM_QUEUES but will not exceed the hardware
-maximum reported by the device.
-
-MSI-X sharing among vPorts is enabled when there are not enough MSI-X
-vectors for dedicated allocation, or when the platform does not support
-dynamic MSI-X allocation (in which case all vectors are pre-allocated
-at probe time and sharing is always used). The msi_sharing flag is
-reset at the top of mana_gd_query_max_resources() so it is recomputed
-from current hardware state on each probe or resume cycle.
-
-Clamp apc->max_queues to gc->max_num_queues_vport in mana_init_port()
-so that on resume, if max_num_queues_vport has decreased due to fewer
-MSI-X vectors, num_queues is reduced accordingly before EQ allocation.
-
-A device reporting zero ports now results in a fatal probe error since
-the per-vPort MSI-X math requires at least one port.
-
-Rename mana_query_device_cfg() to mana_gd_query_device_cfg() as it is
-used at GDMA device probe time for querying device capabilities.
+To allow Ethernet EQs to use dedicated or shared MSI-X vectors and RDMA
+EQs to share the same MSI-X, introduce a GIC (GDMA IRQ Context) with
+reference counting. This allows the driver to create an interrupt context
+on an assigned or unassigned MSI-X vector and share it across multiple
+EQ consumers.
 
 Signed-off-by: Long Li <longli@microsoft.com>
 ---
- .../net/ethernet/microsoft/mana/gdma_main.c   | 78 ++++++++++++++++++-
- drivers/net/ethernet/microsoft/mana/mana_en.c | 45 ++++++-----
- include/net/mana/gdma.h                       | 13 +++-
- 3 files changed, 114 insertions(+), 22 deletions(-)
+ .../net/ethernet/microsoft/mana/gdma_main.c   | 169 ++++++++++++++++++
+ include/net/mana/gdma.h                       |  12 ++
+ 2 files changed, 181 insertions(+)
 
 diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index 712a0881d720..786e1d4cd4fe 100644
+index 786e1d4cd4fe..fd643300a427 100644
 --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
 +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -179,8 +179,21 @@ static int mana_gd_query_max_resources(struct pci_dev *pdev)
- 	struct gdma_context *gc = pci_get_drvdata(pdev);
- 	struct gdma_query_max_resources_resp resp = {};
- 	struct gdma_general_req req = {};
-+	unsigned int max_num_queues;
-+	u8 bm_hostmode;
-+	u16 num_ports;
- 	int err;
- 
-+	/* Reset msi_sharing so it is recomputed from current hardware
-+	 * state. On resume, num_online_cpus() or num_msix_usable may
-+	 * have changed, making dedicated MSI-X feasible where it was
-+	 * not before. Only reset on platforms that support dynamic
-+	 * MSI-X allocation; on non-dyn platforms msi_sharing is
-+	 * unconditionally true (set in mana_gd_setup_hwc_irqs).
-+	 */
-+	if (pci_msix_can_alloc_dyn(to_pci_dev(gc->dev)))
-+		gc->msi_sharing = false;
-+
- 	mana_gd_init_req_hdr(&req.hdr, GDMA_QUERY_MAX_RESOURCES,
- 			     sizeof(req), sizeof(resp));
- 
-@@ -232,6 +245,52 @@ static int mana_gd_query_max_resources(struct pci_dev *pdev)
- 	debugfs_create_u32("max_num_queues", 0400, gc->mana_pci_debugfs,
- 			   &gc->max_num_queues);
- 
-+	err = mana_gd_query_device_cfg(gc, MANA_MAJOR_VERSION,
-+				       MANA_MINOR_VERSION,
-+				       MANA_MICRO_VERSION,
-+				       &num_ports, &bm_hostmode);
-+	if (err)
-+		return err;
-+
-+	if (!num_ports) {
-+		dev_err(gc->dev, "Failed to detect any vPort\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Cap to the same limit used by mana_probe() for port instantiation,
-+	 * so MSI-X and queue budgeting matches the actual port count.
-+	 */
-+	if (num_ports > MAX_PORTS_IN_MANA_DEV)
-+		num_ports = MAX_PORTS_IN_MANA_DEV;
-+
-+	/*
-+	 * Adjust the per-vPort max queue count to allow dedicated
-+	 * MSIx for each vPort. Prefer at least MANA_DEF_NUM_QUEUES,
-+	 * but the hardware max (gc->max_num_queues) takes precedence.
-+	 */
-+	max_num_queues = (gc->num_msix_usable - 1) / num_ports;
-+	max_num_queues = rounddown_pow_of_two(max(max_num_queues, 1U));
-+	if (max_num_queues < MANA_DEF_NUM_QUEUES)
-+		max_num_queues = MANA_DEF_NUM_QUEUES;
-+
-+	/*
-+	 * Use dedicated MSIx for EQs whenever possible, use MSIx sharing for
-+	 * Ethernet EQs when (max_num_queues * num_ports > num_msix_usable - 1).
-+	 */
-+	max_num_queues = min(gc->max_num_queues, max_num_queues);
-+	if (max_num_queues * num_ports > gc->num_msix_usable - 1)
-+		gc->msi_sharing = true;
-+
-+	/* If MSI is shared, use max allowed value */
-+	if (gc->msi_sharing)
-+		gc->max_num_queues_vport = min(gc->num_msix_usable - 1,
-+					       gc->max_num_queues);
-+	else
-+		gc->max_num_queues_vport = max_num_queues;
-+
-+	dev_info(gc->dev, "MSI sharing mode %u max queues %u\n",
-+		 gc->msi_sharing, gc->max_num_queues_vport);
-+
- 	return 0;
- }
- 
-@@ -1901,6 +1960,7 @@ static int mana_gd_setup_hwc_irqs(struct pci_dev *pdev)
- 		/* Need 1 interrupt for HWC */
- 		max_irqs = min(num_online_cpus(), MANA_MAX_NUM_QUEUES) + 1;
- 		min_irqs = 2;
-+		gc->msi_sharing = true;
+@@ -871,6 +871,10 @@ static int mana_gd_register_irq(struct gdma_queue *queue,
  	}
  
- 	nvec = pci_alloc_irq_vectors(pdev, min_irqs, max_irqs, PCI_IRQ_MSIX);
-@@ -1979,6 +2039,8 @@ static void mana_gd_remove_irqs(struct pci_dev *pdev)
+ 	queue->eq.msix_index = msi_index;
++	/* The caller acquired a GIC reference via mana_gd_get_gic().
++	 * That refcount prevents mana_gd_put_gic() from erasing this
++	 * irq_contexts entry concurrently.
++	 */
+ 	gic = xa_load(&gc->irq_contexts, msi_index);
+ 	if (WARN_ON(!gic))
+ 		return -EINVAL;
+@@ -898,6 +902,10 @@ static void mana_gd_deregister_irq(struct gdma_queue *queue)
+ 	if (WARN_ON(msix_index >= gc->num_msix_usable))
+ 		return;
  
- 	pci_free_irq_vectors(pdev);
- 
-+	bitmap_free(gc->msi_bitmap);
-+	gc->msi_bitmap = NULL;
- 	gc->max_num_msix = 0;
- 	gc->num_msix_usable = 0;
- }
-@@ -2018,6 +2080,10 @@ static int mana_gd_setup(struct pci_dev *pdev)
- 	if (err)
- 		goto destroy_hwc;
- 
-+	err = mana_gd_detect_devices(pdev);
-+	if (err)
-+		goto destroy_hwc;
-+
- 	err = mana_gd_query_max_resources(pdev);
- 	if (err)
- 		goto destroy_hwc;
-@@ -2028,9 +2094,15 @@ static int mana_gd_setup(struct pci_dev *pdev)
- 		goto destroy_hwc;
- 	}
- 
--	err = mana_gd_detect_devices(pdev);
--	if (err)
--		goto destroy_hwc;
-+	if (!gc->msi_sharing) {
-+		gc->msi_bitmap = bitmap_zalloc(gc->num_msix_usable, GFP_KERNEL);
-+		if (!gc->msi_bitmap) {
-+			err = -ENOMEM;
-+			goto destroy_hwc;
-+		}
-+		/* Set bit for HWC */
-+		set_bit(0, gc->msi_bitmap);
-+	}
- 
- 	dev_dbg(&pdev->dev, "mana gdma setup successful\n");
- 	return 0;
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index ed60cc15fe78..3ec8e94e7c17 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -1018,10 +1018,9 @@ static int mana_init_port_context(struct mana_port_context *apc)
- 	return !apc->rxqs ? -ENOMEM : 0;
++	/* The caller releases the GIC reference via mana_gd_put_gic()
++	 * after this function returns. The refcount guarantees this
++	 * irq_contexts entry is still valid.
++	 */
+ 	gic = xa_load(&gc->irq_contexts, msix_index);
+ 	if (WARN_ON(!gic))
+ 		return;
+@@ -1679,6 +1687,166 @@ static irqreturn_t mana_gd_intr(int irq, void *arg)
+ 	return IRQ_HANDLED;
  }
  
--static int mana_send_request(struct mana_context *ac, void *in_buf,
--			     u32 in_len, void *out_buf, u32 out_len)
-+static int gdma_mana_send_request(struct gdma_context *gc, void *in_buf,
-+				  u32 in_len, void *out_buf, u32 out_len)
- {
--	struct gdma_context *gc = ac->gdma_dev->gdma_context;
- 	struct gdma_resp_hdr *resp = out_buf;
- 	struct gdma_req_hdr *req = in_buf;
- 	struct device *dev = gc->dev;
-@@ -1055,6 +1054,14 @@ static int mana_send_request(struct mana_context *ac, void *in_buf,
- 	return 0;
- }
- 
-+static int mana_send_request(struct mana_context *ac, void *in_buf,
-+			     u32 in_len, void *out_buf, u32 out_len)
++void mana_gd_put_gic(struct gdma_context *gc, bool use_msi_bitmap, int msi)
 +{
-+	struct gdma_context *gc = ac->gdma_dev->gdma_context;
++	struct pci_dev *dev = to_pci_dev(gc->dev);
++	struct gdma_irq_context *gic;
++	struct msi_map irq_map;
++	int irq;
 +
-+	return gdma_mana_send_request(gc, in_buf, in_len, out_buf, out_len);
++	mutex_lock(&gc->gic_mutex);
++
++	gic = xa_load(&gc->irq_contexts, msi);
++	if (WARN_ON(!gic)) {
++		mutex_unlock(&gc->gic_mutex);
++		return;
++	}
++
++	if (use_msi_bitmap)
++		gic->bitmap_refs--;
++
++	if (use_msi_bitmap && gic->bitmap_refs == 0)
++		clear_bit(msi, gc->msi_bitmap);
++
++	if (!refcount_dec_and_test(&gic->refcount))
++		goto out;
++
++	irq = gic->irq;
++
++	irq_update_affinity_hint(irq, NULL);
++	free_irq(irq, gic);
++
++	if (gic->dyn_msix) {
++		irq_map.virq = irq;
++		irq_map.index = msi;
++		pci_msix_free_irq(dev, irq_map);
++	}
++
++	xa_erase(&gc->irq_contexts, msi);
++	kfree(gic);
++
++out:
++	mutex_unlock(&gc->gic_mutex);
 +}
++EXPORT_SYMBOL_NS(mana_gd_put_gic, "NET_MANA");
 +
- static int mana_verify_resp_hdr(const struct gdma_resp_hdr *resp_hdr,
- 				const enum mana_command_code expected_code,
- 				const u32 min_size)
-@@ -1188,11 +1195,10 @@ static void mana_pf_deregister_filter(struct mana_port_context *apc)
- 			   err, resp.hdr.status);
- }
- 
--static int mana_query_device_cfg(struct mana_context *ac, u32 proto_major_ver,
--				 u32 proto_minor_ver, u32 proto_micro_ver,
--				 u16 *max_num_vports, u8 *bm_hostmode)
-+int mana_gd_query_device_cfg(struct gdma_context *gc, u32 proto_major_ver,
-+			     u32 proto_minor_ver, u32 proto_micro_ver,
-+			     u16 *max_num_vports, u8 *bm_hostmode)
++/*
++ * Get a GIC (GDMA IRQ Context) on a MSI vector
++ * a MSI can be shared between different EQs, this function supports setting
++ * up separate MSIs using a bitmap, or directly using the MSI index
++ *
++ * @use_msi_bitmap:
++ * True if MSI is assigned by this function on available slots from bitmap.
++ * False if MSI is passed from *msi_requested
++ */
++struct gdma_irq_context *mana_gd_get_gic(struct gdma_context *gc,
++					 bool use_msi_bitmap,
++					 int *msi_requested)
++{
++	struct pci_dev *dev = to_pci_dev(gc->dev);
++	struct gdma_irq_context *gic;
++	struct msi_map irq_map = { };
++	int irq;
++	int msi;
++	int err;
++
++	mutex_lock(&gc->gic_mutex);
++
++	if (use_msi_bitmap) {
++		msi = find_first_zero_bit(gc->msi_bitmap, gc->num_msix_usable);
++		if (msi >= gc->num_msix_usable) {
++			dev_err(gc->dev, "No free MSI vectors available\n");
++			gic = ERR_PTR(-ENOSPC);
++			goto out;
++		}
++		*msi_requested = msi;
++	} else {
++		msi = *msi_requested;
++	}
++
++	gic = xa_load(&gc->irq_contexts, msi);
++	if (gic) {
++		refcount_inc(&gic->refcount);
++		if (use_msi_bitmap) {
++			gic->bitmap_refs++;
++			set_bit(msi, gc->msi_bitmap);
++		}
++		goto out;
++	}
++
++	irq = pci_irq_vector(dev, msi);
++	if (irq == -EINVAL) {
++		irq_map = pci_msix_alloc_irq_at(dev, msi, NULL);
++		if (!irq_map.virq) {
++			err = irq_map.index;
++			dev_err(gc->dev,
++				"Failed to alloc irq_map msi %d err %d\n",
++				msi, err);
++			gic = ERR_PTR(err);
++			goto out;
++		}
++		irq = irq_map.virq;
++		msi = irq_map.index;
++		*msi_requested = msi;
++	}
++
++	gic = kzalloc(sizeof(*gic), GFP_KERNEL);
++	if (!gic) {
++		gic = ERR_PTR(-ENOMEM);
++		if (irq_map.virq)
++			pci_msix_free_irq(dev, irq_map);
++		goto out;
++	}
++
++	gic->handler = mana_gd_process_eq_events;
++	gic->msi = msi;
++	gic->irq = irq;
++	INIT_LIST_HEAD(&gic->eq_list);
++	spin_lock_init(&gic->lock);
++
++	if (!gic->msi)
++		snprintf(gic->name, MANA_IRQ_NAME_SZ, "mana_hwc@pci:%s",
++			 pci_name(dev));
++	else
++		snprintf(gic->name, MANA_IRQ_NAME_SZ, "mana_msi%d@pci:%s",
++			 gic->msi, pci_name(dev));
++
++	err = request_irq(irq, mana_gd_intr, 0, gic->name, gic);
++	if (err) {
++		dev_err(gc->dev, "Failed to request irq %d %s\n",
++			irq, gic->name);
++		kfree(gic);
++		gic = ERR_PTR(err);
++		if (irq_map.virq)
++			pci_msix_free_irq(dev, irq_map);
++		goto out;
++	}
++
++	gic->dyn_msix = !!irq_map.virq;
++	refcount_set(&gic->refcount, 1);
++	gic->bitmap_refs = use_msi_bitmap ? 1 : 0;
++
++	err = xa_err(xa_store(&gc->irq_contexts, msi, gic, GFP_KERNEL));
++	if (err) {
++		dev_err(gc->dev, "Failed to store irq context for msi %d: %d\n",
++			msi, err);
++		free_irq(irq, gic);
++		kfree(gic);
++		gic = ERR_PTR(err);
++		if (irq_map.virq)
++			pci_msix_free_irq(dev, irq_map);
++		goto out;
++	}
++
++	if (use_msi_bitmap)
++		set_bit(msi, gc->msi_bitmap);
++
++out:
++	mutex_unlock(&gc->gic_mutex);
++	return gic;
++}
++EXPORT_SYMBOL_NS(mana_gd_get_gic, "NET_MANA");
++
+ int mana_gd_alloc_res_map(u32 res_avail, struct gdma_resource *r)
  {
--	struct gdma_context *gc = ac->gdma_dev->gdma_context;
- 	struct mana_query_device_cfg_resp resp = {};
- 	struct mana_query_device_cfg_req req = {};
- 	struct device *dev = gc->dev;
-@@ -1207,7 +1213,8 @@ static int mana_query_device_cfg(struct mana_context *ac, u32 proto_major_ver,
- 	req.proto_minor_ver = proto_minor_ver;
- 	req.proto_micro_ver = proto_micro_ver;
+ 	r->map = bitmap_zalloc(res_avail, GFP_KERNEL);
+@@ -2180,6 +2348,7 @@ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 		goto release_region;
  
--	err = mana_send_request(ac, &req, sizeof(req), &resp, sizeof(resp));
-+	err = gdma_mana_send_request(gc, &req, sizeof(req),
-+				     &resp, sizeof(resp));
- 	if (err) {
- 		dev_err(dev, "Failed to query config: %d", err);
- 		return err;
-@@ -1241,8 +1248,6 @@ static int mana_query_device_cfg(struct mana_context *ac, u32 proto_major_ver,
- 	else
- 		*bm_hostmode = 0;
- 
--	debugfs_create_u16("adapter-MTU", 0400, gc->mana_pci_debugfs, &gc->adapter_mtu);
--
- 	return 0;
- }
- 
-@@ -3208,6 +3213,8 @@ static int mana_init_port(struct net_device *ndev)
- 	max_queues = min_t(u32, max_txq, max_rxq);
- 	if (apc->max_queues > max_queues)
- 		apc->max_queues = max_queues;
-+	if (apc->max_queues > gc->max_num_queues_vport)
-+		apc->max_queues = gc->max_num_queues_vport;
- 
- 	if (apc->num_queues > apc->max_queues)
- 		apc->num_queues = apc->max_queues;
-@@ -3478,7 +3485,7 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
- 	int err;
- 
- 	ndev = alloc_etherdev_mq(sizeof(struct mana_port_context),
--				 gc->max_num_queues);
-+				 gc->max_num_queues_vport);
- 	if (!ndev)
- 		return -ENOMEM;
- 
-@@ -3487,9 +3494,9 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
- 	apc = netdev_priv(ndev);
- 	apc->ac = ac;
- 	apc->ndev = ndev;
--	apc->max_queues = gc->max_num_queues;
-+	apc->max_queues = gc->max_num_queues_vport;
- 	/* Use MANA_DEF_NUM_QUEUES as default, still honoring the HW limit */
--	apc->num_queues = min(gc->max_num_queues, MANA_DEF_NUM_QUEUES);
-+	apc->num_queues = min(gc->max_num_queues_vport, MANA_DEF_NUM_QUEUES);
- 	apc->tx_queue_size = DEF_TX_BUFFERS_PER_QUEUE;
- 	apc->rx_queue_size = DEF_RX_BUFFERS_PER_QUEUE;
- 	apc->port_handle = INVALID_MANA_HANDLE;
-@@ -3753,13 +3760,18 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
- 
- 	INIT_DELAYED_WORK(&ac->gf_stats_work, mana_gf_stats_work_handler);
- 
--	err = mana_query_device_cfg(ac, MANA_MAJOR_VERSION, MANA_MINOR_VERSION,
--				    MANA_MICRO_VERSION, &num_ports, &bm_hostmode);
-+	err = mana_gd_query_device_cfg(gc, MANA_MAJOR_VERSION,
-+				       MANA_MINOR_VERSION,
-+				       MANA_MICRO_VERSION,
-+				       &num_ports, &bm_hostmode);
- 	if (err)
- 		goto out;
- 
- 	ac->bm_hostmode = bm_hostmode;
- 
-+	debugfs_create_u16("adapter-MTU", 0400,
-+			   gc->mana_pci_debugfs, &gc->adapter_mtu);
-+
- 	if (!resuming) {
- 		ac->num_ports = num_ports;
- 	} else {
-@@ -3773,9 +3785,6 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
- 		enable_work(&ac->link_change_work);
- 	}
- 
--	if (ac->num_ports == 0)
--		dev_err(dev, "Failed to detect any vPort\n");
--
- 	if (ac->num_ports > MAX_PORTS_IN_MANA_DEV)
- 		ac->num_ports = MAX_PORTS_IN_MANA_DEV;
- 
+ 	mutex_init(&gc->eq_test_event_mutex);
++	mutex_init(&gc->gic_mutex);
+ 	pci_set_drvdata(pdev, gc);
+ 	gc->bar0_pa = pci_resource_start(pdev, 0);
+ 	gc->bar0_size = pci_resource_len(pdev, 0);
 diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
-index 70d62bc32837..145cc59dfc19 100644
+index 145cc59dfc19..e3ee85c614ec 100644
 --- a/include/net/mana/gdma.h
 +++ b/include/net/mana/gdma.h
-@@ -399,8 +399,10 @@ struct gdma_context {
- 	struct device		*dev;
- 	struct dentry		*mana_pci_debugfs;
- 
--	/* Per-vPort max number of queues */
-+	/* Hardware max number of queues */
- 	unsigned int		max_num_queues;
-+	/* Per-vPort max number of queues */
-+	unsigned int		max_num_queues_vport;
- 	unsigned int		max_num_msix;
- 	unsigned int		num_msix_usable;
- 	struct xarray		irq_contexts;
-@@ -447,6 +449,12 @@ struct gdma_context {
- 	struct workqueue_struct *service_wq;
- 
- 	unsigned long		flags;
-+
-+	/* Indicate if this device is sharing MSI for EQs on MANA */
-+	bool msi_sharing;
-+
-+	/* Bitmap tracks where MSI is allocated when it is not shared for EQs */
-+	unsigned long *msi_bitmap;
+@@ -388,6 +388,11 @@ struct gdma_irq_context {
+ 	spinlock_t lock;
+ 	struct list_head eq_list;
+ 	char name[MANA_IRQ_NAME_SZ];
++	unsigned int msi;
++	unsigned int irq;
++	refcount_t refcount;
++	unsigned int bitmap_refs;
++	bool dyn_msix;
  };
  
- static inline bool mana_gd_is_mana(struct gdma_dev *gd)
-@@ -1019,4 +1027,7 @@ int mana_gd_resume(struct pci_dev *pdev);
+ enum gdma_context_flags {
+@@ -450,6 +455,9 @@ struct gdma_context {
+ 
+ 	unsigned long		flags;
+ 
++	/* Protect access to GIC context */
++	struct mutex		gic_mutex;
++
+ 	/* Indicate if this device is sharing MSI for EQs on MANA */
+ 	bool msi_sharing;
+ 
+@@ -1027,6 +1035,10 @@ int mana_gd_resume(struct pci_dev *pdev);
  
  bool mana_need_log(struct gdma_context *gc, int err);
  
-+int mana_gd_query_device_cfg(struct gdma_context *gc, u32 proto_major_ver,
-+			     u32 proto_minor_ver, u32 proto_micro_ver,
-+			     u16 *max_num_vports, u8 *bm_hostmode);
- #endif /* _GDMA_H */
++struct gdma_irq_context *mana_gd_get_gic(struct gdma_context *gc,
++					 bool use_msi_bitmap,
++					 int *msi_requested);
++void mana_gd_put_gic(struct gdma_context *gc, bool use_msi_bitmap, int msi);
+ int mana_gd_query_device_cfg(struct gdma_context *gc, u32 proto_major_ver,
+ 			     u32 proto_minor_ver, u32 proto_micro_ver,
+ 			     u16 *max_num_vports, u8 *bm_hostmode);
 -- 
 2.43.0
 
