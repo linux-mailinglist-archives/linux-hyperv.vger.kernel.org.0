@@ -1,39 +1,40 @@
-Return-Path: <linux-hyperv+bounces-11495-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11496-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id zj7AFgUfImrFSgEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11495-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 05 Jun 2026 02:57:41 +0200
+	id MOmlL1ofImrXSgEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11496-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 05 Jun 2026 02:59:06 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD5296442B9
-	for <lists+linux-hyperv@lfdr.de>; Fri, 05 Jun 2026 02:57:40 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 220A46442EC
+	for <lists+linux-hyperv@lfdr.de>; Fri, 05 Jun 2026 02:59:06 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
 	dkim=none;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11495-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11495-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11496-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11496-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	dmarc=fail reason="SPF not aligned (relaxed), No valid DKIM" header.from=microsoft.com (policy=reject);
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5C1A53011F17
-	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Jun 2026 00:57:39 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 75F57303EF4B
+	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Jun 2026 00:57:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD5F423D7FF;
-	Fri,  5 Jun 2026 00:57:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADAB625D53B;
+	Fri,  5 Jun 2026 00:57:39 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4010A1C695;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBC1E22339;
 	Fri,  5 Jun 2026 00:57:37 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780621058; cv=none; b=UAI1FRcr1ZmZq736FojMgGpvW3CaedOC3ZYzhsuvuAWJ/FKgYvCSwQ11Z4GR5IP6wWN1VUFXsTjkVvP/szuRpOq860EQ7KiWiXO6PZCKPP0K+11ebPq49h+u+L6Zj/+k3mfynt4JC4ZwSeTGl3clRDvw77Epg1qtRSm9QgFB0aU=
+	t=1780621059; cv=none; b=RgpTUkwEoNIHFK5lJjMEfd1DF5//QpjeDJU2qTvRSESblTt+dXHiHxA0QTOcdlCU1wl4wEJPSyf+rzajfSOsCrJDWzXx2ZLL5zv/dJHBNriI4ibwbX1MNu/Vn+pJAr8zO+DWJcE4HMf8qBXh7VPJT5xfxusPEPpcHBohlZLolkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780621058; c=relaxed/simple;
-	bh=jszyRrYiL96XU6G1BbKnPnxd9Zpxbplb2qCmzqkVUOA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QgRxvtzaubqfI+CDycgYCgwiBCCJGlQ41dBDAwCup4J/5LEZx8Wu8epFFI8cMDYbtTzZ5n54nAWro8LvJml2/7WNwMuA2cEoWlxixVcTvueCHcsBST7oEIzBY9SVITJhniwA4KcEe0ItB5gQsu13tYDpz2ZmbMLP5PTY/zgpWyo=
+	s=arc-20240116; t=1780621059; c=relaxed/simple;
+	bh=uzqDyfxcUWgsTLmirr4dXPryqxzYD4bwyCqxSCAeoDw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rlK4+IA9sVWXX4CgU2yFlz7Yh3R3oOjrtu16+7Z1tEyjmR0URXVGot7WusIF4sO/ZMrFm0AnllHvMPhC6Bacx0Es9onJGmbOsVnQMHmqTGsKllXG5wQfBIwSTGYqgIuji7TvLWtf+TE1EevfJjMtbaexpQ/40WsVbmerfR7X/ug=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; arc=none smtp.client-ip=13.77.154.182
 Received: by linux.microsoft.com (Postfix, from userid 1202)
-	id 1677A20B7169; Thu,  4 Jun 2026 17:57:22 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1677A20B7169
+	id BC3E120B716A; Thu,  4 Jun 2026 17:57:22 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BC3E120B716A
 From: Long Li <longli@microsoft.com>
 To: Long Li <longli@microsoft.com>,
 	Konstantin Taranov <kotaranov@microsoft.com>,
@@ -54,243 +55,801 @@ Cc: Simon Horman <horms@kernel.org>,
 	linux-rdma@vger.kernel.org,
 	linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v12 0/6] net: mana: Per-vPort EQ and MSI-X management
-Date: Thu,  4 Jun 2026 17:57:09 -0700
-Message-ID: <20260605005717.2059954-1-longli@microsoft.com>
+Subject: [PATCH net-next v12 1/6] net: mana: Create separate EQs for each vPort
+Date: Thu,  4 Jun 2026 17:57:10 -0700
+Message-ID: <20260605005717.2059954-2-longli@microsoft.com>
 X-Mailer: git-send-email 2.43.7
+In-Reply-To: <20260605005717.2059954-1-longli@microsoft.com>
+References: <20260605005717.2059954-1-longli@microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [3.54 / 15.00];
+X-Spamd-Result: default: False [3.04 / 15.00];
 	DMARC_POLICY_REJECT(2.00)[microsoft.com : SPF not aligned (relaxed), No valid DKIM,reject];
 	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	MID_CONTAINS_FROM(1.00)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER(0.00)[longli@microsoft.com,linux-hyperv@vger.kernel.org];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:longli@microsoft.com,m:kotaranov@microsoft.com,m:kuba@kernel.org,m:davem@davemloft.net,m:pabeni@redhat.com,m:edumazet@google.com,m:andrew+netdev@lunn.ch,m:jgg@ziepe.ca,m:leon@kernel.org,m:haiyangz@microsoft.com,m:kys@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:shradhagupta@linux.microsoft.com,m:horms@kernel.org,m:netdev@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:andrew@lunn.ch,s:lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11496-lists,linux-hyperv=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[19];
-	TAGGED_FROM(0.00)[bounces-11495-lists,linux-hyperv=lfdr.de];
-	FROM_NEQ_ENVFROM(0.00)[longli@microsoft.com,linux-hyperv@vger.kernel.org];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	R_DKIM_NA(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:longli@microsoft.com,m:kotaranov@microsoft.com,m:kuba@kernel.org,m:davem@davemloft.net,m:pabeni@redhat.com,m:edumazet@google.com,m:andrew+netdev@lunn.ch,m:jgg@ziepe.ca,m:leon@kernel.org,m:haiyangz@microsoft.com,m:kys@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:shradhagupta@linux.microsoft.com,m:horms@kernel.org,m:netdev@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:andrew@lunn.ch,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[longli@microsoft.com,linux-hyperv@vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[longli@microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG]
+	FORGED_SENDER_FORWARDING(0.00)[];
+	R_DKIM_NA(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: AD5296442B9
+X-Rspamd-Queue-Id: 220A46442EC
 
-This series moves EQ ownership from the shared mana_context to per-vPort
-mana_port_context, enabling each vPort to have dedicated MSI-X vectors
-when the hardware provides enough vectors. When vectors are limited, the
-driver falls back to sharing MSI-X among vPorts.
+To prepare for assigning vPorts to dedicated MSI-X vectors, remove EQ
+sharing among the vPorts and create dedicated EQs for each vPort.
 
-The series introduces a GDMA IRQ Context (GIC) abstraction with reference
-counting to manage interrupt context lifecycle. This allows both Ethernet
-and RDMA EQs to dynamically acquire dedicated or shared MSI-X vectors at
-vPort creation time rather than pre-allocating all vectors at probe time.
+Move the EQ definition from struct mana_context to struct mana_port_context
+and update related support functions. Export mana_create_eq() and
+mana_destroy_eq() for use by the MANA RDMA driver.
 
-This series is intended to go through the net-next tree.
+RSS QPs now take a vport reference via pd->vport_use_count to ensure
+EQs outlive all QP consumers. The vport must already be configured by
+a raw QP before an RSS QP can be created. EQs are only destroyed when
+the last QP (raw or RSS) on the PD releases its reference.
 
-The following changes since commit 93790c374b9d77f3db15786d7d432872d92751cf:
+Restrict each vport to a single RSS QP. The hardware only supports one
+steering configuration (indirection table / hash key) per vport, and
+mana_disable_vport_rx() on QP destroy disables RX globally for the
+vport. Previously, creating a second RSS QP would silently overwrite
+the first QP's steering config and destroy would blackhole all traffic.
+This is now explicitly rejected with -EBUSY. Existing applications
+(DPDK being the primary RDMA consumer) always create one RSS QP per
+vport, so no real-world flows are affected.
 
-  net/mlx5: convert miss_list allocation to kvmalloc_array() (2026-06-04 09:33:24 -0700)
+Reject cross-port PD sharing for both raw and RSS QPs. Since EQs and
+vport configuration are per-port, a PD is bound to the port used by
+its first raw QP. Subsequent QPs on the same PD must use the same
+port or the creation fails with -EINVAL. Previously this was silently
+broken: with shared EQs it appeared to work, but with per-vPort EQs
+a cross-port PD would cause wrong-port EQ teardown and corruption.
+DPDK creates one PD per port so no existing flows are affected.
 
-are available in the Git repository at:
+Serialize mana_set_channels() and the async per-port queue reset
+handler against RDMA vport configuration to prevent RDMA from claiming
+the vport during the detach/attach window. A channel_changing flag is
+set under apc->vport_mutex before detach and checked by
+mana_cfg_vport() when called from the RDMA path, blocking RDMA from
+grabbing the vport during the entire window. When the port is down
+and RDMA already holds the vport, the channel change is rejected with
+-EBUSY.
 
-  https://github.com/longlimsft/linux.git tags/mana-eq-msi-v12
-
-for you to fetch changes up to 18505b11dcf052442cdeba5e208a85219776206a:
-
-  RDMA/mana_ib: Allocate interrupt contexts on EQs (2026-06-05 00:26:56 +0000)
-
-Changes in v12:
-- Restrict each vport to a single RSS QP. The hardware only supports
-  one steering config per vport, and destroy disables RX globally.
-  Previously a second RSS QP would silently overwrite the first.
-  Track via pd->has_rss_qp under vport_mutex (patch 1)
-- Validate comp_vector against per-vPort EQ count with modulo mapping.
-  Document the rationale: when RDMA-advertised num_comp_vectors exceeds
-  the port's num_queues, the vector is remapped to an available EQ
-  rather than failing QP creation (patch 1)
-- Extend channel_changing serialization to the async per-port queue
-  reset handler, preventing RDMA from claiming the vport during
-  the reset detach/attach window (patch 1)
-- Fix HW vport registration leak: roll back
-  mana_pf_register_hw_vport() when mana_cfg_vport() fails in
-  mana_create_vport() (patch 1)
-- Cap num_ports to MAX_PORTS_IN_MANA_DEV before the per-vPort MSI-X
-  budget calculation so it matches the port count that is later
-  instantiated by mana_probe() (patch 2)
-- Use a local msi variable in mana_gd_setup_irqs() and
-  mana_gd_setup_dyn_irqs() to decouple the loop counter from
-  the callee-updated mana_gd_get_gic() parameter (patch 4)
-- Add WARN_ON(!xa_empty()) assertion in mana_gd_remove_irqs()
-  before pci_free_irq_vectors() to catch leaked GIC references
-  (patch 4)
-- Log gc->max_num_queues_vport (per-vPort value) instead of
-  gc->max_num_queues (global) in the MSI sharing mode message,
-  use %u format specifiers (patch 2)
-- Clarify comment about MANA_DEF_NUM_QUEUES clamping vs hardware
-  max precedence (patch 2)
-- Rebase onto net-next/main (2026-06-04)
-
-Changes in v11:
-- Address AI reviewer feedback from Paolo on patch 1: add cross-port
-  PD-sharing check in mana_ib_create_qp_rss() to match the guard
-  already present in mana_ib_cfg_vport(), preventing NULL deref on
-  mpc->eqs when an RSS QP is created on a different port than the
-  PD's bound port (patch 1)
-- Document that pd->vport_port is only valid when vport_use_count > 0
-  in the struct mana_ib_pd comment, as suggested by the AI reviewer
-  (patch 1)
-- Propagate actual error code from mana_ib_cfg_vport() instead of
-  hardcoding -ENODEV in the raw QP creation path (patch 1)
-- Switch mana_gd_get_gic() from returning NULL to IS_ERR/PTR_ERR on
-  failure so callers can propagate the actual error code (-ENOSPC,
-  -ENOMEM, etc.) instead of always returning -ENOMEM (patch 3)
-- Update all mana_gd_get_gic() callers (patches 2, 4, 5, 6) to use
-  IS_ERR()/PTR_ERR() error checking
-- Set *msi_requested after pci_msix_alloc_irq_at() returns the actual
-  assigned index, so the caller gets the correct MSI vector when
-  dynamic allocation remaps it (patch 3)
-- Add comments documenting the GIC refcount ownership contract in
-  mana_gd_register_irq() and mana_gd_deregister_irq() (patch 5)
-- Move the zero-port detection error message from mana_probe() to
-  mana_gd_query_max_resources() where the actual check occurs (patch 2)
-- Clamp apc->max_queues to gc->max_num_queues_vport in
-  mana_init_port() so that on resume, if max_num_queues_vport has
-  decreased, num_queues is reduced before EQ allocation (patch 2)
-
-Changes in v10:
-- Add channel_changing flag to block RDMA from grabbing the vport
-  during mana_set_channels() detach/attach window. The flag is checked
-  in mana_cfg_vport() only when called from the RDMA path via a new
-  check_channel_changing parameter (patch 1)
-- Bind each PD to a single physical port via pd->vport_port to prevent
-  cross-port PD sharing which would cause EQ scope mismatch. Returns
-  -EINVAL if a second port tries to use an already-bound PD (patch 1)
-- Guard gc->msi_sharing reset with pci_msix_can_alloc_dyn() to avoid
-  overwriting the non-dyn platform constraint set by
-  mana_gd_setup_hwc_irqs() (patch 2)
-
-Changes in v9:
-- RSS QPs now take a vport reference via pd->vport_use_count to ensure
-  EQs outlive all QP consumers. EQs are only destroyed when the last
-  QP (raw or RSS) on the PD releases its reference (patch 1)
-- Serialize mana_set_channels() against RDMA vport configuration via
-  apc->vport_mutex when the port is down. When the port is up, Ethernet
-  owns the vport exclusively so no locking is needed (patch 1)
-- Change WARN_ON(apc->eqs) to bail out with -EEXIST to prevent
-  leaking prior EQ array if invariant is violated (patch 1)
-- Only commit pd->tx_shortform_allowed and pd->tx_vp_offset after
-  mana_create_eq() succeeds (patch 1)
-- Reset gc->msi_sharing at the top of mana_gd_query_max_resources()
-  so it is recomputed from current hardware state on resume (patch 2)
-- Fix reverse Christmas tree variable declaration ordering (patches
-  1, 3, 5)
-
-Changes in v8:
-- Fix comment to reference per-vPort queue count instead of
-  gc->max_num_queues (patch 2)
-- Remove duplicate irq_update_affinity_hint() calls from error paths
-  and mana_gd_remove_irqs(); the clearing is now centralized in
-  mana_gd_put_gic() (patch 4)
-- Note the IRQ name change (mana_q -> mana_msi) in the commit
-  message (patch 4)
-- Remove dead conditional write to spec.eq.msix_index (patch 5)
-- Document GIC ownership contract and msix_index invariant change
-  in commit message (patch 5)
-- Populate eq.irq on RDMA EQs for consistency with the Ethernet
-  path (patch 6)
-- Document BIT(6) relocation and capability flag semantics in
-  commit message (patch 6)
-- Fix checkpatch --strict alignment and line length warnings
-
-Changes in v7:
-- Use rounddown_pow_of_two() instead of roundup_pow_of_two() when
-  computing per-vPort queue count to avoid unnecessarily forcing shared
-  MSI-X mode (patch 2)
-- Call mana_gd_setup_remaining_irqs() unconditionally to ensure
-  irq_contexts are populated in both dedicated and shared MSI-X modes,
-  fixing bisectability between patches 2 and 5 (patch 2)
-- Guard ibdev_dbg() in mana_ib_cfg_vport() with error check so the
-  vport handle is not logged on the failure path (patch 1)
-- Use cached gic->irq instead of pci_irq_vector() lookup in
-  mana_gd_put_gic() for consistency with the allocation path (patch 3)
-- Fix unsigned int* to int* pointer type mismatch when calling
-  mana_gd_get_gic() by using a local int variable for the MSI index
-  (patches 5, 6)
-
-Changes in v6:
-- Rebased on net-next/main (v7.1-rc1)
-
-Changes in v5:
-- Rebased on net-next/main
-
-Changes in v4:
-- Rebased on net-next/main 7.0-rc4
-- Patch 2: Use MANA_DEF_NUM_QUEUES instead of hardcoded 16 for
-  max_num_queues clamping
-- Patch 3: Track dyn_msix in GIC context instead of re-checking
-  pci_msix_can_alloc_dyn() on each call; improved remove_irqs iteration
-  to skip unallocated entries
-
-Changes in v3:
-- Rebased on net-next/main
-- Patch 1: Added NULL check for mpc->eqs in mana_ib_create_qp_rss() to
-  prevent NULL pointer dereference when RSS QP is created before a raw QP
-  has configured the vport and allocated EQs
-
-Changes in v2:
-- Rebased on net-next/main (adapted to kzalloc_objs/kzalloc_obj macros,
-  new GDMA_DRV_CAP_FLAG definitions)
-- Patch 2: Fixed misleading comment for max_num_queues vs
-  max_num_queues_vport in gdma.h
-- Patch 3: Fixed spelling typo in gdma_main.c ("difference" -> "different")
-
-Long Li (6):
-  net: mana: Create separate EQs for each vPort
-  net: mana: Query device capabilities and configure MSI-X sharing for
-    EQs
-  net: mana: Introduce GIC context with refcounting for interrupt
-    management
-  net: mana: Use GIC functions to allocate global EQs
-  net: mana: Allocate interrupt context for each EQ when creating vPort
-  RDMA/mana_ib: Allocate interrupt contexts on EQs
-
- drivers/infiniband/hw/mana/main.c             |  83 +++-
- drivers/infiniband/hw/mana/mana_ib.h          |  14 +
- drivers/infiniband/hw/mana/qp.c               |  68 +++-
- .../net/ethernet/microsoft/mana/gdma_main.c   | 359 +++++++++++++-----
- drivers/net/ethernet/microsoft/mana/mana_en.c | 198 ++++++----
- .../ethernet/microsoft/mana/mana_ethtool.c    |  23 +-
- include/net/mana/gdma.h                       |  33 +-
+Signed-off-by: Long Li <longli@microsoft.com>
+---
+ drivers/infiniband/hw/mana/main.c             |  40 ++++--
+ drivers/infiniband/hw/mana/mana_ib.h          |  14 ++
+ drivers/infiniband/hw/mana/qp.c               |  68 ++++++++-
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 135 +++++++++++-------
+ .../ethernet/microsoft/mana/mana_ethtool.c    |  23 ++-
  include/net/mana/mana.h                       |  15 +-
- 8 files changed, 604 insertions(+), 189 deletions(-)
+ 6 files changed, 228 insertions(+), 67 deletions(-)
 
-
-base-commit: 93790c374b9d77f3db15786d7d432872d92751cf
+diff --git a/drivers/infiniband/hw/mana/main.c b/drivers/infiniband/hw/mana/main.c
+index afc2fc124fee..f42ea20cb75d 100644
+--- a/drivers/infiniband/hw/mana/main.c
++++ b/drivers/infiniband/hw/mana/main.c
+@@ -20,8 +20,10 @@ void mana_ib_uncfg_vport(struct mana_ib_dev *dev, struct mana_ib_pd *pd,
+ 	pd->vport_use_count--;
+ 	WARN_ON(pd->vport_use_count < 0);
+ 
+-	if (!pd->vport_use_count)
++	if (!pd->vport_use_count) {
++		mana_destroy_eq(mpc);
+ 		mana_uncfg_vport(mpc);
++	}
+ 
+ 	mutex_unlock(&pd->vport_mutex);
+ }
+@@ -40,13 +42,27 @@ int mana_ib_cfg_vport(struct mana_ib_dev *dev, u32 port, struct mana_ib_pd *pd,
+ 
+ 	pd->vport_use_count++;
+ 	if (pd->vport_use_count > 1) {
++		/* Reject cross-port PD sharing. EQs and vport config
++		 * are per-port, so the PD must stay bound to the port
++		 * that was configured on the first raw QP creation.
++		 */
++		if (pd->vport_port != port) {
++			pd->vport_use_count--;
++			mutex_unlock(&pd->vport_mutex);
++			ibdev_dbg(&dev->ib_dev,
++				  "PD already bound to port %u\n",
++				  pd->vport_port);
++			return -EINVAL;
++		}
+ 		ibdev_dbg(&dev->ib_dev,
+ 			  "Skip as this PD is already configured vport\n");
+ 		mutex_unlock(&pd->vport_mutex);
+ 		return 0;
+ 	}
+ 
+-	err = mana_cfg_vport(mpc, pd->pdn, doorbell_id);
++	pd->vport_port = port;
++
++	err = mana_cfg_vport(mpc, pd->pdn, doorbell_id, true);
+ 	if (err) {
+ 		pd->vport_use_count--;
+ 		mutex_unlock(&pd->vport_mutex);
+@@ -55,15 +71,23 @@ int mana_ib_cfg_vport(struct mana_ib_dev *dev, u32 port, struct mana_ib_pd *pd,
+ 		return err;
+ 	}
+ 
+-	mutex_unlock(&pd->vport_mutex);
+ 
+-	pd->tx_shortform_allowed = mpc->tx_shortform_allowed;
+-	pd->tx_vp_offset = mpc->tx_vp_offset;
++	err = mana_create_eq(mpc);
++	if (err) {
++		mana_uncfg_vport(mpc);
++		pd->vport_use_count--;
++	} else {
++		pd->tx_shortform_allowed = mpc->tx_shortform_allowed;
++		pd->tx_vp_offset = mpc->tx_vp_offset;
++	}
++
++	mutex_unlock(&pd->vport_mutex);
+ 
+-	ibdev_dbg(&dev->ib_dev, "vport handle %llx pdid %x doorbell_id %x\n",
+-		  mpc->port_handle, pd->pdn, doorbell_id);
++	if (!err)
++		ibdev_dbg(&dev->ib_dev, "vport handle %llx pdid %x doorbell_id %x\n",
++			  mpc->port_handle, pd->pdn, doorbell_id);
+ 
+-	return 0;
++	return err;
+ }
+ 
+ int mana_ib_alloc_pd(struct ib_pd *ibpd, struct ib_udata *udata)
+diff --git a/drivers/infiniband/hw/mana/mana_ib.h b/drivers/infiniband/hw/mana/mana_ib.h
+index c9c94e86a72b..da05966aff19 100644
+--- a/drivers/infiniband/hw/mana/mana_ib.h
++++ b/drivers/infiniband/hw/mana/mana_ib.h
+@@ -102,6 +102,20 @@ struct mana_ib_pd {
+ 	struct mutex vport_mutex;
+ 	int vport_use_count;
+ 
++	/* Port bound to this PD for raw QP usage. Only valid when
++	 * vport_use_count > 0. A PD can only be associated with a
++	 * single physical port because per-port EQs and vport
++	 * configuration are tied to the PD's refcount.
++	 */
++	u32 vport_port;
++
++	/* Only one RSS QP is allowed per vport because each RSS QP
++	 * overwrites the vport steering config (indirection table /
++	 * hash key) and mana_disable_vport_rx() on destroy would
++	 * blackhole traffic for any other RSS QP on the same vport.
++	 */
++	bool has_rss_qp;
++
+ 	bool tx_shortform_allowed;
+ 	u32 tx_vp_offset;
+ };
+diff --git a/drivers/infiniband/hw/mana/qp.c b/drivers/infiniband/hw/mana/qp.c
+index 0fbcf449c134..d3ee30b64f53 100644
+--- a/drivers/infiniband/hw/mana/qp.c
++++ b/drivers/infiniband/hw/mana/qp.c
+@@ -79,6 +79,7 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp, struct ib_pd *pd,
+ 				 struct ib_qp_init_attr *attr,
+ 				 struct ib_udata *udata)
+ {
++	struct mana_ib_pd *mana_pd = container_of(pd, struct mana_ib_pd, ibpd);
+ 	struct mana_ib_qp *qp = container_of(ibqp, struct mana_ib_qp, ibqp);
+ 	struct mana_ib_dev *mdev =
+ 		container_of(pd->device, struct mana_ib_dev, ib_dev);
+@@ -155,6 +156,30 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp, struct ib_pd *pd,
+ 
+ 	qp->port = port;
+ 
++	/* Take a reference on the vport to ensure EQs outlive this QP.
++	 * The vport must already be configured by a raw QP on the
++	 * same port — cross-port PD sharing is not supported.
++	 * Only one RSS QP per vport is allowed because each one
++	 * overwrites the steering config and destroy disables RX
++	 * globally.
++	 */
++	mutex_lock(&mana_pd->vport_mutex);
++	if (!mana_pd->vport_use_count || mana_pd->vport_port != port) {
++		mutex_unlock(&mana_pd->vport_mutex);
++		ret = -EINVAL;
++		goto fail;
++	}
++	if (mana_pd->has_rss_qp) {
++		mutex_unlock(&mana_pd->vport_mutex);
++		ibdev_dbg(&mdev->ib_dev,
++			  "Only one RSS QP per vport is supported\n");
++		ret = -EBUSY;
++		goto fail;
++	}
++	mana_pd->vport_use_count++;
++	mana_pd->has_rss_qp = true;
++	mutex_unlock(&mana_pd->vport_mutex);
++
+ 	for (i = 0; i < ind_tbl_size; i++) {
+ 		struct mana_obj_spec wq_spec = {};
+ 		struct mana_obj_spec cq_spec = {};
+@@ -171,13 +196,19 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp, struct ib_pd *pd,
+ 		cq_spec.gdma_region = cq->queue.gdma_region;
+ 		cq_spec.queue_size = cq->cqe * COMP_ENTRY_SIZE;
+ 		cq_spec.modr_ctx_id = 0;
+-		eq = &mpc->ac->eqs[cq->comp_vector];
++		/* Map comp_vector to a per-vPort EQ. The modulo handles
++		 * the case where the RDMA-advertised num_comp_vectors
++		 * exceeds this port's num_queues (e.g. after ethtool -L
++		 * reduces it), remapping to an available EQ rather than
++		 * failing the QP creation.
++		 */
++		eq = &mpc->eqs[cq->comp_vector % mpc->num_queues];
+ 		cq_spec.attached_eq = eq->eq->id;
+ 
+ 		ret = mana_create_wq_obj(mpc, mpc->port_handle, GDMA_RQ,
+ 					 &wq_spec, &cq_spec, &wq->rx_object);
+ 		if (ret)
+-			goto fail;
++			goto free_vport;
+ 
+ 		/* The GDMA regions are now owned by the WQ object */
+ 		wq->queue.gdma_region = GDMA_INVALID_DMA_REGION;
+@@ -199,7 +230,7 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp, struct ib_pd *pd,
+ 		ret = mana_ib_install_cq_cb(mdev, cq);
+ 		if (ret) {
+ 			mana_destroy_wq_obj(mpc, GDMA_RQ, wq->rx_object);
+-			goto fail;
++			goto free_vport;
+ 		}
+ 	}
+ 	resp.num_entries = i;
+@@ -210,7 +241,7 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp, struct ib_pd *pd,
+ 					 ucmd.rx_hash_key_len,
+ 					 ucmd.rx_hash_key);
+ 	if (ret)
+-		goto fail;
++		goto free_vport;
+ 
+ 	ret = ib_copy_to_udata(udata, &resp, sizeof(resp));
+ 	if (ret) {
+@@ -226,7 +257,7 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp, struct ib_pd *pd,
+ 
+ err_disable_vport_rx:
+ 	mana_disable_vport_rx(mpc);
+-fail:
++free_vport:
+ 	while (i-- > 0) {
+ 		ibwq = ind_tbl->ind_tbl[i];
+ 		ibcq = ibwq->cq;
+@@ -237,6 +268,13 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp, struct ib_pd *pd,
+ 		mana_destroy_wq_obj(mpc, GDMA_RQ, wq->rx_object);
+ 	}
+ 
++	mutex_lock(&mana_pd->vport_mutex);
++	mana_pd->has_rss_qp = false;
++	mutex_unlock(&mana_pd->vport_mutex);
++
++	mana_ib_uncfg_vport(mdev, mana_pd, port);
++
++fail:
+ 	kfree(mana_ind_table);
+ 
+ 	return ret;
+@@ -299,7 +337,7 @@ static int mana_ib_create_qp_raw(struct ib_qp *ibqp, struct ib_pd *ibpd,
+ 
+ 	err = mana_ib_cfg_vport(mdev, port, pd, mana_ucontext->doorbell);
+ 	if (err)
+-		return -ENODEV;
++		return err;
+ 
+ 	qp->port = port;
+ 
+@@ -321,7 +359,14 @@ static int mana_ib_create_qp_raw(struct ib_qp *ibqp, struct ib_pd *ibpd,
+ 	cq_spec.queue_size = send_cq->cqe * COMP_ENTRY_SIZE;
+ 	cq_spec.modr_ctx_id = 0;
+ 	eq_vec = send_cq->comp_vector;
+-	eq = &mpc->ac->eqs[eq_vec];
++	if (!mpc->eqs) {
++		err = -EINVAL;
++		goto err_destroy_queue;
++	}
++	/* Map comp_vector to a per-vPort EQ. See comment in
++	 * mana_ib_create_qp_rss() for the modulo rationale.
++	 */
++	eq = &mpc->eqs[eq_vec % mpc->num_queues];
+ 	cq_spec.attached_eq = eq->eq->id;
+ 
+ 	err = mana_create_wq_obj(mpc, mpc->port_handle, GDMA_SQ, &wq_spec,
+@@ -785,14 +830,17 @@ static int mana_ib_destroy_qp_rss(struct mana_ib_qp *qp,
+ {
+ 	struct mana_ib_dev *mdev =
+ 		container_of(qp->ibqp.device, struct mana_ib_dev, ib_dev);
++	struct ib_pd *ibpd = qp->ibqp.pd;
+ 	struct mana_port_context *mpc;
+ 	struct net_device *ndev;
++	struct mana_ib_pd *pd;
+ 	struct mana_ib_wq *wq;
+ 	struct ib_wq *ibwq;
+ 	int i;
+ 
+ 	ndev = mana_ib_get_netdev(qp->ibqp.device, qp->port);
+ 	mpc = netdev_priv(ndev);
++	pd = container_of(ibpd, struct mana_ib_pd, ibpd);
+ 
+ 	/* Disable vPort RX steering before destroying RX WQ objects.
+ 	 * Otherwise firmware still routes traffic to the destroyed queues,
+@@ -817,6 +865,12 @@ static int mana_ib_destroy_qp_rss(struct mana_ib_qp *qp,
+ 		mana_destroy_wq_obj(mpc, GDMA_RQ, wq->rx_object);
+ 	}
+ 
++	mutex_lock(&pd->vport_mutex);
++	pd->has_rss_qp = false;
++	mutex_unlock(&pd->vport_mutex);
++
++	mana_ib_uncfg_vport(mdev, pd, qp->port);
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index db14357d3732..ed60cc15fe78 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -309,11 +309,18 @@ static void mana_per_port_queue_reset_work_handler(struct work_struct *work)
+ 
+ 	rtnl_lock();
+ 
++	/* Block RDMA from grabbing the vport during the detach/attach
++	 * window, same as mana_set_channels().
++	 */
++	mutex_lock(&apc->vport_mutex);
++	apc->channel_changing = true;
++	mutex_unlock(&apc->vport_mutex);
++
+ 	/* Pre-allocate buffers to prevent failure in mana_attach later */
+ 	err = mana_pre_alloc_rxbufs(apc, ndev->mtu, apc->num_queues);
+ 	if (err) {
+ 		netdev_err(ndev, "Insufficient memory for reset post tx stall detection\n");
+-		goto out;
++		goto clear_flag;
+ 	}
+ 
+ 	err = mana_detach(ndev, false);
+@@ -328,7 +335,11 @@ static void mana_per_port_queue_reset_work_handler(struct work_struct *work)
+ 
+ dealloc_pre_rxbufs:
+ 	mana_pre_dealloc_rxbufs(apc);
+-out:
++clear_flag:
++	mutex_lock(&apc->vport_mutex);
++	apc->channel_changing = false;
++	mutex_unlock(&apc->vport_mutex);
++
+ 	rtnl_unlock();
+ }
+ 
+@@ -1298,7 +1309,7 @@ void mana_uncfg_vport(struct mana_port_context *apc)
+ EXPORT_SYMBOL_NS(mana_uncfg_vport, "NET_MANA");
+ 
+ int mana_cfg_vport(struct mana_port_context *apc, u32 protection_dom_id,
+-		   u32 doorbell_pg_id)
++		   u32 doorbell_pg_id, bool check_channel_changing)
+ {
+ 	struct mana_config_vport_resp resp = {};
+ 	struct mana_config_vport_req req = {};
+@@ -1323,7 +1334,8 @@ int mana_cfg_vport(struct mana_port_context *apc, u32 protection_dom_id,
+ 	 * Ethernet usage on the same port.
+ 	 */
+ 	mutex_lock(&apc->vport_mutex);
+-	if (apc->vport_use_count > 0) {
++	if (apc->vport_use_count > 0 ||
++	    (check_channel_changing && apc->channel_changing)) {
+ 		mutex_unlock(&apc->vport_mutex);
+ 		return -EBUSY;
+ 	}
+@@ -1623,78 +1635,84 @@ void mana_destroy_wq_obj(struct mana_port_context *apc, u32 wq_type,
+ }
+ EXPORT_SYMBOL_NS(mana_destroy_wq_obj, "NET_MANA");
+ 
+-static void mana_destroy_eq(struct mana_context *ac)
++void mana_destroy_eq(struct mana_port_context *apc)
+ {
++	struct mana_context *ac = apc->ac;
+ 	struct gdma_context *gc = ac->gdma_dev->gdma_context;
+ 	struct gdma_queue *eq;
+ 	int i;
+ 
+-	if (!ac->eqs)
++	if (!apc->eqs)
+ 		return;
+ 
+-	debugfs_remove_recursive(ac->mana_eqs_debugfs);
+-	ac->mana_eqs_debugfs = NULL;
++	debugfs_remove_recursive(apc->mana_eqs_debugfs);
++	apc->mana_eqs_debugfs = NULL;
+ 
+-	for (i = 0; i < gc->max_num_queues; i++) {
+-		eq = ac->eqs[i].eq;
++	for (i = 0; i < apc->num_queues; i++) {
++		eq = apc->eqs[i].eq;
+ 		if (!eq)
+ 			continue;
+ 
+ 		mana_gd_destroy_queue(gc, eq);
+ 	}
+ 
+-	kfree(ac->eqs);
+-	ac->eqs = NULL;
++	kfree(apc->eqs);
++	apc->eqs = NULL;
+ }
++EXPORT_SYMBOL_NS(mana_destroy_eq, "NET_MANA");
+ 
+-static void mana_create_eq_debugfs(struct mana_context *ac, int i)
++static void mana_create_eq_debugfs(struct mana_port_context *apc, int i)
+ {
+-	struct mana_eq eq = ac->eqs[i];
++	struct mana_eq eq = apc->eqs[i];
+ 	char eqnum[32];
+ 
+ 	sprintf(eqnum, "eq%d", i);
+-	eq.mana_eq_debugfs = debugfs_create_dir(eqnum, ac->mana_eqs_debugfs);
++	eq.mana_eq_debugfs = debugfs_create_dir(eqnum, apc->mana_eqs_debugfs);
+ 	debugfs_create_u32("head", 0400, eq.mana_eq_debugfs, &eq.eq->head);
+ 	debugfs_create_u32("tail", 0400, eq.mana_eq_debugfs, &eq.eq->tail);
+ 	debugfs_create_file("eq_dump", 0400, eq.mana_eq_debugfs, eq.eq, &mana_dbg_q_fops);
+ }
+ 
+-static int mana_create_eq(struct mana_context *ac)
++int mana_create_eq(struct mana_port_context *apc)
+ {
+-	struct gdma_dev *gd = ac->gdma_dev;
++	struct gdma_dev *gd = apc->ac->gdma_dev;
+ 	struct gdma_context *gc = gd->gdma_context;
+ 	struct gdma_queue_spec spec = {};
+ 	int err;
+ 	int i;
+ 
+-	ac->eqs = kzalloc_objs(struct mana_eq, gc->max_num_queues);
+-	if (!ac->eqs)
++	if (WARN_ON(apc->eqs))
++		return -EEXIST;
++	apc->eqs = kzalloc_objs(struct mana_eq, apc->num_queues);
++	if (!apc->eqs)
+ 		return -ENOMEM;
+ 
+ 	spec.type = GDMA_EQ;
+ 	spec.monitor_avl_buf = false;
+ 	spec.queue_size = EQ_SIZE;
+ 	spec.eq.callback = NULL;
+-	spec.eq.context = ac->eqs;
++	spec.eq.context = apc->eqs;
+ 	spec.eq.log2_throttle_limit = LOG2_EQ_THROTTLE;
+ 
+-	ac->mana_eqs_debugfs = debugfs_create_dir("EQs", gc->mana_pci_debugfs);
++	apc->mana_eqs_debugfs =
++		debugfs_create_dir("EQs", apc->mana_port_debugfs);
+ 
+-	for (i = 0; i < gc->max_num_queues; i++) {
++	for (i = 0; i < apc->num_queues; i++) {
+ 		spec.eq.msix_index = (i + 1) % gc->num_msix_usable;
+-		err = mana_gd_create_mana_eq(gd, &spec, &ac->eqs[i].eq);
++		err = mana_gd_create_mana_eq(gd, &spec, &apc->eqs[i].eq);
+ 		if (err) {
+ 			dev_err(gc->dev, "Failed to create EQ %d : %d\n", i, err);
+ 			goto out;
+ 		}
+-		mana_create_eq_debugfs(ac, i);
++		mana_create_eq_debugfs(apc, i);
+ 	}
+ 
+ 	return 0;
+ out:
+-	mana_destroy_eq(ac);
++	mana_destroy_eq(apc);
+ 	return err;
+ }
++EXPORT_SYMBOL_NS(mana_create_eq, "NET_MANA");
+ 
+ static int mana_fence_rq(struct mana_port_context *apc, struct mana_rxq *rxq)
+ {
+@@ -2462,7 +2480,7 @@ static int mana_create_txq(struct mana_port_context *apc,
+ 		spec.monitor_avl_buf = false;
+ 		spec.queue_size = cq_size;
+ 		spec.cq.callback = mana_schedule_napi;
+-		spec.cq.parent_eq = ac->eqs[i].eq;
++		spec.cq.parent_eq = apc->eqs[i].eq;
+ 		spec.cq.context = cq;
+ 		err = mana_gd_create_mana_wq_cq(gd, &spec, &cq->gdma_cq);
+ 		if (err)
+@@ -2855,13 +2873,12 @@ static void mana_create_rxq_debugfs(struct mana_port_context *apc, int idx)
+ static int mana_add_rx_queues(struct mana_port_context *apc,
+ 			      struct net_device *ndev)
+ {
+-	struct mana_context *ac = apc->ac;
+ 	struct mana_rxq *rxq;
+ 	int err = 0;
+ 	int i;
+ 
+ 	for (i = 0; i < apc->num_queues; i++) {
+-		rxq = mana_create_rxq(apc, i, &ac->eqs[i], ndev);
++		rxq = mana_create_rxq(apc, i, &apc->eqs[i], ndev);
+ 		if (!rxq) {
+ 			err = -ENOMEM;
+ 			netdev_err(ndev, "Failed to create rxq %d : %d\n", i, err);
+@@ -2880,9 +2897,8 @@ static int mana_add_rx_queues(struct mana_port_context *apc,
+ 	return err;
+ }
+ 
+-static void mana_destroy_vport(struct mana_port_context *apc)
++static void mana_destroy_rxqs(struct mana_port_context *apc)
+ {
+-	struct gdma_dev *gd = apc->ac->gdma_dev;
+ 	struct mana_rxq *rxq;
+ 	u32 rxq_idx;
+ 
+@@ -2897,8 +2913,12 @@ static void mana_destroy_vport(struct mana_port_context *apc)
+ 			apc->rxqs[rxq_idx] = NULL;
+ 		}
+ 	}
++}
++
++static void mana_destroy_vport(struct mana_port_context *apc)
++{
++	struct gdma_dev *gd = apc->ac->gdma_dev;
+ 
+-	mana_destroy_txq(apc);
+ 	mana_uncfg_vport(apc);
+ 
+ 	if (gd->gdma_context->is_pf && !apc->ac->bm_hostmode)
+@@ -2919,11 +2939,14 @@ static int mana_create_vport(struct mana_port_context *apc,
+ 			return err;
+ 	}
+ 
+-	err = mana_cfg_vport(apc, gd->pdid, gd->doorbell);
+-	if (err)
++	err = mana_cfg_vport(apc, gd->pdid, gd->doorbell, false);
++	if (err) {
++		if (gd->gdma_context->is_pf && !apc->ac->bm_hostmode)
++			mana_pf_deregister_hw_vport(apc);
+ 		return err;
++	}
+ 
+-	return mana_create_txq(apc, net);
++	return 0;
+ }
+ 
+ static int mana_rss_table_alloc(struct mana_port_context *apc)
+@@ -3226,21 +3249,36 @@ int mana_alloc_queues(struct net_device *ndev)
+ 
+ 	err = mana_create_vport(apc, ndev);
+ 	if (err) {
+-		netdev_err(ndev, "Failed to create vPort %u : %d\n", apc->port_idx, err);
++		netdev_err(ndev, "Failed to create vPort %u : %d\n",
++			   apc->port_idx, err);
+ 		return err;
+ 	}
+ 
++	err = mana_create_eq(apc);
++	if (err) {
++		netdev_err(ndev, "Failed to create EQ on vPort %u: %d\n",
++			   apc->port_idx, err);
++		goto destroy_vport;
++	}
++
++	err = mana_create_txq(apc, ndev);
++	if (err) {
++		netdev_err(ndev, "Failed to create TXQ on vPort %u: %d\n",
++			   apc->port_idx, err);
++		goto destroy_eq;
++	}
++
+ 	err = netif_set_real_num_tx_queues(ndev, apc->num_queues);
+ 	if (err) {
+ 		netdev_err(ndev,
+ 			   "netif_set_real_num_tx_queues () failed for ndev with num_queues %u : %d\n",
+ 			   apc->num_queues, err);
+-		goto destroy_vport;
++		goto destroy_txq;
+ 	}
+ 
+ 	err = mana_add_rx_queues(apc, ndev);
+ 	if (err)
+-		goto destroy_vport;
++		goto destroy_rxq;
+ 
+ 	apc->rss_state = apc->num_queues > 1 ? TRI_STATE_TRUE : TRI_STATE_FALSE;
+ 
+@@ -3249,7 +3287,7 @@ int mana_alloc_queues(struct net_device *ndev)
+ 		netdev_err(ndev,
+ 			   "netif_set_real_num_rx_queues () failed for ndev with num_queues %u : %d\n",
+ 			   apc->num_queues, err);
+-		goto destroy_vport;
++		goto destroy_rxq;
+ 	}
+ 
+ 	mana_rss_table_init(apc);
+@@ -3257,19 +3295,25 @@ int mana_alloc_queues(struct net_device *ndev)
+ 	err = mana_config_rss(apc, TRI_STATE_TRUE, true, true);
+ 	if (err) {
+ 		netdev_err(ndev, "Failed to configure RSS table: %d\n", err);
+-		goto destroy_vport;
++		goto destroy_rxq;
+ 	}
+ 
+ 	if (gd->gdma_context->is_pf && !apc->ac->bm_hostmode) {
+ 		err = mana_pf_register_filter(apc);
+ 		if (err)
+-			goto destroy_vport;
++			goto destroy_rxq;
+ 	}
+ 
+ 	mana_chn_setxdp(apc, mana_xdp_get(apc));
+ 
+ 	return 0;
+ 
++destroy_rxq:
++	mana_destroy_rxqs(apc);
++destroy_txq:
++	mana_destroy_txq(apc);
++destroy_eq:
++	mana_destroy_eq(apc);
+ destroy_vport:
+ 	mana_destroy_vport(apc);
+ 	return err;
+@@ -3380,6 +3424,9 @@ static int mana_dealloc_queues(struct net_device *ndev)
+ 	mana_fence_rqs(apc);
+ 
+ 	/* Even in err case, still need to cleanup the vPort */
++	mana_destroy_rxqs(apc);
++	mana_destroy_txq(apc);
++	mana_destroy_eq(apc);
+ 	mana_destroy_vport(apc);
+ 
+ 	return 0;
+@@ -3706,12 +3753,6 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
+ 
+ 	INIT_DELAYED_WORK(&ac->gf_stats_work, mana_gf_stats_work_handler);
+ 
+-	err = mana_create_eq(ac);
+-	if (err) {
+-		dev_err(dev, "Failed to create EQs: %d\n", err);
+-		goto out;
+-	}
+-
+ 	err = mana_query_device_cfg(ac, MANA_MAJOR_VERSION, MANA_MINOR_VERSION,
+ 				    MANA_MICRO_VERSION, &num_ports, &bm_hostmode);
+ 	if (err)
+@@ -3856,8 +3897,6 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
+ 		free_netdev(ndev);
+ 	}
+ 
+-	mana_destroy_eq(ac);
+-
+ 	if (ac->per_port_queue_reset_wq) {
+ 		destroy_workqueue(ac->per_port_queue_reset_wq);
+ 		ac->per_port_queue_reset_wq = NULL;
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+index 04350973e19e..4633acc976f0 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+@@ -454,6 +454,11 @@ static int mana_set_coalesce(struct net_device *ndev,
+ 	return err;
+ }
+ 
++/* mana_set_channels - change the number of queues on a port
++ *
++ * Returns -EBUSY if RDMA holds the vport with EQs sized to the
++ * current num_queues.
++ */
+ static int mana_set_channels(struct net_device *ndev,
+ 			     struct ethtool_channels *channels)
+ {
+@@ -462,10 +467,22 @@ static int mana_set_channels(struct net_device *ndev,
+ 	unsigned int old_count = apc->num_queues;
+ 	int err;
+ 
++	/* Set channel_changing to block RDMA from grabbing the vport
++	 * during the detach/attach window. mana_cfg_vport() checks
++	 * this flag under vport_mutex and returns -EBUSY if set.
++	 */
++	mutex_lock(&apc->vport_mutex);
++	if (!apc->port_is_up && apc->vport_use_count) {
++		mutex_unlock(&apc->vport_mutex);
++		return -EBUSY;
++	}
++	apc->channel_changing = true;
++	mutex_unlock(&apc->vport_mutex);
++
+ 	err = mana_pre_alloc_rxbufs(apc, ndev->mtu, new_count);
+ 	if (err) {
+ 		netdev_err(ndev, "Insufficient memory for new allocations");
+-		return err;
++		goto clear_flag;
+ 	}
+ 
+ 	err = mana_detach(ndev, false);
+@@ -483,6 +500,10 @@ static int mana_set_channels(struct net_device *ndev,
+ 
+ out:
+ 	mana_pre_dealloc_rxbufs(apc);
++clear_flag:
++	mutex_lock(&apc->vport_mutex);
++	apc->channel_changing = false;
++	mutex_unlock(&apc->vport_mutex);
+ 	return err;
+ }
+ 
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index d9c27310fd04..5a9b94e0ef34 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -480,8 +480,6 @@ struct mana_context {
+ 	u8 bm_hostmode;
+ 
+ 	struct mana_ethtool_hc_stats hc_stats;
+-	struct mana_eq *eqs;
+-	struct dentry *mana_eqs_debugfs;
+ 	struct workqueue_struct *per_port_queue_reset_wq;
+ 	/* Workqueue for querying hardware stats */
+ 	struct delayed_work gf_stats_work;
+@@ -501,6 +499,9 @@ struct mana_port_context {
+ 
+ 	u8 mac_addr[ETH_ALEN];
+ 
++	struct mana_eq *eqs;
++	struct dentry *mana_eqs_debugfs;
++
+ 	enum TRI_STATE rss_state;
+ 
+ 	mana_handle_t default_rxobj;
+@@ -547,6 +548,12 @@ struct mana_port_context {
+ 	struct mutex vport_mutex;
+ 	int vport_use_count;
+ 
++	/* Set by mana_set_channels() under vport_mutex to block RDMA
++	 * from grabbing the vport during the detach/attach window.
++	 * Checked by mana_cfg_vport() when called from the RDMA path.
++	 */
++	bool channel_changing;
++
+ 	/* Net shaper handle*/
+ 	struct net_shaper_handle handle;
+ 
+@@ -1040,8 +1047,10 @@ void mana_destroy_wq_obj(struct mana_port_context *apc, u32 wq_type,
+ 			 mana_handle_t wq_obj);
+ 
+ int mana_cfg_vport(struct mana_port_context *apc, u32 protection_dom_id,
+-		   u32 doorbell_pg_id);
++		   u32 doorbell_pg_id, bool check_channel_changing);
+ void mana_uncfg_vport(struct mana_port_context *apc);
++int mana_create_eq(struct mana_port_context *apc);
++void mana_destroy_eq(struct mana_port_context *apc);
+ 
+ struct net_device *mana_get_primary_netdev(struct mana_context *ac,
+ 					   u32 port_index,
 -- 
 2.43.0
 
