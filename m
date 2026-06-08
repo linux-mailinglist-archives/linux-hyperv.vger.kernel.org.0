@@ -1,47 +1,47 @@
-Return-Path: <linux-hyperv+bounces-11534-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11535-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id GckGKyyaJmopZgIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11534-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 08 Jun 2026 12:32:12 +0200
+	id KzwcDAuZJmrAZQIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11535-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 08 Jun 2026 12:27:23 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 877786551E8
-	for <lists+linux-hyperv@lfdr.de>; Mon, 08 Jun 2026 12:32:12 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2ED8655102
+	for <lists+linux-hyperv@lfdr.de>; Mon, 08 Jun 2026 12:27:22 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linux.microsoft.com header.s=default header.b=lWIvpzpu;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11534-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11534-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=linux.microsoft.com header.s=default header.b=joPArdp8;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11535-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11535-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=linux.microsoft.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 820553059A46
-	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Jun 2026 10:17:27 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 717DD310D1AD
+	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Jun 2026 10:17:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C73A3BB9F5;
-	Mon,  8 Jun 2026 10:14:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1417E3BD63B;
+	Mon,  8 Jun 2026 10:14:07 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C708C1CAA68;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9E6031327D;
 	Mon,  8 Jun 2026 10:14:04 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780913645; cv=none; b=oRXBUi4f7EJolXtJsnhXFyjAvUp/+offht0e16d0ZuzRf9jTKABPhteu0Cv+1J8LFPgcovVVFLvXyqrhtNNXphMAMcFKlen2zP60VRgXCaf/AvQ8x7Bjgla96XE6sbooGXTzbsavT29DQSVJJ5EbVCHqlXuRvMSO/ZJhglWr3mA=
+	t=1780913647; cv=none; b=lfe7dl86/+qZJIxbg0MCqk99Zs8G8v4NU1EknhQLP3RDO+1yBSA3CriAxFmbcwqW4Z/Zua+EoCUwQkt5ctVgbttZ6dq3Y0i/PC4a1+APZgV8kJLmMScPq0YJPEr9gfLmL4pSZ9hpuL3Sj4f7vCKfSAveTLvp35rOuZ9E1NDwUlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780913645; c=relaxed/simple;
-	bh=7sqsPSlC62BXb8yb/9Brgirj38bkv4Q15+uoFfoYe/w=;
+	s=arc-20240116; t=1780913647; c=relaxed/simple;
+	bh=gC+onrXYGvy71kSebdmca8pRlTC0uWzgIwwWRfamJA8=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S4I1qFPR3zfcda/DxAT/QpzSBIHsShQ97khT8UELDliuKfNJy1/CGMtGJKeIaQi7aBXge8JGv9Q0EErnTLC66SbKlqjH/pp43r7taZxAbsiF8WZHRPK94V+flATwVhCNLHsfHQ5n5VEIhM107TBFlDjY2LRYBWSZuB7eYcOSz+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=lWIvpzpu; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=PCJJVnuA9HwEGAyBIkf4tdLPW6GZzT5zFnX7cYoX/SYcmpp7hkq2mdj+ejY0bp+2YBHHzH8zV4q9dog8hJkdkmF9ppFm0Jj46bVWCAABtl4YEBX/OpF0OONX1MNHEHKSCzcXFFEjRQiOJAPFEZ8D0SK7gqvf1efgklVvL+b/M6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=joPArdp8; arc=none smtp.client-ip=13.77.154.182
 Received: by linux.microsoft.com (Postfix, from userid 1231)
-	id D39DC20B7167; Mon,  8 Jun 2026 03:13:47 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D39DC20B7167
+	id E0C0220B716B; Mon,  8 Jun 2026 03:13:47 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E0C0220B716B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1780913627;
-	bh=o8krHEL94k3Devk000JfdtoizGMtQGBbfvLaItOxdKg=;
+	bh=trhabQE42+25m+BwIKSJ5YnDXkksfcD+tHqcjwGCLsY=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=lWIvpzpuVOT1ewGCrw4W5sc3d9aL3MNkyD24aS8k/MG9FlA3/EbwQumpd+i7Ezt5F
-	 kWpNwB/kQu98SPUSlBalvBtYrMghx3qPevHS8+zmjU8zN3vkc6SKCymkfW6A69hEO5
-	 g7wONGSWYhHzd/bxjBmumwmuufARKtgP3MvLm7iI=
+	b=joPArdp8YKKroAEhaNSmHzyT+frG4sQDIOAHgGTDvbHgo92DJn6P+GhtdDbAq8YoH
+	 6uj7tFSnE3rBidRx/XXjPCIxPa7cwxpWXfAnoFtGxZJx3tuz+fzewhEmUTJTBtsuXu
+	 +CTBzW5H/kh/MG6LleOGu1sawH+u2+H/qZpRj1gg=
 From: Aditya Garg <gargaditya@linux.microsoft.com>
 To: kys@microsoft.com,
 	haiyangz@microsoft.com,
@@ -66,9 +66,9 @@ To: kys@microsoft.com,
 	linux-hyperv@vger.kernel.org,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net v2 1/2] net: mana: initialize gdma queue id to INVALID_QUEUE_ID
-Date: Mon,  8 Jun 2026 03:13:40 -0700
-Message-ID: <20260608101345.2267320-2-gargaditya@linux.microsoft.com>
+Subject: [PATCH net v2 2/2] net: mana: guard TX wq object destroy with INVALID_MANA_HANDLE check
+Date: Mon,  8 Jun 2026 03:13:41 -0700
+Message-ID: <20260608101345.2267320-3-gargaditya@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.7
 In-Reply-To: <20260608101345.2267320-1-gargaditya@linux.microsoft.com>
 References: <20260608101345.2267320-1-gargaditya@linux.microsoft.com>
@@ -87,11 +87,11 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11534-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11535-lists,linux-hyperv=lfdr.de];
 	FORGED_RECIPIENTS(0.00)[m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:andrew+netdev@lunn.ch,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:horms@kernel.org,m:shradhagupta@linux.microsoft.com,m:dipayanroy@linux.microsoft.com,m:ernis@linux.microsoft.com,m:kees@kernel.org,m:shacharr@microsoft.com,m:stephen@networkplumber.org,m:gargaditya@microsoft.com,m:gargaditya@linux.microsoft.com,m:ssengar@linux.microsoft.com,m:linux-hyperv@vger.kernel.org,m:netdev@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:andrew@lunn.ch,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
@@ -109,42 +109,43 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	TO_DN_NONE(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,vger.kernel.org:from_smtp,linux.microsoft.com:mid,linux.microsoft.com:from_mime,linux.microsoft.com:dkim]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,linux.microsoft.com:mid,linux.microsoft.com:from_mime,linux.microsoft.com:dkim,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 877786551E8
+X-Rspamd-Queue-Id: B2ED8655102
 
-mana_gd_create_mana_wq_cq() leaves queue->id as 0 (from kzalloc_obj())
-until mana_create_wq_obj() assigns the firmware-returned id. If creation
-fails before that, cleanup calls mana_gd_destroy_cq() with id 0, NULLing
-gc->cq_table[0] and silently breaking whichever real CQ owns that slot.
+mana_create_txq() has several error paths (after mana_alloc_queues() or
+mana_create_wq_obj() failure) where tx_qp[i].tx_object stays as the
+INVALID_MANA_HANDLE sentinel set at allocation. mana_destroy_txq() then
+unconditionally calls mana_destroy_wq_obj() with (u64)-1, which firmware
+rejects and logs an error.
 
-Initialize queue->id to INVALID_QUEUE_ID right after allocation, matching
-mana_gd_create_eq(). The existing (id >= max_num_cqs) guard then
-short-circuits cleanly.
+Mirror the RX-side pattern in mana_destroy_rxq() and skip the destroy
+when the handle is still INVALID_MANA_HANDLE.
 
 Fixes: ca9c54d2d6a5 ("net: mana: Add a driver for Microsoft Azure Network Adapter (MANA)")
 Signed-off-by: Aditya Garg <gargaditya@linux.microsoft.com>
 Reviewed-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
 Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
 ---
- drivers/net/ethernet/microsoft/mana/gdma_main.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index d8e816882f02..ac71ca8450bf 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-+++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -1192,6 +1192,8 @@ int mana_gd_create_mana_wq_cq(struct gdma_dev *gd,
- 	if (!queue)
- 		return -ENOMEM;
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index c9b1df1ed109..d7de4c4d25bb 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -2334,7 +2334,8 @@ static void mana_destroy_txq(struct mana_port_context *apc)
+ 			netif_napi_del_locked(napi);
+ 			apc->tx_qp[i].txq.napi_initialized = false;
+ 		}
+-		mana_destroy_wq_obj(apc, GDMA_SQ, apc->tx_qp[i].tx_object);
++		if (apc->tx_qp[i].tx_object != INVALID_MANA_HANDLE)
++			mana_destroy_wq_obj(apc, GDMA_SQ, apc->tx_qp[i].tx_object);
  
-+	queue->id = INVALID_QUEUE_ID;
-+
- 	gmi = &queue->mem_info;
- 	err = mana_gd_alloc_memory(gc, spec->queue_size, gmi);
- 	if (err) {
+ 		mana_deinit_cq(apc, &apc->tx_qp[i].tx_cq);
+ 
 -- 
 2.43.0
 
