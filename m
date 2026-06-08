@@ -1,60 +1,60 @@
-Return-Path: <linux-hyperv+bounces-11527-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11528-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id /MpIGFZUJmq2UwIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11527-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 08 Jun 2026 07:34:14 +0200
+	id r2EFGIdaJmo9VQIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11528-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 08 Jun 2026 08:00:39 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5E49652D54
-	for <lists+linux-hyperv@lfdr.de>; Mon, 08 Jun 2026 07:34:13 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id AFFC765300C
+	for <lists+linux-hyperv@lfdr.de>; Mon, 08 Jun 2026 08:00:38 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=KFe97ohi;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11527-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11527-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=ZjMkEf3d;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11528-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11528-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id CD84030027D7
-	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Jun 2026 05:34:12 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 72FFE3007E12
+	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Jun 2026 06:00:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3C2A2BE7A7;
-	Mon,  8 Jun 2026 05:34:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28C3A29C33F;
+	Mon,  8 Jun 2026 06:00:37 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDCA11B6D1A;
-	Mon,  8 Jun 2026 05:34:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16EF02E7369;
+	Mon,  8 Jun 2026 06:00:35 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780896850; cv=none; b=D5J+HnGFVqC0VtlwFjdw3t84vs3gk25oQltHLa2ifKFv8cjXyNhEtACXHXCpJ78kc03iy5ZAbakiXkHDKqka7j77YnZEY2Dw7ZMEVnCC2Hyp0D90lN7/yAwVOoON9QsGhIuYFSvgSYhoX6RzHD1y5lHq2ofck6zUWJVKKc8Uqd8=
+	t=1780898437; cv=none; b=iaeSUyXFbyoe0j8Wn6knmPyNV5Bhu4S2nxJqVtym8VHZSpRzK3HgsddowPCDWaFa/AOdo7vbp3Mr55xx0NLl9c9EHSqR+ttSS0iO5NoUUV/hmaElKgeFZqLG0zGr88yN0NIjjSAGtpk1gCsCbvj3wmYxkqIeBlD9AFesUsOcgOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780896850; c=relaxed/simple;
-	bh=FCLIriCCmgcWIax3D5Xc9jpREXVaX7xezXU5nw9frZY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=rcZYr9nfwkkpM3cwd/2oHdvMv1n3Lp4AW4EZFTLia+cQyvtuaHMZr0MCSErz+FdNzq5eRUgucwhtDyli8xvPAP31fy7UXz3greD4Q9sPqWUbO4vacXs3sRcweXYMfaX55tdbzAbx3UoBfkCXaSH1W2FNIN8Bw4nOAz6u/jmxWhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KFe97ohi; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 633631F00893;
-	Mon,  8 Jun 2026 05:34:09 +0000 (UTC)
+	s=arc-20240116; t=1780898437; c=relaxed/simple;
+	bh=4XSdySNC6ADz9P8KbUcNklDk+9Rvn9ooMDG3UVATMnk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R8nTPI9IwordVcOvMiAMWxMQJID4ncUEIxieiPAIYb4023DhtqTP/389o0gqTXzUaWzfsLci0z7V4GIkUS8wLR17hS4W350w0zNaBsDFhJwECjZxtMcTJoj+aLJgT6h4hCLI1GXEVQq1NLfzvo1dpMKwFzTzYBg7o+dGFepVUVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZjMkEf3d; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91AE01F00893;
+	Mon,  8 Jun 2026 06:00:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780896849;
-	bh=JVWy71YIBt9P1P/WlBP4QVyvzsjWIZeo2ijhUIVAcyA=;
-	h=Date:From:To:Cc:Subject;
-	b=KFe97ohiQkfWcBZjdYHWQgn3oLPsLGjFLqNsc71i9wWxh2WmybXPZntyKVaw0qm8K
-	 skWycwI+NgBk5ac5zDlEsWJ/fKmvX9YKH4jr2gyxqJRIBbxuN5/+u0JSOLmdBaSfyB
-	 J65mq9s7FY437SFGDZ3aWA7cHEgenU6/mT72A05WvobxfnxPzTZ3yGaWr/3eBzvNsh
-	 pcLjXHJhB3rzHytMNf/7GvaZSrX8U17Ew/ywSdTuNecM+l3vQmHSbAT1jJt9q4ImEp
-	 UnluSOAa/3C2N1YqQVg2EVhHJNWM9z/snBy2zAu2B+uGZgqwXXCyzKpi6KpIcCQvPG
-	 79HpuDzaQFEzA==
-Date: Sun, 7 Jun 2026 22:34:08 -0700
+	s=k20260515; t=1780898435;
+	bh=TJIqRbcVuZGfZowRQTnAoA4n6W2NjIkeKA4nRugIc+4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=ZjMkEf3dqgBnPcx/ttCI1ltijDWBQbChhlRd4huUNbWNBOYDg2rYhXjTszVYTEDis
+	 hg/cI3TJiD26RpCQd+WxU1FxzCSXGaDOmfeY/WZLipJZyR0qJDDAKcih2GTw2t457G
+	 uSbMu+hOhjFGvVD53JR7yrDIlnmo2mqfGjofUvOxpG/ILpsLVniIt9J/JuASp185Qv
+	 rbyVFAXvPRobmRs6S2MYAWp42aGRhuEIdj0wBRkVku2E+QEHcxvZvm3LrAdrMWsYok
+	 wxKRz5xADptuwZbJWpBs2YcMjymJ7k5xe9EuVi6mKpHQ3FfkvIwtSBdpagSGkUSEja
+	 l/d8rBYXMTaPw==
+Date: Sun, 7 Jun 2026 23:00:34 -0700
 From: Wei Liu <wei.liu@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Wei Liu <wei.liu@kernel.org>,
-	Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-	Linux Kernel List <linux-kernel@vger.kernel.org>, kys@microsoft.com,
-	haiyangz@microsoft.com, decui@microsoft.com, longli@microsoft.com
-Subject: [GIT PULL] Hyper-V fixes for v7.1-rc8
-Message-ID: <20260608053408.GA1541576@liuwe-devbox-debian-v2.local>
+To: Mukesh R <mrathor@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	wei.liu@kernel.org
+Subject: Re: [PATCH] x86/hyperv: Cosmetic changes in irqdomain.c for
+ readability
+Message-ID: <20260608060034.GB1555293@liuwe-devbox-debian-v2.local>
+References: <20260601225116.956392-1-mrathor@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -63,104 +63,61 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20260601225116.956392-1-mrathor@linux.microsoft.com>
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11527-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11528-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:torvalds@linux-foundation.org,m:wei.liu@kernel.org,m:linux-hyperv@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:decui@microsoft.com,m:longli@microsoft.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:mrathor@linux.microsoft.com,m:linux-hyperv@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:wei.liu@kernel.org,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER(0.00)[wei.liu@kernel.org,linux-hyperv@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FROM_HAS_DN(0.00)[];
 	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[wei.liu@kernel.org,linux-hyperv@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	TAGGED_RCPT(0.00)[linux-hyperv];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp,liuwe-devbox-debian-v2.local:mid]
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,checkpatch.pl:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,liuwe-devbox-debian-v2.local:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: C5E49652D54
+X-Rspamd-Queue-Id: AFFC765300C
 
-Hi Linus,
+On Mon, Jun 01, 2026 at 03:51:16PM -0700, Mukesh R wrote:
+> Make cosmetic changes:
+>  o Rename struct pci_dev *dev to *pdev since there are cases of
+>    struct device *dev in the file and all over the kernel
+>  o Rename hv_build_pci_dev_id to hv_build_devid_type_pci in anticipation
+>    of building different types of device ids
+>  o Fix checkpatch.pl issues with return and extraneous printk
+>  o Replace spaces with tabs
+>  o Rename struct hv_devid *xxx to struct hv_devid *hv_devid given code
+>    paths involve many types of device ids
+>  o Fix indentation in a large if block by using goto.
+> 
+> There are no functional changes.
+> 
+> Reviewed-by: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+> Reviewed-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+> Signed-off-by: Mukesh R <mrathor@linux.microsoft.com>
 
-The following changes since commit 254f49634ee16a731174d2ae34bc50bd5f45e731:
+Applied to hyperv-next.
 
-  Linux 7.1-rc1 (2026-04-26 14:19:00 -0700)
-
-are available in the Git repository at:
-
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed-20260607
-
-for you to fetch changes up to 98e0fc32e53dd62cd38a0d67eaf5846ae20078cc:
-
-  mshv: support 1G hugepages by passing them as 2M-aligned chunks (2026-05-27 15:30:15 -0700)
-
-----------------------------------------------------------------
-hyperv-fixes for v7.1-rc8
- - MSHV driver fixes from various people (Anirudh Rayabharam, Can Peng,
-   Dexuan Cui, Michael Kelley, Jork Loeser, Wei Liu)
- - Hyper-V user space tools fixes (Thorsten Blum)
- - Allow VMBus to be unloaded after frame buffer is flushed (Michael
-   Kelley)
-----------------------------------------------------------------
-Anirudh Rayabharam (Microsoft) (1):
-      mshv: support 1G hugepages by passing them as 2M-aligned chunks
-
-Can Peng (1):
-      mshv: use kmalloc_array in mshv_root_scheduler_init
-
-Dexuan Cui (2):
-      hyperv: Clean up and fix the guest ID comment in hvgdk.h
-      Drivers: hv: vmbus: Improve the logic of reserving fb_mmio on Gen2 VMs
-
-Jork Loeser (3):
-      mshv: limit SynIC management to MSHV-owned resources
-      mshv: clean up SynIC state on kexec for L1VH
-      mshv: unmap debugfs stats pages on kexec
-
-Michael Kelley (3):
-      Drivers: hv: vmbus: Provide option to skip VMBus unload on panic
-      drm/hyperv: During panic do VMBus unload after frame buffer is flushed
-      mshv: Add conditional VMBus dependency
-
-Thorsten Blum (2):
-      hv: utils: handle and propagate errors in kvp_register
-      hv: utils: replace deprecated strcpy with strscpy in kvp_register
-
-Wei Liu (1):
-      mshv: add a missing padding field
-
- drivers/gpu/drm/hyperv/hyperv_drm_drv.c     |   5 +
- drivers/gpu/drm/hyperv/hyperv_drm_modeset.c |  15 +--
- drivers/hv/Kconfig                          |   1 +
- drivers/hv/channel_mgmt.c                   |   1 +
- drivers/hv/hv.c                             |   3 +
- drivers/hv/hv_kvp.c                         |  27 +++--
- drivers/hv/hyperv_vmbus.h                   |   1 -
- drivers/hv/mshv_debugfs.c                   |   7 +-
- drivers/hv/mshv_regions.c                   |  29 +++---
- drivers/hv/mshv_root_main.c                 |   2 +-
- drivers/hv/mshv_synic.c                     | 156 ++++++++++++++++++----------
- drivers/hv/vmbus_drv.c                      |  54 ++++++++--
- include/hyperv/hvgdk.h                      |  10 +-
- include/hyperv/hvhdk.h                      |   1 +
- include/linux/hyperv.h                      |   7 ++
- 15 files changed, 207 insertions(+), 112 deletions(-)
+Wei
 
