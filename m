@@ -1,149 +1,399 @@
-Return-Path: <linux-hyperv+bounces-11543-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11544-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id gKi+GxJfJ2pMvQIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11543-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 09 Jun 2026 02:32:18 +0200
+	id Cw6AIY2XJ2oHzQIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11544-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 09 Jun 2026 06:33:17 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9B2D65B5B7
-	for <lists+linux-hyperv@lfdr.de>; Tue, 09 Jun 2026 02:32:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DF46965C374
+	for <lists+linux-hyperv@lfdr.de>; Tue, 09 Jun 2026 06:33:16 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=google.com header.s=20251104 header.b=leHyf0cd;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11543-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11543-lists+linux-hyperv=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=reject) header.from=google.com;
+	dkim=pass header.d=linux.microsoft.com header.s=default header.b=eS9pLD2O;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11544-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11544-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=linux.microsoft.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B0CFB3061CDA
-	for <lists+linux-hyperv@lfdr.de>; Tue,  9 Jun 2026 00:31:30 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id D6EC33050441
+	for <lists+linux-hyperv@lfdr.de>; Tue,  9 Jun 2026 04:33:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEF07223322;
-	Tue,  9 Jun 2026 00:31:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 743363655DB;
+	Tue,  9 Jun 2026 04:33:14 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01781E5B68
-	for <linux-hyperv@vger.kernel.org>; Tue,  9 Jun 2026 00:31:27 +0000 (UTC)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D47E71A9F90;
+	Tue,  9 Jun 2026 04:33:12 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780965088; cv=none; b=O7QySV10E64VFo+/1edhIQIZd4KOxWmqL8r5FQANcwZh/hAsFaUFdGCr7yJW+QtaTKHOj554UhQvQ2joyVOQNzef11smNUWnyL5njt/vRt+Rv8nXlSHXiL57VvWZ9TSHzbv+l0DHNOdjuNmRVoX8Y47z6/i2CBQBQryd+r0XuU8=
+	t=1780979594; cv=none; b=JsCoO0D1hGq1bSVVZ4aVlSJ5P4S4+qt7axXEfhc6LxB52Q77C6Ca+6aOPplEOa+giFwV/mAcpxlrzSRvgsEjUNSAHXzrZgceECbbff7p6Yarhm18nKGjoUoWMruFoK/Smf8iekUudXq5Esj2X/gLH0EJhSOXUgAScK6+a5WYJTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780965088; c=relaxed/simple;
-	bh=yIJ6TQJxT7dONmA/83aONXNhkBdZrn6zCKFw130M9Q4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=KYj9ep0UWFNAa2J8iYGNU/eDy9tC/k8bI22eY8gjesXNkmsJeC5fFJADHffqYrL5idyIOHCUg6XcSQwXpnF8dx08YqVNRtFSGnmvzhcfr2YGOxuVwvJZfjku/IuPFKojFBS/LlwM5wGKMfd5JWXyJYtqnZV2rlQMRiXEL+fuuU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=leHyf0cd; arc=none smtp.client-ip=209.85.216.74
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-36d97415004so9351972a91.2
-        for <linux-hyperv@vger.kernel.org>; Mon, 08 Jun 2026 17:31:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780965087; x=1781569887; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=p2pVFo4dJytLODVsSoHOHadkmK9decmDzlODrRei+YU=;
-        b=leHyf0cdogosuxxRPjbyiB8XJyMDOjXYEh1zdkbpSjrn/myRf1p2V0bAWPZ3I46xAd
-         HU8+F0GSG/0gImPb3sRwhzzgknD8mtFSt4HyG1kd22w+9iQa2GnQWCnU228N78WaxMJN
-         Vc5D1xHt4WSYR33XTspNrBWZ0lNGlVBAAHlDPCZjFea8VfbL2KcjmvLFTvGHKW7Cc/Jo
-         6svmRjNKIYkODQZpsJhnGnZVkSAr6zUCTmdUA1avO3qm3H7gOhhyiWp3wqvP42QUdkHR
-         bLUSVPnNwYEoOaUjQBAkuV11UyMNWzwjOoBgEvpwo/BpVleCju/Ueijr8+SCbJ70vbAW
-         0LTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780965087; x=1781569887;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=p2pVFo4dJytLODVsSoHOHadkmK9decmDzlODrRei+YU=;
-        b=svEpshitgTMp49PwCY/FMc4e1gpraVXjBfiex+ves1+hSz//wFR9srqrWqgoAxBNN2
-         HNd2JroX44i5baWYXGocUNcrvlxH3Q6AJ9NtaMpIT2BmvJMm+I+c7tcz3pzkcdrwlKPj
-         R/jf9wykVEmxuruO6DnTDev9UcmB0huGlKo6CJe2LvkdNOCftFs6Ukc3APxEw3L4mNZ3
-         uUdPS/nw+/yLNu0uK2JQZapvzFxBabpo76QAT+oTfLdxkKtXXMCkP5P5697iKL7MB0D1
-         2+fSx5qo/95br8JqzfeStXOPTyG44tHZBEgn7oWW/ZL10fuLJ9MWQe2ZLhOxMr6dx5Qo
-         ySVw==
-X-Gm-Message-State: AOJu0YwGaozneTy+R9mVvZbJTaxts3/4VEaPmNAP+9mF8NEi7bZ6LSdL
-	r6hYaBnpJ53czE1q6/BROJUsexRr48Y+3Dnu98DubKyGs9OzrVvST5q+ypC8i8BpR4gAk7hTJZM
-	m5CNtmA==
-X-Received: from pjbfh16.prod.google.com ([2002:a17:90b:350:b0:36b:c7cb:baf])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:58e7:b0:36b:936e:73c8
- with SMTP id 98e67ed59e1d1-370f0e4ad33mr20840879a91.19.1780965086844; Mon, 08
- Jun 2026 17:31:26 -0700 (PDT)
-Date: Mon, 8 Jun 2026 17:31:26 -0700
-In-Reply-To: <20260530070848.158521F00893@smtp.kernel.org>
+	s=arc-20240116; t=1780979594; c=relaxed/simple;
+	bh=8n2rUa58ndHtThTWZ59/AdSok7/ztYMrngn8BMaCEY8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W/stz3/wpjGG1PoxIQkVTpIYHsFFn1VI65Wzn00AagUKgq/ZtTJ/o2rVuoLu7N6dDm9eAtZpH3/eCXO6XEn+3twzLE6pKYjPHEvniXjA+rP70lK4U9oy9vkF9k09HheWpL7XOF63WUYo+sQW8O+n7VETJePbwCSOW9zyyh2GYCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=eS9pLD2O; arc=none smtp.client-ip=13.77.154.182
+Received: by linux.microsoft.com (Postfix, from userid 1204)
+	id 7AC8120B7167; Mon,  8 Jun 2026 21:32:49 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7AC8120B7167
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1780979569;
+	bh=EbqJ/IkzsqoSz7UPJbS0opNH84rgjXe7KslEbNh6Usk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eS9pLD2OlBsevnqnj6DzY/nw3dRmV+Y/GyvmYNdJo6w7yHs+4bf2I5aFLEf5xt8gC
+	 ya8ua+iMUKffMq5zX0ZsoQnMSbhK2v8CS4hUSi0DGDcLy0yt+g6vMFNf4PTgDt3BNL
+	 4c6nZ+3kLAk2USHYeRPVHTySfTsqMEA+ovIxhjMw=
+Date: Mon, 8 Jun 2026 21:32:49 -0700
+From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+To: Jacob Keller <jacob.e.keller@intel.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	leon@kernel.org, longli@microsoft.com, kotaranov@microsoft.com,
+	horms@kernel.org, shradhagupta@linux.microsoft.com,
+	ssengar@linux.microsoft.com, ernis@linux.microsoft.com,
+	shirazsaleem@microsoft.com, linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org, stephen@networkplumber.org,
+	dipayanroy@microsoft.com, leitao@debian.org, kees@kernel.org,
+	john.fastabend@gmail.com, hawk@kernel.org, bpf@vger.kernel.org,
+	daniel@iogearbox.net, ast@kernel.org, sdf@fomichev.me,
+	yury.norov@gmail.com, pavan.chebbi@broadcom.com
+Subject: Re: [PATCH net-next v10 2/2] net: mana: force full-page RX buffers
+ via ethtool private flag
+Message-ID: <aieXcRe47AKklXKr@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20260602202801.1873742-1-dipayanroy@linux.microsoft.com>
+ <20260602202801.1873742-3-dipayanroy@linux.microsoft.com>
+ <c3b2ab74-754d-4d09-b7a2-d274343d0936@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260529144435.704127-27-seanjc@google.com> <20260530070848.158521F00893@smtp.kernel.org>
-Message-ID: <aide3ppnmB_suEab@google.com>
-Subject: Re: [PATCH v4 26/47] x86/kvm: Don't disable kvmclock on BSP in syscore_suspend()
-From: Sean Christopherson <seanjc@google.com>
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-hyperv@vger.kernel.org, kvm@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c3b2ab74-754d-4d09-b7a2-d274343d0936@intel.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MV_CASE(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11543-lists,linux-hyperv=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:jacob.e.keller@intel.com,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:andrew+netdev@lunn.ch,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:leon@kernel.org,m:longli@microsoft.com,m:kotaranov@microsoft.com,m:horms@kernel.org,m:shradhagupta@linux.microsoft.com,m:ssengar@linux.microsoft.com,m:ernis@linux.microsoft.com,m:shirazsaleem@microsoft.com,m:linux-hyperv@vger.kernel.org,m:netdev@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:stephen@networkplumber.org,m:dipayanroy@microsoft.com,m:leitao@debian.org,m:kees@kernel.org,m:john.fastabend@gmail.com,m:hawk@kernel.org,m:bpf@vger.kernel.org,m:daniel@iogearbox.net,m:ast@kernel.org,m:sdf@fomichev.me,m:yury.norov@gmail.com,m:pavan.chebbi@broadcom.com,m:andrew@lunn.ch,m:johnfastabend@gmail.com,m:yurynorov@gmail.com,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11544-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:sashiko-reviews@lists.linux.dev,m:linux-hyperv@vger.kernel.org,m:kvm@vger.kernel.org,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER(0.00)[dipayanroy@linux.microsoft.com,linux-hyperv@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[seanjc@google.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[google.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	MISSING_XM_UA(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	TO_DN_NONE(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[seanjc@google.com,linux-hyperv@vger.kernel.org];
-	RCPT_COUNT_THREE(0.00)[3];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[34];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	FORWARDED(0.00)[lists@lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dipayanroy@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FREEMAIL_CC(0.00)[microsoft.com,kernel.org,lunn.ch,davemloft.net,google.com,redhat.com,linux.microsoft.com,vger.kernel.org,networkplumber.org,debian.org,gmail.com,iogearbox.net,fomichev.me,broadcom.com];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,intel.com:email,linux.microsoft.com:dkim,linux.microsoft.com:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: D9B2D65B5B7
+X-Rspamd-Queue-Id: DF46965C374
 
-On Sat, May 30, 2026, sashiko-bot@kernel.org wrote:
-> > diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> > index c81a24d0efdf6..fd1c417b4f9b9 100644
-> > --- a/arch/x86/kernel/kvm.c
-> > +++ b/arch/x86/kernel/kvm.c
-> > @@ -460,7 +460,7 @@ static void __init sev_map_percpu_data(void)
+On Thu, Jun 04, 2026 at 11:40:30AM -0700, Jacob Keller wrote:
+> On 6/2/2026 1:24 PM, Dipayaan Roy wrote:
+> > On some ARM64 platforms with 4K PAGE_SIZE, page_pool fragment
+> > allocation in the RX refill path can cause 15-20% throughput
+> > regression under high connection counts (>16 TCP streams).
+> > 
+> > Add an ethtool private flag "full-page-rx" that allows the user to
+> > force one RX buffer per page, bypassing the page_pool fragment path.
+> > This restores line-rate (180+ Gbps) performance on affected platforms.
+> > 
+> > Usage:
+> >   ethtool --set-priv-flags eth0 full-page-rx on
+> > 
+> > There is no behavioral change by default. The flag must be explicitly
+> > enabled by the user or udev rule.
+> > 
+> > The existing single-buffer-per-page logic for XDP and jumbo frames is
+> > consolidated into a new helper mana_use_single_rxbuf_per_page() which
+> > is now the single decision point for both the automatic and
+> > user-controlled paths.
+> > 
+> > Signed-off-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+> > ---
 > 
-> [ ... ]
+> I had one or two minor nits, but nothing that I think really deserves a
+> v11. The only real comment is a future "gotcha" that could happen if you
+> ever added a second private flag, which seems unlikely and maybe not
+> worth dealing with until it matters.
 > 
-> > -static void kvm_guest_cpu_offline(bool shutdown)
-> > +static void kvm_guest_cpu_offline(enum kvm_guest_cpu_action action)
+> Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
+>
+
+Hi Jacob,
+
+Thank you for the review.
+I will keep this patch as is, since no plans for any new private flags.
+
+Regards
+Dipayaan Roy
+
+> >  drivers/net/ethernet/microsoft/mana/mana_en.c |  22 +++-
+> >  .../ethernet/microsoft/mana/mana_ethtool.c    | 103 ++++++++++++++++++
+> >  include/net/mana/mana.h                       |   8 ++
+> >  3 files changed, 131 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> > index db14357d3732..447cecfd3f67 100644
+> > --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> > +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> > @@ -744,6 +744,25 @@ static void *mana_get_rxbuf_pre(struct mana_rxq *rxq, dma_addr_t *da)
+> >  	return va;
+> >  }
+> >  
+> > +static bool
+> > +mana_use_single_rxbuf_per_page(struct mana_port_context *apc, u32 mtu)
+> > +{
+> > +	/* On some platforms with 4K PAGE_SIZE, page_pool fragment allocation
+> > +	 * in the RX refill path (~2kB buffer) can cause significant throughput
+> > +	 * regression under high connection counts. Allow user to force one RX
+> > +	 * buffer per page via ethtool private flag to bypass the fragment
+> > +	 * path.
+> > +	 */
+> > +	if (apc->priv_flags & BIT(MANA_PRIV_FLAG_USE_FULL_PAGE_RXBUF))
+> > +		return true;
+> > +
+> > +	/* For xdp and jumbo frames make sure only one packet fits per page. */
+> > +	if (mtu + MANA_RXBUF_PAD > PAGE_SIZE / 2 || mana_xdp_get(apc))
+> > +		return true;
+> 
+> Technically you could combine all three into one if, but I agree that
+> clarity and space for the comment about why the private flag exists
+> makes sense.
+> 
+> > +
+> > +	return false;
+> > +}
+> > +
+> >  /* Get RX buffer's data size, alloc size, XDP headroom based on MTU */
+> >  static void mana_get_rxbuf_cfg(struct mana_port_context *apc,
+> >  			       int mtu, u32 *datasize, u32 *alloc_size,
+> > @@ -754,8 +773,7 @@ static void mana_get_rxbuf_cfg(struct mana_port_context *apc,
+> >  	/* Calculate datasize first (consistent across all cases) */
+> >  	*datasize = mtu + ETH_HLEN;
+> >  
+> > -	/* For xdp and jumbo frames make sure only one packet fits per page */
+> > -	if (mtu + MANA_RXBUF_PAD > PAGE_SIZE / 2 || mana_xdp_get(apc)) {
+> > +	if (mana_use_single_rxbuf_per_page(apc, mtu)) {
+> >  		if (mana_xdp_get(apc)) {
+> >  			*headroom = XDP_PACKET_HEADROOM;
+> >  			*alloc_size = PAGE_SIZE;
+> > diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+> > index 7e79681634db..f22bbb325948 100644
+> > --- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+> > +++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+> > @@ -133,6 +133,10 @@ static const struct mana_stats_desc mana_phy_stats[] = {
+> >  	{ "hc_tc7_tx_pause_phy", offsetof(struct mana_ethtool_phy_stats, tx_pause_tc7_phy) },
+> >  };
+> >  
+> > +static const char mana_priv_flags[MANA_PRIV_FLAG_MAX][ETH_GSTRING_LEN] = {
+> > +	[MANA_PRIV_FLAG_USE_FULL_PAGE_RXBUF] = "full-page-rx"
+> > +};
+> > +
+> >  static int mana_get_sset_count(struct net_device *ndev, int stringset)
 > >  {
-> >  	kvm_disable_steal_time();
-> >  	if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
-> > @@ -468,9 +468,10 @@ static void kvm_guest_cpu_offline(bool shutdown)
-> >  	if (kvm_para_has_feature(KVM_FEATURE_MIGRATION_CONTROL))
-> >  		wrmsrq(MSR_KVM_MIGRATION_CONTROL, 0);
+> >  	struct mana_port_context *apc = netdev_priv(ndev);
+> > @@ -144,6 +148,10 @@ static int mana_get_sset_count(struct net_device *ndev, int stringset)
+> >  		       ARRAY_SIZE(mana_phy_stats) +
+> >  		       ARRAY_SIZE(mana_hc_stats)  +
+> >  		       num_queues * (MANA_STATS_RX_COUNT + MANA_STATS_TX_COUNT);
+> > +
+> > +	case ETH_SS_PRIV_FLAGS:
+> > +		return MANA_PRIV_FLAG_MAX;
+> > +
+> >  	default:
+> >  		return -EINVAL;
+> >  	}
+> > @@ -192,6 +200,14 @@ static void mana_get_strings_stats(struct mana_port_context *apc, u8 **data)
+> >  	}
+> >  }
+> >  
+> > +static void mana_get_strings_priv_flags(u8 **data)
+> > +{
+> > +	int i;
+> > +
+> > +	for (i = 0; i < MANA_PRIV_FLAG_MAX; i++)
+> > +		ethtool_puts(data, mana_priv_flags[i]);
+> > +}
+> > +
+> >  static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
+> >  {
+> >  	struct mana_port_context *apc = netdev_priv(ndev);
+> > @@ -200,6 +216,9 @@ static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
+> >  	case ETH_SS_STATS:
+> >  		mana_get_strings_stats(apc, &data);
+> >  		break;
+> > +	case ETH_SS_PRIV_FLAGS:
+> > +		mana_get_strings_priv_flags(&data);
+> > +		break;
+> >  	default:
+> >  		break;
+> >  	}
+> > @@ -590,6 +609,88 @@ static int mana_get_link_ksettings(struct net_device *ndev,
+> >  	return 0;
+> >  }
+> >  
+> > +static u32 mana_get_priv_flags(struct net_device *ndev)
+> > +{
+> > +	struct mana_port_context *apc = netdev_priv(ndev);
+> > +
+> > +	return apc->priv_flags;
+> > +}
+> > +
+> > +static int mana_set_priv_flags(struct net_device *ndev, u32 priv_flags)
+> > +{
+> > +	struct mana_port_context *apc = netdev_priv(ndev);
+> > +	u32 changed = apc->priv_flags ^ priv_flags;
+> > +	u32 old_priv_flags = apc->priv_flags;
+> > +	bool schedule_port_reset = false;
+> > +	int err = 0;
+> > +
+> > +	if (!changed)
+> > +		return 0;
+> > +
+> > +	/* Reject unknown bits */
+> > +	if (priv_flags & ~GENMASK(MANA_PRIV_FLAG_MAX - 1, 0))
+> > +		return -EINVAL;
 > 
-> [Severity: High]
-> This isn't a bug introduced by this patch, but I noticed that
-> MSR_KVM_MIGRATION_CONTROL is cleared to 0 here during CPU offline and system
-> suspend, but it does not appear to be re-enabled upon online/resume.
+> Good. Explicit rejection ensures that there's no risk of bad value. I
+> think this is only required for the legacy ioctl interface, and won't be
+> able to have a bit set that isn't in your accepted list. However the
+> legacy ioctl interface looks like it doesn't do that double checking, so
+> its good to have this.
 > 
-> Since this patch introduces the kvm_guest_cpu_action enum to solve an
-> identical state-machine issue for kvmclock, should we also use this action
-> enum to ensure the migration control MSR isn't incorrectly cleared on
-> suspend? Otherwise, wouldn't a single CPU hotplug event or a suspend/resume
-> cycle permanently disable live migration for the entire VM?
-
-Looks like.  That's someone else's future problem though.
+> > +
+> > +	if (changed & BIT(MANA_PRIV_FLAG_USE_FULL_PAGE_RXBUF)) {
+> > +		apc->priv_flags = priv_flags;
+> > +
+> 
+> In the (unlikely) event that you need another private flag in the
+> future, this bit seems like it shouldn't be inside the if block here. It
+> seems like you'd want to either do this at the end or up front. Of
+> course it doesn't matter as long as this is the only private flag you have.
+> 
+> > +		if (!apc->port_is_up) {
+> > +			/* Port is down, flag updated to apply on next up
+> > +			 * so just return.
+> > +			 */
+> > +			return 0;
+> > +		}
+> > +
+> > +		/* Pre-allocate buffers to prevent failure in mana_attach
+> > +		 * later
+> > +		 */
+> > +		err = mana_pre_alloc_rxbufs(apc, ndev->mtu, apc->num_queues);
+> > +		if (err) {
+> > +			netdev_err(ndev,
+> > +				   "Insufficient memory for new allocations\n");
+> > +			apc->priv_flags = old_priv_flags;
+> > +			return err;
+> > +		}
+> > +
+> > +		err = mana_detach(ndev, false);
+> > +		if (err) {
+> > +			netdev_err(ndev, "mana_detach failed: %d\n", err);
+> > +			apc->priv_flags = old_priv_flags;
+> > +
+> > +			/* Port is in an inconsistent state. Restore
+> > +			 * 'port_is_up' so that queue reset work handler
+> > +			 * can properly detach and re-attach.
+> > +			 */
+> > +			apc->port_is_up = true;
+> > +			schedule_port_reset = true;
+> > +			goto out;
+> > +		}
+> > +
+> > +		err = mana_attach(ndev);
+> > +		if (err) {
+> > +			netdev_err(ndev, "mana_attach failed: %d\n", err);
+> > +			apc->priv_flags = old_priv_flags;
+> > +
+> > +			/* Restore 'port_is_up' so the reset work handler
+> > +			 * can properly detach/attach. Without this,
+> > +			 * the handler sees port_is_up=false and skips
+> > +			 * queue allocation, leaving the port dead.
+> > +			 */
+> > +			apc->port_is_up = true;
+> > +			schedule_port_reset = true;
+> > +		}
+> 
+> I might have made this bit a separate function, but that comes from
+> history of working with older drivers which accumulated a larger number
+> of private flags. Given that we frown on adding new ones except in more
+> rare cases these days, this is probably fine.
+> 
+> > +	}
+> > +
+> > +out:
+> > +	mana_pre_dealloc_rxbufs(apc);
+> > +
+> > +	if (schedule_port_reset)
+> > +		queue_work(apc->ac->per_port_queue_reset_wq,
+> > +			   &apc->queue_reset_work);
+> > +
+> > +	return err;
+> > +}
+> > +
+> >  const struct ethtool_ops mana_ethtool_ops = {
+> >  	.supported_coalesce_params = ETHTOOL_COALESCE_RX_CQE_FRAMES,
+> >  	.get_ethtool_stats	= mana_get_ethtool_stats,
+> > @@ -608,4 +709,6 @@ const struct ethtool_ops mana_ethtool_ops = {
+> >  	.set_ringparam          = mana_set_ringparam,
+> >  	.get_link_ksettings	= mana_get_link_ksettings,
+> >  	.get_link		= ethtool_op_get_link,
+> > +	.get_priv_flags		= mana_get_priv_flags,
+> > +	.set_priv_flags		= mana_set_priv_flags,
+> >  };
+> > diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+> > index d9c27310fd04..26fd5e041a47 100644
+> > --- a/include/net/mana/mana.h
+> > +++ b/include/net/mana/mana.h
+> > @@ -30,6 +30,12 @@ enum TRI_STATE {
+> >  	TRI_STATE_TRUE = 1
+> >  };
+> >  
+> > +/* MANA ethtool private flag bit positions */
+> > +enum mana_priv_flag_bits {
+> > +	MANA_PRIV_FLAG_USE_FULL_PAGE_RXBUF = 0,
+> > +	MANA_PRIV_FLAG_MAX,
+> 
+> For cases like this, I find it helpful to add a comment indicating this
+> must be the last entry. (and in that case, drop the trailing comma).
+> 
+> > +};
+> > +
+> >  /* Number of entries for hardware indirection table must be in power of 2 */
+> >  #define MANA_INDIRECT_TABLE_MAX_SIZE 512
+> >  #define MANA_INDIRECT_TABLE_DEF_SIZE 64
+> > @@ -531,6 +537,8 @@ struct mana_port_context {
+> >  	u32 rxbpre_headroom;
+> >  	u32 rxbpre_frag_count;
+> >  
+> > +	u32 priv_flags;
+> > +
+> >  	struct bpf_prog *bpf_prog;
+> >  
+> >  	/* Create num_queues EQs, SQs, SQ-CQs, RQs and RQ-CQs, respectively. */
+> 
 
