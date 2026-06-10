@@ -1,94 +1,94 @@
-Return-Path: <linux-hyperv+bounces-11593-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11595-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id fWYlF1uGKWq7YgMAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11593-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Jun 2026 17:44:27 +0200
+	id iKyNHU6EKWrRYQMAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11595-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Jun 2026 17:35:42 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CCF5D66AF57
-	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Jun 2026 17:44:26 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 312F866ADA6
+	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Jun 2026 17:35:42 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=UPlsKJOw;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=7FpMHr4e;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=UPlsKJOw;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=7FpMHr4e;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11593-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11593-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=nYp6+WJy;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=4GP1oyov;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=nYp6+WJy;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=4GP1oyov;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11595-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11595-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=suse.de;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C2D18331EACE
-	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Jun 2026 15:26:33 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 49150318412C
+	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Jun 2026 15:26:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B26B3D8918;
-	Wed, 10 Jun 2026 15:25:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3ECA13E16A9;
+	Wed, 10 Jun 2026 15:26:06 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D34393314C2
-	for <linux-hyperv@vger.kernel.org>; Wed, 10 Jun 2026 15:25:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E1BF3BA23A
+	for <linux-hyperv@vger.kernel.org>; Wed, 10 Jun 2026 15:26:04 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781105158; cv=none; b=o8k4Wc+6oeOnJujgXOiqHDKN83ClVvO6HaZ6Zmr8/668t/sKEx7zqh/BdUJluOexZSbfoY6Ul6DXpy7ag+17ZlKBuZc9R940xaF0OyXOtpQIhDMm04eZBusjFL9hOAqPgK5xN5WkT+1wR4gLqKspUqujrh6rXmbF0yudKte88g0=
+	t=1781105166; cv=none; b=m9JspZh5CDa8n3aNf5/4pEc4gXTBMc/QPDdxXmFwUv/6DhabObDCX3+CkZzF5zFE9ovyo1NJt1/Yhtx5A9yfSFW0q6utXgTethr7nKMAnMmMEMntAy2VaM7zpzW2CZkZ5OgzjKI3C6aMjxuKY8JBsjHpIRpQj6FVbClRLyCIHFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781105158; c=relaxed/simple;
-	bh=k6YeURz2uOkOV/miKdzG6gmMvBTgyC51P6bZYjucucg=;
+	s=arc-20240116; t=1781105166; c=relaxed/simple;
+	bh=evlWPmtJQtVllJ6bis+HzSuiyvsMulYNENN/xnWMkic=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kgNS19W+cF/sI7xeCczH4Nu4ytPKONlMcOkMy2boXClmv821RHHPVbFI5SMmjTUBGgViqIfzCxdtVd+nmDhHmDAqAeULAldcnhkNNVaJAg2peXOYTiW+MWwYNT7w35kU8pKHUh/u6ODa49B+hX8dRruoJni6IdZ5NSHjSkkPq5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UPlsKJOw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7FpMHr4e; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UPlsKJOw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7FpMHr4e; arc=none smtp.client-ip=195.135.223.130
+	 MIME-Version; b=gewtfM9fgbXZ1+mcovPBNqiAnSBV2YCwD9OMZLJOqwp7XXNN0t2d5ZtkncrYzyE5z67k2VjyWqJh9oZHtSUeiLL1dgWOTbJeECJsJGUK4NrXKCe11q31rLnhcTpyQmILnAH1k2/trSiT/m5B0MCHcsg1CubO896mMmtgpBzojfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nYp6+WJy; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=4GP1oyov; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nYp6+WJy; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=4GP1oyov; arc=none smtp.client-ip=195.135.223.130
 Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id E47416AEA8;
-	Wed, 10 Jun 2026 15:25:19 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C007E6AEAA;
+	Wed, 10 Jun 2026 15:25:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1781105119; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1781105120; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GFESXTPcE3Y+rjrUnIDIihl7ns8gRcpEocg6I0wkelM=;
-	b=UPlsKJOwz0OtoxvOQUccXAF3ETu2oy6z1kdiA7LLNhbaKRIqoFYx0yt6+avqbyk6VTz7Ay
-	W2h6hgMycHHK/8f6IPptElkzePQmuP3gtEK6xpKEpxkvabC31OUvjXr9G5D17KTO1QPBQT
-	pazgzdTzWXqmrJgFVJY3U3N1aQ176dk=
+	bh=8wqbu4ZgPs4aAlFGqJpV9YYxgBXMoLFrRD+YYCZyPUw=;
+	b=nYp6+WJykibBlVTA5ZEoEYA4ZGAXIvDpc659KK8Kxq7CIvxnQ5Y1gR+Il2H0hbyz331CtI
+	wzfsE9i/G1XeSwEqj+7/T8aGfqQKVtow7cu1LcPT5Lmgt1u2DUnx+PVCDyUFuyUG4zWT1p
+	qQgwTCedmjj01uxO09X6FCORQyBLQT8=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1781105119;
+	s=susede2_ed25519; t=1781105120;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GFESXTPcE3Y+rjrUnIDIihl7ns8gRcpEocg6I0wkelM=;
-	b=7FpMHr4ewgDGbhKphuteZT8SXxUORYW1dm1zPKQcopgTz96a689V0Mf2d4zXgIHkEWC0uE
-	up4RiPKp/tn51EBQ==
+	bh=8wqbu4ZgPs4aAlFGqJpV9YYxgBXMoLFrRD+YYCZyPUw=;
+	b=4GP1oyovPaE9ZmLzVFvbVA52U9AApzetJ2t4oy7xDA7JCEMTYJBqx+x2J3UNuFCtZDHWMG
+	5n3lDHkR+05GDpCQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1781105119; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1781105120; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GFESXTPcE3Y+rjrUnIDIihl7ns8gRcpEocg6I0wkelM=;
-	b=UPlsKJOwz0OtoxvOQUccXAF3ETu2oy6z1kdiA7LLNhbaKRIqoFYx0yt6+avqbyk6VTz7Ay
-	W2h6hgMycHHK/8f6IPptElkzePQmuP3gtEK6xpKEpxkvabC31OUvjXr9G5D17KTO1QPBQT
-	pazgzdTzWXqmrJgFVJY3U3N1aQ176dk=
+	bh=8wqbu4ZgPs4aAlFGqJpV9YYxgBXMoLFrRD+YYCZyPUw=;
+	b=nYp6+WJykibBlVTA5ZEoEYA4ZGAXIvDpc659KK8Kxq7CIvxnQ5Y1gR+Il2H0hbyz331CtI
+	wzfsE9i/G1XeSwEqj+7/T8aGfqQKVtow7cu1LcPT5Lmgt1u2DUnx+PVCDyUFuyUG4zWT1p
+	qQgwTCedmjj01uxO09X6FCORQyBLQT8=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1781105119;
+	s=susede2_ed25519; t=1781105120;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GFESXTPcE3Y+rjrUnIDIihl7ns8gRcpEocg6I0wkelM=;
-	b=7FpMHr4ewgDGbhKphuteZT8SXxUORYW1dm1zPKQcopgTz96a689V0Mf2d4zXgIHkEWC0uE
-	up4RiPKp/tn51EBQ==
+	bh=8wqbu4ZgPs4aAlFGqJpV9YYxgBXMoLFrRD+YYCZyPUw=;
+	b=4GP1oyovPaE9ZmLzVFvbVA52U9AApzetJ2t4oy7xDA7JCEMTYJBqx+x2J3UNuFCtZDHWMG
+	5n3lDHkR+05GDpCQ==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 05B7E779A9;
-	Wed, 10 Jun 2026 15:25:18 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EC5ED779A7;
+	Wed, 10 Jun 2026 15:25:19 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 6HoBAN+BKWr3HwAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Wed, 10 Jun 2026 15:25:18 +0000
+	id 2MM/ON+BKWr3HwAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Wed, 10 Jun 2026 15:25:19 +0000
 From: Thomas Zimmermann <tzimmermann@suse.de>
 To: mripard@kernel.org,
 	maarten.lankhorst@linux.intel.com,
@@ -121,9 +121,9 @@ Cc: dri-devel@lists.freedesktop.org,
 	virtualization@lists.linux.dev,
 	amd-gfx@lists.freedesktop.org,
 	Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH v5 09/15] drm/ingenic: Remove calls to drm_atomic_helper_check_plane_damage()
-Date: Wed, 10 Jun 2026 17:18:25 +0200
-Message-ID: <20260610152505.260172-10-tzimmermann@suse.de>
+Subject: [PATCH v5 10/15] drm/atomic_helper: Do not evaluate plane damage before atomic_check
+Date: Wed, 10 Jun 2026 17:18:26 +0200
+Message-ID: <20260610152505.260172-11-tzimmermann@suse.de>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260610152505.260172-1-tzimmermann@suse.de>
 References: <20260610152505.260172-1-tzimmermann@suse.de>
@@ -135,29 +135,29 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Flag: NO
-X-Spam-Level: 
 X-Spam-Score: -6.79
+X-Spam-Level: 
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[suse.de,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[31];
-	TAGGED_FROM(0.00)[bounces-11593-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11595-lists,linux-hyperv=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:mripard@kernel.org,m:maarten.lankhorst@linux.intel.com,m:airlied@redhat.com,m:airlied@gmail.com,m:simona@ffwll.ch,m:admin@kodeit.net,m:gargaditya08@proton.me,m:paul@crapouillou.net,m:jani.nikula@linux.intel.com,m:mhklkml@zohomail.com,m:zack.rusin@broadcom.com,m:bcm-kernel-feedback-list@broadcom.com,m:harry.wentland@amd.com,m:sunpeng.li@amd.com,m:siqueira@igalia.com,m:alexander.deucher@amd.com,m:rodrigo.vivi@intel.com,m:joonas.lahtinen@linux.intel.com,m:tursulin@ursulin.net,m:javierm@redhat.com,m:dmitry.osipenko@collabora.com,m:gurchetansingh@chromium.org,m:olvaffe@gmail.com,m:dri-devel@lists.freedesktop.org,m:linux-hyperv@vger.kernel.org,m:intel-gfx@lists.freedesktop.org,m:intel-xe@lists.freedesktop.org,m:linux-mips@vger.kernel.org,m:virtualization@lists.linux.dev,m:amd-gfx@lists.freedesktop.org,m:tzimmermann@suse.de,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER(0.00)[tzimmermann@suse.de,linux-hyperv@vger.kernel.org];
 	FREEMAIL_TO(0.00)[kernel.org,linux.intel.com,redhat.com,gmail.com,ffwll.ch,kodeit.net,proton.me,crapouillou.net,zohomail.com,broadcom.com,amd.com,igalia.com,intel.com,ursulin.net,collabora.com,chromium.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
@@ -170,68 +170,33 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email,suse.de:mid,suse.de:from_mime,vger.kernel.org:from_smtp,broadcom.com:email,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,suse.de:dkim,suse.de:email,suse.de:mid,suse.de:from_mime,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,broadcom.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: CCF5D66AF57
+X-Rspamd-Queue-Id: 312F866ADA6
 
-Atomic helpers call drm_atomic_helper_check_plane_damage() after the
-atomic_check anyway. See atomic_helper_check_planes(). Remove the calls
-from the planes' atomic_check.
+Remove the call to drm_atomic_helper_check_plane_damage() from before
+calling the atomic_check helpers. The call has no longer any purpose,
+as the actual evaluation happens after running atomic_check.
 
 Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
 Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
 Acked-by: Zack Rusin <zack.rusin@broadcom.com>
 ---
- drivers/gpu/drm/ingenic/ingenic-drm-drv.c | 3 ---
- drivers/gpu/drm/ingenic/ingenic-ipu.c     | 8 ++------
- 2 files changed, 2 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/drm_atomic_helper.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-index 42c86f195c66..e99b44e3ac92 100644
---- a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-+++ b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-@@ -519,9 +519,6 @@ static int ingenic_drm_plane_atomic_check(struct drm_plane *plane,
- 	     old_plane_state->fb->format->format != new_plane_state->fb->format->format))
- 		crtc_state->mode_changed = true;
+diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+index 8e080a42aec4..d9cb9b3f8490 100644
+--- a/drivers/gpu/drm/drm_atomic_helper.c
++++ b/drivers/gpu/drm/drm_atomic_helper.c
+@@ -1040,8 +1040,6 @@ drm_atomic_helper_check_planes(struct drm_device *dev,
  
--	if (priv->soc_info->map_noncoherent)
+ 		drm_atomic_helper_plane_changed(state, old_plane_state, new_plane_state, plane);
+ 
 -		drm_atomic_helper_check_plane_damage(state, new_plane_state);
 -
- 	return 0;
- }
- 
-diff --git a/drivers/gpu/drm/ingenic/ingenic-ipu.c b/drivers/gpu/drm/ingenic/ingenic-ipu.c
-index 56143a191f36..fd17c642c7ac 100644
---- a/drivers/gpu/drm/ingenic/ingenic-ipu.c
-+++ b/drivers/gpu/drm/ingenic/ingenic-ipu.c
-@@ -594,7 +594,7 @@ static int ingenic_ipu_plane_atomic_check(struct drm_plane *plane,
- 
- 	if (!new_plane_state->crtc ||
- 	    !crtc_state->mode.hdisplay || !crtc_state->mode.vdisplay)
--		goto out_check_damage;
-+		return 0;
- 
- 	/* Plane must be fully visible */
- 	if (new_plane_state->crtc_x < 0 || new_plane_state->crtc_y < 0 ||
-@@ -611,7 +611,7 @@ static int ingenic_ipu_plane_atomic_check(struct drm_plane *plane,
- 		return -EINVAL;
- 
- 	if (!osd_changed(new_plane_state, old_plane_state))
--		goto out_check_damage;
-+		return 0;
- 
- 	crtc_state->mode_changed = true;
- 
-@@ -645,10 +645,6 @@ static int ingenic_ipu_plane_atomic_check(struct drm_plane *plane,
- 	ipu_state->denom_w = denom_w;
- 	ipu_state->denom_h = denom_h;
- 
--out_check_damage:
--	if (ingenic_drm_map_noncoherent(ipu->master))
--		drm_atomic_helper_check_plane_damage(state, new_plane_state);
--
- 	return 0;
- }
+ 		if (!funcs || !funcs->atomic_check)
+ 			continue;
  
 -- 
 2.54.0
