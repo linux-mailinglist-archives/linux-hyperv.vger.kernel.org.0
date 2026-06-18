@@ -1,62 +1,62 @@
-Return-Path: <linux-hyperv+bounces-11637-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11638-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id o4b8DBUvNGqEQwYAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11637-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Jun 2026 19:47:01 +0200
+	id TrusKzUvNGqQQwYAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11638-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Jun 2026 19:47:33 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC4D96A1FF6
-	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Jun 2026 19:47:00 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05CB46A2001
+	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Jun 2026 19:47:33 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=outlook.com header.s=selector1 header.b=MvlvIM5I;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11637-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11637-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=outlook.com header.s=selector1 header.b=KLUKLx52;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11638-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11638-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=outlook.com;
 	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 818A730398B6
-	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Jun 2026 17:46:01 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id DB5753028809
+	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Jun 2026 17:46:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E797632B134;
-	Thu, 18 Jun 2026 17:46:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EF1832FA2B;
+	Thu, 18 Jun 2026 17:46:37 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azolkn19010029.outbound.protection.outlook.com [52.103.23.29])
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazolkn19012065.outbound.protection.outlook.com [52.103.14.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953E4175A89;
-	Thu, 18 Jun 2026 17:45:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F8F301708;
+	Thu, 18 Jun 2026 17:46:35 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781804760; cv=fail; b=IsbDJgeY2DguNnc9dEfCMXK5wo33UdSLboa8s/HLLzkKWAbJAx5V/F13eVGMoYyd3VaWOHaPlcO6LvTJErA3FJJJ8pgAv4brLQ74dAmk9ezArWs7kNJKQ7ye+zVXEhXNvNFOphLc8rfQM0PbDX4m1pDDuMOv8UTmrmnw0osk3RQ=
+	t=1781804797; cv=fail; b=jzsU1h/1K8Kw9sWbZa+hepd1ypmWJtR8mU3Sx0/Ra3gpV/EmxzrBQDXDy5x/fD50ggeqX3qsefBj7Ph5BPO8/qZBDO1J/MVQTCCPUSoLbMfy5S4i/3Iz/XgvAv19/OlpbClKmYSvlD1bd6LC28Fr96n7nN5ApV4OlRBd3qK8/Lg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781804760; c=relaxed/simple;
-	bh=2F33lA3LAn5RVyKBlBET5oFLPPe4kIr8m87g3cC0PZg=;
+	s=arc-20240116; t=1781804797; c=relaxed/simple;
+	bh=e8gdcThY8MXqcEx/HzJLSRSdQaURDC3j3BpJTmB7RNw=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=b+dmmIuWJYtWtBXI9y5mufBVM2Oh8ODe4nrr0yObM/C/9N8MnhLPoLURvMnoszPLRwTakvr/4YixtxC6YNoUgVcQ4eBrfrf5qYnc3B957wWHse9O0LFe11XR556Xr/ymdrSoCKpnNLoGMCyPoTdMqWQY4mJQQh3/vWAVZv+b9gg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=MvlvIM5I; arc=fail smtp.client-ip=52.103.23.29
+	 Content-Type:MIME-Version; b=hWSSq2z99oSRboCALI3013ALVfxBknMqpwSBZev9XmfdVKnl8EuX2NiGOGO5uM3X7prAhFgh7XO+cxibkhVRJPg38CxCPmXUIhObTNL87eBx/KqtdhhTf2qW6QaCzG/DfnudlZBOHjG6AToOzWDVF7XIvMQeTUqJ+mbfLMP4Aj0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=KLUKLx52; arc=fail smtp.client-ip=52.103.14.65
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UO4dihVpRbmRCkf1S2QKz3fFSEZcwMUfUCDz8RqxoIYaXCeqPnLadwzeId7NKph7n2761JPF7IlM7WsJnuIhtx9HQpVFyhlGyyROwODRxPMrE/jtq548KZDNkGzn7XvkRlAS1dmIjP7b47nKRXWZ+K/VKtia8f+1BbFndUiMLikZ7TXw845rB1RXle5PtpLhadeChliZwAl8nR3Ybsy8H2ghJq+k9zBqvoG9V0C5tbRHSMI77Bx/j6jWUYBLV1Lm7vULSIuPXJZZMm1olb4wrqMLJ8jhLUW/CGdtk/eMuMUiiCWwHscOko0v1KmHfUYN88v6TIZ7wN/LnalT2hmuXA==
+ b=VMTovgWgSTmpET1eg68Mx2TA5KQ+t7YrOng4tHiPvX/OoC7vnJbQPH6WigA9ZskHOGrZqhm1PlOy3b6lCFTviBE/f4FP2D9UlU4FW8ycwwBoCr5etznv3EGKGfFZ39rZMaAbczc1EixaKv1bkOXheV7LQmqVbM/Waa5iY+8NmAOEsKFq9hPnrasejUNy3PVqo+YCzFON/sBqQpti/HjACs/RlgcgH/MvnrGkZ91DsXFAk1Yv3roUcYY28CFQrDmee4Dz/6dlftqqS2QLcju3yWROEMcscncot4ZSlzzmAGxOx7QdlA+k906YsRHBl7LFK0P9EtnJ60mrzpKbomEH8A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/2XnKdxRnnEESk2c2F6kRWskS7Gll+3n5YXYMHMaImY=;
- b=vu9dMg7qmPG2IPGc8hFe7T+gO88iSZXFRIL8GvpQS7qhzv+IxDDcXTmJggF8lnG2z2KV3Hyx8OM9maSI7y4S5QIdVfLg0CTggSQZdf7fWGsvunG6WPtz4hV5REc+nSbJ2PoixsBBZj1kN64lZX3NxdTwNEOM+sAyqd0QhQikFusrHst2flyYruh4q4N1qtnXCFccFBd/iTR6AMb9ixnTepucjwOJBuV5np/o9bgt7HJyCw9vBPUkYUSAipt8ADpYZcNUsJF8r0IirUhEEscPam1LSQloaj/fdk6dpRtQ4j42m+gCzSXV2aWeDxj5EhFSoWgDYhWtGcXLKhX41aIQSQ==
+ bh=IBvZeznODaAFmuJUfDqCcQp5LmgNtAWeG7F7yArLKjY=;
+ b=l0EKLfub2RoZtkbgj19vAY3hehoaHOiBuoHb0/0cAwd+bOK/F53SJv6fYgM5fkge+OBgb96tjq0f2MCZoBOeAvbr5HhP/MHkwgoF7CWspRIoBMV4pvun67LkPlbZJKQv3bp7YryTiDxTDBySkzfvLhghAD8Kp/s0RwBx2+8GX39+7sFG/eeEoTBdPR2WZ6FEVkpD9nCR949ne9RllFGMxmPvQDGW2bH8C6sx7V5jevLysVik1bNnnqy04JMVp7FriLaDw/dGkQopKnAALIpky3nlC7WhPP7hkB+iyo+tdWun72F+Eqx65YqkzXcwtdYOCJgsksCOoWY8RI72//BwNA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/2XnKdxRnnEESk2c2F6kRWskS7Gll+3n5YXYMHMaImY=;
- b=MvlvIM5IV51AZ0U0j8zeqjyedC0c8X1NPGgsV8gxuOeh4ZeqtyzgJ5tERQxajtpXqqh6K84AWqYVc3uz4atEhLwPxthDeh/17OgAaIt/88Rh9rMkpjm9Kfc2PivP0H3BlxoFDKG1k6F6lB96kaGf2x74xBW+rMmVLTegqlZto1KnmHf4n+5mz2T6V7dl5h1tNvYQ8P8mN7+lON1D7DZ3gxt7FsL7GhEHvWGx5RLJJUamrCQ5z7hRHoK+O+102HkPxNQdGJ+h0p+VNmhR7OBtgpiQXRnRvYOeM8Spt4fqGyr8CYbQGn3pYE+Emv9vcY46dXJGhJBaXWv5Qy5iiq5T2g==
+ bh=IBvZeznODaAFmuJUfDqCcQp5LmgNtAWeG7F7yArLKjY=;
+ b=KLUKLx52+Lrdl3GuoPlEemK+JVlwHcgb3GbjbaD8D8JrLEqFt1s0+kMaX69QvfdJ67+gWOOKCrcYz5ETNs/TI3HYiSEvwk0YHCKkth5Piis5rix0+oQtan4CMbwyPDyCGhzhluUiE80ErJ6ftKAGbCOSl4nseKy/j29PS71ebYc3o8OQZs9NGeoyetzY1mor06ATBiBHHXSF/ISvWbFh7tbfG/IT9XgFTl04P49qCCkUJGzq4XQUyiCRoxg+h+rKGjpi6nzExUoHxrZ/xGU9wsBsHNKTxeuM544vZUivqZjHIdv1DxwLkquVYFii9f/UYVdjLBw+QGnNoNlI0Tc4rQ==
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
  by SA6PR02MB10791.namprd02.prod.outlook.com (2603:10b6:806:440::16) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.113.18; Thu, 18 Jun
- 2026 17:45:57 +0000
+ 2026 17:46:31 +0000
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::900:1ccf:2b1e:52b6%3]) with mapi id 15.21.0139.009; Thu, 18 Jun 2026
- 17:45:57 +0000
+ 17:46:30 +0000
 From: Michael Kelley <mhklinux@outlook.com>
 To: Kameron Carr <kameroncarr@linux.microsoft.com>, "kys@microsoft.com"
 	<kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
@@ -71,74 +71,74 @@ CC: "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org"
 	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
 	<linux-kernel@vger.kernel.org>, "linux-arch@vger.kernel.org"
 	<linux-arch@vger.kernel.org>, Michael Kelley <mhklinux@outlook.com>
-Subject: RE: [RFC PATCH 2/6] firmware: smccc: Detect hypervisor via RSI host
- call in CCA Realms
-Thread-Topic: [RFC PATCH 2/6] firmware: smccc: Detect hypervisor via RSI host
- call in CCA Realms
-Thread-Index: AQHc+DtPxcOOrB/q7kidEc5w+N6QuLZEpCqg
-Date: Thu, 18 Jun 2026 17:45:57 +0000
+Subject: RE: [RFC PATCH 3/6] arm64: hyperv: Add per-CPU RSI host call
+ infrastructure for CCA Realms
+Thread-Topic: [RFC PATCH 3/6] arm64: hyperv: Add per-CPU RSI host call
+ infrastructure for CCA Realms
+Thread-Index: AQHc+DtPOuQtWWWiVEm0BFnDhje0VbZEpFGA
+Date: Thu, 18 Jun 2026 17:46:30 +0000
 Message-ID:
- <SN6PR02MB4157F6A66DEDE650298E120ED4E32@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <SN6PR02MB41577A7B554CCE8414041287D4E32@SN6PR02MB4157.namprd02.prod.outlook.com>
 References: <20260609181030.2378391-1-kameroncarr@linux.microsoft.com>
- <20260609181030.2378391-3-kameroncarr@linux.microsoft.com>
-In-Reply-To: <20260609181030.2378391-3-kameroncarr@linux.microsoft.com>
+ <20260609181030.2378391-4-kameroncarr@linux.microsoft.com>
+In-Reply-To: <20260609181030.2378391-4-kameroncarr@linux.microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SA6PR02MB10791:EE_
-x-ms-office365-filtering-correlation-id: 394ad267-7560-4f4b-3c5a-08decd617411
+x-ms-office365-filtering-correlation-id: 8611d60d-f759-4394-04df-08decd6187e8
 x-ms-exchange-slblob-mailprops:
- znQPCv1HvwUXBahuwteIkQeW30lJPuxOI05fU2m3MB4pFFz6pPmbb0zEddZgDDKwjvcqYZRZNGbSypSO73FYxB+dMJ1aRUbSZb8RFEzGh/Gy6WdTZrHUJbY48arzS286NbbuBYz9YF4IkulGJOpYxgXHvGq/MoWSR1xnFxHWlgbspRC/c6KeyRD5WB2AWdYBG33pR7hvjnktt2rHxEN6TLs8wi89VJFlb4HSmRMaLvJLKQ9gB6YHchSD5dcu8NbSb2hzLrA10tjW2le+/5nPLe27Cbek902dZ+ZeI4Tl1boV6Y0fF5lqT19Tdtpgz2FNNyD039ex20ONczMr3wVAPND9PwXOXb7+ZCQpK0RdkP4pqgHQNUvu3O8sYsNNielVzB1YZUotVMGInYL4gUC+AjQsvAnvu9Kmrah6dJsKEvVZqRSUME7XtdKm+wbqUlE20FZvP8MxZqPFFev8yzR0TCLRCDwJQZRJlyWiwmlkNcP8d0lXBQtTPfdjVXX/ZhRBLxks0y4oQV0Ptph852mKJGxXcUPTOzbDCVUGJ7XYRxGRe+rcjMakNa0FFV4CThOW21DlDzFDxv/WnlVX1Nz1EQzAMq2aP0FcSFmnRP3Oz7d3WCjY7rvTqr4Pf4bgW/BDQrNaMlj6+kQ+jtbAAVrQi5rumF/bqoZlj64vJsz4LIBwQxdKPSefUX5Gn+zeJICLAMYemMzxeI4FgDCjTcrPCf+9HyR6K0xXWQZNj00IaF1tuhLnVJgmgnG/T/cSaASY4ToLQqLDs6Q=
+ qdrM8TqeFBvhuFgLLe5qs4jWk9CHdv0AGgV/B5l+/hqauZZNPspa+qsTJwVaV4ux0aUIbxw8qO3D9Q5IEDdyExo/IBuzhuGl4+T3HsbqMtRQnlGmxRbIU1N6Dhle25qWxp+GrzmG3qoHgyuBz4o2mVT/laLm2qyUOqW948Rwiwul4wOSDFfkhoT2Zdn9gnFbnyLZQXJqgs0d6PTtE4atSESAIzzk6urf4xMCRZzvbmOzAEBrs7Uj9gkfvpr0vbOO8kM8jSXopwykz/Mov8VTy3m0w30LElk/1JLk7nSPY/dTSdk70P4oO425UfVvK4b6VfT6dMGdK6q6yuaF0+868NfQOnLJnwkPr0ZZbcggj6K+PuMd9VpyEW8MU99v9zMcnAjro/m1N3mKOCouAfw1dRP9uBf6XBTS8XFQPTF7wge5nxofTyuPs2Sl2R6rUIwdruqawjQ6ECgPY4MBCjUVEiRSdhIchBNTQHhFzTdUrforFxt9IRhEsfmYVDaNaH2TGXKvCz09ijUGX7QrYHqusMMKnQGaxgi8ZVO8SEvolcSTwMExBRPVQiBCYrmBWfEHLafaH4zKEqHfYfBsi6jPO/BEhIvUZlRaLHL20Fm9JtlUQz3iPikhLuY5y91OgGmrXT0nPg2KzIC7uGTi5MIUN29eZJ1en+G0rESINkKYUXbe7x+xyhJQyXajXgfFngtK4PbPHektU7aUZjNZHPAhV7LhMlJOudvuQuTYSwdHoqlpLn17dUqCSSONKxbN+WrME8BxmOGWmNgDAIcvefwgYBskTLxr7e+6
 x-microsoft-antispam:
- BCL:0;ARA:14566002|37011999003|41001999006|31061999003|12121999013|8060799015|8062599012|15080799012|19110799012|19101099003|13091999003|51005399006|102099032|40105399003|3412199025|440099028|1710799026;
+ BCL:0;ARA:14566002|37011999003|41001999006|31061999003|8060799015|8062599012|15080799012|19110799012|19101099003|13091999003|51005399006|102099032|40105399003|3412199025|440099028|12091999003|1710799026;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?tCiUB1SMlddP15xi87REezpTodJj9pLxKi83LAoMEROusEcjxTIBjJte5QVd?=
- =?us-ascii?Q?cTK0h8EqXYoibw4/xc3I0ZSrak9k8sUscREPMAzYrYElQhPjxUA/vooELLxS?=
- =?us-ascii?Q?mUvB6gnzFiJYKgiHZ6vQ5GINAaSyFPny9kJmuQSfadf/3IMWDBI48IrJIoA6?=
- =?us-ascii?Q?y4Pa3qtXITrxXP3hV24o0/AS/AoARDjq9xqkX/cwCte2CTPNbd3hNzG8Dt1f?=
- =?us-ascii?Q?NHSukyrHJxFIGX1noTwL8g3nVFe8Ps2dz86eoUGgPl03S3aBgn5fPW7KGakT?=
- =?us-ascii?Q?Y7JCwI2sOvXOZZKsp8ZEOrJBir1DGQ3id7zg8YsqzB7dh4vr973MjGBP5GuJ?=
- =?us-ascii?Q?jVb90MiEF8kdGFjiwp9nqIIoW4/dCcg/s8ynYb99hep4EdUglX3Vphwd1kwu?=
- =?us-ascii?Q?lLa/QHqUnY/j/VAt1EfPtKZLSFVA1JJQi0AIiBslJsoiEnpwVrP7Y0s/X8oJ?=
- =?us-ascii?Q?Lpn4x+JeTSESralEvAKfoEs3Ng6dESAQ262jPbOc0Rz7OslrCxNBcxKTnhBI?=
- =?us-ascii?Q?T6I72Z9bJnuBrO7dy/vT6/lv7tp9gh/Wrs2A2lHBn8aBAb2jhkV0ZBKd4man?=
- =?us-ascii?Q?hV1PQLjHmZ4n20/aQ2W+SqZcez4xXolLyK9WBE6PTg601IoM62hEDBrQK+Fn?=
- =?us-ascii?Q?AF0iq4rdir9y9MBjiaP1ZvFe4dCLTSKODs2B2NK2+7vKQpLSuLs3W4+2ew1g?=
- =?us-ascii?Q?BHH55T5JA+hMtqzvxpTdmN1a+95P2UK+mH/Jp6YgD8+VDFD9Ioo7yL8KVNaQ?=
- =?us-ascii?Q?WucXTEu8R5w7StJPcgNR26AiLLeMVAx4mE3nj9XDA51dB6GsT/r94BMOmT3Q?=
- =?us-ascii?Q?1NSCsrtuRC2vMItk/1q8SpZUWUYzFirSVNTEzV8AQDB3tuH20jRban0MAikV?=
- =?us-ascii?Q?6e39zg4R/0mdn3VkuDuu2W89ZpUpAF59+WNbof2DBak/17A60Vz6q+FecpFS?=
- =?us-ascii?Q?vklETHaTXNWo9NEyLo4vLGZerT/HIoyTVD8hyKJuuo56EPcUDvO115oYQmrF?=
- =?us-ascii?Q?AnxMX36hmtIPZomx+q82nK9wSajjmi/iRwl8lrlDaY0gTlTOKYLO18jqp92e?=
- =?us-ascii?Q?d73rP4E5omCQAHnNo5ANELLHLX2XcA=3D=3D?=
+ =?us-ascii?Q?7uFNLHpSd1PjXRHCneQP1hpUOrKVcZeYcXNQmemT9NcCQeSjQ0i9i8Z8/ycK?=
+ =?us-ascii?Q?ttrGNOF9+zBrX5405jEjvvr0/slwgs10VzX/2i+ESdDaGZWFIZjGWngijAOF?=
+ =?us-ascii?Q?N9ss++vGWI+50/ruT70gMgctw5XKnmtaaSseB2v/jXqCIGY9xE+gkGIe5oC3?=
+ =?us-ascii?Q?iHDDtqoRC3cONtUvM6IUi4hRr+KGcK9WGXNFxDks7nGNFPfEo0F2sbZdYnso?=
+ =?us-ascii?Q?ByVSyIfLVz/NaKHg4Fuhuks+IrhYPdl5xW0fkUw/3ushacZcT7cAdGBevAmo?=
+ =?us-ascii?Q?qDQXbagaHFxe25BXmm/tuvIH2UKdY+y7DuIAQFTjcUIBzs1nbfMpjPQYfRou?=
+ =?us-ascii?Q?cAM33iigmA6ivcsWfhjeFDs8kkC+O/VT/efLZuNhQsEu9HgpNrn0i3sGY1BW?=
+ =?us-ascii?Q?d0qV0mvxNGeT+wh+Rz/0TSSGL02cLpzrA35kNbK5FOZ4OxQDZt23gwcyr2tU?=
+ =?us-ascii?Q?JSxnMxJKxEWVVbNOuJD1IwIvaoOFVwyVTrmhC2zFcE16Vpcon0xU1HoTBWFc?=
+ =?us-ascii?Q?i2bRUKNY+6YxCRJ8QZuYP5YbBaU7BpkaQkIJdEuc6X5LIZYryToCH/CyK9Ei?=
+ =?us-ascii?Q?tRda7r1qGkKD4DoqoSDHNixeDdWD+sZIC2oXWuqQfqKEUJgM2VLNvr2CiL48?=
+ =?us-ascii?Q?78AGC9TszrDsUB+Ndmvn65tNmwo92wASYlrVKkABs9nH1fQzFoB5v2KgWCVY?=
+ =?us-ascii?Q?m68KRHlDoTJNjSSeZrziRAJrQ8QeKHfUZM5kOPrITgAooKHm8orhlBx5jQUe?=
+ =?us-ascii?Q?r5V5q7nftb3fAcO2fVO6ZQPODDJ3AtwXF6/LlFzrAimNVY4MvlH0ya7EbBdI?=
+ =?us-ascii?Q?SekHC8lKWPQDXEZwA5NB8hfRCQCQhvcTIg+fKRIYxGWceuaAl+vcRnUX6MpH?=
+ =?us-ascii?Q?Uaj8+pD+chpnyquSn0aFhBwIt2SrBUl0mPF3VgdFcb7SK9Lbv4lbiK/X8lGV?=
+ =?us-ascii?Q?LIAwb2iX6AQCdL+4OMn1r7xdQK9Vyn5gq9vL6QpLt9j3uw4/L9YRrEJzfNgC?=
+ =?us-ascii?Q?3BquW9A16rsF3Aw/F9PNJN2c8n1kNbuHYW4YpEZYvZ+WyKYqQFcYcH2DuqE5?=
+ =?us-ascii?Q?PaSxnpd4VwDhW+0eK8sTJtNZGA9yfg=3D=3D?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?OCHPnt0eefrMD71Fv5wMeb/Zq78u1fW9v23JHHdFm2my26I7gZdRuMKWEY8v?=
- =?us-ascii?Q?6qQHfcRa6kNXjXDaygsL4xAhZA5u21sw4X2m5tmCHE5RSjF8Gkdd32zJQs9o?=
- =?us-ascii?Q?2tuPIwvHInjXb4dAK3K1rvrMmNy2qSJoejMHRj6zA0qMZ0sL5Yr0P1W8lpBs?=
- =?us-ascii?Q?vUFzIsEimnnsKBmYwlQsIKv9FhBtR1+e4Kt8Z5fVqu4b3ov8RPDsi0OB8IqW?=
- =?us-ascii?Q?5P9hZ3PleUMcUyfPwQIQWjZbhwzeF1vyOKZfPN/D3g3zS7D1drQgoCRSJ4HJ?=
- =?us-ascii?Q?mXWMQoZEAa8Tjsm/rsGGhRctyVHemmWcRR4lQ0zvWqUfcBZa3MkS0J6nvgQM?=
- =?us-ascii?Q?InYiI2PAxMF07MbUmLmeAazjMeKFZcK9b+4yv4ah/x5ZsuupQKoYBfaBKhz6?=
- =?us-ascii?Q?nf4KcLxIrB8PjQmqk2d5dgplMK+JIALf2SOAek3JmVj/NNuuExAY45oc9TnC?=
- =?us-ascii?Q?oMywbJP3YxEkDQXqRtKvAtgnskq2d4+4bv4sNoVZJgCrSRoH/7FEyVtLYFXH?=
- =?us-ascii?Q?2p/KCFFYyter2WkcqE4kwHqL4g9B7H8BevjeGxxhea7HRCoSKNTDJc3RRtjB?=
- =?us-ascii?Q?p/C+B9iuLiMKZkbt68bGxxOJn756GTIgeZNBQB39Or9KW1rFqvoV6lmgAoPp?=
- =?us-ascii?Q?U/HkTNYfMGfVtEAPM/RW0bNWzRxL3cyYXRvBYGvaYcfjZQV3rjer55h2mulr?=
- =?us-ascii?Q?Xm7YB8aFPJVfljgDXBLJ2e9lf5XaWRf56T39mYPQGGKUz+s8g1n4mA3Ycz6l?=
- =?us-ascii?Q?4eQ0roBOS8iRxOsND4HqSb98C2unuFyO9ukfQv33wKYJRfiaW0r9tyHV5EVu?=
- =?us-ascii?Q?K+hkqErXwOaA4x2XBwSin0VT88H2RIZduN5grAb2Gwg59COOPgltciKNUIAu?=
- =?us-ascii?Q?HRXVwQkgNwwhaHislRepnCoTBtexWG8/yWPGdtLtm3gNHf7FMRuYmhAYIJOS?=
- =?us-ascii?Q?ykmKCS/eJTRAimoJVOa1cOsgH6TRbeiM0VGbrBDrd7i2TvpNbtZx1DxLz4wl?=
- =?us-ascii?Q?AVAjvcw33s4gfG73feLTNYE3BR3rSI/P7HD2XNJN1nSPc6ZkVT/Q/U1QENke?=
- =?us-ascii?Q?E5EUKDnK4FJhMzTC/qCPte/J9UTkG9IO0bmeRxUJozwzod9rv2HhZaXHkjdt?=
- =?us-ascii?Q?G35XX7X2viT3r+p4EgRrC7e6ncgKe90nU5NkV9sG7KLbfpWukHfprpfHOLee?=
- =?us-ascii?Q?GeAVHcy8yWkQYGpBW5ScQtgN5ONtPWBvKASnI7WcW5X/+H7LDix5Xc3h1XfM?=
- =?us-ascii?Q?meWhB+QI8rRoic4qfd8auZVPAcL0nmR388AnYT0VK4hBqzYd90GYsD2eImN/?=
- =?us-ascii?Q?9vZNAHJQ93WW3A+mnHHulM36ZGeyJ4pWOMP2PLReAfUkuX2G5sGZWtNbOeOh?=
- =?us-ascii?Q?nBD2if8=3D?=
+ =?us-ascii?Q?Jl4Fn/QEMYuV/fMxqCdfW5ttKY2/5079iBr2JNRsDjDyafHFVudHQfL1FCaL?=
+ =?us-ascii?Q?p+kXwukPPiDkBFMqOcD8tVORIeDuTy6pm5zUjZj16pHtLbILhxmVNpqYGXO4?=
+ =?us-ascii?Q?WPk0M52PK765uImh3qEDMiNxmN7bA+7wnyG2IdY9Rgfn+6a7K7hb07yJnp26?=
+ =?us-ascii?Q?77X/YYhkOPzqT5oZ9wWBV29jACF9rPCoEAeaFreStFF2O9hmvX4JKEmBEljx?=
+ =?us-ascii?Q?0uaZQckV99AjQFgF96t7YRtT+WD32wRgi/wUiBxgZQ2Y05mMXGcmkmFg8RvV?=
+ =?us-ascii?Q?/OP/y7lT7i9sC1XoEVId4aiZHscenVGs3ziWq46DANfpSokM1aFG7CYVLONi?=
+ =?us-ascii?Q?+XDztwiaf1D3YtCnUxpI4uRYxpAJx9G5orrMXfRKj7BIt7A/gXQBADCuvX/D?=
+ =?us-ascii?Q?2e0R+98MYtuGZa4L0q1TlDJqN9Jkez0C+NLBgjVAc7mFBM9zxQtKLisAoErs?=
+ =?us-ascii?Q?xJXodAmWniNI5Lx/PBfWOi6wESqGjEiiraHMGBdfQwya2yVqYV46As2KLuN6?=
+ =?us-ascii?Q?040Justa7sztS6dIv1uO+EM1SLPECHwT3Gw0QjtM/gkfzHOPwdBfhYVb2tQT?=
+ =?us-ascii?Q?3DhCslyd8zxbn9Qw1h2df4KIiKMbW2CnC438wpXyEtcjcMPU/MKvymr5FkC8?=
+ =?us-ascii?Q?YxtxNveFhTAiXSMm4MVt8aNz7oLeLbTV/qSVxLlxmw0hmMdZZepv2wjuey3S?=
+ =?us-ascii?Q?og8XQoUsKXWRilRXy9kKIFYhIIkVNOgkPi1et5O7OL7rPUASMfFwVEK0a1+/?=
+ =?us-ascii?Q?CbcG/77NKulOoDXMq3mmJ6cte5TuFzOplxnJc4Ox9qdZKcawmAS84+/sYQKh?=
+ =?us-ascii?Q?imu/FADhXqEByR3Ow31CE4+vHvnYysqMp+0LxfcPkbVVOYiCovfYWxXxsNOm?=
+ =?us-ascii?Q?CHg+gtKT8pvvmLozYl7SwCDm4NGQLO1CuVrDhAWqB6oYn5efJ1Vk15Searh0?=
+ =?us-ascii?Q?Kz6X+8VghZ0WHJ3DQis6TOHatLIUt19/NjBGy8tEvV/K0hYYsfxcAQ7a55iG?=
+ =?us-ascii?Q?7rTR6xKURCQhVtDYLb/ZVDQ3mSL6wIIS9uncz8eO2N93vSTGO5AlDY//a2Qm?=
+ =?us-ascii?Q?RZ+FpwWn8H6a0Abtp/dszGvf6hlOPSdi/0/8SWpRDSFm++9tOW13HVwxSNpN?=
+ =?us-ascii?Q?I3hOX2o+sppMnH3gVKiydY7zWf9sG3+UPXxjnS5ekB2E5EXvrZZeq7WvdOag?=
+ =?us-ascii?Q?QgKCdQyn0HiwuL8EdbXIHWvaXaMlBSPiuv6fFu7aNtH6INiOClAlP8wjBdWu?=
+ =?us-ascii?Q?Zj10l+n7mMKh8sqGb8iRaDqzQa8U4ABFdQWMPqtko00cGN8LzwinISz7dXZP?=
+ =?us-ascii?Q?vGdJtYLDM91ohNjcqBBUgaJGguJgZTftSl7Y6O3NPrtCCx7yiH0kYcNw0LF0?=
+ =?us-ascii?Q?/Lrtva4=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -151,8 +151,8 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 394ad267-7560-4f4b-3c5a-08decd617411
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2026 17:45:57.5933
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8611d60d-f759-4394-04df-08decd6187e8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2026 17:46:30.8639
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
@@ -163,15 +163,15 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	DMARC_POLICY_ALLOW(-0.50)[outlook.com,none];
 	R_DKIM_ALLOW(-0.20)[outlook.com:s=selector1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11637-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11638-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:kameroncarr@linux.microsoft.com,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:catalin.marinas@arm.com,m:will@kernel.org,m:mark.rutland@arm.com,m:lpieralisi@kernel.org,m:sudeep.holla@kernel.org,m:arnd@arndb.de,m:thuth@redhat.com,m:linux-hyperv@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-arch@vger.kernel.org,m:mhklinux@outlook.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[mhklinux@outlook.com,linux-hyperv@vger.kernel.org];
 	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FORGED_SENDER(0.00)[mhklinux@outlook.com,linux-hyperv@vger.kernel.org];
 	FREEMAIL_FROM(0.00)[outlook.com];
 	FREEMAIL_CC(0.00)[arm.com,kernel.org,arndb.de,redhat.com,vger.kernel.org,lists.infradead.org,outlook.com];
 	RCPT_COUNT_TWELVE(0.00)[18];
@@ -191,108 +191,196 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MID_RHS_MATCH_FROMTLD(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,outlook.com:dkim,outlook.com:from_mime,vger.kernel.org:from_smtp,SN6PR02MB4157.namprd02.prod.outlook.com:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: CC4D96A1FF6
+X-Rspamd-Queue-Id: 05CB46A2001
 
 From: Kameron Carr <kameroncarr@linux.microsoft.com> Sent: Tuesday, June 9,=
  2026 11:10 AM
 >=20
-> Modify arm_smccc_hypervisor_has_uuid() to check is_realm_world() and
-> use rsi_host_call() to query the hypervisor vendor UUID when inside a
-> Realm. The realm path is factored into a helper,
-> arm_smccc_realm_get_hypervisor_uuid(), that owns a file-static
-> rsi_host_call buffer (uuid_hc) serialized by a spinlock.
+> Arm CCA Realms cannot issue Hyper-V hypercalls via HVC; the guest must
+> route them through the RSI_HOST_CALL interface, which takes the IPA of a
+> per-CPU rsi_host_call structure as its argument.
 >=20
-> The RSI-specific includes, file-static state and helper are guarded
-> with CONFIG_ARM64 because <asm/rsi.h> does not exist on 32-bit ARM.
->=20
-> For non-Realm environments, the existing arm_smccc_1_1_invoke() path
-> is unchanged.
+> Add hyperv_pcpu_hostcall_struct as a per-CPU pointer to that buffer and
+> allocate it for the boot CPU during hyperv_init() and for each secondary
+> CPU in hv_cpu_init(). The allocation is gated on is_realm_world() so
+> non-Realm arm64 Hyper-V guests pay no memory cost.
+
+I wonder if there's a simpler approach here. What about calculating the
+total size of struct rsi_host_call needed for all CPUs, then doing a single
+dynamic allocation to effectively create an array of entries? Each CPU
+would just index into the array with its processor ID. You could still have
+a per-cpu pointer that points to the correct array entry to avoid the need
+to get the processor ID, but I wonder if even that is worth the trouble. Si=
+nce
+struct rsi_host_call size is a power of 2, the indexing is just a simple sh=
+ift.
+
+The hyperv_pcpu_input_page is allocated the way it is because it's much
+bigger. But 16 struct rsi_host_call fit into a single 4 KiB, so there's no
+danger of hitting a memory allocation limit at boot time. Even with 8192
+CPUs the allocation is only 2 MiB.=20
+
+Michael
+
 >=20
 > Signed-off-by: Kameron Carr <kameroncarr@linux.microsoft.com>
 > ---
->  drivers/firmware/smccc/smccc.c | 41 +++++++++++++++++++++++++++++++++-
->  1 file changed, 40 insertions(+), 1 deletion(-)
+>  arch/arm64/hyperv/mshyperv.c      | 78 ++++++++++++++++++++++++++++++-
+>  arch/arm64/include/asm/mshyperv.h |  3 ++
+>  2 files changed, 79 insertions(+), 2 deletions(-)
 >=20
-> diff --git a/drivers/firmware/smccc/smccc.c b/drivers/firmware/smccc/smcc=
-c.c
-> index bdee057db2fd3..6b465e65472b0 100644
-> --- a/drivers/firmware/smccc/smccc.c
-> +++ b/drivers/firmware/smccc/smccc.c
-> @@ -12,6 +12,12 @@
->  #include <linux/platform_device.h>
->  #include <asm/archrandom.h>
->=20
-> +#ifdef CONFIG_ARM64
-> +#include <linux/cleanup.h>
-> +#include <linux/spinlock.h>
+> diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
+> index 4fdc26ade1d74..08fec82691683 100644
+> --- a/arch/arm64/hyperv/mshyperv.c
+> +++ b/arch/arm64/hyperv/mshyperv.c
+> @@ -15,10 +15,16 @@
+>  #include <linux/errno.h>
+>  #include <linux/version.h>
+>  #include <linux/cpuhotplug.h>
+> +#include <linux/slab.h>
+> +#include <linux/percpu.h>
+>  #include <asm/mshyperv.h>
 > +#include <asm/rsi.h>
-> +#endif
-> +
->  static u32 smccc_version =3D ARM_SMCCC_VERSION_1_0;
->  static enum arm_smccc_conduit smccc_conduit =3D SMCCC_CONDUIT_NONE;
 >=20
-> @@ -67,12 +73,45 @@ s32 arm_smccc_get_soc_id_revision(void)
->  }
->  EXPORT_SYMBOL_GPL(arm_smccc_get_soc_id_revision);
+>  static bool hyperv_initialized;
 >=20
-> +#ifdef CONFIG_ARM64
-> +static struct rsi_host_call uuid_hc;
-> +static DEFINE_SPINLOCK(uuid_hc_lock);
-
-So evidently Sashiko is wrong in saying that struct rsi_host_call must be
-in decrypted memory?
-
->=20
-> +/*
-> + * Helper function to get the hypervisor UUID via an RsiHostCall.
-> + */
-> +static bool arm_smccc_realm_get_hypervisor_uuid(struct arm_smccc_res *re=
-s)
-> +{
-> +	guard(spinlock_irqsave)(&uuid_hc_lock);
+> +void * __percpu *hyperv_pcpu_hostcall_struct;
+> +EXPORT_SYMBOL_GPL(hyperv_pcpu_hostcall_struct);
 > +
-> +	memset(&uuid_hc, 0, sizeof(uuid_hc));
-> +	uuid_hc.gprs[0] =3D ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID;
-> +
-> +	if (rsi_host_call(__pa_symbol(&uuid_hc)) !=3D RSI_SUCCESS)
-> +		return false;
-
-Rather than having this function return a boolean upon failure,
-couldn't it just set res->a0 to SMCCC_RET_NOT_SUPPORTED like
-arm_smcc_1_1_invoke()? Then arm_smccc_hypervisor_has_uuid()
-could process both paths exactly the same way.
-
-> +
-> +	res->a0 =3D uuid_hc.gprs[0];
-> +	res->a1 =3D uuid_hc.gprs[1];
-> +	res->a2 =3D uuid_hc.gprs[2];
-> +	res->a3 =3D uuid_hc.gprs[3];
-> +	return true;
-> +}
-> +#endif
-> +
->  bool arm_smccc_hypervisor_has_uuid(const uuid_t *hyp_uuid)
+>  int hv_get_hypervisor_version(union hv_hypervisor_version_info *info)
 >  {
->  	struct arm_smccc_res res =3D {};
->  	uuid_t uuid;
+>  	hv_get_vpreg_128(HV_REGISTER_HYPERVISOR_VERSION,
+> @@ -60,6 +66,46 @@ static bool __init hyperv_detect_via_acpi(void)
 >=20
-> -	arm_smccc_1_1_invoke(ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID, &res);
-> +#ifdef CONFIG_ARM64
+>  #endif
+>=20
+> +static void hv_hostcall_free(void)
+> +{
+> +	int cpu;
+> +
+> +	if (!hyperv_pcpu_hostcall_struct)
+> +		return;
+> +
+> +	for_each_possible_cpu(cpu)
+> +		kfree(*per_cpu_ptr(hyperv_pcpu_hostcall_struct, cpu));
+> +	free_percpu(hyperv_pcpu_hostcall_struct);
+> +	hyperv_pcpu_hostcall_struct =3D NULL;
+> +}
+> +
+> +static int hv_cpu_init(unsigned int cpu)
+> +{
+> +	void **hostcall_struct;
+> +	gfp_t flags;
+> +	void *mem;
+> +
+> +	if (hyperv_pcpu_hostcall_struct) {
+> +		/* hv_cpu_init() can be called with IRQs disabled from hv_resume() */
+> +		flags =3D irqs_disabled() ? GFP_ATOMIC : GFP_KERNEL;
+> +
+> +		hostcall_struct =3D (void **)this_cpu_ptr(hyperv_pcpu_hostcall_struct)=
+;
+> +		/*
+> +		 * The hostcall_struct memory is not freed when the CPU
+> +		 * goes offline. If a previously offlined CPU is brought
+> +		 * back online, the memory is reused here.
+> +		 */
+> +		if (!*hostcall_struct) {
+> +			mem =3D kzalloc_obj(struct rsi_host_call, flags);
+> +			if (!mem)
+> +				return -ENOMEM;
+> +			*hostcall_struct =3D mem;
+> +		}
+> +	}
+> +
+> +	return hv_common_cpu_init(cpu);
+> +}
+> +
+>  static bool __init hyperv_detect_via_smccc(void)
+>  {
+>  	uuid_t hyperv_uuid =3D UUID_INIT(
+> @@ -73,6 +119,8 @@ static bool __init hyperv_detect_via_smccc(void)
+>  static int __init hyperv_init(void)
+>  {
+>  	struct hv_get_vp_registers_output	result;
+> +	void **hostcall_struct;
+> +	void *mem;
+>  	u64	guest_id;
+>  	int	ret;
+>=20
+> @@ -85,6 +133,27 @@ static int __init hyperv_init(void)
+>  	if (!hyperv_detect_via_acpi() && !hyperv_detect_via_smccc())
+>  		return 0;
+>=20
+> +	/*
+> +	 * The RSI host-call buffer is only ever used when
+> +	 * is_realm_world() is true. Skip the per-CPU allocation on
+> +	 * non-Realm guests.
+> +	 */
 > +	if (is_realm_world()) {
-> +		if (!arm_smccc_realm_get_hypervisor_uuid(&res))
-> +			return false;
-> +	} else
-> +#endif
+> +		hyperv_pcpu_hostcall_struct =3D alloc_percpu(void *);
+> +		if (!hyperv_pcpu_hostcall_struct)
+> +			return -ENOMEM;
 > +
-> 	arm_smccc_1_1_invoke(ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID,
-> +				     &res);
+> +		hostcall_struct =3D (void **)this_cpu_ptr(hyperv_pcpu_hostcall_struct)=
+;
+> +		if (!*hostcall_struct) {
+> +			mem =3D kzalloc_obj(struct rsi_host_call);
+> +			if (!mem) {
+> +				ret =3D -ENOMEM;
+> +				goto free_hostcall_mem;
+> +			}
+> +			*hostcall_struct =3D mem;
+> +		}
+> +	}
 > +
->  	if (res.a0 =3D=3D SMCCC_RET_NOT_SUPPORTED)
->  		return false;
+>  	/* Setup the guest ID */
+>  	guest_id =3D hv_generate_guest_id(LINUX_VERSION_CODE);
+>  	hv_set_vpreg(HV_REGISTER_GUEST_OS_ID, guest_id);
+> @@ -106,12 +175,13 @@ static int __init hyperv_init(void)
 >=20
+>  	ret =3D hv_common_init();
+>  	if (ret)
+> -		return ret;
+> +		goto free_hostcall_mem;
+>=20
+>  	ret =3D cpuhp_setup_state(CPUHP_AP_HYPERV_ONLINE,
+> "arm64/hyperv_init:online",
+> -				hv_common_cpu_init, hv_common_cpu_die);
+> +				hv_cpu_init, hv_common_cpu_die);
+>  	if (ret < 0) {
+>  		hv_common_free();
+> +		hv_hostcall_free();
+>  		return ret;
+>  	}
+>=20
+> @@ -125,6 +195,10 @@ static int __init hyperv_init(void)
+>=20
+>  	hyperv_initialized =3D true;
+>  	return 0;
+> +
+> +free_hostcall_mem:
+> +	hv_hostcall_free();
+> +	return ret;
+>  }
+>=20
+>  early_initcall(hyperv_init);
+> diff --git a/arch/arm64/include/asm/mshyperv.h b/arch/arm64/include/asm/m=
+shyperv.h
+> index b721d3134ab66..65a00bd14c6cb 100644
+> --- a/arch/arm64/include/asm/mshyperv.h
+> +++ b/arch/arm64/include/asm/mshyperv.h
+> @@ -63,4 +63,7 @@ static inline u64 hv_get_non_nested_msr(unsigned int re=
+g)
+>=20
+>  #include <asm-generic/mshyperv.h>
+>=20
+> +/* Per-CPU RSI host call structure for CCA Realms */
+> +extern void *__percpu *hyperv_pcpu_hostcall_struct;
+> +
+>  #endif
 > --
 > 2.45.4
 >=20
