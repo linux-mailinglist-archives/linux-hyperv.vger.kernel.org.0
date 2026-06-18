@@ -1,266 +1,290 @@
-Return-Path: <linux-hyperv+bounces-11631-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11632-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id s8SBA8rFMmpW5QUAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11631-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Jun 2026 18:05:30 +0200
+	id eCDdKENrM2pnAwYAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11632-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Jun 2026 05:51:31 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E33069B3E2
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Jun 2026 18:05:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1ACD269D64C
+	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Jun 2026 05:51:31 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=outlook.com header.s=selector1 header.b=ttUqnLxc;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11631-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11631-lists+linux-hyperv=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=outlook.com;
-	arc=reject ("cv is fail on i=2")
+	dkim=none;
+	dmarc=fail reason="SPF not aligned (relaxed), No valid DKIM" header.from=microsoft.com (policy=reject);
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11632-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11632-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 30BBA30CE29E
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Jun 2026 16:05:05 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 574AD305068E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Jun 2026 03:51:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BBC34963D1;
-	Wed, 17 Jun 2026 16:02:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0336C30C343;
+	Thu, 18 Jun 2026 03:51:26 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazolkn19012016.outbound.protection.outlook.com [52.103.11.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B91C94A2E34;
-	Wed, 17 Jun 2026 16:02:41 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781712176; cv=fail; b=nDGy7G/hqWz50nWElB4DRfpWg0POuDbGpP5aEX7e4kQUgpC9mmPqkma9tlvHA8TApQ/Kg5M9ByV391jq83Mi0KxmBd1WFSOO+UM4aTonPkb2dqavqTkWh7N0N+9GuwTGFXnI53Qg99pcch08XaA0uawOpvbPDFgoLowv9CPSMm4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781712176; c=relaxed/simple;
-	bh=H+d+enUzL8kXHgqO7gG0UHu7p+iul8X9l+vtge34KYY=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=qXvPTCLD+g85Uk+CTiqmbmCYkTxuDV9+mcT/ebWcLg6trPPfLMUVu6fD8t3/9EatpmL52lZ2WTLicfe9LysRyph+S+OYho53cpPtI/Rch1tduL2H3N5IN+VowTIy/gyKZBcsRHNcr3ESemzI7zbsgEWyZAk6s83yM5jqazlbapo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ttUqnLxc; arc=fail smtp.client-ip=52.103.11.16
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=q+O42aHEry90m0Bmb233ZZIXifGMWn15HCucdwqiGVR7xCPZeUf+aFAUvirITFDs8TemD201OrZtGcXctpfUyA0ie78kiu+Ww8V11NgoQPe5cGCXlz5R6XPS8aHUUyGozBxeg82txTxHCRfrgoj9T83pWttHBZxItuSC22mFovLZNWK0k71w/DJwKMnQsuOyLPlXBl+vZSlnOxTNr+WYPGGq0b4v1UoqZCCCVYAA8fQ7oM7PfjWtiCxfH3oeb9dPQGWsY/7eJOLKpZJN6C0Uizv1aq9KZZx9uGND2ElkE9766zZqTjGVHu48lR+9vmMdjDPn97eLDU6N1wvK/Phy9Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LX4Iw2ScPl49LKoUK2PfY4rNdCEeLgYtl1YcA+uYj9Y=;
- b=adGKQwTmMssCMJwngej/m05JsbnWgv5w6fjTke8lxGa3qr5kR44YaLJiRH8rxQupf7x08D37H9JXMJRAXzlvXkfefrsmGA3vTX1b1CgC2g4ML2Mi+5DwZHUfdMtq3G/8DjsiCpXCz6H+u2Ra/0ftjhHbywQLRY+dHxC4sloHG9lnW3ET1kOdYzCJHVgslxGQ0Rpv33pqcOwMsqh6emuAF9C4EZaqaVnCg4nYxU+xdLfxkhPjLH57gSrMWnii1LQETxzkccvqbqEbXA24IjuMk8E6ZN+clSjxn8GfiFAsiatAXGJxp7Lym76qprh5flpzt/B9Z/PBHubHRgyvoTLQPg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LX4Iw2ScPl49LKoUK2PfY4rNdCEeLgYtl1YcA+uYj9Y=;
- b=ttUqnLxceB33RordtirQ2xbArKF4VRiq2e4sbeZYhoL6y5wc+wbAeI3iJ8F+V/3aQH6JS2KLt0dQ01AnsAP3Sh6y21wLs9nA3zuNt+hZbCoRRuRIb8uruVz1f5MyhyGwKSNa3dELQ/ye0rwHDOAsFAehrLfAti/vjYkIIdj749GCsboVDx1N72QkG7i2aPSBLnENnIPsDKeVITeLFj8N4nOvfoje7wkb+5x/q9vdupkpaRjCGK5delkmMS27OAak1KbnTniesQRtoG9gvfNLxxCGMAzRyHoTsiQcxz6nqX75V6muWhr7QAp7OJst0yPCGBbfCapBosrcsrJEZpK1Zw==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by CH3PR02MB10280.namprd02.prod.outlook.com (2603:10b6:610:1ce::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.11; Wed, 17 Jun
- 2026 16:02:39 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6%3]) with mapi id 15.21.0139.009; Wed, 17 Jun 2026
- 16:02:39 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-CC: "K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang
-	<haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
-	<decui@microsoft.com>, Long Li <longli@microsoft.com>, Lorenzo Pieralisi
-	<lpieralisi@kernel.org>, =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?=
-	<kwilczynski@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, Rob
- Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH] PCI: hv: add hard timeout to wait_for_response()
-Thread-Topic: [PATCH] PCI: hv: add hard timeout to wait_for_response()
-Thread-Index: AQHc/nDsmF4XHn0uSkWoerJoFRnNC7ZC6Isw
-Date: Wed, 17 Jun 2026 16:02:38 +0000
-Message-ID:
- <SN6PR02MB41575A367289AEE6293AD71BD4E42@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20260612174010.2598695-1-hamzamahfooz@linux.microsoft.com>
-In-Reply-To: <20260612174010.2598695-1-hamzamahfooz@linux.microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CH3PR02MB10280:EE_
-x-ms-office365-filtering-correlation-id: d5b54193-77f1-4b7a-e65f-08decc89daf4
-x-microsoft-antispam:
- BCL:0;ARA:14566002|8060799015|8062599012|13091999003|37011999003|31061999003|19110799012|19101099003|13031999006|41001999006|51005399006|15080799012|56899033|102099032|40105399003|3412199025|4302099013|440099028|1602099012|18061999006|10035399007;
-x-microsoft-antispam-message-info:
- =?iso-8859-2?Q?HlaIeUPTbQYjQByfW8ZGu+5gECEgZ+gaPZg+K34Eme+kgsRe8412hyEZu7?=
- =?iso-8859-2?Q?wZvxfal09WPKSG4boFlDexeZo87MOfmIc4gBEbz7jnltt5ad0mhxefJWz+?=
- =?iso-8859-2?Q?goIfJ4sKB8+bgyZaLILgz00pqM21R/S60TAV05B8F0P7o44wFkRz8M3UeK?=
- =?iso-8859-2?Q?adcxGZJ7sjZDw6VXWEszyDQXy0g6/rxFqzQlgwW/RAUuFj2hIkuesjMXvO?=
- =?iso-8859-2?Q?u3lQoN/Um3zSUCUHroB05GC/VFitjllc70W4Png4h7nV0p0NOcISoPQDvJ?=
- =?iso-8859-2?Q?r9Lc+V6s89WWf86fhY9JY2BWehQdUt2v87ioR2gG2tUs6XEdC4DtaW9i+B?=
- =?iso-8859-2?Q?6wyJYk7JiDLeS/HXLy9YJIknFqUQDKvTUHLOVYnxJkkcrOg0WUY5woAYX+?=
- =?iso-8859-2?Q?I29PSD4VcteW92cosx+yeh9nyX9UXUbCaHgBEWWnmh+9BbkUaH3UFx/pey?=
- =?iso-8859-2?Q?U18jKxGuoa42DWluGjEi0G0Ned5QhYYQd5Jwijhp5eqNqfL+6lSm5WBy0L?=
- =?iso-8859-2?Q?/mCOnBjqwm5b8h//jEQzsYr5lCv/oCmXwFFZm62HzFYN8krerrFXshVKie?=
- =?iso-8859-2?Q?RHNpVVv/dZJP93Uqr6To0Fy1dl/qYokIltdMtwsoigk/fR0tDyjGborQbc?=
- =?iso-8859-2?Q?ClD6KQrE0nichDDvtP0iaHch0IV/OQunYhlD90HWsjR3T2r3IZj6e7mHH5?=
- =?iso-8859-2?Q?RANFjwo/3O2TLquQzE2SOd+Z+famMfO4RJNg8SUoAdeh8mTouGbs3zoftW?=
- =?iso-8859-2?Q?4N/f/mrfPcpPjuroA2KC8X4x3FtjWO6nibDtjj1DsyDi3QD+K3RnEcQOpa?=
- =?iso-8859-2?Q?iObJGufvJvCvYu3KdEKyJ0t4hva04Y3Byo7brRUBoqBvrn4tydjuYbmxgy?=
- =?iso-8859-2?Q?diJ3mog3qj/Sw9xX2lLmMgN/4uL6UjiBcLdIBDn+EvSwo7fB/OPJvf3hiU?=
- =?iso-8859-2?Q?NHmAy/XQ1gBA+EB5m7iqLBPggXJN+AX2ACt0kKL6k/KKqgNXrH1iJ5+30m?=
- =?iso-8859-2?Q?M+8Q0yEBZTNo2ElZQxKme0eX3ZzaLmg1HWfVM/6rYQgho4h28nAYRlzch0?=
- =?iso-8859-2?Q?rdFg1w7mqfY1Bpd3jEYJcv9Uc+U4Zl0pW/bDeu7JXJB/FUK1/Ue2wiaL8s?=
- =?iso-8859-2?Q?uLvHbSukXnSJsA8+NvdI4/gG0sghwm4sZxQwQNiei7fBUejth7uGYU2Lms?=
- =?iso-8859-2?Q?6l6Bt1DuJiRZnPnd24eEmgjl7/bHwolBaUSd4K4swwbnD6436BoTczji?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-2?Q?CeafQyQce35vSY+i3DRR30a5FAfeqNZGqCrdU5gLEt7yfSynZrvVPeGSmO?=
- =?iso-8859-2?Q?sJxkOc3XnTXOo/ZElNzMxGhAF0bpGgFTXeX0BtsRaiYzdorRh3Olze28Xe?=
- =?iso-8859-2?Q?jY71SHVlvl1TFjvQ6/hfPOWAc7YrNb2zSFVkvsofavnqJke5kDfDa1iJ0j?=
- =?iso-8859-2?Q?B3tlZg05GloDFevDuMjmwWwIBsqQWf7z8XKHXzicu8jlzzDzS2QEs3b1Fw?=
- =?iso-8859-2?Q?B8gXWPlZlUlVBvBU0FWh/10sRq3IgLrQy3aNSqeIUEnZjDDbj0h5F3cuFL?=
- =?iso-8859-2?Q?H2u9L6XD8QEGq7lmmhaMdV1hL7YTsg70aSGs8JvoJruXmkfedd0c6vy5nW?=
- =?iso-8859-2?Q?OEpoigFsEd5isqcPQMlHK2sP5VIYTeDbLM3FxFixeo4T3DU6lD9au/P7tu?=
- =?iso-8859-2?Q?YtLRDIGhc9DwmlSjU0PTMyealJSNfPwaJIh/e0dwkF6Vh0KoAfqFNLc/rE?=
- =?iso-8859-2?Q?PAjMJ+VFUw4Bdex11YUjLP+QaT3LrWRf/kI4JUmfgLsBCr1sRFkQl8sAGA?=
- =?iso-8859-2?Q?qmwtPzs5NEFGRpDs0l5zWQp6xiXViIdGTYSpdqXyAUt1uAgFvze7Uwb2y7?=
- =?iso-8859-2?Q?3bUSb7FLt7yzEmkRuRv+li09CdsCO0FF7sOY08Y8sjD5Iw+hWzA/D1Owvj?=
- =?iso-8859-2?Q?jE/6VPKzgL1VuOgGyQtqz86z0FKFn+9LI0yx6WXQEqrg3r1+y76ccdvdje?=
- =?iso-8859-2?Q?dJieZWHvxcP7g0ajnsh7f8SW5tw9TqY/lDsHnY7a9LKWgnNAz89CY67tZp?=
- =?iso-8859-2?Q?343vMAqWJ6kdm/6CNbpQcgW5dMW6RHrkmhmMsxTtYjw0zZAUh3rXRzxpX8?=
- =?iso-8859-2?Q?oKg7XA/lg9cXNV8GOK9o16vOkgpW3BULF3f+fXDNMiNtUdGzwVtWm9nD8n?=
- =?iso-8859-2?Q?90xGvLbd7ZFy6LBrF86X1H5xZPwlk0ziBOs0sDp6s78JgRmu09Xc87uN7z?=
- =?iso-8859-2?Q?NWUmY4yZHtKdAMmszNvqnA00XEM2h7u3UEjYLULAL5c99BriySN/j2kWgZ?=
- =?iso-8859-2?Q?VAZ7O7hxUABdYqmU+2IX/A3zWcfRAOCFbzIWbsxymyUbYcwqiYw4rOf1g9?=
- =?iso-8859-2?Q?zph3ozLbPQ6GodaO1nCBWAbsHwyZ00oM7ylAubccnwjkYQ3p3JK3dk8d8r?=
- =?iso-8859-2?Q?N0fL3guQmnBb1udX77GI9gElFNgxZdB4YCUn4qR6lqNQ9zCHkOnDe8nZmp?=
- =?iso-8859-2?Q?1B44/lHHo1M/Iaz4Q4loIqTVAedPf2YXxIPKee5Bpz2aaniEb8CbQIGoiI?=
- =?iso-8859-2?Q?npQ3+o2x2Y8WflYYrgjqXT99Ia+msV++UF5pXDRzqREqMtU5CvZNN8uGHx?=
- =?iso-8859-2?Q?WLehX4hBHa1PqRhgJOPvXYDmFCYGuOAeXUCeSgwqLz17XFHRnS+5Sxmd3v?=
- =?iso-8859-2?Q?2R7O0ZOVdLUHpW3oiu68e2eODs30fx+JZ2Xmm6sWAQFIm+QBxQPj0=3D?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A38632BE056;
+	Thu, 18 Jun 2026 03:51:24 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781754685; cv=none; b=FT9GYC5KtzWIjLtLw5g1XFFgziB5eQ/UTokczhU0XHyxtUVVR/q0+LdOHd+u45VHI/7S8nXda9nqJxpIioScFYhBtbLMGNdH1NIjpvJJN0shSe0UlMNR7mcCBzIeo9xcX4QwcCo8jhkaT7rTYI3g7Gx54+ZJMPW9zVdbgzGI8Mk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781754685; c=relaxed/simple;
+	bh=HBm50bLHcEgYjPf/ZmIn0/j/3ci8fvGwi8NcKkiyGD4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=StPBn47Bs1BGKv7K1jektr9Nwg5mq1loiWLvf3/ICADoT4B2J8VUwzgtnPjOjBE0x/dlWrHfwfg+39TxdLN44/Y8fyMV3DoY5pc6tQHJ483ePJcdDHg+O5UdvOTbp9J5/CnpwVOeI3tilCes138RvX4g2DWHQ9/mWn7itvUPHwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; arc=none smtp.client-ip=13.77.154.182
+Received: by linux.microsoft.com (Postfix, from userid 1009)
+	id 3CABC20B7167; Wed, 17 Jun 2026 20:51:17 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3CABC20B7167
+From: Dexuan Cui <decui@microsoft.com>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	longli@microsoft.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	kotaranov@microsoft.com,
+	horms@kernel.org,
+	ernis@linux.microsoft.com,
+	dipayanroy@linux.microsoft.com,
+	kees@kernel.org,
+	jacob.e.keller@intel.com,
+	ssengar@linux.microsoft.com,
+	linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Cc: stable@vger.kernel.org
+Subject: [PATCH net] net: mana: Sync page pool RX frags for CPU
+Date: Wed, 17 Jun 2026 20:50:29 -0700
+Message-ID: <20260618035029.249361-1-decui@microsoft.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: d5b54193-77f1-4b7a-e65f-08decc89daf4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2026 16:02:38.8769
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR02MB10280
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[outlook.com,none];
-	R_DKIM_ALLOW(-0.20)[outlook.com:s=selector1];
+X-Spamd-Result: default: False [3.54 / 15.00];
+	DMARC_POLICY_REJECT(2.00)[microsoft.com : SPF not aligned (relaxed), No valid DKIM,reject];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_MISSING_CHARSET(0.50)[];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11631-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11632-lists,linux-hyperv=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:andrew+netdev@lunn.ch,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:kotaranov@microsoft.com,m:horms@kernel.org,m:ernis@linux.microsoft.com,m:dipayanroy@linux.microsoft.com,m:kees@kernel.org,m:jacob.e.keller@intel.com,m:ssengar@linux.microsoft.com,m:linux-hyperv@vger.kernel.org,m:netdev@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:stable@vger.kernel.org,m:andrew@lunn.ch,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:hamzamahfooz@linux.microsoft.com,m:linux-hyperv@vger.kernel.org,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:lpieralisi@kernel.org,m:kwilczynski@kernel.org,m:mani@kernel.org,m:robh@kernel.org,m:bhelgaas@google.com,m:linux-pci@vger.kernel.org,m:stable@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[mhklinux@outlook.com,linux-hyperv@vger.kernel.org];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FREEMAIL_FROM(0.00)[outlook.com];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2600:3c04:e001:36c::12fc:5321:from];
+	FORGED_SENDER(0.00)[decui@microsoft.com,linux-hyperv@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[outlook.com:+];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mhklinux@outlook.com,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[decui@microsoft.com,linux-hyperv@vger.kernel.org];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp];
+	TO_DN_NONE(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	R_DKIM_NA(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[100.90.174.1:received,13.77.154.182:received];
 	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp,outlook.com:dkim,outlook.com:from_mime]
+	RCPT_COUNT_TWELVE(0.00)[22];
+	FORGED_SENDER_FORWARDING(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 6E33069B3E2
+X-Rspamd-Queue-Id: 1ACD269D64C
 
-From: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com> Sent: Friday, June 1=
-2, 2026 10:40 AM
->=20
+MANA allocates RX buffers from page pool fragments when frag_count is
+greater than 1. In that case the buffers remain DMA mapped by page pool
+and the RX completion path does not call dma_unmap_single(). As a result,
+the implicit sync-for-CPU normally performed by dma_unmap_single() is
+missing before the packet data is passed to the networking stack.
 
-The addressees for this patch include the linux-hyperv and linux-pci
-mailing lists, but not the broad linux-kernel mailing list. Any reason not
-to include the latter? In Documentation/process/submitting-patches.rst,
-in the section "Select the recipients for your patch", it says
+This breaks RX on configurations which require explicit DMA syncing, for
+example when booted with swiotlb=force.
 
-    linux-kernel@vger.kernel.org should be used by default for all patches
+Fix this by recording the page pool page and DMA sync offset when the RX
+buffer is allocated, and syncing the received packet range for CPU access
+before handing the RX buffer to the stack.
 
-I subscribe to the broad linux-kernel list and do my own filtering, instead
-of subscribing to individual subsystem lists. So I didn't see this patch
-until I glanced at https://lore.kernel.org/linux-hyperv/. Following the
-guidance to always include linux-kernel would help me, for one. :-)
+Also validate the packet length reported in the RX CQE before using it as
+a DMA sync length or passing it to skb processing. The CQE is supplied
+by the device and should not be blindly trusted by Confidential VMs.
 
-Thx,
+Fixes: 730ff06d3f5c ("net: mana: Use page pool fragments for RX buffers instead of full pages to improve memory efficiency.")
+Cc: stable@vger.kernel.org
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+---
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 61 +++++++++++++++----
+ include/net/mana/mana.h                       |  8 +++
+ 2 files changed, 57 insertions(+), 12 deletions(-)
 
-Michael
-
-> It is possible that we never receive a rescind event, in which case we
-> will wait indefinitely for a device that will never show up. So, assume
-> a device is gone if have been polling for more than 5 seconds.
->=20
-> Cc: stable@vger.kernel.org
-> Fixes: c3635da2a336 ("PCI: hv: Do not wait forever on a device that has d=
-isappeared")
-> Signed-off-by: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
-/pci-hyperv.c
-> index cfc8fa403dad..bd63efc4a210 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -52,6 +52,7 @@
->  #include <linux/acpi.h>
->  #include <linux/sizes.h>
->  #include <linux/of_irq.h>
-> +#include <linux/jiffies.h>
->  #include <asm/mshyperv.h>
->=20
->  /*
-> @@ -1038,6 +1039,8 @@ static void put_pcichild(struct hv_pci_dev *hpdev)
->  		kfree(hpdev);
->  }
->=20
-> +#define TIMEOUT_MS 5000
-> +
->  /*
->   * There is no good way to get notified from vmbus_onoffer_rescind(),
->   * so let's use polling here, since this is not a hot path.
-> @@ -1045,8 +1048,13 @@ static void put_pcichild(struct hv_pci_dev *hpdev)
->  static int wait_for_response(struct hv_device *hdev,
->  			     struct completion *comp)
->  {
-> +	unsigned long timeout =3D get_jiffies_64() + msecs_to_jiffies(TIMEOUT_M=
-S);
-> +	unsigned long now;
-> +
->  	while (true) {
-> -		if (hdev->channel->rescind) {
-> +		now =3D get_jiffies_64();
-> +		if (hdev->channel->rescind ||
-> +		    time_after(now, timeout)) {
->  			dev_warn_once(&hdev->device, "The device is gone.\n");
->  			return -ENODEV;
->  		}
-> --
-> 2.54.0
->=20
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index c9b1df1ed109..d8906169666d 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -2044,15 +2044,19 @@ static void mana_rx_skb(void *buf_va, bool from_pool,
+ }
+ 
+ static void *mana_get_rxfrag(struct mana_rxq *rxq, struct device *dev,
+-			     dma_addr_t *da, bool *from_pool)
++			     dma_addr_t *da, bool *from_pool,
++			     struct page **pp_page, u32 *dma_sync_offset)
+ {
+ 	struct page *page;
+ 	u32 offset;
+ 	void *va;
++
+ 	*from_pool = false;
++	*pp_page = NULL;
++	*dma_sync_offset = 0;
+ 
+ 	/* Don't use fragments for jumbo frames or XDP where it's 1 fragment
+-	 * per page.
++	 * per page. These buffers are mapped with dma_map_single().
+ 	 */
+ 	if (rxq->frag_count == 1) {
+ 		/* Reuse XDP dropped page if available */
+@@ -2087,31 +2091,47 @@ static void *mana_get_rxfrag(struct mana_rxq *rxq, struct device *dev,
+ 	va  = page_to_virt(page) + offset;
+ 	*da = page_pool_get_dma_addr(page) + offset + rxq->headroom;
+ 	*from_pool = true;
++	*pp_page = page;
++	*dma_sync_offset = offset + rxq->headroom;
+ 
+ 	return va;
+ }
+ 
+ /* Allocate frag for rx buffer, and save the old buf */
+ static void mana_refill_rx_oob(struct device *dev, struct mana_rxq *rxq,
+-			       struct mana_recv_buf_oob *rxoob, void **old_buf,
+-			       bool *old_fp)
++			       struct mana_recv_buf_oob *rxoob, u32 pktlen,
++			       void **old_buf, bool *old_fp)
+ {
++	u32 dma_sync_offset;
++	struct page *pp_page;
+ 	bool from_pool;
+ 	dma_addr_t da;
+ 	void *va;
+ 
+-	va = mana_get_rxfrag(rxq, dev, &da, &from_pool);
++	va = mana_get_rxfrag(rxq, dev, &da, &from_pool, &pp_page,
++			     &dma_sync_offset);
+ 	if (!va)
+ 		return;
+-	if (!rxoob->from_pool || rxq->frag_count == 1)
++	if (!rxoob->from_pool || rxq->frag_count == 1) {
+ 		dma_unmap_single(dev, rxoob->sgl[0].address, rxq->datasize,
+ 				 DMA_FROM_DEVICE);
++	} else {
++		/* The page pool maps the whole page and only syncs for device
++		 * automatically (PP_FLAG_DMA_SYNC_DEV). Sync the received bytes
++		 * for the CPU before they are read: this is required if DMA
++		 * is incoherent or bounce buffers are used.
++		 */
++		page_pool_dma_sync_for_cpu(rxq->page_pool, rxoob->pp_page,
++					   rxoob->dma_sync_offset, pktlen);
++	}
+ 	*old_buf = rxoob->buf_va;
+ 	*old_fp = rxoob->from_pool;
+ 
+ 	rxoob->buf_va = va;
+ 	rxoob->sgl[0].address = da;
+ 	rxoob->from_pool = from_pool;
++	rxoob->pp_page = pp_page;
++	rxoob->dma_sync_offset = dma_sync_offset;
+ }
+ 
+ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
+@@ -2170,12 +2190,24 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
+ 		rxbuf_oob = &rxq->rx_oobs[curr];
+ 		WARN_ON_ONCE(rxbuf_oob->wqe_inf.wqe_size_in_bu != 1);
+ 
+-		mana_refill_rx_oob(dev, rxq, rxbuf_oob, &old_buf, &old_fp);
++		if (unlikely(pktlen > rxq->datasize)) {
++			/* Increase it even if mana_rx_skb() isn't called. */
++			rxq->rx_cq.work_done++;
+ 
+-		/* Unsuccessful refill will have old_buf == NULL.
+-		 * In this case, mana_rx_skb() will drop the packet.
+-		 */
+-		mana_rx_skb(old_buf, old_fp, oob, rxq, i);
++			++ndev->stats.rx_dropped;
++			netdev_warn_once(ndev,
++				"Dropped oversized RX packet: len=%u, datasize=%u\n",
++				pktlen, rxq->datasize);
++
++			/* Reuse the RX buffer since rxbuf_oob is unchanged. */
++		} else {
++			mana_refill_rx_oob(dev, rxq, rxbuf_oob, pktlen, &old_buf, &old_fp);
++
++			/* Unsuccessful refill will have old_buf == NULL.
++			 * In this case, mana_rx_skb() will drop the packet.
++			 */
++			mana_rx_skb(old_buf, old_fp, oob, rxq, i);
++		}
+ 
+ 		mana_move_wq_tail(rxq->gdma_rq,
+ 				  rxbuf_oob->wqe_inf.wqe_size_in_bu);
+@@ -2566,6 +2598,8 @@ static int mana_fill_rx_oob(struct mana_recv_buf_oob *rx_oob, u32 mem_key,
+ 			    struct mana_rxq *rxq, struct device *dev)
+ {
+ 	struct mana_port_context *mpc = netdev_priv(rxq->ndev);
++	struct page *pp_page = NULL;
++	u32 dma_sync_offset = 0;
+ 	bool from_pool = false;
+ 	dma_addr_t da;
+ 	void *va;
+@@ -2573,13 +2607,16 @@ static int mana_fill_rx_oob(struct mana_recv_buf_oob *rx_oob, u32 mem_key,
+ 	if (mpc->rxbufs_pre)
+ 		va = mana_get_rxbuf_pre(rxq, &da);
+ 	else
+-		va = mana_get_rxfrag(rxq, dev, &da, &from_pool);
++		va = mana_get_rxfrag(rxq, dev, &da, &from_pool, &pp_page,
++				     &dma_sync_offset);
+ 
+ 	if (!va)
+ 		return -ENOMEM;
+ 
+ 	rx_oob->buf_va = va;
+ 	rx_oob->from_pool = from_pool;
++	rx_oob->pp_page = pp_page;
++	rx_oob->dma_sync_offset = dma_sync_offset;
+ 
+ 	rx_oob->sgl[0].address = da;
+ 	rx_oob->sgl[0].size = rxq->datasize;
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index 8f721cd4e4a7..4111b93169d2 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -305,6 +305,14 @@ struct mana_recv_buf_oob {
+ 
+ 	void *buf_va;
+ 	bool from_pool; /* allocated from a page pool */
++	/* head page of the page_pool fragment; valid only when
++	 * from_pool && frag_count > 1.
++	 */
++	struct page *pp_page;
++	/* Fragment offset plus rxq->headroom, passed to
++	 * page_pool_dma_sync_for_cpu().
++	 */
++	u32 dma_sync_offset;
+ 
+ 	/* SGL of the buffer going to be sent as part of the work request. */
+ 	u32 num_sge;
+-- 
+2.34.1
 
 
