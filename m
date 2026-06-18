@@ -1,66 +1,94 @@
-Return-Path: <linux-hyperv+bounces-11632-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11633-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id eCDdKENrM2pnAwYAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11632-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Jun 2026 05:51:31 +0200
+	id QNZnA31xM2p/BgYAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11633-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Jun 2026 06:18:05 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1ACD269D64C
-	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Jun 2026 05:51:31 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C3BE69D796
+	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Jun 2026 06:18:04 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=none;
-	dmarc=fail reason="SPF not aligned (relaxed), No valid DKIM" header.from=microsoft.com (policy=reject);
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11632-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11632-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=V2voVSjV;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11633-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11633-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 574AD305068E
-	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Jun 2026 03:51:29 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 794AA303183C
+	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Jun 2026 04:18:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0336C30C343;
-	Thu, 18 Jun 2026 03:51:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 941143749FF;
+	Thu, 18 Jun 2026 04:18:00 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A38632BE056;
-	Thu, 18 Jun 2026 03:51:24 +0000 (UTC)
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677D135C19D
+	for <linux-hyperv@vger.kernel.org>; Thu, 18 Jun 2026 04:17:59 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781754685; cv=none; b=FT9GYC5KtzWIjLtLw5g1XFFgziB5eQ/UTokczhU0XHyxtUVVR/q0+LdOHd+u45VHI/7S8nXda9nqJxpIioScFYhBtbLMGNdH1NIjpvJJN0shSe0UlMNR7mcCBzIeo9xcX4QwcCo8jhkaT7rTYI3g7Gx54+ZJMPW9zVdbgzGI8Mk=
+	t=1781756280; cv=none; b=c8wtd6r8wIJYbPxNjjtq/551Z1vni7LiCsaSqVeL2HsT7wCG+YQjB1rS3lHoCeBYfaPnYtFYIxMc6EREUllvBTYPyP8XxVZox/xlv+U8oi4n21zqnIONYzie3EwDaUOS4qVChZy5Ddx8eOWkADf4e6trkeTy7t3bal+G4j2PeuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781754685; c=relaxed/simple;
-	bh=HBm50bLHcEgYjPf/ZmIn0/j/3ci8fvGwi8NcKkiyGD4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=StPBn47Bs1BGKv7K1jektr9Nwg5mq1loiWLvf3/ICADoT4B2J8VUwzgtnPjOjBE0x/dlWrHfwfg+39TxdLN44/Y8fyMV3DoY5pc6tQHJ483ePJcdDHg+O5UdvOTbp9J5/CnpwVOeI3tilCes138RvX4g2DWHQ9/mWn7itvUPHwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; arc=none smtp.client-ip=13.77.154.182
-Received: by linux.microsoft.com (Postfix, from userid 1009)
-	id 3CABC20B7167; Wed, 17 Jun 2026 20:51:17 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3CABC20B7167
-From: Dexuan Cui <decui@microsoft.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	longli@microsoft.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	kotaranov@microsoft.com,
-	horms@kernel.org,
-	ernis@linux.microsoft.com,
-	dipayanroy@linux.microsoft.com,
-	kees@kernel.org,
-	jacob.e.keller@intel.com,
-	ssengar@linux.microsoft.com,
+	s=arc-20240116; t=1781756280; c=relaxed/simple;
+	bh=6u7Foak+HYm4YNvp1NSRBYj8EWhdk24OG4yFL6eNabw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MPfdCcXoOb1mMnNrlAf5+LJZrpaTBErqzNItV8CxNnAcd2312V8AykGf2Qc0bcnoS555Ntlu2mxIl7G9vSmf2P4HD/mY7Zb+lxm8GPxcW+EBUOsbQymU1SOphAdNWrdqQe2rjVmnamsQK3SWIWDTKFxDCixRFq6/1WEvCi+R5VA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V2voVSjV; arc=none smtp.client-ip=209.85.214.177
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2c6bdb8a8bdso3018925ad.1
+        for <linux-hyperv@vger.kernel.org>; Wed, 17 Jun 2026 21:17:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781756279; x=1782361079; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=f9+4F23nRXmvcstAl7PKXowIyLqfAAv72bfzi1AI54M=;
+        b=V2voVSjVhcJsGM1w7okvlUvaRkQ7ZDnGNsT/x4sH6xvGLt02Eb5WCfof7XEOB7uRpR
+         KPggH+wC8UwcN3LpqZRdEAOhXH77QMOHdOxGVFuhRjxiBIKU8ZnGYEjDalB0RouwWBaX
+         qBQ1eKq8Axs7V1dnb9hfG+0dIBsS7X+gu74hncFa+GXL3m16kMwSDnUlAJmRrRKgy4hj
+         czC1LiDGbnJ9+Qnjxvl0Q34VYuz6e1KqZglwVl+OPcXRvJNbMekzNafHYQkwceJg2kCK
+         xBvEER1joSNQUbRAe6T7a+n/Swyr7lcChop7CS9szrucXsALHLOdI9hc2W+WtsRJFh/z
+         ZrUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781756279; x=1782361079;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f9+4F23nRXmvcstAl7PKXowIyLqfAAv72bfzi1AI54M=;
+        b=DEsIvH34wB25IRcR7hwGa47k4SlgyQQ5VOcBBOXBjExKHF1vALhd97fnNUle6eTBa5
+         lzhAxQTKcDxFpfO1LHM1PD+rV3TyKAyFdexqDF1xmQonTwFHQ8l33/Z1tbNn/Sx8aMys
+         8U0PKnnvYOhlQ5Or1eWd5HpeWJEz8SDeor4g8lxWRoHzm2Ki92IxB7XXSnKM3AGjcxdf
+         hZGfAQ+9c+phxzNVaF7rSzsvZda4Wab9tBxtDKPiZQeqNu2KGRHEwQYVsbeXJWjxfjyO
+         pdTZoRuuzJ71qmm0FrPe0/O/RMyhcNZjQ3Z+ZI2dnZa7WUlGjerR362qoZm44d+f80Ok
+         numQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9DsHnST0uaw58RtDbG0a0rdxaYdIs0ubMAc16xZdBuauuUwOw5UF8ckZrTod2NvrjmK1t1Z0toecSos9A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyM7NdxtcdDzYfv2qB891MM27tidohzinJcTAzbgjT0zmGGxrpv
+	4XtzJiz1WING/8wai6kLwwu7u0w9FBAitC3hXkVRHKU8q/y+NLA1dTyL
+X-Gm-Gg: AfdE7ckxgkKljU+aTh5Oh9RPOPS9QEHFkY5AuxD2aakjs0uj76c9gNWnPtI53M/wWG2
+	cGko+Dr6T9al/7RPDc8jGpSPSb91m2MPkSBT1uHzwmLEph7+MsEHGk7R4kneWuSvGcM/GztKxrP
+	Shw+mwDujfAtWglHyHSDm/vbR6FkFRhs7sIrz/RsdEtuSTVMYcIo7+zFFnbyxfhSTmm4G//iXwP
+	hCYBCx2c06nJOTTb+LaHd/yQTdBIeKxMWyWTvrzS1qWC9t6KF6ko8yT+ZXvfOl0eevQGx5l3fB+
+	03mKg+yx0cChnh/CNkooY51xKLSNemMdU3G7nyrH+CtjJ/MrxH6JuqMDTIqc2xs2zd9njNgyRaT
+	x32AHZ/TvwsC01LXNDdVUuECkOd/JJesYpJTnNTSUoIbcieIxYocdDBfjH/uwpoQrM1Q9x2HUza
+	UdUEL3cR1mPB5cgWbqUO0jDV7CMEeH57+ygj8/LwF0stc=
+X-Received: by 2002:a17:902:e54a:b0:2c2:2a8a:af69 with SMTP id d9443c01a7336-2c6bc0c4a66mr66215135ad.9.1781756278676;
+        Wed, 17 Jun 2026 21:17:58 -0700 (PDT)
+Received: from haichao.tail057a43.ts.net ([2001:da8:e000:1206:c19d:3f9a:e9ce:93d4])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c6c4689ccfsm34516645ad.66.2026.06.17.21.17.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2026 21:17:58 -0700 (PDT)
+From: Ruoyu Wang <ruoyuw560@gmail.com>
+To: Jason Gunthorpe <jgg@nvidia.com>,
+	Leon Romanovsky <leonro@nvidia.com>
+Cc: Cheng Xu <chengyou@linux.alibaba.com>,
+	Kai Shen <kaishen@linux.alibaba.com>,
+	Long Li <longli@microsoft.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	linux-rdma@vger.kernel.org,
 	linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Cc: stable@vger.kernel.org
-Subject: [PATCH net] net: mana: Sync page pool RX frags for CPU
-Date: Wed, 17 Jun 2026 20:50:29 -0700
-Message-ID: <20260618035029.249361-1-decui@microsoft.com>
-X-Mailer: git-send-email 2.43.7
+	Ruoyu Wang <ruoyuw560@gmail.com>
+Subject: [PATCH v2 1/2] RDMA/erdma: initialize ret for empty receive WR lists
+Date: Thu, 18 Jun 2026 12:17:51 +0800
+Message-ID: <20260618041752.481193-1-ruoyuw560@gmail.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -69,222 +97,73 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [3.54 / 15.00];
-	DMARC_POLICY_REJECT(2.00)[microsoft.com : SPF not aligned (relaxed), No valid DKIM,reject];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11632-lists,linux-hyperv=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:andrew+netdev@lunn.ch,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:kotaranov@microsoft.com,m:horms@kernel.org,m:ernis@linux.microsoft.com,m:dipayanroy@linux.microsoft.com,m:kees@kernel.org,m:jacob.e.keller@intel.com,m:ssengar@linux.microsoft.com,m:linux-hyperv@vger.kernel.org,m:netdev@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:stable@vger.kernel.org,m:andrew@lunn.ch,s:lists@lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCVD_TLS_LAST(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2600:3c04:e001:36c::12fc:5321:from];
-	FORGED_SENDER(0.00)[decui@microsoft.com,linux-hyperv@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[linux.alibaba.com,microsoft.com,vger.kernel.org,gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-11633-lists,linux-hyperv=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[decui@microsoft.com,linux-hyperv@vger.kernel.org];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:jgg@nvidia.com,m:leonro@nvidia.com,m:chengyou@linux.alibaba.com,m:kaishen@linux.alibaba.com,m:longli@microsoft.com,m:kotaranov@microsoft.com,m:linux-rdma@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:ruoyuw560@gmail.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[ruoyuw560@gmail.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	PRECEDENCE_BULK(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp];
-	TO_DN_NONE(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ruoyuw560@gmail.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	R_DKIM_NA(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[100.90.174.1:received,13.77.154.182:received];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	FORGED_SENDER_FORWARDING(0.00)[]
+	RCVD_COUNT_FIVE(0.00)[5];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 1ACD269D64C
+X-Rspamd-Queue-Id: 5C3BE69D796
 
-MANA allocates RX buffers from page pool fragments when frag_count is
-greater than 1. In that case the buffers remain DMA mapped by page pool
-and the RX completion path does not call dma_unmap_single(). As a result,
-the implicit sync-for-CPU normally performed by dma_unmap_single() is
-missing before the packet data is passed to the networking stack.
+erdma_post_recv() returns ret after walking the receive work request list.
+If the caller passes an empty list, the loop is skipped and ret is not
+assigned.
 
-This breaks RX on configurations which require explicit DMA syncing, for
-example when booted with swiotlb=force.
+Initialize ret to 0 so an empty receive work request list returns success
+instead of stack data.
 
-Fix this by recording the page pool page and DMA sync offset when the RX
-buffer is allocated, and syncing the received packet range for CPU access
-before handing the RX buffer to the stack.
-
-Also validate the packet length reported in the RX CQE before using it as
-a DMA sync length or passing it to skb processing. The CQE is supplied
-by the device and should not be blindly trusted by Confidential VMs.
-
-Fixes: 730ff06d3f5c ("net: mana: Use page pool fragments for RX buffers instead of full pages to improve memory efficiency.")
-Cc: stable@vger.kernel.org
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Fixes: 155055771704 ("RDMA/erdma: Add verbs implementation")
+Signed-off-by: Ruoyu Wang <ruoyuw560@gmail.com>
 ---
- drivers/net/ethernet/microsoft/mana/mana_en.c | 61 +++++++++++++++----
- include/net/mana/mana.h                       |  8 +++
- 2 files changed, 57 insertions(+), 12 deletions(-)
+v2:
+- Split the erdma and mana_ib changes into separate patches.
+- Add a driver-specific Fixes tag.
 
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index c9b1df1ed109..d8906169666d 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -2044,15 +2044,19 @@ static void mana_rx_skb(void *buf_va, bool from_pool,
- }
+ drivers/infiniband/hw/erdma/erdma_qp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/infiniband/hw/erdma/erdma_qp.c b/drivers/infiniband/hw/erdma/erdma_qp.c
+index 25f6c49aec779..e002343832f74 100644
+--- a/drivers/infiniband/hw/erdma/erdma_qp.c
++++ b/drivers/infiniband/hw/erdma/erdma_qp.c
+@@ -734,7 +734,7 @@ int erdma_post_recv(struct ib_qp *ibqp, const struct ib_recv_wr *recv_wr,
+ 	const struct ib_recv_wr *wr = recv_wr;
+ 	struct erdma_qp *qp = to_eqp(ibqp);
+ 	unsigned long flags;
+-	int ret;
++	int ret = 0;
  
- static void *mana_get_rxfrag(struct mana_rxq *rxq, struct device *dev,
--			     dma_addr_t *da, bool *from_pool)
-+			     dma_addr_t *da, bool *from_pool,
-+			     struct page **pp_page, u32 *dma_sync_offset)
- {
- 	struct page *page;
- 	u32 offset;
- 	void *va;
-+
- 	*from_pool = false;
-+	*pp_page = NULL;
-+	*dma_sync_offset = 0;
+ 	spin_lock_irqsave(&qp->lock, flags);
  
- 	/* Don't use fragments for jumbo frames or XDP where it's 1 fragment
--	 * per page.
-+	 * per page. These buffers are mapped with dma_map_single().
- 	 */
- 	if (rxq->frag_count == 1) {
- 		/* Reuse XDP dropped page if available */
-@@ -2087,31 +2091,47 @@ static void *mana_get_rxfrag(struct mana_rxq *rxq, struct device *dev,
- 	va  = page_to_virt(page) + offset;
- 	*da = page_pool_get_dma_addr(page) + offset + rxq->headroom;
- 	*from_pool = true;
-+	*pp_page = page;
-+	*dma_sync_offset = offset + rxq->headroom;
- 
- 	return va;
- }
- 
- /* Allocate frag for rx buffer, and save the old buf */
- static void mana_refill_rx_oob(struct device *dev, struct mana_rxq *rxq,
--			       struct mana_recv_buf_oob *rxoob, void **old_buf,
--			       bool *old_fp)
-+			       struct mana_recv_buf_oob *rxoob, u32 pktlen,
-+			       void **old_buf, bool *old_fp)
- {
-+	u32 dma_sync_offset;
-+	struct page *pp_page;
- 	bool from_pool;
- 	dma_addr_t da;
- 	void *va;
- 
--	va = mana_get_rxfrag(rxq, dev, &da, &from_pool);
-+	va = mana_get_rxfrag(rxq, dev, &da, &from_pool, &pp_page,
-+			     &dma_sync_offset);
- 	if (!va)
- 		return;
--	if (!rxoob->from_pool || rxq->frag_count == 1)
-+	if (!rxoob->from_pool || rxq->frag_count == 1) {
- 		dma_unmap_single(dev, rxoob->sgl[0].address, rxq->datasize,
- 				 DMA_FROM_DEVICE);
-+	} else {
-+		/* The page pool maps the whole page and only syncs for device
-+		 * automatically (PP_FLAG_DMA_SYNC_DEV). Sync the received bytes
-+		 * for the CPU before they are read: this is required if DMA
-+		 * is incoherent or bounce buffers are used.
-+		 */
-+		page_pool_dma_sync_for_cpu(rxq->page_pool, rxoob->pp_page,
-+					   rxoob->dma_sync_offset, pktlen);
-+	}
- 	*old_buf = rxoob->buf_va;
- 	*old_fp = rxoob->from_pool;
- 
- 	rxoob->buf_va = va;
- 	rxoob->sgl[0].address = da;
- 	rxoob->from_pool = from_pool;
-+	rxoob->pp_page = pp_page;
-+	rxoob->dma_sync_offset = dma_sync_offset;
- }
- 
- static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
-@@ -2170,12 +2190,24 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
- 		rxbuf_oob = &rxq->rx_oobs[curr];
- 		WARN_ON_ONCE(rxbuf_oob->wqe_inf.wqe_size_in_bu != 1);
- 
--		mana_refill_rx_oob(dev, rxq, rxbuf_oob, &old_buf, &old_fp);
-+		if (unlikely(pktlen > rxq->datasize)) {
-+			/* Increase it even if mana_rx_skb() isn't called. */
-+			rxq->rx_cq.work_done++;
- 
--		/* Unsuccessful refill will have old_buf == NULL.
--		 * In this case, mana_rx_skb() will drop the packet.
--		 */
--		mana_rx_skb(old_buf, old_fp, oob, rxq, i);
-+			++ndev->stats.rx_dropped;
-+			netdev_warn_once(ndev,
-+				"Dropped oversized RX packet: len=%u, datasize=%u\n",
-+				pktlen, rxq->datasize);
-+
-+			/* Reuse the RX buffer since rxbuf_oob is unchanged. */
-+		} else {
-+			mana_refill_rx_oob(dev, rxq, rxbuf_oob, pktlen, &old_buf, &old_fp);
-+
-+			/* Unsuccessful refill will have old_buf == NULL.
-+			 * In this case, mana_rx_skb() will drop the packet.
-+			 */
-+			mana_rx_skb(old_buf, old_fp, oob, rxq, i);
-+		}
- 
- 		mana_move_wq_tail(rxq->gdma_rq,
- 				  rxbuf_oob->wqe_inf.wqe_size_in_bu);
-@@ -2566,6 +2598,8 @@ static int mana_fill_rx_oob(struct mana_recv_buf_oob *rx_oob, u32 mem_key,
- 			    struct mana_rxq *rxq, struct device *dev)
- {
- 	struct mana_port_context *mpc = netdev_priv(rxq->ndev);
-+	struct page *pp_page = NULL;
-+	u32 dma_sync_offset = 0;
- 	bool from_pool = false;
- 	dma_addr_t da;
- 	void *va;
-@@ -2573,13 +2607,16 @@ static int mana_fill_rx_oob(struct mana_recv_buf_oob *rx_oob, u32 mem_key,
- 	if (mpc->rxbufs_pre)
- 		va = mana_get_rxbuf_pre(rxq, &da);
- 	else
--		va = mana_get_rxfrag(rxq, dev, &da, &from_pool);
-+		va = mana_get_rxfrag(rxq, dev, &da, &from_pool, &pp_page,
-+				     &dma_sync_offset);
- 
- 	if (!va)
- 		return -ENOMEM;
- 
- 	rx_oob->buf_va = va;
- 	rx_oob->from_pool = from_pool;
-+	rx_oob->pp_page = pp_page;
-+	rx_oob->dma_sync_offset = dma_sync_offset;
- 
- 	rx_oob->sgl[0].address = da;
- 	rx_oob->sgl[0].size = rxq->datasize;
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index 8f721cd4e4a7..4111b93169d2 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -305,6 +305,14 @@ struct mana_recv_buf_oob {
- 
- 	void *buf_va;
- 	bool from_pool; /* allocated from a page pool */
-+	/* head page of the page_pool fragment; valid only when
-+	 * from_pool && frag_count > 1.
-+	 */
-+	struct page *pp_page;
-+	/* Fragment offset plus rxq->headroom, passed to
-+	 * page_pool_dma_sync_for_cpu().
-+	 */
-+	u32 dma_sync_offset;
- 
- 	/* SGL of the buffer going to be sent as part of the work request. */
- 	u32 num_sge;
 -- 
-2.34.1
-
+2.51.0
 
