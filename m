@@ -1,241 +1,189 @@
-Return-Path: <linux-hyperv+bounces-11640-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11641-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id p53nNzo7NGotSQYAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11640-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Jun 2026 20:38:50 +0200
+	id DBItCsDZNGoRigYAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11641-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Jun 2026 07:55:12 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7962D6A22CD
-	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Jun 2026 20:38:50 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B48B6A401C
+	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Jun 2026 07:55:11 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=microsoft.com header.s=selector2 header.b=iuWZdayN;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11640-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11640-lists+linux-hyperv=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=reject) header.from=microsoft.com;
-	arc=reject ("cv is fail on i=2")
+	dkim=pass header.d=linux.microsoft.com header.s=default header.b=CVomVZZI;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11641-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11641-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=linux.microsoft.com;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id EB0523023692
-	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Jun 2026 18:38:49 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 40803306C6E9
+	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Jun 2026 05:54:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AC75403AE4;
-	Thu, 18 Jun 2026 18:38:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9284D3451C1;
+	Fri, 19 Jun 2026 05:54:00 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11022074.outbound.protection.outlook.com [52.101.48.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45EE8401A14;
-	Thu, 18 Jun 2026 18:38:45 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781807927; cv=fail; b=i9/CdK1wmMdchcqiytP8K5eLeGSWwiA4qnrx0rg45ayMATf3gC7tJ60mz4bElIzOec/hLp13WDdYGE0361nXj2QOC7HngNI58w3fFgZ7gKGOJ4Zx48FIinmhujIuGI8aTT7am05VHHpp3xvypSlLe4gvysonrM83e1+HHGsXAq4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781807927; c=relaxed/simple;
-	bh=8wjYvYGFbOGXimIZfjufLikEVjCtDLfzWFojplBHhNE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=JCwa0CVA/hrl0YKt064R5MtFlVuKcpkdr1cfe9V1Nzdgy661XqGu6Qa3x/O8geN6iuXh076qFpniAMrbAgw5i6hao7LIMwkWf5Np6VZnSMEqSSUIUrkkDvnZnC2wqkIBz+2wOe7ac1mMFu9t9raO3w2Aq3aMYXoonMtH3VeqYt4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=iuWZdayN; arc=fail smtp.client-ip=52.101.48.74
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oKNWv1HQ4qtjRtBNg/pQeSkY4bywnFZl9SeLeddfnmI6w5hDkiXeKGC90WJz4FcSKz1IV5tb83mOj1pJ9YzcHcY8QBuo/zyoKTatbBji3Swh/RMHP80fC+WD4Uhpd30wf0t3fSzLSfE3saxMd/bQsWXPsCoWBF4ofxYk1rxDIKNi6xVvXC4doDpy1lIB0uLqiqYsIikDYOHZmHHa/9SzJZyTuBfvJ9/FZuvTkwtuYozXyWOvb9eAdO/MNthgbYA5p+qG5NFAoOa36UIJuNYOXd6PzWbfruBuyRuhPCtKDqIAtqcxb9DHednsYpxtBop33E3HQ5yoDBUH8x7U2kMjJg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KWs0pqBzoPTQXdAObStncvVaVw5iIAZ1xE4NzogYx1g=;
- b=J9SNdNR9Yst83w+Ar+MhgcY8nFr0A+ATpZ2sYmExXRlc7KXmZaTqAcCrjq9iDHZ7cMgpDFvlPdQjCZ9VCrQSRnmspsEdO7prpceP9SzS159Uqi9fkKr/xiuMev+QLLH+4WxlsIOT1t15n6CcG/JmFy+LOnMnz6NlaXYR/9E2RDRMQ0YFi9uNHh7Kt6/7NblJk6HI6wzV8lQD1LvwoqzGN4QHi6aJxuAzw3/8S6vpl+BwcPliE2chxJcw+EE5TONvz+UxB5TH464ikhqIW9m0/ZRuvQhBXUizGJPsxvpY3vmMRSkC523reu0Qf+0G4LMyJB5tAaGT23Z7xYBjB6/5Kw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KWs0pqBzoPTQXdAObStncvVaVw5iIAZ1xE4NzogYx1g=;
- b=iuWZdayNJJ/HeSjaRR0iOj7ZI5tXuFeQyaqeA6fqVIkJsui4kXr8oWkhpJtCd4Ez1CRhofQfWD82CGXbbD0vrSW4mY+mmwVueo3ZY2rCaihYACBQxV7g26YQ1CqXkoSgI+V9HvN5mc8XSYVwNMjblmKLPiD8xbrbr7d+F6R8l4U=
-Received: from SA3PR21MB3867.namprd21.prod.outlook.com (2603:10b6:806:2fc::15)
- by PH0PR21MB6350.namprd21.prod.outlook.com (2603:10b6:510:374::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.6; Thu, 18 Jun
- 2026 18:38:41 +0000
-Received: from SA3PR21MB3867.namprd21.prod.outlook.com
- ([fe80::d8ab:5f37:de73:8e6]) by SA3PR21MB3867.namprd21.prod.outlook.com
- ([fe80::d8ab:5f37:de73:8e6%5]) with mapi id 15.21.0159.000; Thu, 18 Jun 2026
- 18:38:41 +0000
-From: Haiyang Zhang <haiyangz@microsoft.com>
-To: Dexuan Cui <DECUI@microsoft.com>, KY Srinivasan <kys@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>, Dexuan Cui <DECUI@microsoft.com>,
-	Long Li <longli@microsoft.com>, "andrew+netdev@lunn.ch"
-	<andrew+netdev@lunn.ch>, "davem@davemloft.net" <davem@davemloft.net>,
-	"edumazet@google.com" <edumazet@google.com>, "kuba@kernel.org"
-	<kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>, Konstantin
- Taranov <kotaranov@microsoft.com>, "horms@kernel.org" <horms@kernel.org>,
-	"ernis@linux.microsoft.com" <ernis@linux.microsoft.com>,
-	"dipayanroy@linux.microsoft.com" <dipayanroy@linux.microsoft.com>,
-	"kees@kernel.org" <kees@kernel.org>, "jacob.e.keller@intel.com"
-	<jacob.e.keller@intel.com>, "ssengar@linux.microsoft.com"
-	<ssengar@linux.microsoft.com>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-rdma@vger.kernel.org"
-	<linux-rdma@vger.kernel.org>
-CC: "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH net] net: mana: Sync page pool RX frags for CPU
-Thread-Topic: [PATCH net] net: mana: Sync page pool RX frags for CPU
-Thread-Index: AQHc/tW7ny4CStGhZ0mFMn/7JB0H2bZEpWmQ
-Date: Thu, 18 Jun 2026 18:38:41 +0000
-Message-ID:
- <SA3PR21MB38674EB484BFB58C2EC9A2B7CAE32@SA3PR21MB3867.namprd21.prod.outlook.com>
-References: <20260618035029.249361-1-decui@microsoft.com>
-In-Reply-To: <20260618035029.249361-1-decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=cdb5c85e-e3b6-48bc-a83d-5595288bb4a5;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2026-06-18T18:37:39Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
- 3, 0, 1;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA3PR21MB3867:EE_|PH0PR21MB6350:EE_
-x-ms-office365-filtering-correlation-id: 41bc5081-3ba5-4082-9741-08decd68d1ea
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|376014|23010399003|7416014|1800799024|38070700021|22082099003|18002099003|6133799003|921020|7053199004|56012099006|11063799006;
-x-microsoft-antispam-message-info:
- 6Vpr//cQqa2Kj6zFAy6diWzONKQlWgKmiOVzQihdyGpz+gVWRf0ti2lUBfJhjDI7T+6zSTAjrODZFuV1tZ2OED6FunBh9OULoXx63Erczu1j5WtwhaHwGzErBhvGpFvMFBRGZaBpoUtdInugjvWRw68TlFYOwYBAfEgcQc93iNNPa9ov0M1RLjVf7vOiWis2VZkrRk/pV19cPii7adetgczp0/Q1Zy17I6EX9BUDhpA/KusaKw02N+r+EIWRy69xXEdV0ZL/diui0cM+JVzGC5mBJ+XXlRWWMR2CwJL6iEpSHFkrPXFZSU/S2ChvzyOUP56uE26+F5O0Oea0Vyr4/+WS/8KMz4F8nIJ0eWnTVB0PXFTvqy2qsSscNULV20be8pAc+c6zohWQai5N2RHr17g6fn/jbvPKEZGdlJ8Q7SdRZULFv2l3+coEXR3868gp6wmXfNt4UxZloPaG7+AZF9abp+RGtxulBUXrcweh/5XFudTyakO9nBCVxpa/FaH1Bbw/jQ995qf+U2NSEyq+dsqZFW1dLvle0YUK4tEAIk7ZzAkw2BaPnlYhsl2f49KsxxfWmuMapwBkNh7IGQSCr7a5CQBKgOl2Tc48EzZ92s+Xk1+PC76rMjbTvTxox2VCDACHpwkjg4CFzuCW2khk1/vtRkP0b9gv785n+PfV3Omo+tvP9cVUBe98CZj5m2PgAfL4IZMJWx/JKncY1dvnVv5zi8IdhwiYmoQldNpMBYqHI41YZElURO0r/HzzAZ3ZtoTvA3JM+2MXviEisAu93g==
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR21MB3867.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(23010399003)(7416014)(1800799024)(38070700021)(22082099003)(18002099003)(6133799003)(921020)(7053199004)(56012099006)(11063799006);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?Yy8pTyBqkt5FXbevx6vrhdq+U6vSw2T3iXbPtqL0bCGcV8UbZE5UwyGbRjhC?=
- =?us-ascii?Q?SLId3xNVmX3QeynqocDFFaJ4JxEkKx+ctwtFDYrn3B7Dv0vVa/d0LurOe6Gj?=
- =?us-ascii?Q?ePUQeIPdMb9c8rgpXJU56yEt3JFNCywwFi1ZsjvwXpIdA4i94Aobn9s9SKmW?=
- =?us-ascii?Q?aNJz/SBYsjUWllTCVKE742KUbR73oZjql5qhd8oUZjFRFX5sau5Ctzk0FGve?=
- =?us-ascii?Q?hxZTcqdW097TsoNiDSdH/UatePxOsucDZLImaz9yK4kCwlY/iHqEwDh3ZJky?=
- =?us-ascii?Q?TxuAjFIvT+BZyzzfC9EGFIDwIzfnaeLseRJZLg/UqRjTxcmDV+f4+xJpc79q?=
- =?us-ascii?Q?hvA99Tw9LUjv5OiwwiZU3TCjuGzsGwC9hHQcaLuJXUe+tVSk2jWy0iNKNXkC?=
- =?us-ascii?Q?j5ZYXTGLg59L6QACyxJ6EKCLeYC1wv+SGqD1ZQOFasaoBthjQ8+bI37eab8B?=
- =?us-ascii?Q?qcreKQjLX5RUFb0G07R6CaP6ichDzLzNO1+TPe3HBoCFYSIA616d5P7BM12c?=
- =?us-ascii?Q?K0WNReAThuNq4i7bZa4jlxJ8dobniJwm5sSyiJRPSSwfWEZGqwbNzBYy6kJG?=
- =?us-ascii?Q?TY40bQZDfSUi1HHMkHNW09RFFRhFRYHsu7lDbMpGFnDstui6IKc740F5aRF9?=
- =?us-ascii?Q?I3ZuIFw28n6A8o2Ien3XaVEnlTUWfSuNOph+62Z/VVokOm1h7cQDCbdSCO5D?=
- =?us-ascii?Q?hgkEAxqxad3C/aJa+DzP4Dfe9ke/D1zIzcV0N26R4JAZq5188oKTRgHZrVwf?=
- =?us-ascii?Q?PDDYe9iC+0qiIsb8wwur/xsMZyWJ96Q/GjNtHuLVw8lY7Ur11tRd1DlR835A?=
- =?us-ascii?Q?na8xrHgrZHAIEK8s4MkVZdnwV1OGz71OoJ7An+DeBwj3hFpjgw5ZgRaQTiPC?=
- =?us-ascii?Q?hEzUcNyph1uo+g6L5YybosnPBgha2XYZkxz94OT/OIZ8HJNMNyrTc5spZHyy?=
- =?us-ascii?Q?8V5ZnVc5NOMfYyczivVyhBRKo/8kO8hl8J43RVsgF7vTWHVwYImWKKbVX20/?=
- =?us-ascii?Q?+H0W3pq9JCcrp/L5yTPNaOGXBsOnihlmTGmMfyZfJ5w27yaJYwJ25aDrC7Ip?=
- =?us-ascii?Q?UJ9tasCYhCqOnH1juhj6APDtHhQfSzHn/5E9B04kIMJh3nZOLf9iixX5LGhm?=
- =?us-ascii?Q?rYf2zGmu2UyWucsHlDoP6Jh9aSQL81Bcpz108XqmjzlmEo+uiLjzt008BN31?=
- =?us-ascii?Q?unIlm3LFEoA8pC22AQU7/AlHl2FgntxTEbeucPkI7NeUb8d3Qp5XI2ZVE0Yl?=
- =?us-ascii?Q?YFOtEBTNy8FOeGdCYybaH+E18ffvJd088rkATRj55MMk+pYdybaZ3+XlOfCE?=
- =?us-ascii?Q?Y8DI2qRQfIFhOkNGCO+rRcXYc2VJYGegVE3Wp5LFIfShGbRHygwLv6rR+Afu?=
- =?us-ascii?Q?tlCtbhAArib6OyMSUspKtHDOI3mrm6OhxwpG4JlVsC5TWpj1QFbHtdObUgok?=
- =?us-ascii?Q?HnG2EFt3NCTtMA0zS7GXNUkPNTKaQHUteyIrkh/jakkI3yzaYljUukh5wXx/?=
- =?us-ascii?Q?In+hKYGvT25dek/yl+G4halwP7vUofGg2sL+amEumulmlY5b72D/zv6cOEY6?=
- =?us-ascii?Q?DKCP9SfKStAamCJKeeyrKdo9DOKlYe9thbnnCUag8gshhPH/QqLZeS7iwrcm?=
- =?us-ascii?Q?Mj6Q30yyTsMkLfNrW5Fqbz30OjX8LnuRNoLhJi2VF3eawKQIlPGYxDxBm5g+?=
- =?us-ascii?Q?+Lih/V4cy+AQdEGG8IzDRhf++uGHMv+pvAuSr9gScRW8aQk3Hx/2EsoZEh1f?=
- =?us-ascii?Q?kJgnf9bmaw=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F5DD344D8D;
+	Fri, 19 Jun 2026 05:53:59 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781848440; cv=none; b=knRDxJ2Qdtm4BRyRqjPCoCy8mjpXYO8Dbck2fmeijyrtfBSvg+nApQnWmUvpG3t5XlIwKF2JsENqJHa2cX8h4Y8IMUVi5fn62/KoWc/qWTHJ6BjgtWqO//waFWuPDStwVsrAvlHjjG76uQHxqSCFijBVZ3FPv8i8aze5fvipvHI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781848440; c=relaxed/simple;
+	bh=/GYwtyj4OiwSnfQ1NkHHQpVoUWEX0p5XIzUtXUf6Fgw=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=ijG1aRlm2p9kO6V/SYSfTUeMa1pf5wuxIDxQagb18sUZUfcaG2xVd0MyHuOi9iE/mK3FABmWo0lZ025WLaHwVD9EuOhfpTqB/uQ7I5DhMwN4rKrJIUIoFn+0AioP5E6w02jHSiDwHHzGXozL55I/1tXKoOa6x9C/lQwcwf36T+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=CVomVZZI; arc=none smtp.client-ip=13.77.154.182
+Received: by linux.microsoft.com (Postfix, from userid 1173)
+	id 7786820B7168; Thu, 18 Jun 2026 22:53:52 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7786820B7168
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1781848432;
+	bh=djzZlvhhSVxdzxt5Tfjo+wj0N0UWQ5SDaG8r7yyi7oQ=;
+	h=From:To:Subject:Date:From;
+	b=CVomVZZIgStxfhkcyelsx9ZfoAg2ofDMrPEhYWSHWom7owo3p61oBd2gr0gP4/nL/
+	 WgrexreV8oAx/lrUxeSAH5kloCBvk+TwuHrnTu9RLDrqbsm3LRYhEtoY/dORLIV8H8
+	 pEN93sDZvrjyJvXoWBx1Wl4EmWpPMI2JXwzNL/UA=
+From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	longli@microsoft.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	dipayanroy@linux.microsoft.com,
+	ssengar@linux.microsoft.com,
+	jacob.e.keller@intel.com,
+	ernis@linux.microsoft.com,
+	horms@kernel.org,
+	gargaditya@linux.microsoft.com,
+	kees@kernel.org,
+	linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH net] net: mana: Fall back to standard MTU when PF reports adapter_mtu of 0
+Date: Thu, 18 Jun 2026 22:53:38 -0700
+Message-ID: <20260619055348.467224-1-ernis@linux.microsoft.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA3PR21MB3867.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41bc5081-3ba5-4082-9741-08decd68d1ea
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2026 18:38:41.5050
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6r6W7EBj9qJxHFO3fCkLNwNW+9G37yy+YI/O0zX0+Si54LingUbp14rUt8C6KVLt64/GTjQOVzmxtojrQHPfrQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR21MB6350
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[microsoft.com:d:+,kernel.org:s:+];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[microsoft.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[microsoft.com:s=selector2];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11640-lists,linux-hyperv=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:DECUI@microsoft.com,m:kys@microsoft.com,m:wei.liu@kernel.org,m:longli@microsoft.com,m:andrew+netdev@lunn.ch,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:kotaranov@microsoft.com,m:horms@kernel.org,m:ernis@linux.microsoft.com,m:dipayanroy@linux.microsoft.com,m:kees@kernel.org,m:jacob.e.keller@intel.com,m:ssengar@linux.microsoft.com,m:linux-hyperv@vger.kernel.org,m:netdev@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:stable@vger.kernel.org,m:andrew@lunn.ch,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11641-lists,linux-hyperv=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[haiyangz@microsoft.com,linux-hyperv@vger.kernel.org];
+	FORGED_SENDER(0.00)[ernis@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:andrew+netdev@lunn.ch,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:dipayanroy@linux.microsoft.com,m:ssengar@linux.microsoft.com,m:jacob.e.keller@intel.com,m:ernis@linux.microsoft.com,m:horms@kernel.org,m:gargaditya@linux.microsoft.com,m:kees@kernel.org,m:linux-hyperv@vger.kernel.org,m:netdev@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:bpf@vger.kernel.org,m:andrew@lunn.ch,s:lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[21];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[haiyangz@microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[ernis@linux.microsoft.com,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[microsoft.com:+];
-	RCVD_COUNT_FIVE(0.00)[5];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	TO_DN_NONE(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp,linux.microsoft.com:dkim,linux.microsoft.com:mid,linux.microsoft.com:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 7962D6A22CD
+X-Rspamd-Queue-Id: 8B48B6A401C
 
+Commit d7709812e13d ("net: mana: hardening: Validate adapter_mtu from
+MANA_QUERY_DEV_CONFIG") rejected any adapter_mtu value smaller than
+ETH_MIN_MTU + ETH_HLEN, including 0, returning -EPROTO and failing
+mana_probe().
 
+Some older PF firmware versions still in the field report
+adapter_mtu as 0 in the MANA_QUERY_DEV_CONFIG response. With the
+hardening check in place, the MANA VF driver now fails to load on
+those hosts, breaking networking entirely for guests.
 
-> -----Original Message-----
-> From: Dexuan Cui <decui@microsoft.com>
-> Sent: Wednesday, June 17, 2026 11:50 PM
-> To: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> <haiyangz@microsoft.com>; wei.liu@kernel.org; Dexuan Cui
-> <DECUI@microsoft.com>; Long Li <longli@microsoft.com>;
-> andrew+netdev@lunn.ch; davem@davemloft.net; edumazet@google.com;
-> kuba@kernel.org; pabeni@redhat.com; Konstantin Taranov
-> <kotaranov@microsoft.com>; horms@kernel.org; ernis@linux.microsoft.com;
-> dipayanroy@linux.microsoft.com; kees@kernel.org; jacob.e.keller@intel.com=
-;
-> ssengar@linux.microsoft.com; linux-hyperv@vger.kernel.org;
-> netdev@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> rdma@vger.kernel.org
-> Cc: stable@vger.kernel.org
-> Subject: [PATCH net] net: mana: Sync page pool RX frags for CPU
->=20
-> MANA allocates RX buffers from page pool fragments when frag_count is
-> greater than 1. In that case the buffers remain DMA mapped by page pool
-> and the RX completion path does not call dma_unmap_single(). As a result,
-> the implicit sync-for-CPU normally performed by dma_unmap_single() is
-> missing before the packet data is passed to the networking stack.
->=20
-> This breaks RX on configurations which require explicit DMA syncing, for
-> example when booted with swiotlb=3Dforce.
->=20
-> Fix this by recording the page pool page and DMA sync offset when the RX
-> buffer is allocated, and syncing the received packet range for CPU access
-> before handing the RX buffer to the stack.
->=20
-> Also validate the packet length reported in the RX CQE before using it as
-> a DMA sync length or passing it to skb processing. The CQE is supplied
-> by the device and should not be blindly trusted by Confidential VMs.
->=20
-> Fixes: 730ff06d3f5c ("net: mana: Use page pool fragments for RX buffers
-> instead of full pages to improve memory efficiency.")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
->  drivers/net/ethernet/microsoft/mana/mana_en.c | 61 +++++++++++++++----
->  include/net/mana/mana.h                       |  8 +++
->  2 files changed, 57 insertions(+), 12 deletions(-)
+MANA hardware always supports the standard Ethernet MTU. Treat a
+reported adapter_mtu of 0 as "the PF did not advertise a value" and
+fall back to ETH_FRAME_LEN, the same value used for the pre-V2
+message version path. Only jumbo frames remain unavailable until
+the PF reports a valid MTU.
 
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Other small-but-nonzero bogus values are still rejected, preserving
+the original protection against the unsigned-subtraction wrap that
+would otherwise let ndev->max_mtu underflow to a huge value.
 
+Fixes: d7709812e13d ("net: mana: hardening: Validate adapter_mtu from MANA_QUERY_DEV_CONFIG")
+Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+---
+ drivers/net/ethernet/microsoft/mana/mana_bpf.c |  3 ++-
+ drivers/net/ethernet/microsoft/mana/mana_en.c  | 16 ++++++++++++++--
+ 2 files changed, 16 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_bpf.c b/drivers/net/ethernet/microsoft/mana/mana_bpf.c
+index b5e9bb184a1d..53308e139cbe 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_bpf.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_bpf.c
+@@ -237,7 +237,8 @@ static int mana_xdp_set(struct net_device *ndev, struct bpf_prog *prog,
+ 		bpf_prog_put(old_prog);
+ 
+ 	if (prog)
+-		ndev->max_mtu = MANA_XDP_MTU_MAX;
++		ndev->max_mtu = min_t(unsigned int, MANA_XDP_MTU_MAX,
++				      gc->adapter_mtu - ETH_HLEN);
+ 	else
+ 		ndev->max_mtu = gc->adapter_mtu - ETH_HLEN;
+ 
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index 87862b0434c7..7438ea6b3f26 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -1233,12 +1233,24 @@ int mana_gd_query_device_cfg(struct gdma_context *gc, u32 proto_major_ver,
+ 	*max_num_vports = resp.max_num_vports;
+ 
+ 	if (resp.hdr.response.msg_version >= GDMA_MESSAGE_V2) {
+-		if (resp.adapter_mtu < ETH_MIN_MTU + ETH_HLEN) {
++		if (resp.adapter_mtu == 0) {
++			/*
++			 * Some older PF firmware versions report an
++			 * adapter_mtu of 0. MANA hardware always supports the
++			 * standard Ethernet MTU, so fall back to ETH_FRAME_LEN.
++			 * Jumbo frames will not be available in this case.
++			 */
++			dev_info(dev,
++				 "PF reported adapter_mtu of 0, falling back to %u (jumbo frames disabled)\n",
++				 ETH_FRAME_LEN);
++			gc->adapter_mtu = ETH_FRAME_LEN;
++		} else if (resp.adapter_mtu < ETH_MIN_MTU + ETH_HLEN) {
+ 			dev_err(dev, "Adapter MTU too small: %u\n",
+ 				resp.adapter_mtu);
+ 			return -EPROTO;
++		} else {
++			gc->adapter_mtu = resp.adapter_mtu;
+ 		}
+-		gc->adapter_mtu = resp.adapter_mtu;
+ 	} else {
+ 		gc->adapter_mtu = ETH_FRAME_LEN;
+ 	}
+-- 
+2.34.1
 
 
