@@ -1,181 +1,162 @@
-Return-Path: <linux-hyperv+bounces-11656-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11657-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id nYC+EKgSPGoFjggAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11656-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 24 Jun 2026 19:23:52 +0200
+	id AYqoN7UUPGqEjggAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11657-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 24 Jun 2026 19:32:37 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id AEBD26C053B
-	for <lists+linux-hyperv@lfdr.de>; Wed, 24 Jun 2026 19:23:51 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39ECE6C05AE
+	for <lists+linux-hyperv@lfdr.de>; Wed, 24 Jun 2026 19:32:37 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b="eOx3yF/3";
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11656-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11656-lists+linux-hyperv=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=A7E+HkSn;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11657-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11657-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DA5D5300B109
-	for <lists+linux-hyperv@lfdr.de>; Wed, 24 Jun 2026 17:22:41 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 08ADB3008A6D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 24 Jun 2026 17:32:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37B103DD509;
-	Wed, 24 Jun 2026 17:22:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADAC73033FB;
+	Wed, 24 Jun 2026 17:32:35 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12E73DCD90
-	for <linux-hyperv@vger.kernel.org>; Wed, 24 Jun 2026 17:22:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC251FFC48
+	for <linux-hyperv@vger.kernel.org>; Wed, 24 Jun 2026 17:32:34 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782321761; cv=none; b=muM4L4h8WEitK+T8kogv86NiSi22QfH50+smRR/en0cHqNq0Ow/DBaK0PnrDFyrtUx9Yxx/H54rQfGEz0czoPekLsXazLIJGMrczNM9DwRbm8G5Dkrc27epd4EMGtyT6QLgTldOaDKXa7iLcpGfLb9hDTth/gihRstnMb7gYbnk=
+	t=1782322355; cv=none; b=UMrtJJNlV/v+CZhGsZ+g4B25nFNjEE6Ty6BQ/HUWtQTTVF5FtM6Su24fYts4wQ9pCPsUOjXtwDCyouBZ+42NLGdofe15BB8gvIpEA+qcKjyqvBGZeCKz1AUhQIIhavKLIDOFonZWsWxzKNZNazFhC2TWZpXaSvYDoHVwZZlIwdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782321761; c=relaxed/simple;
-	bh=bYdiyUxQ1xXquRm8oNOGsZfeYsTcAGZLZoxdSt1Er28=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qIiAoJIeF/THYRURkHLyuJYSAb2RyeU80BMg5Y46w0lhGUvHeUVKFTFWs3DdIqxfO2wa9UrvcNDME+Nybkwn65Vse3utGK9usK/otYkW1d86FYdlUV8SS9LQalTzG9rC9t938E7DWVtp/S8jwLC/cFt1mHs96Fh1N3zMdOjadNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eOx3yF/3; arc=none smtp.client-ip=209.85.128.169
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-7fe723ca5e5so14477567b3.2
-        for <linux-hyperv@vger.kernel.org>; Wed, 24 Jun 2026 10:22:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782321759; x=1782926559; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pbwnK5C4I/+GGTcPtzynJG36TtlPd9rOiV4o4AgC0tU=;
-        b=eOx3yF/3ST4Djc2akpkUeXbEwHHH9rKceut98O+4PVBo6U1TgLm8jxmFpsUJHPyNqh
-         ElAbjAk3MobJSgoznGbNRXT3YjdL+7z5CSWtc5uVYv46iud23dHffeA+GS79LuN7Q5Br
-         wPwrXu5ZWtn1ezAUohAKh6/W+a4mnnlomt6yKTFHJGus5vxifdZGLD1s10+B6/VoB14K
-         xQgpTBy990/gugnTOxhFgBRbQCgXwoaVDuYwlKMHDrjdwxaXdCiJeSy1ImapiDLDIxx6
-         gLt9Q82/5m4NE+IT3V3xG0/60A+YQcKO54HyxxI0ZfMciwngvP11pRMoaGxVSo+xpxmh
-         vPPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782321759; x=1782926559;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pbwnK5C4I/+GGTcPtzynJG36TtlPd9rOiV4o4AgC0tU=;
-        b=sPA4ClJDdH3AS96wHCZLNFxGl2MOdh9/nPio5y9OtnAmhwr6pKIkw1vbT3iWS+y67B
-         9ytTpUrP2uwUkeoekANkeB34nztEC3uYISreTsprr/FLr9ZMz+oFSZxBemvRUZTOD11C
-         2pmfVNepKqe2Bty0RKnW9iKw4z7AaU5cW6j6po/2a4e5OSxIkfXop9iq36G0WyRtarx1
-         6ZQYd+E1zPJjsyPEmsGs2/SigolByDJICA8YRrQB8r2g6zsaXN3/sZPAGnZFvuGrtevQ
-         dp0V2NqjIuNFRFR45BDFHGukSvbfLWngXOy3ZoIhdRVSp/VIUCjLsdfwn8foz95+rvzS
-         nCQQ==
-X-Gm-Message-State: AOJu0Yz0gKpZQdQMNIgBf4Z6yfmtdl11vH0fB+M+xafVlOyE8eHlTE3K
-	K7eZ8nDxkHGFqnadWktNVjK7u0tD42041PCCBXYIo0eW0dySjS+escBk
-X-Gm-Gg: AfdE7cmXauCXVxOy2LvRhriLiBaXiC8m1BlxmTlI1vxT1LgZacrvsHAYzevB6RSbkYn
-	eUQNwhCPjpEwgbCAW7tWAHcEsTF2GQpbUysSesDDhWAsRaNc+4qxaEz+MQaNfLFL3RTL+059zZ1
-	9rpCklillIlquIwI5aKd5NglGb1w/t78Fy+KJjEEItM4ORBEuj1LoxwnfaThlcUK0HJBJ92LEn9
-	zUYFyW5Fhu03GhvYKJKNOZHbhcYkpxnbR5r9TmFxj5IL141G38V/os4i5IFu75O8i91n/3hjW90
-	GULMMgXo/PGQOEVu8ezEFtqgSrNOa/WMHyqmGgdmK6rJNHdBUAA8lxru/Hma3RQQ/WkVeDVEsdm
-	zOCREhgFqnapPWAiqkBxPzxZfWImsrdn0OGYAaCq01fxsJD36T40WD/df5FTehBdgTg7c86KM7O
-	Y7msfZzHpsaLr4zvoRS2xuN0xqWw==
-X-Received: by 2002:a05:690c:6885:b0:7f8:7e60:acf with SMTP id 00721157ae682-807ef918a25mr41186257b3.52.1782321758845;
-        Wed, 24 Jun 2026 10:22:38 -0700 (PDT)
-Received: from Dev-Null-MSI ([2a0d:3344:52ac:a808:98a4:4381:be45:536f])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-8025c96fdbesm60985327b3.8.2026.06.24.10.22.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2026 10:22:38 -0700 (PDT)
-From: Yousef Alhouseen <alhouseenyousef@gmail.com>
-To: "K . Y . Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>
-Cc: linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yousef Alhouseen <alhouseenyousef@gmail.com>
-Subject: [PATCH] hyperv: mshv: zero VTL hypercall output page
-Date: Wed, 24 Jun 2026 19:21:57 +0200
-Message-ID: <20260624172157.2790-1-alhouseenyousef@gmail.com>
-X-Mailer: git-send-email 2.54.0
+	s=arc-20240116; t=1782322355; c=relaxed/simple;
+	bh=x1n9GnLzZCe5B8fcZwuvBiMcOLWXu00Lc+dt8XLXQU8=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=iJ4IL0QWDf8UoNrVccJag3ngtHTZ0lD2sjLE9uIyio1il/a8GLNE+n/6B4pUDnyQhTUaUKaUuKObSNR9IL/NE2XTcHMXsJYZVx1DnC079eBwS2pYJf0TktyDAbD1Rdj8FVpBgqM85EI4fn+5daavRsrzMaOuzCRwUZnialmt5gs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A7E+HkSn; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FD181F000E9;
+	Wed, 24 Jun 2026 17:32:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782322354;
+	bh=dJwINGebrg9lSGSRim9MjZBjXfIZmw3BG9jbex0V2Cw=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=A7E+HkSnakHyX/uANAyA/iMeGvW9u9sc0biLMb7MBWxceOMuPhpdk5sdP1FjxQpWd
+	 U9r/dI2qjnRWGmIBBDaSCBWpxXJvnEbgngP8f3Qi9OuzhTSzHXYaxD/NNA2WO7GsL1
+	 r08IrsUcEHqXlDYaZXo0t28WR4Q99u/Sm8s+Fz+h/gi7+ZSUl+1ds4I1ECPpTzC+YC
+	 o9FCjMAo8Qoy1dSXqZQBOxvRuzauG6ElAeFGTqDVn1boenLtFTE29EJ3rTiNXOI1h2
+	 F6uWdaUvqfdT7AzF5jAUpV4jp/X6CwoATq85XTNlVzecwSx0HJstKM90lUK0GB4eEA
+	 XkU7sGb+KgPQA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] hyperv: mshv: zero VTL hypercall output page
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Yousef Alhouseen" <alhouseenyousef@gmail.com>
+Cc: linux-hyperv@vger.kernel.org
+In-Reply-To: <20260624172157.2790-1-alhouseenyousef@gmail.com>
+References: <20260624172157.2790-1-alhouseenyousef@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 24 Jun 2026 17:32:33 +0000
+Message-Id: <20260624173234.1FD181F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-3.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-11656-lists,linux-hyperv=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:linux-hyperv@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:alhouseenyousef@gmail.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[alhouseenyousef@gmail.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-11657-lists,linux-hyperv=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:alhouseenyousef@gmail.com,m:linux-hyperv@vger.kernel.org,s:lists@lfdr.de];
+	RCPT_COUNT_TWO(0.00)[2];
+	FREEMAIL_TO(0.00)[gmail.com];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[alhouseenyousef@gmail.com,linux-hyperv@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
+	FROM_NO_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	MISSING_XM_UA(0.00)[];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: AEBD26C053B
+X-Rspamd-Queue-Id: 39ECE6C05AE
 
-mshv_vtl_hvcall_call() copies output_size bytes from a freshly allocated
-hypercall output page back to userspace. The page is currently allocated
-without __GFP_ZERO, so any bytes not written by the hypervisor are copied
-from stale page contents.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-Allocate the output page zeroed before issuing the hypercall. Also check
-both bounce-page allocations before using them so memory pressure cannot
-turn the copy paths into NULL pointer dereferences.
+Pre-existing issues:
+- [High] This problem wasn't introduced by this patch, but the patch only p=
+artially fixes the information leak. While it zeroes the `out` page, the in=
+put bounce page `in` is still allocated without the `__GFP_ZERO` flag. If a=
+ user provides an `hvcall.input_size` that is smaller than the input size e=
+xpected by the hypercall (specified by `hvcall.control`), `copy_from_user()=
+` will only partially initialize the `in` page. The remainder of the page w=
+ill contain uninitialized, stale kernel memory. This full page is then pass=
+ed to the hypervisor. If the hypervisor processes these uninitialized bytes=
+ and reflects them into the `out` page or alters its observable behavior ba=
+sed on them, sensitive kernel data is leaked to userspace.
+--
 
-Signed-off-by: Yousef Alhouseen <alhouseenyousef@gmail.com>
----
- drivers/hv/mshv_vtl_main.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+commit d8767fa45f0b927a8630a3fee3fba738b9ae7851
+Author: Yousef Alhouseen <alhouseenyousef@gmail.com>
 
-diff --git a/drivers/hv/mshv_vtl_main.c b/drivers/hv/mshv_vtl_main.c
-index 0d3d41619..0365d207c 100644
---- a/drivers/hv/mshv_vtl_main.c
-+++ b/drivers/hv/mshv_vtl_main.c
-@@ -1147,7 +1147,11 @@ static int mshv_vtl_hvcall_call(struct mshv_vtl_hvcall_fd *fd,
- 	 * TODO: Take care of this when CVM support is added.
- 	 */
- 	in = (void *)__get_free_page(GFP_KERNEL);
--	out = (void *)__get_free_page(GFP_KERNEL);
-+	out = (void *)__get_free_page(GFP_KERNEL | __GFP_ZERO);
-+	if (!in || !out) {
-+		ret = -ENOMEM;
-+		goto free_pages;
-+	}
- 
- 	if (copy_from_user(in, (void __user *)hvcall.input_ptr, hvcall.input_size)) {
- 		ret = -EFAULT;
-@@ -1162,8 +1166,10 @@ static int mshv_vtl_hvcall_call(struct mshv_vtl_hvcall_fd *fd,
- 	}
- 	ret = put_user(hvcall.status, &hvcall_user->status);
- free_pages:
--	free_page((unsigned long)in);
--	free_page((unsigned long)out);
-+	if (in)
-+		free_page((unsigned long)in);
-+	if (out)
-+		free_page((unsigned long)out);
- 
- 	return ret;
- }
--- 
-2.54.0
+hyperv: mshv: zero VTL hypercall output page
+   =20
+This patch zeroes the hypercall output page to avoid copying stale memory
+to userspace and adds NULL pointer checks for the page allocations.
 
+> diff --git a/drivers/hv/mshv_vtl_main.c b/drivers/hv/mshv_vtl_main.c
+> index 0d3d4161974f8..0365d207cb110 100644
+> --- a/drivers/hv/mshv_vtl_main.c
+> +++ b/drivers/hv/mshv_vtl_main.c
+> @@ -1147,7 +1147,11 @@ static int mshv_vtl_hvcall_call(struct mshv_vtl_hv=
+call_fd *fd,
+>  	 * TODO: Take care of this when CVM support is added.
+>  	 */
+>  	in =3D (void *)__get_free_page(GFP_KERNEL);
+
+[Severity: High]
+This isn't a bug introduced by this patch, but should the "in" page also
+be allocated with __GFP_ZERO to prevent leaking stale kernel memory?
+
+If userspace provides an hvcall.input_size that is smaller than what the
+hypercall expects, copy_from_user() will only partially initialize the
+"in" page. The remainder of the page will contain uninitialized kernel
+memory which is then passed to the hypervisor in hv_do_hypercall(). If the
+hypervisor reflects this input or alters behavior based on it, could this
+result in an information leak?
+
+> -	out =3D (void *)__get_free_page(GFP_KERNEL);
+> +	out =3D (void *)__get_free_page(GFP_KERNEL | __GFP_ZERO);
+> +	if (!in || !out) {
+> +		ret =3D -ENOMEM;
+> +		goto free_pages;
+> +	}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260624172157.2790=
+-1-alhouseenyousef@gmail.com?part=3D1
 
