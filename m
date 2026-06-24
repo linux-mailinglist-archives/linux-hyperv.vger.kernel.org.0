@@ -1,385 +1,257 @@
-Return-Path: <linux-hyperv+bounces-11654-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11655-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id sRc9MhuHO2oVZQgAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11654-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 24 Jun 2026 09:28:27 +0200
+	id IMY/OuEAPGociQgAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11655-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 24 Jun 2026 18:08:01 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 609366BC2A6
-	for <lists+linux-hyperv@lfdr.de>; Wed, 24 Jun 2026 09:28:27 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6FAB96BFE81
+	for <lists+linux-hyperv@lfdr.de>; Wed, 24 Jun 2026 18:08:01 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linux.microsoft.com header.s=default header.b=OoIZ3WFJ;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11654-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11654-lists+linux-hyperv=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=linux.microsoft.com;
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=pass header.d=amd.com header.s=selector1 header.b=TBblVmJj;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11655-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11655-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=amd.com;
+	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B646A315ACD2
-	for <lists+linux-hyperv@lfdr.de>; Wed, 24 Jun 2026 07:23:31 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D41B63007AE2
+	for <lists+linux-hyperv@lfdr.de>; Wed, 24 Jun 2026 16:06:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26D073B0AFB;
-	Wed, 24 Jun 2026 07:22:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B1153BB682;
+	Wed, 24 Jun 2026 16:06:21 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CC103AEF21;
-	Wed, 24 Jun 2026 07:21:53 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782285721; cv=none; b=NIfhz7DmpAKaUUTO8hAH44WrFje0ohhwCoqjBajaL/Dd8DRllqGlSEvQFTTwAYrtuqNNoCTukmyT9iZO5k4wWl2KYYiFpBxRRV/iWZrk7KuoIqQl00S1t4HZ6+1Y8gyC/gc8YwjcCDNlQB/rdlgnS1HVVG5xvcCRNWdM245oKH4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782285721; c=relaxed/simple;
-	bh=gMg4cJ1lc++NRxcPRk2cYtFHfIOvtZA72w1qrvkSCA0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W1C1RXOnHDRZX/yIk0uMtLD3qG6CBFE2Z079YD9qPAcZ3iJpblca+YQJZS1Nlgq/KcI+hK9yZeRvC8iV3Bi+R4HWXEVzMeIgFmczAo8DZxaOIkswvRH2/P+ysS8CEmpUyPXViU46MwZ8fgLcdVQwnqzzx3gX39hvjjFepGBvWRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=OoIZ3WFJ; arc=none smtp.client-ip=13.77.154.182
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 53B8B20B7166; Wed, 24 Jun 2026 00:21:49 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 53B8B20B7166
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1782285709;
-	bh=+K6Bh3hIZ0daDgho/IIaZdeJRXdcwIKYv85ESXlxElU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=OoIZ3WFJ9urIb8zKJk/SKAcq0vOaTbS9Ka59q/SZKLvuSPnD2i640TmETgUIXnfpa
-	 CU4qGxrOwRQPl9x4jjO937bz+n8448IBdwIx2UtcdxBnDgNBsVuRTj9A2B6AmPSm1j
-	 efH4ukfIac81kARf9E8UZMkcK+JQOdYSLRvC+gdk=
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Dexuan Cui <decui@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Dipayaan Roy <dipayanroy@linux.microsoft.com>,
-	Shiraz Saleem <shirazsaleem@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Long Li <longli@microsoft.com>,
-	Yury Norov <yury.norov@gmail.com>
-Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>,
-	Saurabh Singh Sengar <ssengar@microsoft.com>,
-	stable@vger.kernel.org,
-	Yury Norov <ynorov@nvidia.com>
-Subject: [PATCH v5 net] net: mana: Optimize irq affinity for low vcpu configs
-Date: Wed, 24 Jun 2026 00:21:35 -0700
-Message-ID: <20260624072138.1632849-1-shradhagupta@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.7
+Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010029.outbound.protection.outlook.com [52.101.85.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9994E2472A2;
+	Wed, 24 Jun 2026 16:06:19 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782317180; cv=fail; b=pjZwC9JhsAZ67+SL0Vs8p5OSGW7reuNtWLD1aZ3f7kRATWWRWKVSh7rOmKC3dAdaPhziRi6YKfe0Xj4Gtxeu7BMCa3lC05yw+qjhzCMi8qiTstdcmX3IYKPO7wpSYGEGytDs6VACxsqyVIB920h5+73I1IhlIhH80jerGlGbtOU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782317180; c=relaxed/simple;
+	bh=PHiTP6a5fz4jWjIKhMMyzkpgOBKGSZCPM80zdcu78ts=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=jHKQ0mCfxjK3axywV9Gq8pUMNoN1YvDF84HqXsZ8R4YAgN5USD9pCzfLG8ha2D2DhyETZxn8sDRNBJ4IEkP1lAZC7yGlHObMtk/4mtQhjwzfanW30wpRZ8VKhdS0Ep+G2k/hSMCNiZm7otFSiGNllO8yMfVkQp0z5Xp97fLf32w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TBblVmJj; arc=fail smtp.client-ip=52.101.85.29
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=rbPK4n79dIq8BlwIbb+IxdPK18sFIudFtd/RwsZ+AWWHLi5Hll5jM+ShellZMU3NUOnTztAXzeSDTdYiBFZ5wzdWl966k6M6UL8yGXGyfj9WAweDhipEsU7UWa6aA9+O5q3BYZP79t8g5jogwaND31+B9dwMjqaRKHqm8xaYGjDN04Y9Gs/MqmFHenButk6KDkVrO8+cNx1bhOoEPggIjo3mR/E4OpooCdxliDJ2z/0ENuoYNPhoprUAZd5IorCuoGT87OgNtdgewDpdAyky4PmfO8keiwvOstkqcFvg6Q6O3A7UHSWoJMyox3sa6cMaBKjG+FsukkTqnhc3q6+KpQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QdUrrqULep6MhF7cE9TjgShpa1hSivDoozD+Kc4K3a0=;
+ b=a8FkXWjInSMkLEk0XeLQxDilMRq2ZmkYk/+/Fcr2MVU5FSpWcewfegsRMMPXgFcXDjBP1fE2seGBrVHRBUzFioYg9wE5B1KdjlVCtr2T1zUvOVPAek6rZjLkYNDl0HRjPKvR4kvjk9oEhS/sEWtOTR6QHkbC9urVMK/3hhcJSApaevc69Z6/FkRxBArEdj2l/by0r2njPEg8cHNBuLparl4ytPwZNR3b9Xay/4H4js6PvrFBbK2aTmBwAFkoP85BnAvQdtTPrmDIqC7B7KaDygfdSs/TDAUTxRdEKIAJqUrUxdFNWEysPHY/CPl2G1uS+UlwchFJCgyhiJWPwvtOXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QdUrrqULep6MhF7cE9TjgShpa1hSivDoozD+Kc4K3a0=;
+ b=TBblVmJjbP68GIi0WwiGFWAdLihB6JNzHrR8s5Ug1I2p4vvunu7RokbtJpGHOl7vEJMdEfkPKUjWFAQ07iw1RXh7dt6atTiuIG9hK7AIs1QmgY1SN4sSOI9P7eCmM1IPBXDF5iKtADlrACvuA8t6yNhcUBMTLn9qA4SSazyKvDQ=
+Received: from SJ0PR12MB7007.namprd12.prod.outlook.com (2603:10b6:a03:486::8)
+ by SA1PR12MB6677.namprd12.prod.outlook.com (2603:10b6:806:250::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.20; Wed, 24 Jun
+ 2026 16:06:15 +0000
+Received: from SJ0PR12MB7007.namprd12.prod.outlook.com
+ ([fe80::6f95:c4a2:894d:9e8a]) by SJ0PR12MB7007.namprd12.prod.outlook.com
+ ([fe80::6f95:c4a2:894d:9e8a%5]) with mapi id 15.21.0139.018; Wed, 24 Jun 2026
+ 16:06:15 +0000
+Message-ID: <ad39a114-98bd-4711-8795-00409f3175b0@amd.com>
+Date: Wed, 24 Jun 2026 12:06:04 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 01/15] drm/amd/display: Handle struct
+ drm_plane_state.ignore_damage_clips
+To: Thomas Zimmermann <tzimmermann@suse.de>, mripard@kernel.org,
+ maarten.lankhorst@linux.intel.com, airlied@redhat.com, airlied@gmail.com,
+ simona@ffwll.ch, admin@kodeit.net, gargaditya08@proton.me,
+ paul@crapouillou.net, jani.nikula@linux.intel.com, mhklkml@zohomail.com,
+ zack.rusin@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+ sunpeng.li@amd.com, siqueira@igalia.com, alexander.deucher@amd.com,
+ rodrigo.vivi@intel.com, joonas.lahtinen@linux.intel.com,
+ tursulin@ursulin.net, javierm@redhat.com, dmitry.osipenko@collabora.com,
+ gurchetansingh@chromium.org, olvaffe@gmail.com
+Cc: dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+ intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
+ linux-mips@vger.kernel.org, virtualization@lists.linux.dev,
+ amd-gfx@lists.freedesktop.org, Zack Rusin <zackr@vmware.com>,
+ stable@vger.kernel.org
+References: <20260610152505.260172-1-tzimmermann@suse.de>
+ <20260610152505.260172-2-tzimmermann@suse.de>
+Content-Language: en-US
+From: Harry Wentland <harry.wentland@amd.com>
+In-Reply-To: <20260610152505.260172-2-tzimmermann@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YQZPR01CA0016.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:85::15) To SJ0PR12MB7007.namprd12.prod.outlook.com
+ (2603:10b6:a03:486::8)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ0PR12MB7007:EE_|SA1PR12MB6677:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5e78edeb-1d8b-45d6-a463-08ded20a8494
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|7416014|376014|1800799024|366016|921020|18002099003|22082099003|56012099006|11063799006|4143699003;
+X-Microsoft-Antispam-Message-Info:
+	NCBSrW3aIfNukg7pEpvpT8iky1xJXIQXfwJXjXhVmSPfgAaLc82KoovXQAyvTe++J9Sj06AjpFKcgaUXzlSeG4ALQin5sr96oEBXogUbGmYPdtS4E9Rw8yGuJUnU/77bpNUWgVMiAk/2ZHf8tH+HEWDv+7RXi/ezEO1RMFpnpMsB9aXBBiMqYRiK6D7/fZQD20DBtye3n8TroEuMq9ZJIfu+mg73bYR0Yz7KwmVuuNw5VpkUhImf7TZfDB8NOnoarBwTExbhQg8WVjzES2ejuvRXF5EGGf+3nFk+r0JT9PUUV8d5HiXf5CMggA1uzJs/bzJqejVzfLqyRoNGDmJZPol8D9G9gWjVJyg4v8IjDHM+wKHNbyzwW9PfPVRa7tFZM1ocnIWlRKi16kirMuFcDTKKMOOdzrcnNDyKzaYpmfBWSavSdQojeh5E0iIzFiFdqKid/gSDiQflTIJ4aJQEz06bW1PlMakGFQpGmdND2JjwZWC7NVOR3KNJ/eCgLudjWeO77Pzi2Ch3lb9GdZ1TIXBGcpR3gPp9DIsTmhDkeQuurWKNJYD41WdYbKfSfk9H6EmTx/R9aqz19oTweykokhyFFTXKC37HYRJvOO/v2nJZEjQT8kFs3iUmvPombKEPKF+R07mjET/+e4Zm2BTGBuBQCQ8y0R7/9qwAGGssyFBIu0ObgkSAmOq4mh18n7/pRDorapseuYlb9YccEQNOQQ==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR12MB7007.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(7416014)(376014)(1800799024)(366016)(921020)(18002099003)(22082099003)(56012099006)(11063799006)(4143699003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SXZscUlRcERaTnJNeXIwdGdVTHhyM3k2WlNwSXZwYVlBQlN4WWk0NWRCKzFl?=
+ =?utf-8?B?RXU2LzVjUkJ2WkxaaDU3dDZKdEZRV1lKWDZhbThLbjhKT3dTZXl0T014dTNH?=
+ =?utf-8?B?MHJSakpGMHZKdFl1WmlUZTdjV3VTK2lFYUM2TjdOQ2dXRmRjSEowRXVLWVQx?=
+ =?utf-8?B?U0Z2TTNnRFgxZ3VvcVJxdVh0UjZCM1ptQzlROWNiUzlzTWtxR29KMVJORXVD?=
+ =?utf-8?B?bnVvb1BBTFBxQ05zYjczWWYwcjF4a2FMT3VPUURiS3kwM1dMR0ZWWmJ4NDk5?=
+ =?utf-8?B?ZWJ1aEFpNkFBV3IwZHRQeWFTN1ExVDNJUVZFMmdsY1ZMREpaRVkrZFRBTW5k?=
+ =?utf-8?B?YXBFdm9PNE1xQTJYRGhCSmt4eWtMUGlZcHFxeEpiTG41VmxTQzZsZmRyZHlX?=
+ =?utf-8?B?dGJwMlF2RjhzYnVFQzI3UlJIZXFRa0gzNHRWbGQ2UzgwYVBrQlo5ekZ1YzZp?=
+ =?utf-8?B?SlN0UjAxcjZ0Q3p2K0hyNlhPajhsMitsaEdpcTVRR3JCMTMyZEN0R3MvWDh2?=
+ =?utf-8?B?U0cwa20vRm5NYVZTbnIvUXNrRXA2UDZ2eGRZVDFzT003RGhlckVMS2hzY0xF?=
+ =?utf-8?B?cmdmTE9ZTU40K1VyRmh0eXg2dEcxampNU2pZMC9XNlF5bWpyaWlETnpaY1NM?=
+ =?utf-8?B?dGtnZGxyWnJIdWcyR0hyOFdDN285L2wvQUdzK0hGSE5OSmZGUnlKZTUxTlNw?=
+ =?utf-8?B?RTdPcTRQMHNrU0V6OFdiOG5XdVhQUER3b3dkV1VIZXdRZkRQcS8zZmlla2xN?=
+ =?utf-8?B?NG5pY1JXUzdnYm5KSWxON0xhLzhZMEFTV1ZIN055UzcyRUhidWNRYVkybGs0?=
+ =?utf-8?B?VldmU01CSnVWWkVQNG1zRzAzNnFKNjdTczhSdTRjelNUUUxiWUx0UHRvWU1z?=
+ =?utf-8?B?bE93dG41UEVPZEpRZzhmSWcxeW95UGVzQ1pDSDlTckdlK0Z6Ulo1dmJ4RlJF?=
+ =?utf-8?B?YlBDRTZIN3B1V3prelFuMzFXcUlRMTIvbFJXQTU3V1lsMkJtL1J2dVhhM0JV?=
+ =?utf-8?B?TUt5WGtqWHgxMlg0Z1JFK1JCZzVubVNLaUFHMWxlQ3lpc0U4cUJrREpBK0py?=
+ =?utf-8?B?TjUyR29tc1J0VzFwckpFVmVNYmkrdVNJcVNYWGk4RGNJQk9pTEZ1QlVCczI4?=
+ =?utf-8?B?TVJTZUszcVZ5NHNBSEVZOFc2RUNMay9Ma0ZTTnZBK3l5b3d6ektydEdyZGg4?=
+ =?utf-8?B?ZjJSK3hBWC91Z2ZDc1BjRjQxcGYwV0loTEtIUVlBYmp2eGNVS0FOVTZFMjRQ?=
+ =?utf-8?B?NGNobW5DNTB1d3BSdEE4ZFFySUNJV1pVUTJEMHFHMFpORDBNdnVRQkE4MUY5?=
+ =?utf-8?B?V1oyZHJyU2pvS203ZkUyS2JRa0kxM0lnLzJKUlBCOUhtR3V6dVR3NHl1MlFM?=
+ =?utf-8?B?UjR1L3VkejVLSnBMc3Ard3JVTEFyTDNuYmpPWDZHZ3NEcUVNZFROUEhBdEVO?=
+ =?utf-8?B?VmZmbzZoR0cxS1lxQzd1UEswMFF6dWhYNWVGYTc4RHB6R0NsZU1SbkxSa2Q0?=
+ =?utf-8?B?ZW1HZ2kzeVpnaGFxaHh1dEhPMDVkRG1aVGJmV0xxanQ2anhIbHRwdDFXeVM0?=
+ =?utf-8?B?VTBYcEx6dERTaDJUc09TMitheVdMU0t2SVp6WTArUld5MFpDcWM1VHJQcUpp?=
+ =?utf-8?B?YjRMcWFoaUtzWFFPcmpyTzRmTUtnRUpEeHNnbEt2UWZBWXpwU3MvdFNqbjhH?=
+ =?utf-8?B?bFZIeHp4TThNM3dPMGoyYWxoQzZobWR2ZWwzampaa28xQ29QZU52cFlHVno1?=
+ =?utf-8?B?MlNuTFplSHdvenQrdWY3cXBKRGtoZ0JNZU5WUTdpbFZjamRTY0ZsSFVLaU5z?=
+ =?utf-8?B?eGlzK1hBVGpWWHJiY1VEN095OVVZYmZYa1BRTWZSd3lwbGxybW81d3VDVmNM?=
+ =?utf-8?B?YXBwMnpuZGRFU3dqZHRNSGFyY2Q5bk4xTTlhOWVuN1pHNFV5SmhEd29HbS95?=
+ =?utf-8?B?ZFgyYVpWUEdZbTJYbWdiMmFSbDNGN25YbUFOVCszbU80N01LZzB1RmRNbWVy?=
+ =?utf-8?B?Y2N2NUxLK2tGUTUrbmV6d2trK3lObWQ0TTVSRXZxME0rNUJIMW1lTW9yNjIr?=
+ =?utf-8?B?Wk1JcGFyWXdoeUR4N3NzTHZmaExVclMrc0FqYWIvalYwMjNoUGxRVzEyOTk5?=
+ =?utf-8?B?Y3VmL0lUaUVicjFjdGY0UnR5WWN5alhNWmZ5QUtKN1crSXdJaXN4cmZudzhF?=
+ =?utf-8?B?Y1ovYTJ6eUJCSm0wWmdVRG5RRVBIbFRzMFA3cTNobENOcXRTQTY0dS9qYTVV?=
+ =?utf-8?B?TEhKNGZRT1QyenZWN0N3QmxMc1lpK2RVNFlyZ1BIRTIySWRsaVlKSitvMitX?=
+ =?utf-8?B?dUxpWWdTS1FMNzRROFBpRlNXT1l1QUR2akZQeGpXSVIzbEhuZVVEdz09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e78edeb-1d8b-45d6-a463-08ded20a8494
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR12MB7007.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2026 16:06:15.1149
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jVDnNUwNCZTIBsbc8ttGuT3Dx7IEa+dT5yCCjM2Hqrgyq7z0q5+iUHwcgbH2hNkA1PemFwsTCS3MZZ3+bMTFvQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6677
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[microsoft.com:d:+,kernel.org:s:+];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_TO(0.00)[microsoft.com,kernel.org,lunn.ch,davemloft.net,google.com,redhat.com,linux.microsoft.com,outlook.com,gmail.com];
-	FORGED_RECIPIENTS(0.00)[m:decui@microsoft.com,m:wei.liu@kernel.org,m:haiyangz@microsoft.com,m:kys@microsoft.com,m:andrew+netdev@lunn.ch,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:kotaranov@microsoft.com,m:horms@kernel.org,m:ernis@linux.microsoft.com,m:dipayanroy@linux.microsoft.com,m:shirazsaleem@microsoft.com,m:mhklinux@outlook.com,m:longli@microsoft.com,m:yury.norov@gmail.com,m:shradhagupta@linux.microsoft.com,m:linux-hyperv@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:netdev@vger.kernel.org,m:paulros@microsoft.com,m:shradhagupta@microsoft.com,m:ssengar@microsoft.com,m:stable@vger.kernel.org,m:ynorov@nvidia.com,m:andrew@lunn.ch,m:yurynorov@gmail.com,s:lists@lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[shradhagupta@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[26];
-	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11654-lists,linux-hyperv=lfdr.de];
-	PRECEDENCE_BULK(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[shradhagupta@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	FORGED_SENDER_FORWARDING(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11655-lists,linux-hyperv=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[32];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:tzimmermann@suse.de,m:mripard@kernel.org,m:maarten.lankhorst@linux.intel.com,m:airlied@redhat.com,m:airlied@gmail.com,m:simona@ffwll.ch,m:admin@kodeit.net,m:gargaditya08@proton.me,m:paul@crapouillou.net,m:jani.nikula@linux.intel.com,m:mhklkml@zohomail.com,m:zack.rusin@broadcom.com,m:bcm-kernel-feedback-list@broadcom.com,m:sunpeng.li@amd.com,m:siqueira@igalia.com,m:alexander.deucher@amd.com,m:rodrigo.vivi@intel.com,m:joonas.lahtinen@linux.intel.com,m:tursulin@ursulin.net,m:javierm@redhat.com,m:dmitry.osipenko@collabora.com,m:gurchetansingh@chromium.org,m:olvaffe@gmail.com,m:dri-devel@lists.freedesktop.org,m:linux-hyperv@vger.kernel.org,m:intel-gfx@lists.freedesktop.org,m:intel-xe@lists.freedesktop.org,m:linux-mips@vger.kernel.org,m:virtualization@lists.linux.dev,m:amd-gfx@lists.freedesktop.org,m:zackr@vmware.com,m:stable@vger.kernel.org,s:lists@lfdr.de];
+	FREEMAIL_TO(0.00)[suse.de,kernel.org,linux.intel.com,redhat.com,gmail.com,ffwll.ch,kodeit.net,proton.me,crapouillou.net,zohomail.com,broadcom.com,amd.com,igalia.com,intel.com,ursulin.net,collabora.com,chromium.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[harry.wentland@amd.com,linux-hyperv@vger.kernel.org];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,nvidia.com:email,linux.microsoft.com:dkim,linux.microsoft.com:mid,linux.microsoft.com:from_mime]
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[harry.wentland@amd.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[amd.com:+];
+	ALIAS_RESOLVED(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,suse.de:email,vger.kernel.org:from_smtp,vmware.com:email,amd.com:dkim,amd.com:email,amd.com:mid,amd.com:from_mime,lists.freedesktop.org:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 609366BC2A6
-
-Before the commit 755391121038 ("net: mana: Allocate MSI-X vectors
-dynamically"), all the MANA IRQs were assigned statically and together
-during early driver load.
-
-After this commit, the IRQ allocation for MANA was done in two phases.
-HWC IRQ allocated earlier and then, queue IRQs dynamically added at a
-later point. By this time, the IRQ weights on vCPUs can become imbalanced
-and if IRQ count is greater than the vCPU count the topology aware IRQ
-distribution logic in MANA can cause multiple MANA IRQs to land on the
-same vCPUs, while other sibling vCPUs have none (case 1).
-
-On SMP enabled, low-vCPU systems, this becomes a bigger problem as the
-softIRQ handling overhead of two IRQs on the same vCPUs becomes much more
-than their overheads if they were spread across sibling vCPUs.
-
-In such cases when many parallel TCP connections are tested, the
-throughput drops significantly.
-
-Fix the affinity assignment logic, in cases where the IRQ count is greater
-than the vCPU count and when IRQs are added dynamically, by utilizing all
-the vCPUs irrespective of their NUMA/core bindings (case 2).
-
-The results of setting the affinity and hint to NULL were also studied,
-and we observed that, with this logic if there are pre-existing IRQs
-allocated on the VM (apart from MANA), during MANA IRQs allocation, it
-leads to clustering of the MANA queue IRQs again (case 3).
+X-Rspamd-Queue-Id: 6FAB96BFE81
 
 
-=======================================================
-Case 1: without this patch
-=======================================================
-4 vcpu(2 cores), 5 MANA IRQs (1 HWC + 4 Queue)
 
-	TYPE		effective vCPU aff
-=======================================================
-IRQ0:	HWC		0
-IRQ1:	mana_q1		0
-IRQ2:	mana_q2		2
-IRQ3:	mana_q3		0
-IRQ4:	mana_q4		3
+On 2026-06-10 11:18, Thomas Zimmermann wrote:
+> The mode-setting pipeline can disabled damage clippings for a commit
+> by setting ignore_damage_clips in struct drm_plane_state. The commit
+> will then do a full display update.
+> 
+> Test the flag in DCN code and do a full update in DCN code if it has
+> been set.
+> 
+> Commit 35ed38d58257 ("drm: Allow drivers to indicate the damage helpers
+> to ignore damage clips") introduced ignore_damage_clips to selectively
+> ignore damage clipping in certain framebuffer changes. This driver does
+> not do that, but DRM's damage iterator will soon rely on the flag.
+> Therefore supporting it here as well make sense for consistency.
+> 
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Fixes: 35ed38d58257 ("drm: Allow drivers to indicate the damage helpers to ignore damage clips")
+> Cc: Javier Martinez Canillas <javierm@redhat.com>
+> Cc: Thomas Zimmermann <tzimmermann@suse.de>
+> Cc: Zack Rusin <zackr@vmware.com>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: <stable@vger.kernel.org> # v6.8+
 
-%soft on each vCPU(mpstat -P ALL 1) on receiver
-vCPU		0	1	2	3
-=======================================================
-pass 1:		38.85	0.03	24.89	24.65
-pass 2:		39.15	0.03	24.57	25.28
-pass 3:		40.36	0.03	23.20	23.17
+While I haven't looked thoroughly at the rest of the series this
+patch for amdgpu_dm looks fine.
 
-=======================================================
-Case 2: with this patch
-=======================================================
-4 vcpu(2 cores), 5 MANA IRQs (1 HWC + 4 Queue)
+Reviewed-by: Harry Wentland <harry.wentland@amd.com>
 
-        TYPE            effective vCPU aff
-=======================================================
-IRQ0:   HWC             0
-IRQ1:   mana_q1         0
-IRQ2:   mana_q2         1
-IRQ3:   mana_q3         2
-IRQ4:   mana_q4         3
+Harry
 
-%soft on each vCPU(mpstat -P ALL 1) on receiver
-vCPU            0       1       2       3
-=======================================================
-pass 1:         15.42	15.85	14.99	14.51
-pass 2:         15.53	15.94	15.81	15.93
-pass 3:         16.41	16.35	16.40	16.36
-
-=======================================================
-Case 3: with affinity set to NULL
-=======================================================
-4 vCPU(2 cores), 5 MANA IRQs (1 HWC + 4 Queue)
-
-	TYPE		effective vCPU aff
-=======================================================
-IRQ0:	HWC			0
-IRQ1:	mana_q1			2
-IRQ2:	mana_q2			3
-IRQ3:	mana_q3			2
-IRQ4:	mana_q4			3
-
-=======================================================
-Throughput Impact(in Gbps, same env)
-=======================================================
-TCP conn	with patch	w/o patch	aff NULL
-20480		15.65		7.73		5.25
-10240		15.63		8.93		5.77
-8192		15.64		9.69		7.16
-6144		15.64		13.16		9.33
-4096		15.69		15.75		13.50
-2048		15.69		15.83		13.61
-1024		15.71		15.28		13.60
-
-Fixes: 755391121038 ("net: mana: Allocate MSI-X vectors dynamically")
-Cc: stable@vger.kernel.org
-Co-developed-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-Reviewed-by: Simon Horman <horms@kernel.org>
-Reviewed-by: Yury Norov <ynorov@nvidia.com>
----
-Changes in v5
- * modify commit message to align with fix patch format
----
-Changes in v4
- * Add mana prefix on irq_affinity_*() in mana driver
- * Corrected grammar, comment for mana_irq_setup_linear()
- * added new line as per guidelines
- * added case 3 in commit message for when affinity is NULL
----
-Changes in v3
- * Optimize the comments in mana_gd_setup_dyn_irqs()
- * add more details in the dev_dbg for extra IRQs
----
-Changes in v2
- * Removed the unused skip_first_cpu variable
- * fixed exit condition in irq_setup_linear() with len == 0
- * changed return type of irq_setup_linear() as it will always be 0
- * removed the unnecessary rcu_read_lock() in irq_setup_linear()
- * added appropriate comments to indicate expected behaviour when
-   IRQs are more than or equal to num_online_cpus()
----
- .../net/ethernet/microsoft/mana/gdma_main.c   | 78 +++++++++++++++----
- 1 file changed, 64 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index a0fdd052d7f1..e8b7ffb47eb9 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-+++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -210,6 +210,8 @@ static int mana_gd_query_max_resources(struct pci_dev *pdev)
- 	} else {
- 		/* If dynamic allocation is enabled we have already allocated
- 		 * hwc msi
-+		 * Also, we make sure in this case the following is always true
-+		 * (num_msix_usable - 1 HWC) <= num_online_cpus()
- 		 */
- 		gc->num_msix_usable = min(resp.max_msix, num_online_cpus() + 1);
- 	}
-@@ -1909,8 +1911,8 @@ void mana_gd_free_res_map(struct gdma_resource *r)
-  * do the same thing.
-  */
- 
--static int irq_setup(unsigned int *irqs, unsigned int len, int node,
--		     bool skip_first_cpu)
-+static int mana_irq_setup_numa_aware(unsigned int *irqs, unsigned int len,
-+				     int node, bool skip_first_cpu)
- {
- 	const struct cpumask *next, *prev = cpu_none_mask;
- 	cpumask_var_t cpus __free(free_cpumask_var);
-@@ -1946,11 +1948,24 @@ static int irq_setup(unsigned int *irqs, unsigned int len, int node,
- 	return 0;
- }
- 
-+/* must be called with cpus_read_lock() held */
-+static void mana_irq_setup_linear(unsigned int *irqs, unsigned int len)
-+{
-+	int cpu;
-+
-+	for_each_online_cpu(cpu) {
-+		if (len == 0)
-+			break;
-+
-+		irq_set_affinity_and_hint(*irqs++, cpumask_of(cpu));
-+		len--;
-+	}
-+}
-+
- static int mana_gd_setup_dyn_irqs(struct pci_dev *pdev, int nvec)
- {
- 	struct gdma_context *gc = pci_get_drvdata(pdev);
- 	struct gdma_irq_context *gic;
--	bool skip_first_cpu = false;
- 	int *irqs, err, i, msi;
- 
- 	irqs = kmalloc_objs(int, nvec);
-@@ -1958,10 +1973,12 @@ static int mana_gd_setup_dyn_irqs(struct pci_dev *pdev, int nvec)
- 		return -ENOMEM;
- 
- 	/*
-+	 * In this function, num_msix_usable = HWC IRQ + Queue IRQ.
-+	 * nvec is only Queue IRQ (HWC already setup).
- 	 * While processing the next pci irq vector, we start with index 1,
- 	 * as IRQ vector at index 0 is already processed for HWC.
- 	 * However, the population of irqs array starts with index 0, to be
--	 * further used in irq_setup()
-+	 * further used in mana_irq_setup_numa_aware()
- 	 */
- 	for (i = 1; i <= nvec; i++) {
- 		msi = i;
-@@ -1975,18 +1992,51 @@ static int mana_gd_setup_dyn_irqs(struct pci_dev *pdev, int nvec)
- 	}
- 
- 	/*
--	 * When calling irq_setup() for dynamically added IRQs, if number of
--	 * CPUs is more than or equal to allocated MSI-X, we need to skip the
--	 * first CPU sibling group since they are already affinitized to HWC IRQ
-+	 * When calling mana_irq_setup_numa_aware() for dynamically added IRQs,
-+	 * if number of CPUs is more than or equal to allocated MSI-X, we need to
-+	 * skip the first CPU sibling group since they are already affinitized to
-+	 * HWC IRQ
- 	 */
- 	cpus_read_lock();
--	if (gc->num_msix_usable <= num_online_cpus())
--		skip_first_cpu = true;
-+	if (gc->num_msix_usable <= num_online_cpus()) {
-+		err = mana_irq_setup_numa_aware(irqs, nvec, gc->numa_node,
-+						true);
-+		if (err) {
-+			cpus_read_unlock();
-+			goto free_irq;
-+		}
-+	} else {
-+		/*
-+		 * When num_msix_usable are more than num_online_cpus, our
-+		 * queue IRQs should be equal to num of online vCPUs.
-+		 * We try to make sure queue IRQs spread across all vCPUs.
-+		 * In such a case NUMA or CPU core affinity does not matter.
-+		 * Note: in this case the total mana IRQ should always be
-+		 * num_online_cpus + 1. The first HWC IRQ is already handled
-+		 * in HWC setup calls
-+		 * However, if CPUs went offline since num_msix_usable was
-+		 * computed, queue IRQs will be more than num_online_cpus().
-+		 * In such cases remaining extra IRQs will retain their default
-+		 * affinity.
-+		 */
-+		int first_unassigned = num_online_cpus();
- 
--	err = irq_setup(irqs, nvec, gc->numa_node, skip_first_cpu);
--	if (err) {
--		cpus_read_unlock();
--		goto free_irq;
-+		if (nvec > first_unassigned) {
-+			char buf[32];
-+
-+			if (first_unassigned == nvec - 1)
-+				snprintf(buf, sizeof(buf), "%d",
-+					 first_unassigned);
-+			else
-+				snprintf(buf, sizeof(buf), "%d-%d",
-+					 first_unassigned, nvec - 1);
-+
-+			dev_dbg(&pdev->dev,
-+				"MANA IRQ indices #%s will retain the default CPU affinity\n",
-+				buf);
-+		}
-+
-+		mana_irq_setup_linear(irqs, nvec);
- 	}
- 
- 	cpus_read_unlock();
-@@ -2041,7 +2091,7 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev, int nvec)
- 		nvec -= 1;
- 	}
- 
--	err = irq_setup(irqs, nvec, gc->numa_node, false);
-+	err = mana_irq_setup_numa_aware(irqs, nvec, gc->numa_node, false);
- 	if (err) {
- 		cpus_read_unlock();
- 		goto free_irq;
-
-base-commit: 96e7f9122aae0ed000ee321f324b812a447906d9
--- 
-2.34.1
+> ---
+>  drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> index 0e20194e6662..4cbb27f65a0b 100644
+> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> @@ -6614,8 +6614,8 @@ static void fill_dc_dirty_rects(struct drm_plane *plane,
+>  {
+>  	struct dm_crtc_state *dm_crtc_state = to_dm_crtc_state(crtc_state);
+>  	struct rect *dirty_rects = flip_addrs->dirty_rects;
+> -	u32 num_clips;
+> -	struct drm_mode_rect *clips;
+> +	u32 num_clips = 0;
+> +	struct drm_mode_rect *clips = NULL;
+>  	bool bb_changed;
+>  	bool fb_changed;
+>  	u32 i = 0;
+> @@ -6631,8 +6631,10 @@ static void fill_dc_dirty_rects(struct drm_plane *plane,
+>  	if (new_plane_state->rotation != DRM_MODE_ROTATE_0)
+>  		goto ffu;
+>  
+> -	num_clips = drm_plane_get_damage_clips_count(new_plane_state);
+> -	clips = drm_plane_get_damage_clips(new_plane_state);
+> +	if (!new_plane_state->ignore_damage_clips) {
+> +		num_clips = drm_plane_get_damage_clips_count(new_plane_state);
+> +		clips = drm_plane_get_damage_clips(new_plane_state);
+> +	}
+>  
+>  	if (num_clips && (!amdgpu_damage_clips || (amdgpu_damage_clips < 0 &&
+>  						   is_psr_su)))
 
 
