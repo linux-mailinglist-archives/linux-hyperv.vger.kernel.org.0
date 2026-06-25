@@ -1,252 +1,163 @@
-Return-Path: <linux-hyperv+bounces-11686-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11687-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id PilZHvJxPWrw3AgAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11686-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 25 Jun 2026 20:22:42 +0200
+	id YgSeDbNyPWoU3QgAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11687-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 25 Jun 2026 20:25:55 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 781486C82B9
-	for <lists+linux-hyperv@lfdr.de>; Thu, 25 Jun 2026 20:22:41 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7CFA16C82F3
+	for <lists+linux-hyperv@lfdr.de>; Thu, 25 Jun 2026 20:25:54 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=outlook.com header.s=selector1 header.b=ayqyF0N+;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11686-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11686-lists+linux-hyperv=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=outlook.com;
-	arc=reject ("cv is fail on i=2")
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=cFFAcn2E;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11687-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11687-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 7E7A93001CDB
-	for <lists+linux-hyperv@lfdr.de>; Thu, 25 Jun 2026 18:22:26 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0126830134AA
+	for <lists+linux-hyperv@lfdr.de>; Thu, 25 Jun 2026 18:23:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 186B730EF97;
-	Thu, 25 Jun 2026 18:22:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC6BB30569F;
+	Thu, 25 Jun 2026 18:23:52 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazolkn19010004.outbound.protection.outlook.com [52.103.13.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B81253115A2;
-	Thu, 25 Jun 2026 18:22:13 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782411745; cv=fail; b=EV4Pgo3SoV6sloEisZQQbZe/Sd2S9/AEhB60Dh1/ngqAohVViEjoa/x1r3FDSM2Trq8gA6/pirM5/GLJVX4d1nudafWse9rcgUn4EBiaKT77+a8/nIlBaR8hmDvN8ald7uIORcXkEkCdcGUW+2+MB4fhrUHvsFaLoPMjbZDX8yM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782411745; c=relaxed/simple;
-	bh=A4FxQ8KnGub9dAa15BF1h61iJ56yGHgbwuqRdz/Ef94=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=q2cIT5nUFwipwqSawYbwdZe/xzmIpIiqjn62avYdQ4aDubHnlZi2xN2WUxvAODdFqeyq/R0tRz2HSc6n2/zQ2QIwUIkcMS3T2zA5GOMS34keEAqcmK0e8JxbeV+mniphFqhZqya6tCM9O7aTMIzGFx9sAQpmXil4H+/TCSqD5c4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ayqyF0N+; arc=fail smtp.client-ip=52.103.13.4
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lJ4IryeZaiTsfHkQHwwltItOJsrZQ0fKUQiFRV+UGeIxrMD7iM0W2S2hJr3U3aIjFwoLH07/Ty+Hnk1+bpXi4++/fIiuir4UvFmIXVOGo1NVI88bHRuwHjPDna4qRNE8FN+nw10pDpP8oGSNJ3Zkqt2gS8bEOaFoC8UYiALE6xJJBJ8im3PO/VpE/Q7scZvfIprvlw5XmNz1S296meB/kW01RtuB1CPlWmvnNDnVgLKf/7TomEkmTPvT7Il1aljDQdonABOVWigGdqoF8lDg0O5pFKQBzEkgSk8X9OUQ7PZ8tHt1MZXQlCuKe56S55X+0V7iGJa14W2SKgdrxj5hUQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8Uo6T3DyV1Bn5zCYZIg7iNo7nX/8Ez0QlIA1Nbv21iM=;
- b=O1VxRJEasFFp93EcToMHwon6Ut6pCU9o1VRoffN65FhZCGDU1mfcPxq+9t6JJuqyCJIujttduNQe2lw1CzgOiFBA8m1MjBIn7zExowmGwDrqjeNz1/xnkcSFsy1EOADtcKk1/5YrpAuz485G4FQXBMKTe/lqvTdlAnoFtbnihEaVvZ3llWMBuoKrOBjCIOKSROfueTELhwBY+xCvI2Fojdnjmvkv6rP42YlKVk7Dj+2gtyXJm+LRW1jpdeAC88theL+rD5OAIGI4MJqzaTEDXyZj8Nr+KXFQe973H5TTAfIIoqU54e2GFtBBwSLiHH+vbK61epXlr5aYwtJmvHt3mw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8Uo6T3DyV1Bn5zCYZIg7iNo7nX/8Ez0QlIA1Nbv21iM=;
- b=ayqyF0N+9COh5dMLJgz2MV326De1kImgcec+S2EBre5QeJzmhO07PwmBeBrzW4T9UXphlIReUjgFxqq1q4S1AUBRkOG19x3XhCAxHhJokmNIGbEC31vQo7KSwyV6EvUsXX4Bp1ax+2Lo1PWZt9UX+RYf4heWbeDIUtZv5tJyxuAlYLUR0rJqizTbbyoHetCHx2mu8XY++0nVw5wGQQ0G56hY3rXHA4Pu45LvNFRQ+RtkL9Bl54soZ3EcJwWLswE7mi0/QpssYKnSI1LyDAa/ia11HARXoUj+aZ0hIc8MRIrByTiGQ1KKEm8wyC09LpmtX3/i4Q1B3uSfcUBYHixzuw==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by PH0PR02MB7845.namprd02.prod.outlook.com (2603:10b6:510:53::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.16; Thu, 25 Jun
- 2026 18:22:06 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6%3]) with mapi id 15.21.0159.007; Thu, 25 Jun 2026
- 18:22:06 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Yousef Alhouseen <alhouseenyousef@gmail.com>, "K . Y . Srinivasan"
-	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
-	<wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, Long Li
-	<longli@microsoft.com>
-CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] mshv_vtl: clear hypercall output before copyout
-Thread-Topic: [PATCH v2] mshv_vtl: clear hypercall output before copyout
-Thread-Index: AQHdBM56ZD0yw0L6SkGhQbRGpD0zILZPlNfA
-Date: Thu, 25 Jun 2026 18:22:06 +0000
-Message-ID:
- <SN6PR02MB4157E7169B0FECD97C9EA7A8D4EC2@SN6PR02MB4157.namprd02.prod.outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16C630566D
+	for <linux-hyperv@vger.kernel.org>; Thu, 25 Jun 2026 18:23:51 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782411832; cv=none; b=LehcHwrn7Z6YVOMxzAQ86lqbi637yvjhboSuZVls1bV+IORJQqJW21yE+JOcwwgPWeM1NSBMDtYexSUCYtQ/wf+U/sLDVs3syuN8WCW4uxVO1FdRATS6qneP+svq1k/sT7EHhXHx0hdhKIbCAIt0rZ0toZ+Emx+IvAVjIKn3tL0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782411832; c=relaxed/simple;
+	bh=QAA985uMRZvXyjsf8dvY73+oVXm57DdTytkSdH9p0n4=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=UQmhOBMbSIJ2LQJU46AgliSUUjqYe62JYcJMTrUjPZAoqBvor5uBBXe43g56rxvip1j0vfH0yirEDPjWj8PluQCCJDBvemNbGS/RLLd1e0F+8T4SwFWKrINXXZysH2G0DgE1SHX3TnUJ4uXJpRAb5Agt/02Vtd3yTGfxkow4Kzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cFFAcn2E; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 311071F000E9;
+	Thu, 25 Jun 2026 18:23:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782411831;
+	bh=SJxnqCUsr4vmmjn+PhJmbMo1R1duQRGGCLMh7+S+sYk=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=cFFAcn2EmJk+EiSEXGhyKrS8M1SUXuxcqTEsAuO8Zbyw+noaslm5NBXIZDQEZIBNf
+	 eSVZktbsK2gVB1iEUXc4sWIu7i3Wvy6gU9xXvGdCO74KgJzknHJdabYN1uhWE89ORq
+	 R+g4mjY0sf6g8gwFrQsKnnF/Jmmz1kw1HfIDvByrEdB7eOuvbaibkknTsfXFQQSSCs
+	 CJewet8iR7WdorrhuVxNPj2yWvDeRQu7LSLRfRwHHn83Rmq7v7de1dq23QPvhKj2pz
+	 LykH/3S6rju43lJHIyA1yeCk7cJQYj/zJE80sN4MPKe3ts38XXrNk/I5v21lle3/vH
+	 hWwbm2hlrBp/g==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2] mshv_vtl: clear hypercall output before copyout
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Yousef Alhouseen" <alhouseenyousef@gmail.com>
+Cc: linux-hyperv@vger.kernel.org
+In-Reply-To: <20260625181314.1399-1-alhouseenyousef@gmail.com>
 References: <20260624172157.2790-1-alhouseenyousef@gmail.com>
  <20260625181314.1399-1-alhouseenyousef@gmail.com>
-In-Reply-To: <20260625181314.1399-1-alhouseenyousef@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH0PR02MB7845:EE_
-x-ms-office365-filtering-correlation-id: 9afe768d-8517-43ce-4524-08ded2e6a9ee
-x-ms-exchange-slblob-mailprops:
- AlkLxVwsndm0VyxXF8Qt58maZsxVls0a/dg3SoViazO6aFF/2SaFUrhY0CaNUXD9i+nrWFH6UNmBfKb0jOp95U0hk/pzUSyGUTCSFOGcaAMKQZnteB5YNWzPdQd45iBGmbvF5xjdJ3iTzQIiv5komjVeS4QXNujjUynNOT3Y2SF05LM3lsegA50W902bnR3o+1DE0xF2CpULogpwLC33QS7sH14Z3ODo++DkyaeB3dPns3AtVUQBY9kkRKfvLUKPR0enTrti724QQIwq5A2wZP7HriX3Ts/eHNR4aA6LFmsuXmdBwecqzmD5kjToG1ez4gssbnpxZQ64V90z6GppC6wy/n3NYMoSJO18s6Co1hVxVr1Savbm4eL2ZbazYiDQQyhp8Uxe/KrKooLFOEd27eQyqhYvEvjqOljq3CT51x8DDPyDQjEXpMqqLl9uGAXZO5ilMH1ctu3QL6UKrRE+J6uaCOHIgajxiF/wqcOR7UkGGdoFCOspbOAaFr/KgyOHJmxxQj6FDir6x3LAE6C8Zc652FKos9xfu8i49e2OfRsPmLM8jsoOgITW4Vr0qtMZUmrxUGeFSjTMFUUbZ4PZdVDEqqVe7S8kppKfVqpIXEkNX78pcewFaLJ1tYeFJ+Sv+RsYECEy1SzlYRp8gV9Mqb9s+Pl9BtQANiUoyvA40HDfgvL0NN8B9ktojyTXtESqvTtVy2/wjxhfBrWAgeCScjdx/rLR5m23B30Ziw/DBsvQGU5cqYTQZmRLlRfR7rjtiB2PwAi746FHP5p/o26rW8pv8Bf9B2kI
-x-microsoft-antispam:
- BCL:0;ARA:14566002|19110799012|8062599012|25010399006|19101099003|8060799015|13091999003|37011999003|31061999003|15080799012|12121999013|51005399006|3412199025|4302099013|1602099012|102099032|440099028|40105399003|10035399007|12091999003;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?A+hT7MkRBWh9vxeTV3BTrsn2WvdXl1Etwz9DmH8KN60xvL4kGgf6vDqBG1v9?=
- =?us-ascii?Q?LP4dRozGhmBxRIs7+TPqrZVK4haLkyH+T2Gr3X8yVj2dqKt8EnVoB+6tA78g?=
- =?us-ascii?Q?nqInQPhz+i6UcuXeiuMJbyuyLoo3ZCa2vIjjCpcJHfX6ZFn5OVa8uPfn3ZIj?=
- =?us-ascii?Q?/8PBJalCbOSoZPQQGAxSF2+YFqJIe22uQIcb5q4jZXhaHnn3e1phPx3843RV?=
- =?us-ascii?Q?L12djkt7sXcE9C0fWP3lzjVT5F2JVH0GxL337fNywu2duPa8lJvKR8JwcgOo?=
- =?us-ascii?Q?svDWsP+P13qgkb21fFEcdZHH0AkujPmSVa0x0LAl+sjtULNjhI1RmifH6dSd?=
- =?us-ascii?Q?JVAVBuY00lLsMDp+1uff2B/FIt8FeLvqtmAmdTgQLnsMAfuGqnSVw/BXUTKf?=
- =?us-ascii?Q?t5XXGyVWO2cP981Mgveru9EZHjfsAlX3zCl6xOV28sdIUDliOFBmYmcikk4o?=
- =?us-ascii?Q?sPEmWlkL/AdAXVZP+0SniAKHugQHtjG1zpNi6NeuGIxF+SWo1YphdFhgj5iH?=
- =?us-ascii?Q?YRGT7c8LH+BISgyB7QNKxN35/s5PovQkNK7FfLYdXbPAZ+Lxs7Prb3NHHKda?=
- =?us-ascii?Q?bFMo4VGswQNc053qbMcufMHqEZKAW6CvjowxDpY296i1A/eORf+KXobULhB7?=
- =?us-ascii?Q?ICWyoKVAcIRx8qW65aX7J2ggIil4NCy9QGlAj8h72R5eSLIaG+XU8ujRLKXa?=
- =?us-ascii?Q?Wq2zZn5YGgE94LuteIKITA8Iv+pyThsukO42atVP7rmnRcyWSKSYFlAQBNfp?=
- =?us-ascii?Q?YqSQq4K1YvABRWSWKs+K/srAWDVyMQxOkCgaT7roJAiVduI7weIUValqbQjd?=
- =?us-ascii?Q?gwrWo84TehsuGl4zzRav37jMTlZBp675VR4aOkCTiZOXEaQy+sSKFR/ktYBr?=
- =?us-ascii?Q?71ekQqu4nNPYieWLaC1Sr7UgxUa46+jvFrkQT4flXDHqOsc5zsD06KoKb7uv?=
- =?us-ascii?Q?mXCneETtIHczZ2SDUmlBxLhzREoBINvyZArgfl2EdSo9rQjIpm5ewkhoQi5h?=
- =?us-ascii?Q?d4Q59v3gqSm9+DyojoHaJYM0K+oL81iXAHD/7Nq0C/fzzxYiFFKa1dGpizma?=
- =?us-ascii?Q?QNrN7GNzxUatXHMwA/cIwB2T9iY/T4iPtqBf9F6Ey4yVkgGRUGWho/3fQR0s?=
- =?us-ascii?Q?/gKq7Z8CaZS74PviCRlxArmunND9pnbxW1uZEU6swY8Mrmq/XqxOJPc=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?BPJek3+K8EAve8WTSTIvUGroOZFooPMuwtfUoHxxot9rJ5AsG9p5zp6SFT+B?=
- =?us-ascii?Q?EDStoZkRl0zzTNx7cfGs8lTQvaYAVlrRn3rn6n/ub6kA3axbd8l2C6blc/PH?=
- =?us-ascii?Q?q1IQsnfb7/NNHZsq0lIHv/nKg5kA98GWoH2K2WvtW5tOKqHraTyzAMQ6ro+a?=
- =?us-ascii?Q?+Ra1qUeRYreU7G8xQdQbPS7ZtzywUKfVCKL9JPcP/vxNLqGoGakJdU7rDdYj?=
- =?us-ascii?Q?UiwoznyMTfNADSZX+fE6tjIJbREhJuWTG3jcxRdh3wJdqPpZwYjfWpiZzr5E?=
- =?us-ascii?Q?X2TcfSigfYO7TvKRz4/s9p1/ShmQu7aDJRTjnMIAc1x07Lw+ToS64YeRlcSC?=
- =?us-ascii?Q?3W+37v7OmoZbs/WFrM6VoHS46xzXeMr9xF8OPAgC2SN3WzwBeG5iEaUPKREH?=
- =?us-ascii?Q?dcZfm/u9QKukSaBp/nuZFiROWvc8GGo2kU6fru1IVdwXzUPUN1Eh3lwk7PtX?=
- =?us-ascii?Q?TbQ1IR8uG0RMIKUcyNsHGzCYY8M7EESUPsCUkwc/rVVwBCJbrjbIIf1qXZA3?=
- =?us-ascii?Q?BpCV82bor/vaZkbBkCA7/46BdbcWxiKBdkyBa5BHgxtml+9FrNWa++dkndn6?=
- =?us-ascii?Q?rc6gBKVXBF30gxHLDxbX300ZlxDCjc806CdrFqDiy++saxMY0s3ZYY2Xfo5b?=
- =?us-ascii?Q?jaiDCv6tbYMQ50QiT4oqP1t0kmv3hWImBvtCrfiUi9ay6P0HYt0OBBcn0vHW?=
- =?us-ascii?Q?Q31asCgMMRPUw5BUjsDqg1LnK+iOGO8ImREgwv96PBaKU3nPLeycchg74r3b?=
- =?us-ascii?Q?7NU1TCR2ufoFrp0U5esVWP84w3fyqReadGSqG4Pmhm/OLnKqTzChRwf7zvfT?=
- =?us-ascii?Q?SJ3XkJP2Xgs5+4OFgiEa75ZcYAGv3r/EHmOqKa/Wl5SsZp7PReCpQiBV0USt?=
- =?us-ascii?Q?ZEOpOfd6aRwWIjzLdsKkW1snpH1uUDeGD8BWZ9Vee9uANGjtQLL771GmFBXw?=
- =?us-ascii?Q?8KjHFPNEB6ZNVZ4lkng53baD4vidmPzM6pX8T9JBZmEamUQwYwjpyH4dcPfM?=
- =?us-ascii?Q?VpIx1Dtowcw2kxVTmwArFG+TeScN1Lj5JwZeMzidXK/nlXoF1T3DP/S++PgK?=
- =?us-ascii?Q?eeYFy+I1P+4HhkU9k9HvRw0NYYXiekWs5/Kon/ouIZxfh2eoZdtrkHSBoiCY?=
- =?us-ascii?Q?N1W/kYntlB9G4hDff3PD1kp5CERjX0urXYxkzgAduWsn0KqhRIMsOEMBH4u3?=
- =?us-ascii?Q?Gjow43kmq+L4LQYnlYRC3y19dBWV0w2zXugpbapDlyJOIgFR4Y0Hn3H7EF7g?=
- =?us-ascii?Q?cBNigOdwQnxliHUmhhSppnDUhvEFWqoBo4ooJYukBBjPEnIxbVki2HF5ZyE2?=
- =?us-ascii?Q?k+MNio2/aCubHxoiCgX9Iv/3GQBdtkhmCq9MlfgXY2M+0FGyTGdQvGYWXFjM?=
- =?us-ascii?Q?v+OmG20=3D?=
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
+Date: Thu, 25 Jun 2026 18:23:50 +0000
+Message-Id: <20260625182351.311071F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9afe768d-8517-43ce-4524-08ded2e6a9ee
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2026 18:22:06.8383
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR02MB7845
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[outlook.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[outlook.com:s=selector1];
+X-Spamd-Result: default: False [-3.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	MISSING_MIME_VERSION(2.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_FROM(0.00)[outlook.com];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11686-lists,linux-hyperv=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:alhouseenyousef@gmail.com,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:linux-hyperv@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com,microsoft.com,kernel.org];
-	FORGED_SENDER(0.00)[mhklinux@outlook.com,linux-hyperv@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11687-lists,linux-hyperv=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:alhouseenyousef@gmail.com,m:linux-hyperv@vger.kernel.org,s:lists@lfdr.de];
+	FREEMAIL_TO(0.00)[gmail.com];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mhklinux@outlook.com,linux-hyperv@vger.kernel.org];
-	PRECEDENCE_BULK(0.00)[];
-	DKIM_TRACE(0.00)[outlook.com:+];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCPT_COUNT_TWO(0.00)[2];
+	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NO_DN(0.00)[];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp,outlook.com:dkim,outlook.com:email,outlook.com:from_mime,SN6PR02MB4157.namprd02.prod.outlook.com:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[smtp.kernel.org:mid,lists.linux.dev:replyto,vger.kernel.org:from_smtp,sashiko.dev:url,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 781486C82B9
+X-Rspamd-Queue-Id: 7CFA16C82F3
 
-From: Yousef Alhouseen <alhouseenyousef@gmail.com> Sent: Thursday, June 25,=
- 2026 11:13 AM
->=20
-> mshv_vtl_hvcall_call() copies output_size bytes to userspace.
->=20
-> The output page is freshly allocated. Userspace chooses the copyout lengt=
-h.
->=20
-> If the hypercall writes less, the tail can contain stale page data.
->=20
-> Clear the copied range before issuing the hypercall.
->=20
-> Also check both bounce page allocations before either page is used.
->=20
-> Signed-off-by: Yousef Alhouseen <alhouseenyousef@gmail.com>
-> ---
-> Changes in v2:
-> - Use the mshv_vtl subject prefix.
-> - Clear only the requested output byte range instead of the whole page.
-> - Add a comment explaining why the output range is cleared.
-> - Keep free_page() calls unconditional.
-> - v1: https://lore.kernel.org/all/20260624172157.2790-1-alhouseenyousef@g=
-mail.com/=20
->=20
->  drivers/hv/mshv_vtl_main.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->=20
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+
+Pre-existing issues:
+- [High] Uninitialized kernel memory in the `in` bounce page is exposed to =
+the hypervisor and potentially other untrusted VTLs.
+--
+
+commit e6ad11845017945abcff5cffd83d1f2f8170c980
+Author: Yousef Alhouseen <alhouseenyousef@gmail.com>
+
+mshv_vtl: clear hypercall output before copyout
+
+mshv_vtl_hvcall_call() copies output_size bytes to userspace.
+The output page is freshly allocated. Userspace chooses the copyout length.
+If the hypercall writes less, the tail can contain stale page data.
+Clear the copied range before issuing the hypercall.
+
 > diff --git a/drivers/hv/mshv_vtl_main.c b/drivers/hv/mshv_vtl_main.c
-> index 0d3d41619..dbf03b667 100644
 > --- a/drivers/hv/mshv_vtl_main.c
 > +++ b/drivers/hv/mshv_vtl_main.c
 > @@ -1148,12 +1148,22 @@ static int mshv_vtl_hvcall_call(struct mshv_vtl_h=
 vcall_fd *fd,
 >  	 */
 >  	in =3D (void *)__get_free_page(GFP_KERNEL);
+
+[Severity: High]
+This is a pre-existing issue, but does this allocation also need to be
+cleared to prevent leaking kernel memory to the hypervisor?
+
+Since the subsequent copy_from_user() only copies hvcall.input_size bytes,
+the tail of the page remains uninitialized. If a user provides a small
+input_size but crafts hvcall.control so the hypervisor expects a larger
+payload, the hypervisor will read the uninitialized tail of the page during
+hv_do_hypercall().
+
+Should this use __get_free_page(GFP_KERNEL | __GFP_ZERO) to prevent stale
+data from being exposed to the hypervisor across security boundaries?
+
 >  	out =3D (void *)__get_free_page(GFP_KERNEL);
 > +	if (!in || !out) {
 > +		ret =3D -ENOMEM;
 > +		goto free_pages;
 > +	}
->=20
+> =20
 >  	if (copy_from_user(in, (void __user *)hvcall.input_ptr, hvcall.input_si=
 ze)) {
 >  		ret =3D -EFAULT;
 >  		goto free_pages;
 >  	}
->=20
-> +	/*
-> +	 * The caller supplies output_size, so clear the range copied back to
-> +	 * userspace in case the hypercall writes fewer bytes than requested.
-> +	 */
-> +	memset(out, 0, hvcall.output_size);
-> +
->  	hvcall.status =3D hv_do_hypercall(hvcall.control, in, out);
->=20
->  	if (copy_to_user((void __user *)hvcall.output_ptr, out, hvcall.output_s=
-ize)) {
-> --
-> 2.54.0
 
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260625181314.1399=
+-1-alhouseenyousef@gmail.com?part=3D1
 
