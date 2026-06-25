@@ -1,64 +1,64 @@
-Return-Path: <linux-hyperv+bounces-11682-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11683-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id /wfBB6dqPWqb2wgAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11682-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 25 Jun 2026 19:51:35 +0200
+	id m2ryDD9rPWrO2wgAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11683-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 25 Jun 2026 19:54:07 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A7B26C805A
-	for <lists+linux-hyperv@lfdr.de>; Thu, 25 Jun 2026 19:51:34 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C50436C80A2
+	for <lists+linux-hyperv@lfdr.de>; Thu, 25 Jun 2026 19:54:06 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=PL4pr566;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11682-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11682-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b="VJX5/K1V";
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11683-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11683-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 796FC300E5D7
-	for <lists+linux-hyperv@lfdr.de>; Thu, 25 Jun 2026 17:51:00 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 3D7FB300681A
+	for <lists+linux-hyperv@lfdr.de>; Thu, 25 Jun 2026 17:54:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFD1C25785C;
-	Thu, 25 Jun 2026 17:50:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A41E30566D;
+	Thu, 25 Jun 2026 17:54:04 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD5992F7EFD
-	for <linux-hyperv@vger.kernel.org>; Thu, 25 Jun 2026 17:50:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD7D3EA961
+	for <linux-hyperv@vger.kernel.org>; Thu, 25 Jun 2026 17:54:02 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782409858; cv=none; b=tfhdht6wXwIKDrMNtEcPyHgyjk/tfMKhL/US2tJURxbYb4ExMA5Z9Lqhd6FxLIv3H4smNzJ/bvyaOmeSx0ynyMgDK14TllmZYc0USyqM/jGYDPlgsmCFlWJoRm68D/NVUOjFSnuE9IUHGxOn5bJqYlI+8Wxjy/00UaV2H9EBFTk=
+	t=1782410044; cv=none; b=HE7KXw/qb/+TZbeRCpfO4ZUHQA0vFncOIVlpUAo1tBP6aCPHqbY6+aFYMKvM5ZoiDEW5cWNsoF28QBgcruZE7KFdSZM9lVyrfVnPLA2PH26iIhOb2emnP5mpuI6pM9SHccXlARWaDqXhO6Jg0uxwijy+0rcMuUneFuaCXAyHFPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782409858; c=relaxed/simple;
-	bh=JskPsisDdF0VFqwJDY/IV1vyX3gklNHe1ipwC/9NiHA=;
+	s=arc-20240116; t=1782410044; c=relaxed/simple;
+	bh=qG0bn8kxZQeXC+1GlekZJ3kTnfb1eop9+y2PB3tftk0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=UgufC9mx52eZvUQOIoNb1QfXJZonqXvQJqJWNunJZsEa+xggDy3Mw3UMi0LeCecsZB4wUMrwSZbl5exAlzbW8u3PlkmkhKUMwaeCHXUSEWXSi3gg9L9Qy/BR7cwir7e4RE9bN5ILzEbgGR7f5NIFrteN/hZ4E0m4IAGp27sTCb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PL4pr566; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 405101F000E9;
-	Thu, 25 Jun 2026 17:50:57 +0000 (UTC)
+	 Message-Id; b=RR0d1K+/KSp1UU8J/nd+JMqHW49l2WO4F0fylHZX/eID+E/vs+RkptJ8WYnzXQyYc+BABDaD3AJjQbBWMiIA/JAFr9tKEQaNCczoGxNmdQzyEoPJhR6DwVGGPopNCqt6ZUpMDgXFSWSqDsZt2LyTJr65Y3GX52f47bejRd4GnSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VJX5/K1V; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 378B51F000E9;
+	Thu, 25 Jun 2026 17:54:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782409857;
-	bh=3olMyBRRJ5c9LAGC9o7TBKD5FPKftb7Nb386CLXx+cw=;
+	s=k20260515; t=1782410042;
+	bh=KBqLGNFCwil1X1ocztkmUvL0PUsyEzxpBiVKIzfYqOw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=PL4pr566cPi5Xq/i9LeEd91+LjsWulVqtvIHZXYDLrBhnXzqX00HxKxGT/HYtM5ym
-	 Xx4vvunnTkcLICRjaZRD1wPzVhuZfwL1dFHId6QFbPNIAo1XUOrV79LqtroxJGKrK0
-	 +yDOzkvFxo6ef828U3lFjQgTqxqgMBRWsmpGIJKtRua92qVau9Vp2gnhOL/a4m/bNZ
-	 8ZVs6etJF7/2fxpBKUJ0SMLEN3/0ihQUndTtZPqibAMob7T0UbZO1rB2xKjECurd/h
-	 ThpOYfnBCZ4KFlHZ1jNS7Z43bWf1e3mvI1K5ox94cE5urr+mIPhsJgBx4CAatNQnYa
-	 o7KIt472W4JBA==
+	b=VJX5/K1V8WRSHbuKxm3BpQJX+3xmGg8x1aH2EkOH+5xA1hVjdWU7mvZfTLci47kgG
+	 UPytES6EPWMwKcYGuA8jfwPBldi62O5gTDvcFMaMRbSLh/D+DmkvyXEl5DmSiNSoSF
+	 jzFXjXw3dGCKqHOBd7Hys4itYSkJF1V5gpLkP+DJXfHmXVsLfA2Dyezugwr/jycYPi
+	 u75XUrsekHxO3CwQsKlOfNzgOr+p7IgP7zQVfE3NTk93yAljL53O3E6nMTiNnlBhYi
+	 thD/hE5Uqu5NyvZN276th/i5Ho22EDSMhFz1lB8PMiwDWcmYb5YX3mzE4DCABggn79
+	 KGQlPKc3ZlEeA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 4/6] Drivers: hv: Mark shared memory as decrypted for
- CCA Realms
+Subject: Re: [PATCH v2 2/6] firmware: smccc: Detect hypervisor via RSI host
+ call in CCA Realms
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Kameron Carr" <kameroncarr@linux.microsoft.com>
 Cc: linux-hyperv@vger.kernel.org
-In-Reply-To: <20260625173500.1995481-5-kameroncarr@linux.microsoft.com>
+In-Reply-To: <20260625173500.1995481-3-kameroncarr@linux.microsoft.com>
 References: <20260625173500.1995481-1-kameroncarr@linux.microsoft.com>
- <20260625173500.1995481-5-kameroncarr@linux.microsoft.com>
+ <20260625173500.1995481-3-kameroncarr@linux.microsoft.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 25 Jun 2026 17:50:56 +0000
-Message-Id: <20260625175057.405101F000E9@smtp.kernel.org>
+Date: Thu, 25 Jun 2026 17:54:01 +0000
+Message-Id: <20260625175402.378B51F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -71,14 +71,14 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORWARDED(0.00)[lists@lfdr.de];
 	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11682-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11683-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:kameroncarr@linux.microsoft.com,m:linux-hyperv@vger.kernel.org,s:lists@lfdr.de];
 	RCPT_COUNT_TWO(0.00)[2];
@@ -98,89 +98,90 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FROM_NO_DN(0.00)[];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sashiko.dev:url,lists.linux.dev:replyto,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,smtp.kernel.org:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,lists.linux.dev:replyto,smtp.kernel.org:mid,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 7A7B26C805A
+X-Rspamd-Queue-Id: C50436C80A2
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [High] Using `kmalloc()` to allocate hypercall input/output pages violate=
-s the strict page-alignment requirements of `set_memory_decrypted()`, causi=
-ng silent failures on ARM64 and exposing slab metadata to the untrusted hos=
-t on x86.
+- [Medium] Initialization order bug causes `arm_smccc_hypervisor_has_uuid()=
+` to incorrectly fall back to standard SMC during early boot in a CCA Realm.
 --
 
-commit 02dd1b4271844f489855c82e06efdec7e95897e3
+commit 8e27a5d40fac36e0edcb6814624362e892694ac4
 Author: Kameron Carr <kameroncarr@linux.microsoft.com>
 
-Drivers: hv: Mark shared memory as decrypted for CCA Realms
+firmware: smccc: Detect hypervisor via RSI host call in CCA Realms
 
-This commit extends the confidential VM shared memory decryption handling
-for hypercall input/output pages to support Arm CCA Realm guests. It also
-updates the memory allocation to round up to the nearest page size to satis=
-fy
-decryption requirements.
+This commit modifies arm_smccc_hypervisor_has_uuid() to check is_realm_worl=
+d()
+and use an RSI host call to query the hypervisor UUID inside a Realm. It ad=
+ds
+a file-static RSI host call buffer serialized by a spinlock for ARM64.
 
-> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-> index 6b67ac6167891..17048a0a18729 100644
-> --- a/drivers/hv/hv_common.c
-> +++ b/drivers/hv/hv_common.c
-
+> diff --git a/drivers/firmware/smccc/smccc.c b/drivers/firmware/smccc/smcc=
+c.c
+> index bdee057db2fd3..a876b7aa2dc99 100644
+> --- a/drivers/firmware/smccc/smccc.c
+> +++ b/drivers/firmware/smccc/smccc.c
 [ ... ]
-
-> @@ -489,7 +490,7 @@ int hv_common_cpu_init(unsigned int cpu)
->  	 * online and then taken offline
->  	 */
->  	if (!*inputarg) {
-> -		mem =3D kmalloc_array(pgcount, HV_HYP_PAGE_SIZE, flags);
-> +		mem =3D kmalloc(alloc_size, flags);
->  		if (!mem)
->  			return -ENOMEM;
+> @@ -67,12 +73,45 @@ s32 arm_smccc_get_soc_id_revision(void)
+>  }
+>  EXPORT_SYMBOL_GPL(arm_smccc_get_soc_id_revision);
 > =20
-> @@ -499,14 +500,16 @@ int hv_common_cpu_init(unsigned int cpu)
->  		}
+[ ... ]
+>  bool arm_smccc_hypervisor_has_uuid(const uuid_t *hyp_uuid)
+>  {
+>  	struct arm_smccc_res res =3D {};
+>  	uuid_t uuid;
 > =20
->  		if (!ms_hyperv.paravisor_present &&
-> -		    (hv_isolation_type_snp() || hv_isolation_type_tdx())) {
-> -			ret =3D set_memory_decrypted((unsigned long)mem, pgcount);
-> +		    (hv_isolation_type_snp() || hv_isolation_type_tdx() ||
-> +		     hv_isolation_type_cca())) {
-> +			ret =3D set_memory_decrypted((unsigned long)kasan_reset_tag(mem),
-> +				alloc_size >> PAGE_SHIFT);
+> -	arm_smccc_1_1_invoke(ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID, &res);
+> +#ifdef CONFIG_ARM64
+> +	if (is_realm_world())
+> +		arm_smccc_realm_get_hypervisor_uuid(&res);
+> +	else
+> +#endif
 
-[Severity: High]
-This is a pre-existing issue, but does using kmalloc() here guarantee the
-required page alignment for set_memory_decrypted()?
+[Severity: Medium]
+Will this check evaluate to false during early boot, causing the detection =
+to
+incorrectly fall back to the standard SMC conduit?
 
-When slub debugging (like redzoning) is enabled, kmalloc() can return an
-unaligned address due to prepended metadata.
+Looking at setup_arch(), psci_dt_init() executes before arm64_rsi_init() is
+called to set up the rsi_present static key used by is_realm_world():
 
-On arm64, set_memory_decrypted() requires a page-aligned address. If
-given an unaligned address, it warns and returns 0 without decrypting.
-This leaves the hypercall pages encrypted, which breaks guest-hypervisor
-communication for CCA Realms.
+setup_arch() {
+    ...
+    if (acpi_disabled)
+        psci_dt_init();
+    else
+        psci_acpi_init();
 
-On x86, set_memory_decrypted() masks the address to the page boundary.
-Because this memory is from a slab cache, decrypting the entire underlying
-physical page could expose other unrelated kernel slab objects on the same
-page to the untrusted hypervisor.
+    arm64_rsi_init();
+    ...
+}
 
->  			if (ret) {
->  				/* It may be unsafe to free 'mem' */
->  				return ret;
->  			}
-> =20
-> -			memset(mem, 0x00, pgcount * HV_HYP_PAGE_SIZE);
-> +			memset(mem, 0x00, alloc_size);
->  		}
+Because psci_dt_init() calls psci_probe(), which calls kvm_init_hyp_service=
+s(),
+this eventually reaches arm_smccc_hypervisor_has_uuid() before the static k=
+ey
+is initialized.=20
+
+Does this sequence cause a silent failure to detect the KVM hypervisor insi=
+de
+an Arm CCA Realm?
+
+> +		arm_smccc_1_1_invoke(ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID,
+> +				     &res);
+> +
+>  	if (res.a0 =3D=3D SMCCC_RET_NOT_SUPPORTED)
+>  		return false;
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260625173500.1995=
-481-1-kameroncarr@linux.microsoft.com?part=3D4
+481-1-kameroncarr@linux.microsoft.com?part=3D2
 
