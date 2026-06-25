@@ -1,187 +1,191 @@
-Return-Path: <linux-hyperv+bounces-11683-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11684-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id m2ryDD9rPWrO2wgAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11683-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 25 Jun 2026 19:54:07 +0200
+	id jO9BEA9wPWqd3AgAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11684-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 25 Jun 2026 20:14:39 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C50436C80A2
-	for <lists+linux-hyperv@lfdr.de>; Thu, 25 Jun 2026 19:54:06 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 926476C81F0
+	for <lists+linux-hyperv@lfdr.de>; Thu, 25 Jun 2026 20:14:38 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b="VJX5/K1V";
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11683-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11683-lists+linux-hyperv=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=HDV29m6q;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11684-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11684-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 3D7FB300681A
-	for <lists+linux-hyperv@lfdr.de>; Thu, 25 Jun 2026 17:54:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A8690302C91E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 25 Jun 2026 18:14:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A41E30566D;
-	Thu, 25 Jun 2026 17:54:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4273B30BF6D;
+	Thu, 25 Jun 2026 18:14:33 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD7D3EA961
-	for <linux-hyperv@vger.kernel.org>; Thu, 25 Jun 2026 17:54:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B86827B32C
+	for <linux-hyperv@vger.kernel.org>; Thu, 25 Jun 2026 18:14:31 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782410044; cv=none; b=HE7KXw/qb/+TZbeRCpfO4ZUHQA0vFncOIVlpUAo1tBP6aCPHqbY6+aFYMKvM5ZoiDEW5cWNsoF28QBgcruZE7KFdSZM9lVyrfVnPLA2PH26iIhOb2emnP5mpuI6pM9SHccXlARWaDqXhO6Jg0uxwijy+0rcMuUneFuaCXAyHFPU=
+	t=1782411273; cv=none; b=Cru9pHzExvjJJOVG5zI9vU9xLqicoMgmWWgMa65wyX6s6lJ6XGvFUgjE+qABEy0t5VRIuV9fKSbPAT3gh/iIxWrRTrfJgpm1tAqCTgXneur4x/nKC/MFCTbmcYz4iTSvlyTUqluZ0FAf7p0DpaXm3Xs/akMDTSCHeu6jC0NLirg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782410044; c=relaxed/simple;
-	bh=qG0bn8kxZQeXC+1GlekZJ3kTnfb1eop9+y2PB3tftk0=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=RR0d1K+/KSp1UU8J/nd+JMqHW49l2WO4F0fylHZX/eID+E/vs+RkptJ8WYnzXQyYc+BABDaD3AJjQbBWMiIA/JAFr9tKEQaNCczoGxNmdQzyEoPJhR6DwVGGPopNCqt6ZUpMDgXFSWSqDsZt2LyTJr65Y3GX52f47bejRd4GnSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VJX5/K1V; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 378B51F000E9;
-	Thu, 25 Jun 2026 17:54:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782410042;
-	bh=KBqLGNFCwil1X1ocztkmUvL0PUsyEzxpBiVKIzfYqOw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=VJX5/K1V8WRSHbuKxm3BpQJX+3xmGg8x1aH2EkOH+5xA1hVjdWU7mvZfTLci47kgG
-	 UPytES6EPWMwKcYGuA8jfwPBldi62O5gTDvcFMaMRbSLh/D+DmkvyXEl5DmSiNSoSF
-	 jzFXjXw3dGCKqHOBd7Hys4itYSkJF1V5gpLkP+DJXfHmXVsLfA2Dyezugwr/jycYPi
-	 u75XUrsekHxO3CwQsKlOfNzgOr+p7IgP7zQVfE3NTk93yAljL53O3E6nMTiNnlBhYi
-	 thD/hE5Uqu5NyvZN276th/i5Ho22EDSMhFz1lB8PMiwDWcmYb5YX3mzE4DCABggn79
-	 KGQlPKc3ZlEeA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 2/6] firmware: smccc: Detect hypervisor via RSI host
- call in CCA Realms
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Kameron Carr" <kameroncarr@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org
-In-Reply-To: <20260625173500.1995481-3-kameroncarr@linux.microsoft.com>
-References: <20260625173500.1995481-1-kameroncarr@linux.microsoft.com>
- <20260625173500.1995481-3-kameroncarr@linux.microsoft.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 25 Jun 2026 17:54:01 +0000
-Message-Id: <20260625175402.378B51F000E9@smtp.kernel.org>
+	s=arc-20240116; t=1782411273; c=relaxed/simple;
+	bh=oCDgq258AMaW4NdaSF471eM9Gj3tYv+ywa96wXZCOz0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XwZYFg0YfSmRKN6sshpKm821+IZopSIuCA9C+Y03gmUhxQaOrxuFXYf4MasZmnyg0kpL6OaCumjcVtY1zrw+aH9Xu8ilZGx8LOcJjLx9ABtbcpPi1dfWqKndfCd2HBWwLgGrScs3/6wXcTuaAK01dJNVBFk3NCN0LF/YFcGCYSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HDV29m6q; arc=none smtp.client-ip=209.85.128.170
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-8000e21f014so2912827b3.2
+        for <linux-hyperv@vger.kernel.org>; Thu, 25 Jun 2026 11:14:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782411270; x=1783016070; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0001ivkwixrdliONYVWWSumm3/LwuGYj6UIz947Dh9M=;
+        b=HDV29m6qrDEJf8MCE6ymG1K3Bu+s0p+vKcMIW8JmWBesqvp28sn0kVr5H6khDaIWwu
+         y4Y0jbOtDD5sBjp9aZ/UBol9l6KN5ukGekTJ5vI/OTmkPU+6NCI8iaVqdxUA94omMneW
+         L+FiR2L5m6Vja6ScKCOIw3m1RWxzx60zak50Y9Dmm5Ip86Mb40ryM1yWvvNPvge1NuB0
+         +GKVDBlD/SMM4OQd2AhsmPaZZbkkfTc1PvFdn+vy6Gs/pG4eQhrlGJW7M3rWlyZZl4ts
+         2cbeBknrcA2D8RWHDFa9hAnx7V1QvXKnWrl16HKWviavgQiQcKI9NiI5YEPZf9LjuPhP
+         nPEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782411270; x=1783016070;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=0001ivkwixrdliONYVWWSumm3/LwuGYj6UIz947Dh9M=;
+        b=ZlLECcAgoHt8rJEQ0lgC4nTcmsDSh2uT4flXrkxP39NjiPw1nLasdDNPDzVXjxHx/z
+         KbsJfiyj0TznjHYWmGaL6xmY7Gyxej+Oy+xVnmrxovWbNmNIOcmosTlPueRlDRG6HotV
+         whi/TmXf4xnTHE85+KlNX3YpDdnEXSPB2UD+q8QR2bCTPWXw4CTwNOyCShSg1r5GqMEQ
+         rRMLSS/5MunNco9onZY4uzc4TOjQEQd/BDp+Dud1wzZhWRTgyg5CTD+b7GGIcrmpa2U9
+         WHbTM1iL5ImmS6RpLELxWja8L6PWgVE+6G1ng2DnMnqrsnLvJMwkFPf1Yw8L56iOJ2xB
+         wWbg==
+X-Forwarded-Encrypted: i=1; AHgh+RokQ2YQfmSCJlN6Y3tEH8oNQbpE9GMJgvaH+kOBy7Za1tzc/WqRT84RckfStxUSsR/X/UZS3/Kwt1ToVYU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeqfffpaW3d87qXurly48EVzqTQC0OU6ySXuNvq2PgZ8WgNZjJ
+	80NoDtrFusVHozqc4+i7hFbdN40st9WifneYZ1l6RIF1+CZw1tr9zxxR
+X-Gm-Gg: AfdE7cnnGoYn4XDeatjWfMgKCEomfq10Wjvnd1O4gUqtTe3uMF5EyAtk2T8SYPXKSHO
+	VPkxcm5WapRYoWC37AoP0AD1115fmJWONgiTPyYQDQYkASH0CNY6KhrP2/HCnwhms3nEbum59AP
+	TsCvz67VANChshflA+6buVdT1rtNFuU2dXWYuK15O62ZxR3H95I22XZxA2S0Gzf7SbXyLdq1HbK
+	FLeeZdzY4xQDYcS7l+aapLeXG9HttWz33A+WPewuQq/8vkrzFTQMydl+q1uSdfZT3n/KjInfrZx
+	v/LrfSN6v0NwOEh9aXIwy3PYjfds02RNB3rFpVfyl2RvT4xcjoyAJehs5Epue3yghJe5fx0/oTa
+	h9QlgGGVUJ8H5QLMrIxZxWj9/d5ImtR4SfjTr4jfWHAxBYSWbtC77w7IpBn+42x0khuBjAYNCNM
+	/w04BKA7o1PFKZjYaIsEX0/RjO+g==
+X-Received: by 2002:a05:690c:9690:b0:80a:30dd:c91b with SMTP id 00721157ae682-80a67dff343mr38354657b3.16.1782411270190;
+        Thu, 25 Jun 2026 11:14:30 -0700 (PDT)
+Received: from Dev-Null-MSI ([2a0d:3344:52ac:a808:98a4:4381:be45:536f])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-8079ef5c533sm29882317b3.41.2026.06.25.11.14.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2026 11:14:29 -0700 (PDT)
+From: Yousef Alhouseen <alhouseenyousef@gmail.com>
+To: "K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>
+Cc: Michael Kelley <mhklinux@outlook.com>,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yousef Alhouseen <alhouseenyousef@gmail.com>
+Subject: [PATCH v2] mshv_vtl: clear hypercall output before copyout
+Date: Thu, 25 Jun 2026 20:13:14 +0200
+Message-ID: <20260625181314.1399-1-alhouseenyousef@gmail.com>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260624172157.2790-1-alhouseenyousef@gmail.com>
+References: <20260624172157.2790-1-alhouseenyousef@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	MISSING_MIME_VERSION(2.00)[];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	FORWARDED(0.00)[lists@lfdr.de];
 	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11683-lists,linux-hyperv=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:kameroncarr@linux.microsoft.com,m:linux-hyperv@vger.kernel.org,s:lists@lfdr.de];
-	RCPT_COUNT_TWO(0.00)[2];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	FREEMAIL_CC(0.00)[outlook.com,vger.kernel.org,gmail.com];
 	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-11684-lists,linux-hyperv=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	ALIAS_RESOLVED(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:mhklinux@outlook.com,m:linux-hyperv@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:alhouseenyousef@gmail.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[alhouseenyousef@gmail.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_NO_DN(0.00)[];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[alhouseenyousef@gmail.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,lists.linux.dev:replyto,smtp.kernel.org:mid,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: C50436C80A2
+X-Rspamd-Queue-Id: 926476C81F0
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] Initialization order bug causes `arm_smccc_hypervisor_has_uuid()=
-` to incorrectly fall back to standard SMC during early boot in a CCA Realm.
---
+mshv_vtl_hvcall_call() copies output_size bytes to userspace.
 
-commit 8e27a5d40fac36e0edcb6814624362e892694ac4
-Author: Kameron Carr <kameroncarr@linux.microsoft.com>
+The output page is freshly allocated. Userspace chooses the copyout length.
 
-firmware: smccc: Detect hypervisor via RSI host call in CCA Realms
+If the hypercall writes less, the tail can contain stale page data.
 
-This commit modifies arm_smccc_hypervisor_has_uuid() to check is_realm_worl=
-d()
-and use an RSI host call to query the hypervisor UUID inside a Realm. It ad=
-ds
-a file-static RSI host call buffer serialized by a spinlock for ARM64.
+Clear the copied range before issuing the hypercall.
 
-> diff --git a/drivers/firmware/smccc/smccc.c b/drivers/firmware/smccc/smcc=
-c.c
-> index bdee057db2fd3..a876b7aa2dc99 100644
-> --- a/drivers/firmware/smccc/smccc.c
-> +++ b/drivers/firmware/smccc/smccc.c
-[ ... ]
-> @@ -67,12 +73,45 @@ s32 arm_smccc_get_soc_id_revision(void)
->  }
->  EXPORT_SYMBOL_GPL(arm_smccc_get_soc_id_revision);
-> =20
-[ ... ]
->  bool arm_smccc_hypervisor_has_uuid(const uuid_t *hyp_uuid)
->  {
->  	struct arm_smccc_res res =3D {};
->  	uuid_t uuid;
-> =20
-> -	arm_smccc_1_1_invoke(ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID, &res);
-> +#ifdef CONFIG_ARM64
-> +	if (is_realm_world())
-> +		arm_smccc_realm_get_hypervisor_uuid(&res);
-> +	else
-> +#endif
+Also check both bounce page allocations before either page is used.
 
-[Severity: Medium]
-Will this check evaluate to false during early boot, causing the detection =
-to
-incorrectly fall back to the standard SMC conduit?
+Signed-off-by: Yousef Alhouseen <alhouseenyousef@gmail.com>
+---
+Changes in v2:
+- Use the mshv_vtl subject prefix.
+- Clear only the requested output byte range instead of the whole page.
+- Add a comment explaining why the output range is cleared.
+- Keep free_page() calls unconditional.
+- v1: https://lore.kernel.org/r/20260624172157.2790-1-alhouseenyousef@gmail.com
 
-Looking at setup_arch(), psci_dt_init() executes before arm64_rsi_init() is
-called to set up the rsi_present static key used by is_realm_world():
+ drivers/hv/mshv_vtl_main.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-setup_arch() {
-    ...
-    if (acpi_disabled)
-        psci_dt_init();
-    else
-        psci_acpi_init();
-
-    arm64_rsi_init();
-    ...
-}
-
-Because psci_dt_init() calls psci_probe(), which calls kvm_init_hyp_service=
-s(),
-this eventually reaches arm_smccc_hypervisor_has_uuid() before the static k=
-ey
-is initialized.=20
-
-Does this sequence cause a silent failure to detect the KVM hypervisor insi=
-de
-an Arm CCA Realm?
-
-> +		arm_smccc_1_1_invoke(ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID,
-> +				     &res);
-> +
->  	if (res.a0 =3D=3D SMCCC_RET_NOT_SUPPORTED)
->  		return false;
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260625173500.1995=
-481-1-kameroncarr@linux.microsoft.com?part=3D2
+diff --git a/drivers/hv/mshv_vtl_main.c b/drivers/hv/mshv_vtl_main.c
+index 0d3d41619..dbf03b667 100644
+--- a/drivers/hv/mshv_vtl_main.c
++++ b/drivers/hv/mshv_vtl_main.c
+@@ -1148,12 +1148,22 @@ static int mshv_vtl_hvcall_call(struct mshv_vtl_hvcall_fd *fd,
+ 	 */
+ 	in = (void *)__get_free_page(GFP_KERNEL);
+ 	out = (void *)__get_free_page(GFP_KERNEL);
++	if (!in || !out) {
++		ret = -ENOMEM;
++		goto free_pages;
++	}
+ 
+ 	if (copy_from_user(in, (void __user *)hvcall.input_ptr, hvcall.input_size)) {
+ 		ret = -EFAULT;
+ 		goto free_pages;
+ 	}
+ 
++	/*
++	 * The caller supplies output_size, so clear the range copied back to
++	 * userspace in case the hypercall writes fewer bytes than requested.
++	 */
++	memset(out, 0, hvcall.output_size);
++
+ 	hvcall.status = hv_do_hypercall(hvcall.control, in, out);
+ 
+ 	if (copy_to_user((void __user *)hvcall.output_ptr, out, hvcall.output_size)) {
+-- 
+2.54.0
 
