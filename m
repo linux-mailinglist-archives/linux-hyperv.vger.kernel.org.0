@@ -1,143 +1,154 @@
-Return-Path: <linux-hyperv+bounces-11677-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11678-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id SLgTL2xoPWoD2wgAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11677-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 25 Jun 2026 19:42:04 +0200
+	id eS4bBw5rPWrC2wgAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11678-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 25 Jun 2026 19:53:18 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5427B6C7F16
-	for <lists+linux-hyperv@lfdr.de>; Thu, 25 Jun 2026 19:42:04 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 943C26C8084
+	for <lists+linux-hyperv@lfdr.de>; Thu, 25 Jun 2026 19:53:17 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linux.microsoft.com header.s=default header.b=XiBBDjmo;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11677-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11677-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=linux.microsoft.com header.s=default header.b=M7geG8xy;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11678-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11678-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=linux.microsoft.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 313B2308301B
-	for <lists+linux-hyperv@lfdr.de>; Thu, 25 Jun 2026 17:37:09 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C9CF430C58BA
+	for <lists+linux-hyperv@lfdr.de>; Thu, 25 Jun 2026 17:42:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA94F3EFFA4;
-	Thu, 25 Jun 2026 17:35:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1173235E940;
+	Thu, 25 Jun 2026 17:42:56 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54AC33EE1F8;
-	Thu, 25 Jun 2026 17:35:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4EBF25785C;
+	Thu, 25 Jun 2026 17:42:54 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782408910; cv=none; b=r/byyIy3W7G/7mzRR75xFJhUSqtDmnLAsl47Kexs9tBcI2/9RMwjTJGN5EOD32gvGm9LWvDfzr6gn7KQgPtM8rQrdz6fM92dq/qBuSB9oWd7cMA1D1Dw4lPClZjR302x9TWyRO2QhjU96thagz7ocBrmT7Fcwj/QDHzyH+kUPig=
+	t=1782409376; cv=none; b=LwW8n8BOpSxebGb6rR/YKq5exhrxi0yj2AxfECRHal7dVjFD7c0eECs9BkAPZH0swGoAkecT+6ofWEBq804Xk/CbA1H2thXOeDg9P0AgNfUwRKVJLjvOZDURX7+sINAZmf/VTbGd/3Jt42oqftA0p8lH73e2U6kvtqf0qr6wilU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782408910; c=relaxed/simple;
-	bh=zEk5sFNW6pqe6e2eBsawwoFQuYsd70ozm+V7GXOXLmY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SOBlNHruzR9Y9d08a5V8bau4j+LmtG7oZoDSvDNfadTddkNS7838zDtdd2ph0MdexLjXaetlocFuBodFTlmFRom+Zm2GaJP48yIyFkVO3KaRTB9+t08xS/m0wmVNJ26BV/BqBUmQKiSYKncpfD7KFpxbuUYF5T8gq+NIDFPrx1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=XiBBDjmo; arc=none smtp.client-ip=13.77.154.182
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 468DB20B716E;
-	Thu, 25 Jun 2026 10:35:03 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 468DB20B716E
+	s=arc-20240116; t=1782409376; c=relaxed/simple;
+	bh=ex0ixU8nrolSMbX0zWTpjeHiIaN3XTiwbYCu6pteU5k=;
+	h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ZBGltmiuNkrjXkR336xbjkmUxLIMbZTn5lLXPUGbvRtYicYUlrynakryZrtiqBIzcZS61Ko2yrXNfnkF46BuqNLdEwdcG26ZPWGsDYWNFrB9MryfzQmr1O72u2jCru1rNdx5LhGYK47b+Wtnr0QwwqkCsuivcn59firwTDxuLes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=M7geG8xy; arc=none smtp.client-ip=13.77.154.182
+Received: from DairyQueen (unknown [4.194.122.162])
+	by linux.microsoft.com (Postfix) with ESMTPSA id CCE1C20B7167;
+	Thu, 25 Jun 2026 10:42:41 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CCE1C20B7167
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1782408903;
-	bh=5qXijFv0wIQN76+QfzfXNNBj5pz3HvHQr8PE2OKbhL0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XiBBDjmosB83q+Narr6sdJYR2vnJFfZCtpMKocf8XbUho8BA5YgiU+sUacn68FcQU
-	 d4mbt7HaTPWLRE3jVwIX4ZWVKVPv2JJrMZY8DMxODFhCqfAVhMmaWrI8xOQOdUinSl
-	 KmDmpDIYPxUX/8CdROgLc5fmhicako9w2gHuo+1g=
-From: Kameron Carr <kameroncarr@linux.microsoft.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	longli@microsoft.com
-Cc: catalin.marinas@arm.com,
-	will@kernel.org,
-	mark.rutland@arm.com,
-	lpieralisi@kernel.org,
-	sudeep.holla@kernel.org,
-	arnd@arndb.de,
-	thuth@redhat.com,
-	linux-hyperv@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	mhklinux@outlook.com
-Subject: [PATCH v2 6/6] arm64: hyperv: Implement hv_is_isolation_supported() for CCA Realms
-Date: Thu, 25 Jun 2026 10:35:00 -0700
-Message-ID: <20260625173500.1995481-7-kameroncarr@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.7
-In-Reply-To: <20260625173500.1995481-1-kameroncarr@linux.microsoft.com>
-References: <20260625173500.1995481-1-kameroncarr@linux.microsoft.com>
+	s=default; t=1782409368;
+	bh=pnOfNp9/ctehv6PmReGlUMeN9R8JuaY0IwGr+iGJTlQ=;
+	h=From:To:Cc:References:In-Reply-To:Subject:Date:From;
+	b=M7geG8xyuW3jaKBpp3FmBW4kbWpHezIBq47o5MufG7sOysIPZXBqCTpdgclvpB1ZI
+	 nk0OqJdgyEKrm4mi2pBsz8xsgWsMUSIAG5uCeKblrU1kMdilPADNuyR+gtBWX/Xj0h
+	 t0oswmRWmaHFk8EWTH72SKsvFnajnmtyUCTik4RQ=
+From: "Kameron Carr" <kameroncarr@linux.microsoft.com>
+To: "'Michael Kelley'" <mhklinux@outlook.com>
+Cc: <catalin.marinas@arm.com>,
+	<will@kernel.org>,
+	<mark.rutland@arm.com>,
+	<lpieralisi@kernel.org>,
+	<sudeep.holla@kernel.org>,
+	<arnd@arndb.de>,
+	<thuth@redhat.com>,
+	<linux-hyperv@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>,
+	<kys@microsoft.com>,
+	<haiyangz@microsoft.com>,
+	<wei.liu@kernel.org>,
+	<decui@microsoft.com>,
+	<longli@microsoft.com>
+References: <20260609181030.2378391-1-kameroncarr@linux.microsoft.com> <20260609181030.2378391-3-kameroncarr@linux.microsoft.com> <SN6PR02MB4157F6A66DEDE650298E120ED4E32@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To: <SN6PR02MB4157F6A66DEDE650298E120ED4E32@SN6PR02MB4157.namprd02.prod.outlook.com>
+Subject: RE: [RFC PATCH 2/6] firmware: smccc: Detect hypervisor via RSI host call in CCA Realms
+Date: Thu, 25 Jun 2026 10:42:41 -0700
+Message-ID: <001701dd04ca$0cfd88b0$26f89a10$@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: en-us
+Thread-Index: AQIqsf51yBS/Or0EhgWD9giRtIuOSwIF3n0XAZ3FyRa1lxLTUA==
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.66 / 15.00];
+X-Spamd-Result: default: False [-5.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[microsoft.com:d:+,kernel.org:s:+];
-	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-11677-lists,linux-hyperv=lfdr.de];
-	FREEMAIL_CC(0.00)[arm.com,kernel.org,arndb.de,redhat.com,vger.kernel.org,lists.infradead.org,outlook.com];
-	FORGED_RECIPIENTS(0.00)[m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:catalin.marinas@arm.com,m:will@kernel.org,m:mark.rutland@arm.com,m:lpieralisi@kernel.org,m:sudeep.holla@kernel.org,m:arnd@arndb.de,m:thuth@redhat.com,m:linux-hyperv@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-arch@vger.kernel.org,m:mhklinux@outlook.com,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER(0.00)[kameroncarr@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[kameroncarr@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:mhklinux@outlook.com,m:catalin.marinas@arm.com,m:will@kernel.org,m:mark.rutland@arm.com,m:lpieralisi@kernel.org,m:sudeep.holla@kernel.org,m:arnd@arndb.de,m:thuth@redhat.com,m:linux-hyperv@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-arch@vger.kernel.org,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	TO_DN_NONE(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	FORGED_SENDER(0.00)[kameroncarr@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	FREEMAIL_TO(0.00)[outlook.com];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11678-lists,linux-hyperv=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[kameroncarr@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,linux.microsoft.com:mid,linux.microsoft.com:from_mime,vger.kernel.org:from_smtp,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:dkim,linux.microsoft.com:mid,linux.microsoft.com:from_mime,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5427B6C7F16
+X-Rspamd-Queue-Id: 943C26C8084
 
-Provide an arm64 implementation of hv_is_isolation_supported() that
-overrides the __weak default in drivers/hv/hv_common.c.
+On Thursday, June 18, 2026 10:46 AM, Michael Kelley wrote:
+> From: Kameron Carr <kameroncarr@linux.microsoft.com> Sent: Tuesday, June
+> 9, 2026 11:10 AM
+> > diff --git a/drivers/firmware/smccc/smccc.c
+> b/drivers/firmware/smccc/smccc.c
+> > index bdee057db2fd3..6b465e65472b0 100644
+> > --- a/drivers/firmware/smccc/smccc.c
+> > +++ b/drivers/firmware/smccc/smccc.c
+> > @@ -12,6 +12,12 @@
+> >  #include <linux/platform_device.h>
+> >  #include <asm/archrandom.h>
+> >
+> > +#ifdef CONFIG_ARM64
+> > +#include <linux/cleanup.h>
+> > +#include <linux/spinlock.h>
+> > +#include <asm/rsi.h>
+> > +#endif
+> > +
+> >  static u32 smccc_version = ARM_SMCCC_VERSION_1_0;
+> >  static enum arm_smccc_conduit smccc_conduit = SMCCC_CONDUIT_NONE;
+> >
+> > @@ -67,12 +73,45 @@ s32 arm_smccc_get_soc_id_revision(void)
+> >  }
+> >  EXPORT_SYMBOL_GPL(arm_smccc_get_soc_id_revision);
+> >
+> > +#ifdef CONFIG_ARM64
+> > +static struct rsi_host_call uuid_hc;
+> > +static DEFINE_SPINLOCK(uuid_hc_lock);
+> 
+> So evidently Sashiko is wrong in saying that struct rsi_host_call must be
+> in decrypted memory?
 
-The implementation deliberately does not depend on
-hv_is_hyperv_initialized() because hv_common_init() consults
-hv_is_isolation_supported() before hyperv_initialized is set.
-
-Signed-off-by: Kameron Carr <kameroncarr@linux.microsoft.com>
----
- arch/arm64/hyperv/mshyperv.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
-index 8e8148b723d9c..62995b6133f6f 100644
---- a/arch/arm64/hyperv/mshyperv.c
-+++ b/arch/arm64/hyperv/mshyperv.c
-@@ -169,3 +169,8 @@ bool hv_isolation_type_cca(void)
- {
- 	return is_realm_world();
- }
-+
-+bool hv_is_isolation_supported(void)
-+{
-+	return is_realm_world();
-+}
--- 
-2.45.4
+Yes, Sashiko is wrong. The RMM spec clearly states that the rsi_host_call
+struct must be encrypted / "protected". The other two requirements are
+256 aligned and not RIPAS_EMPTY.
 
 
