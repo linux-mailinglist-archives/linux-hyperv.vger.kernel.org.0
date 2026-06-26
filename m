@@ -1,151 +1,181 @@
-Return-Path: <linux-hyperv+bounces-11690-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11691-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id TPc3JIDlPWou7wgAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11690-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Jun 2026 04:35:44 +0200
+	id TE7QEtFdPmqXEgkAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11691-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Jun 2026 13:09:05 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 042B26C9D30
-	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Jun 2026 04:35:44 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B3CC6CC4A4
+	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Jun 2026 13:09:04 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=TSvPnq65;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11690-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11690-lists+linux-hyperv=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=linux.microsoft.com header.s=default header.b=gn8G+z5G;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11691-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11691-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=linux.microsoft.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id A980430EB4AB
-	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Jun 2026 02:32:04 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5C4A6301CF9A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Jun 2026 11:09:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D34A631A555;
-	Fri, 26 Jun 2026 02:32:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C943E3E51E7;
+	Fri, 26 Jun 2026 11:09:02 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B631F31619C;
-	Fri, 26 Jun 2026 02:31:59 +0000 (UTC)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E36A379EE8;
+	Fri, 26 Jun 2026 11:09:01 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782441120; cv=none; b=pAumdknMnPBxMDoo2FLdcD21bdDdb+qYgQ2UETmD1xa27Zs4ND1kem42vAhfRIc3hkvFx1JPsG0apDpJJKjNaxLeXjNx7sKppKuZqjX0/Ku4vM6i1O9Nt/6IvV+hVOdpeqbCaEfOJ2xBtpnv7uIuiO4+FopsB3nlvDtTbi148pk=
+	t=1782472142; cv=none; b=DKQjSfCq7YuH5cNznYkhwnksM+y4BTcdWii3JmETB0zmBbHuJgxS8hTl6TNuRkDXjNFf5FKFVT+k9sd0XVkOi3QbOTdugIlxYrGD0xbxSirBTfsjjtPo1OHy5n4ibvBKAxZ3kz5Z9HKpw5zffRBEZFYsq5DgVcdyc88Tfj97+cg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782441120; c=relaxed/simple;
-	bh=Cu+8ULxgnfPyxokxyZMw5c5021izxVS9EdEkDIfmAzQ=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=jjTBLXCAmup1mfwO5KgBInkfRBfyOe7dV3FG242KcFjMgH5dacu/gpFnVi/w0Qwc0ZuqqUWhshYpjtHtbs2UczEld8efrAIXTvOMeJiele/fNgSdr8tICTl4suoSPzvV52RaPpVryjaXudD1jo1AD+fdCyQgxrtwEypVuiRgkbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TSvPnq65; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FEB31F000E9;
-	Fri, 26 Jun 2026 02:31:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782441119;
-	bh=8y1WmmNAeCzXid8EtBZSYlMy9wcWQjR0ZVlBu3F3G+s=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc;
-	b=TSvPnq65R5BLi1BlMnwfEIPaaXv008iQkAeDOGvqztjDg2Fd/pbIBjDtovtOZBCp2
-	 0cFX37NwxAM+ZxwIJY8XAzyN+Xg28ztB8Fu5tahOWdRyUItN6JECzNHwVjN083T7NV
-	 ubF6FpJgABuOOJ9lC8TR/atgESb5MUahDJXfdcJwp7WG3XtZg2Uw6Fn0wROTa24XS7
-	 6CAzmIf2YBSYBwoPfCvcJJ5GpmfjP7g+3HINgNfcVSvCQrOo52CrvDDOA9eEkdSaNf
-	 +hmj9Ssxug6MlT1ybGm9+oi3s0IeJmJWfB8jj7spcexXryEXxld1z0MsmGM7hAQczJ
-	 0ATe0ak0+2nMA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id D0A1339389C4;
-	Fri, 26 Jun 2026 02:31:47 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1782472142; c=relaxed/simple;
+	bh=tpxBv6SR8AFlZnUlebSAxkhctIUO8PhcUXPu/ZOgS2c=;
+	h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:
+	 MIME-Version:Content-Type; b=HHkOYFPp95st6nolPlvjQdpVLqWPEme8joCEHO6IV0wYBS0lHchD+AV+mVw29ZKBmBO5E52APlA8S7+H1Llz4ofRXQKULF2/JfADTlcLUQPNx6MKM+Eftt3OK2QV80CRwZUB9vigHMtgIBnp7kni9EQITIZruhkmuUo/JKzyufg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=gn8G+z5G; arc=none smtp.client-ip=13.77.154.182
+Received: from DairyQueen (unknown [4.194.122.162])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 6DA3320B7169;
+	Fri, 26 Jun 2026 04:08:40 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6DA3320B7169
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1782472130;
+	bh=3tXlinCc4IpnuxZycQ2g/1yaIY+ksDllWGNc2F2P03I=;
+	h=From:To:Cc:References:In-Reply-To:Subject:Date:From;
+	b=gn8G+z5GBVcwrrg49tOu6UrJ2T/Q7/0ZG4TisIRJkAZJxzfJaem8sRm2Dq3BZJI7+
+	 CRoYohSTdyZKVDOcxWqw0+h3F8t6vgjNnXxgZ1nb1RzuDefkxLuQKpJZlgFX/eEtJA
+	 NmmLv/voUeuLZOsDLzUSs0jZ5ALyakKRlI0wy8E0=
+From: "Kameron Carr" <kameroncarr@linux.microsoft.com>
+To: "'Michael Kelley'" <mhklinux@outlook.com>,
+	<kys@microsoft.com>,
+	<haiyangz@microsoft.com>,
+	<wei.liu@kernel.org>,
+	<decui@microsoft.com>,
+	<longli@microsoft.com>
+Cc: <catalin.marinas@arm.com>,
+	<will@kernel.org>,
+	<mark.rutland@arm.com>,
+	<lpieralisi@kernel.org>,
+	<sudeep.holla@kernel.org>,
+	<arnd@arndb.de>,
+	<thuth@redhat.com>,
+	<linux-hyperv@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>
+References: <20260625173500.1995481-1-kameroncarr@linux.microsoft.com> <20260625173500.1995481-5-kameroncarr@linux.microsoft.com> <SN6PR02MB4157D5F94B5C5F35020FF047D4EC2@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To: <SN6PR02MB4157D5F94B5C5F35020FF047D4EC2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Subject: RE: [PATCH v2 4/6] Drivers: hv: Mark shared memory as decrypted for CCA Realms
+Date: Fri, 26 Jun 2026 04:08:42 -0700
+Message-ID: <000801dd055c$2e375050$8aa5f0f0$@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] net: ethtool: keep rtnl_lock for ops using
- ethtool_op_get_link()
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <178244110650.3816447.9959963102868412586.git-patchwork-notify@kernel.org>
-Date: Fri, 26 Jun 2026 02:31:46 +0000
-References: <20260624190439.2521219-1-kuba@kernel.org>
-In-Reply-To: <20260624190439.2521219-1-kuba@kernel.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: davem@davemloft.net, netdev@vger.kernel.org, edumazet@google.com,
- pabeni@redhat.com, andrew+netdev@lunn.ch, horms@kernel.org,
- leitao@debian.org, joshwash@google.com, hramamurthy@google.com,
- anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com, saeedm@nvidia.com,
- tariqt@nvidia.com, mbloch@nvidia.com, leon@kernel.org, alexanderduyck@fb.com,
- kernel-team@meta.com, kys@microsoft.com, haiyangz@microsoft.com,
- wei.liu@kernel.org, decui@microsoft.com, longli@microsoft.com,
- jordanrhee@google.com, jacob.e.keller@intel.com, nktgrg@google.com,
- debarghyak@google.com, mohsin.bashr@gmail.com, ernis@linux.microsoft.com,
- sdf@fomichev.me, gal@nvidia.com, linux-rdma@vger.kernel.org,
- linux-hyperv@vger.kernel.org
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: en-us
+Thread-Index: AQEAlq3oFwuiSVNoPj5kD0Q006gIdwI/GO7nAcdUdB636UC94A==
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.66 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-5.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[microsoft.com:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[davemloft.net,vger.kernel.org,google.com,redhat.com,lunn.ch,kernel.org,debian.org,intel.com,nvidia.com,fb.com,meta.com,microsoft.com,gmail.com,linux.microsoft.com,fomichev.me];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11690-lists,linux-hyperv=lfdr.de,netdevbpf];
-	RCPT_COUNT_TWELVE(0.00)[33];
-	FORGED_SENDER(0.00)[patchwork-bot@kernel.org,linux-hyperv@vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:mhklinux@outlook.com,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:catalin.marinas@arm.com,m:will@kernel.org,m:mark.rutland@arm.com,m:lpieralisi@kernel.org,m:sudeep.holla@kernel.org,m:arnd@arndb.de,m:thuth@redhat.com,m:linux-hyperv@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-arch@vger.kernel.org,s:lists@lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER(0.00)[kameroncarr@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	FREEMAIL_TO(0.00)[outlook.com,microsoft.com,kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:kuba@kernel.org,m:davem@davemloft.net,m:netdev@vger.kernel.org,m:edumazet@google.com,m:pabeni@redhat.com,m:andrew+netdev@lunn.ch,m:horms@kernel.org,m:leitao@debian.org,m:joshwash@google.com,m:hramamurthy@google.com,m:anthony.l.nguyen@intel.com,m:przemyslaw.kitszel@intel.com,m:saeedm@nvidia.com,m:tariqt@nvidia.com,m:mbloch@nvidia.com,m:leon@kernel.org,m:alexanderduyck@fb.com,m:kernel-team@meta.com,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:jordanrhee@google.com,m:jacob.e.keller@intel.com,m:nktgrg@google.com,m:debarghyak@google.com,m:mohsin.bashr@gmail.com,m:ernis@linux.microsoft.com,m:sdf@fomichev.me,m:gal@nvidia.com,m:linux-rdma@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:andrew@lunn.ch,m:mohsinbashr@gmail.com,s:lists@lfdr.de];
-	FROM_NEQ_ENVFROM(0.00)[patchwork-bot@kernel.org,linux-hyperv@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11691-lists,linux-hyperv=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TO_DN_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	FROM_NO_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+	FORGED_SENDER_FORWARDING(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[kameroncarr@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 042B26C9D30
+X-Rspamd-Queue-Id: 9B3CC6CC4A4
 
-Hello:
-
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Wed, 24 Jun 2026 12:04:39 -0700 you wrote:
-> Breno reports following splats on mlx5:
+On Thursday, June 25, 2026 11:59 AM, Michael Kelley wrote:
+> From: Kameron Carr <kameroncarr@linux.microsoft.com> Sent: Thursday,
+> June 25, 2026 10:35 AM
+> > We need to round up the memory allocated for the input/output pages to
+> > the nearest PAGE_SIZE, since set_memory_decrypted() requires the size to
+> > be a multiple of PAGE_SIZE. This only has an effect on ARM VMs that are
+> > using PAGE_SIZE larger than 4K.
 > 
->   RTNL: assertion failed at net/core/dev.c (2241)
->   WARNING: net/core/dev.c:2241 at netif_state_change+0xed/0x130, CPU#5: ethtool/1335
->   RIP: 0010:netif_state_change+0xf9/0x130
->   Call Trace:
->     <TASK>
->      __linkwatch_sync_dev+0xea/0x120
->      ethtool_op_get_link+0xe/0x20
->      __ethtool_get_link+0x26/0x40
->      linkstate_prepare_data+0x51/0x200
->      ethnl_default_doit+0x213/0x470
->      genl_family_rcv_msg_doit+0xdd/0x110
+> I think this change resulted from a Sashiko comment. My understanding is
+> that the ARM CCA architecture only supports CCA guests with 4 KiB page
+> size. Is that still the case, or has that restriction been lifted in a
+later version
+> of the architecture? I'm in favor of handling the larger page sizes, if
+only for
+> future proofing. But I wondered whether your intent is to always support
+> > 4 KiB page sizes even if CCA doesn't support them now. Another way to
+> put it: In reviewing code, should I flag issues related to page sizes > 4
+KiB?
+
+I think you might be right. I'm looking at RMM spec 2.0 beta 2, and the RMI
+can have granule size 4KB, 16KB, 64KB, but the RSI is restricted to granule
+size
+4KB.
+
+I'm open to suggestion on best way to move forward.
+
+> > @@ -499,14 +500,16 @@ int hv_common_cpu_init(unsigned int cpu)
+> >  		}
+> >
+> >  		if (!ms_hyperv.paravisor_present &&
+> > -		    (hv_isolation_type_snp() || hv_isolation_type_tdx())) {
+> > -			ret = set_memory_decrypted((unsigned long)mem,
+> pgcount);
+> > +		    (hv_isolation_type_snp() || hv_isolation_type_tdx() ||
+> > +		     hv_isolation_type_cca())) {
+> > +			ret = set_memory_decrypted((unsigned
+> long)kasan_reset_tag(mem),
+> > +				alloc_size >> PAGE_SHIFT);
 > 
-> [...]
+> I don't know enough about KASAN or the tag situation on ARM64
+> to comment on this change. But this same sequence of allocating
+> memory and then decrypting it occurs in other places in Hyper-V
+> code. It seems like those places would also need the same
+> kasan_reset_tag() call.
 
-Here is the summary with links:
-  - [net] net: ethtool: keep rtnl_lock for ops using ethtool_op_get_link()
-    https://git.kernel.org/netdev/net/c/1105ef941c1a
+I'm not sure of the exact behavior of PAGE_END when there are
+KASAN tags, but it looks like tags could mess with the address
+comparison.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+I do see that __virt_to_phys_nodebug() and virt_addr_valid() in
+arch/arm64/include/asm/memory.h both reset tags before calling
+__is_lm_address().
+
+If there are many calls that follow this pattern, it may be better to
+add the tag reset in __set_memory_enc_dec().
+
+I can undo this change.
+
+Regards,
+Kameron
+
 
 
 
