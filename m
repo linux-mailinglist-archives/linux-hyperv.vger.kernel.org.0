@@ -1,181 +1,242 @@
-Return-Path: <linux-hyperv+bounces-11691-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11692-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id TE7QEtFdPmqXEgkAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11691-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Jun 2026 13:09:05 +0200
+	id TfG2HGSTPmpeIQkAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11692-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Jun 2026 16:57:40 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B3CC6CC4A4
-	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Jun 2026 13:09:04 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 177E56CE374
+	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Jun 2026 16:57:40 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linux.microsoft.com header.s=default header.b=gn8G+z5G;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11691-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11691-lists+linux-hyperv=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=linux.microsoft.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=iDZhI9iC;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11692-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11692-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5C4A6301CF9A
-	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Jun 2026 11:09:03 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id DB22030ABFD6
+	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Jun 2026 14:51:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C943E3E51E7;
-	Fri, 26 Jun 2026 11:09:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 419F53F7A9F;
+	Fri, 26 Jun 2026 14:50:56 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E36A379EE8;
-	Fri, 26 Jun 2026 11:09:01 +0000 (UTC)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01EB030B50F;
+	Fri, 26 Jun 2026 14:50:55 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782472142; cv=none; b=DKQjSfCq7YuH5cNznYkhwnksM+y4BTcdWii3JmETB0zmBbHuJgxS8hTl6TNuRkDXjNFf5FKFVT+k9sd0XVkOi3QbOTdugIlxYrGD0xbxSirBTfsjjtPo1OHy5n4ibvBKAxZ3kz5Z9HKpw5zffRBEZFYsq5DgVcdyc88Tfj97+cg=
+	t=1782485456; cv=none; b=hFMzSPaZsA4xciwmSyMjofDwSxJvuAFpOMtH6mK6JGhywZw8p/Yul7isE6quCwRh3m0TpDqFqkf2O20F+a0o9yPp0Ju3G48LfQwJv8b+1yvW05gnxnOP1cwcIC84jh6+bJ2H9QzV8rnNIAj1EUXichMqpl+DgxAXM/M3sedvc3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782472142; c=relaxed/simple;
-	bh=tpxBv6SR8AFlZnUlebSAxkhctIUO8PhcUXPu/ZOgS2c=;
-	h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:
-	 MIME-Version:Content-Type; b=HHkOYFPp95st6nolPlvjQdpVLqWPEme8joCEHO6IV0wYBS0lHchD+AV+mVw29ZKBmBO5E52APlA8S7+H1Llz4ofRXQKULF2/JfADTlcLUQPNx6MKM+Eftt3OK2QV80CRwZUB9vigHMtgIBnp7kni9EQITIZruhkmuUo/JKzyufg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=gn8G+z5G; arc=none smtp.client-ip=13.77.154.182
-Received: from DairyQueen (unknown [4.194.122.162])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 6DA3320B7169;
-	Fri, 26 Jun 2026 04:08:40 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6DA3320B7169
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1782472130;
-	bh=3tXlinCc4IpnuxZycQ2g/1yaIY+ksDllWGNc2F2P03I=;
-	h=From:To:Cc:References:In-Reply-To:Subject:Date:From;
-	b=gn8G+z5GBVcwrrg49tOu6UrJ2T/Q7/0ZG4TisIRJkAZJxzfJaem8sRm2Dq3BZJI7+
-	 CRoYohSTdyZKVDOcxWqw0+h3F8t6vgjNnXxgZ1nb1RzuDefkxLuQKpJZlgFX/eEtJA
-	 NmmLv/voUeuLZOsDLzUSs0jZ5ALyakKRlI0wy8E0=
-From: "Kameron Carr" <kameroncarr@linux.microsoft.com>
-To: "'Michael Kelley'" <mhklinux@outlook.com>,
-	<kys@microsoft.com>,
-	<haiyangz@microsoft.com>,
-	<wei.liu@kernel.org>,
-	<decui@microsoft.com>,
-	<longli@microsoft.com>
-Cc: <catalin.marinas@arm.com>,
-	<will@kernel.org>,
-	<mark.rutland@arm.com>,
-	<lpieralisi@kernel.org>,
-	<sudeep.holla@kernel.org>,
-	<arnd@arndb.de>,
-	<thuth@redhat.com>,
-	<linux-hyperv@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>
-References: <20260625173500.1995481-1-kameroncarr@linux.microsoft.com> <20260625173500.1995481-5-kameroncarr@linux.microsoft.com> <SN6PR02MB4157D5F94B5C5F35020FF047D4EC2@SN6PR02MB4157.namprd02.prod.outlook.com>
-In-Reply-To: <SN6PR02MB4157D5F94B5C5F35020FF047D4EC2@SN6PR02MB4157.namprd02.prod.outlook.com>
-Subject: RE: [PATCH v2 4/6] Drivers: hv: Mark shared memory as decrypted for CCA Realms
-Date: Fri, 26 Jun 2026 04:08:42 -0700
-Message-ID: <000801dd055c$2e375050$8aa5f0f0$@linux.microsoft.com>
+	s=arc-20240116; t=1782485456; c=relaxed/simple;
+	bh=JCLAeQVKI++UFhHCy4DXgU0YkKin5C+cQ3159/WrbEA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dC4m8m8/GfJ+bRGV34lcKo2DQI5sjaGIN8IQIu0/OBg0u+ERWe2AUjl+YISL1Tvx/XIMo5xYS2xfD+mZCBJ8dd3A+V6yiG551aF1UUdMZrW6Pl2xff4AQagZ2/kERd5FtDs2VcRRFX8lZbf3XHCr0RTfTdsQDCQVt7vmuTWbUDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iDZhI9iC; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B42B1F000E9;
+	Fri, 26 Jun 2026 14:50:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782485454;
+	bh=eeYtlt82OtWBDyc4TXqVh3jBy3MFqJIuldO9muaK438=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=iDZhI9iCBbeqQkxKvBvis57YrHTKvs+WPaZHMNypJ1Js+vn7DCD5Brk/FbiipFdqK
+	 7SefG56wd3bw4RrAuVLdzGnlvdAeAc8VnW6ezs1MYEYVc0LlFBABtO/8Cjx89EfEbU
+	 5T2G73ufKK10xkqyZdxVTaSQpmR9O5OmzvhwGKEBYJy2tvTpFmiPxSRvE79IWMUaUT
+	 vkKpn0gog6prHrw9BS2SxCAD+wyEZ5E7XdL/0p4WZA3ugAbJ9Qlo/iE46KF+3eSE6j
+	 UHYI4A5fG24BkooovUKmWyrqUiA7qxUFeN54SbrG5j4Jpv3lri8mVmLJN0Uli43a7m
+	 OupEt1viH6pnw==
+Date: Fri, 26 Jun 2026 15:50:48 +0100
+From: Simon Horman <horms@kernel.org>
+To: Dexuan Cui <decui@microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	longli@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	kotaranov@microsoft.com, ernis@linux.microsoft.com,
+	dipayanroy@linux.microsoft.com, kees@kernel.org,
+	jacob.e.keller@intel.com, ssengar@linux.microsoft.com,
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH net v2 1/2] net: mana: Sync page pool RX frags for CPU
+Message-ID: <20260626145048.GB1310988@horms.kernel.org>
+References: <20260624222605.1794719-1-decui@microsoft.com>
+ <20260624222605.1794719-2-decui@microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-us
-Thread-Index: AQEAlq3oFwuiSVNoPj5kD0Q006gIdwI/GO7nAcdUdB636UC94A==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260624222605.1794719-2-decui@microsoft.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[microsoft.com:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-3.66 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:mhklinux@outlook.com,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:catalin.marinas@arm.com,m:will@kernel.org,m:mark.rutland@arm.com,m:lpieralisi@kernel.org,m:sudeep.holla@kernel.org,m:arnd@arndb.de,m:thuth@redhat.com,m:linux-hyperv@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-arch@vger.kernel.org,s:lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[kameroncarr@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	FREEMAIL_TO(0.00)[outlook.com,microsoft.com,kernel.org];
+	TAGGED_FROM(0.00)[bounces-11692-lists,linux-hyperv=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[21];
+	FORGED_RECIPIENTS(0.00)[m:decui@microsoft.com,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:longli@microsoft.com,m:andrew+netdev@lunn.ch,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:kotaranov@microsoft.com,m:ernis@linux.microsoft.com,m:dipayanroy@linux.microsoft.com,m:kees@kernel.org,m:jacob.e.keller@intel.com,m:ssengar@linux.microsoft.com,m:linux-hyperv@vger.kernel.org,m:netdev@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:stable@vger.kernel.org,m:andrew@lunn.ch,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-11691-lists,linux-hyperv=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[horms@kernel.org,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[kameroncarr@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[horms@kernel.org,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,linux.dev:url,vger.kernel.org:from_smtp,horms.kernel.org:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 9B3CC6CC4A4
+X-Rspamd-Queue-Id: 177E56CE374
 
-On Thursday, June 25, 2026 11:59 AM, Michael Kelley wrote:
-> From: Kameron Carr <kameroncarr@linux.microsoft.com> Sent: Thursday,
-> June 25, 2026 10:35 AM
-> > We need to round up the memory allocated for the input/output pages to
-> > the nearest PAGE_SIZE, since set_memory_decrypted() requires the size to
-> > be a multiple of PAGE_SIZE. This only has an effect on ARM VMs that are
-> > using PAGE_SIZE larger than 4K.
+On Wed, Jun 24, 2026 at 03:26:04PM -0700, Dexuan Cui wrote:
+> MANA allocates RX buffers from page pool fragments when frag_count is
+> greater than 1. In that case the buffers remain DMA mapped by page pool
+> and the RX completion path does not call dma_unmap_single(). As a result,
+> the implicit sync-for-CPU normally performed by dma_unmap_single() is
+> missing before the packet data is passed to the networking stack.
 > 
-> I think this change resulted from a Sashiko comment. My understanding is
-> that the ARM CCA architecture only supports CCA guests with 4 KiB page
-> size. Is that still the case, or has that restriction been lifted in a
-later version
-> of the architecture? I'm in favor of handling the larger page sizes, if
-only for
-> future proofing. But I wondered whether your intent is to always support
-> > 4 KiB page sizes even if CCA doesn't support them now. Another way to
-> put it: In reviewing code, should I flag issues related to page sizes > 4
-KiB?
-
-I think you might be right. I'm looking at RMM spec 2.0 beta 2, and the RMI
-can have granule size 4KB, 16KB, 64KB, but the RSI is restricted to granule
-size
-4KB.
-
-I'm open to suggestion on best way to move forward.
-
-> > @@ -499,14 +500,16 @@ int hv_common_cpu_init(unsigned int cpu)
-> >  		}
-> >
-> >  		if (!ms_hyperv.paravisor_present &&
-> > -		    (hv_isolation_type_snp() || hv_isolation_type_tdx())) {
-> > -			ret = set_memory_decrypted((unsigned long)mem,
-> pgcount);
-> > +		    (hv_isolation_type_snp() || hv_isolation_type_tdx() ||
-> > +		     hv_isolation_type_cca())) {
-> > +			ret = set_memory_decrypted((unsigned
-> long)kasan_reset_tag(mem),
-> > +				alloc_size >> PAGE_SHIFT);
+> This breaks RX on configurations which require explicit DMA syncing, for
+> example when booted with swiotlb=force.
 > 
-> I don't know enough about KASAN or the tag situation on ARM64
-> to comment on this change. But this same sequence of allocating
-> memory and then decrypting it occurs in other places in Hyper-V
-> code. It seems like those places would also need the same
-> kasan_reset_tag() call.
+> Fix this by recording the page pool page and DMA sync offset when the RX
+> buffer is allocated, and syncing the received packet range for CPU access
+> before handing the RX buffer to the stack.
+> 
+> Fixes: 730ff06d3f5c ("net: mana: Use page pool fragments for RX buffers instead of full pages to improve memory efficiency.")
+> Cc: stable@vger.kernel.org
+> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> ---
+> 
+> Changes since v1:
+>     v1 is split into two patches in the v2.
+>     Add Haiyang's Reviewed-by.
+> 
+>  drivers/net/ethernet/microsoft/mana/mana_en.c | 39 +++++++++++++++----
+>  include/net/mana/mana.h                       |  8 ++++
+>  2 files changed, 40 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> index c9b1df1ed109..1875bffd82b7 100644
+> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> @@ -2044,12 +2044,16 @@ static void mana_rx_skb(void *buf_va, bool from_pool,
+>  }
+>  
+>  static void *mana_get_rxfrag(struct mana_rxq *rxq, struct device *dev,
+> -			     dma_addr_t *da, bool *from_pool)
+> +			     dma_addr_t *da, bool *from_pool,
+> +			     struct page **pp_page, u32 *dma_sync_offset)
+>  {
+>  	struct page *page;
+>  	u32 offset;
+>  	void *va;
+> +
+>  	*from_pool = false;
+> +	*pp_page = NULL;
+> +	*dma_sync_offset = 0;
+>  
+>  	/* Don't use fragments for jumbo frames or XDP where it's 1 fragment
+>  	 * per page.
+> @@ -2087,31 +2091,47 @@ static void *mana_get_rxfrag(struct mana_rxq *rxq, struct device *dev,
+>  	va  = page_to_virt(page) + offset;
+>  	*da = page_pool_get_dma_addr(page) + offset + rxq->headroom;
+>  	*from_pool = true;
+> +	*pp_page = page;
+> +	*dma_sync_offset = offset + rxq->headroom;
+>  
+>  	return va;
+>  }
+>  
+>  /* Allocate frag for rx buffer, and save the old buf */
+>  static void mana_refill_rx_oob(struct device *dev, struct mana_rxq *rxq,
+> -			       struct mana_recv_buf_oob *rxoob, void **old_buf,
+> -			       bool *old_fp)
+> +			       struct mana_recv_buf_oob *rxoob, u32 pktlen,
+> +			       void **old_buf, bool *old_fp)
+>  {
+> +	struct page *pp_page;
+> +	u32 dma_sync_offset;
+>  	bool from_pool;
+>  	dma_addr_t da;
+>  	void *va;
+>  
+> -	va = mana_get_rxfrag(rxq, dev, &da, &from_pool);
+> +	va = mana_get_rxfrag(rxq, dev, &da, &from_pool, &pp_page,
+> +			     &dma_sync_offset);
+>  	if (!va)
+>  		return;
+> -	if (!rxoob->from_pool || rxq->frag_count == 1)
+> +	if (!rxoob->from_pool || rxq->frag_count == 1) {
+>  		dma_unmap_single(dev, rxoob->sgl[0].address, rxq->datasize,
+>  				 DMA_FROM_DEVICE);
+> +	} else {
+> +		/* The page pool maps the whole page and only syncs for device
+> +		 * automatically (PP_FLAG_DMA_SYNC_DEV). Sync the received bytes
+> +		 * for the CPU before they are read: this is required if DMA
+> +		 * is incoherent or bounce buffers are used.
+> +		 */
+> +		page_pool_dma_sync_for_cpu(rxq->page_pool, rxoob->pp_page,
+> +					   rxoob->dma_sync_offset, pktlen);
+> +	}
 
-I'm not sure of the exact behavior of PAGE_END when there are
-KASAN tags, but it looks like tags could mess with the address
-comparison.
+Hi,
 
-I do see that __virt_to_phys_nodebug() and virt_addr_valid() in
-arch/arm64/include/asm/memory.h both reset tags before calling
-__is_lm_address().
+I'm sorry to be bothersome but I think that the order of the two patches
+that comprise this series should be reversed. Or if that is not possible,
+go back to a single patch.
 
-If there are many calls that follow this pattern, it may be better to
-add the tag reset in __set_memory_enc_dec().
+Because, as flagged by https://netdev-ai.bots.linux.dev/sashiko/
 
-I can undo this change.
+  Is pktlen here bounded before it reaches page_pool_dma_sync_for_cpu()?
+  The value originates from oob->ppi[i].pkt_len in mana_process_rx_cqe()
+  and is forwarded straight into this call with no comparison against
+  rxq->datasize or (rxq->alloc_size - rxoob->dma_sync_offset).
 
-Regards,
-Kameron
+  When SWIOTLB is in use (the swiotlb=force case explicitly called out in
+  the commit message), page_pool_dma_sync_for_cpu() reaches
+  dma_sync_single_range_for_cpu() and copies dma_sync_size bytes from the
+  bounce buffer back into the original page.
 
+  Since alloc_size can be smaller than PAGE_SIZE and multiple fragments
+  share a single page_pool page, can a pktlen larger than the fragment
+  extent here cause the copy-back to spill past this fragment into
+  neighbouring fragments that belong to other rxoobs still in flight?
 
+  If so, those neighbours may already have been or may shortly be passed
+  up via napi_gro_receive() in mana_rx_skb(), so the over-sync would
+  silently overwrite their payloads before the eventual skb_put() in
+  mana_build_skb() trips skb_over_panic() on this oversized packet.
 
+  Would it make sense to validate pktlen against rxq->datasize before
+  calling mana_refill_rx_oob()?  The follow-up patch in this series,
+  "net: mana: Validate the packet length reported by the NIC" (commit
+  6c707fe658d6), adds exactly that check:
+      if (unlikely(pktlen > rxq->datasize))
+          ...
+  Could that validation be folded into this patch so that the sync-for-CPU
+  introduced here cannot be steered with an attacker-controlled length,
+  particularly given that the motivating scenario (swiotlb=force) is the
+  Confidential VM case where the hypervisor-supplied CQE is untrusted?
 
