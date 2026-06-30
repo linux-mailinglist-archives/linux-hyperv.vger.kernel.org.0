@@ -1,895 +1,207 @@
-Return-Path: <linux-hyperv+bounces-11709-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11710-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id FoC7OJPlQmoqHQoAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11709-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 29 Jun 2026 23:37:23 +0200
+	id i5oQBwESRGrFnwoAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11710-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Jun 2026 20:59:13 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50B496DEE49
-	for <lists+linux-hyperv@lfdr.de>; Mon, 29 Jun 2026 23:37:23 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 94C936E75A3
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Jun 2026 20:59:12 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linux.microsoft.com header.s=default header.b=Lqj8+bjR;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11709-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11709-lists+linux-hyperv=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=linux.microsoft.com;
+	dkim=pass header.d=google.com header.s=20251104 header.b="I/3WEowT";
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11710-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11710-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=reject) header.from=google.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1576230179FC
-	for <lists+linux-hyperv@lfdr.de>; Mon, 29 Jun 2026 21:37:22 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 05A3F302F272
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Jun 2026 18:59:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD5073C9EEB;
-	Mon, 29 Jun 2026 21:37:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46CDD3E173B;
+	Tue, 30 Jun 2026 18:59:05 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A44923C9ED6;
-	Mon, 29 Jun 2026 21:37:19 +0000 (UTC)
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 447673DF001
+	for <linux-hyperv@vger.kernel.org>; Tue, 30 Jun 2026 18:59:03 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782769041; cv=none; b=biCds7n3kcoRxPMRyJvJnj82lpH55IBIOFHqR8Bqo4mnJ6obUV7EvtYMGfqToNOrsYEFyXc8BOQ1Iu7nu/q+/xGOfzFEASTmzFujf4DRQYCoZ43WTJzKFcO+NE3r7Lv6ykJD/J7itFe3ER64nDiL8Cv56N5e3B6Jl2SY/WXsv2g=
+	t=1782845945; cv=none; b=ePehZ4fgJcZt0odvgYxY8jYXPB/7iZs/kYv+gO+GZ5pTmW3g13F/SRlPz3HVjcC0e6hwo5xOzxBpDIQbpfR50MoHys6Sv5IRjuJLPUrR0vh00c1pjNawu9RPaqoQtaPIpAAzvfdu7VtcQ+G0RssusM71EAeCREnHXNyVkqh4z1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782769041; c=relaxed/simple;
-	bh=re7tGT10GtF4eiNFtVXTCR63a8lXQ+AbfaA1fUURhOk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IEzI/pOgO3zWQj386ANjKERQJY+A3gJY3zI09g8Sdtl+jgVrGebOOE5R7HM68+2nddAn5UgmwdQpGj5omgvzQ+M/Pnwm5GnJZk5N7Zt64Sg0u3nEWHvxmLhZoZcZ5PAd4u3bKWpxovm30//hNddhW98y//EbqP4YYl5BXn0zf2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Lqj8+bjR; arc=none smtp.client-ip=13.77.154.182
-Received: by linux.microsoft.com (Postfix, from userid 1006)
-	id 5C6A120B716D; Mon, 29 Jun 2026 14:37:19 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5C6A120B716D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1782769039;
-	bh=q5GTnlA4SjZeYEr2l3+6o970Xf+VKar+V9fT7m/nAFo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Lqj8+bjR1TDkakIFSv1F0qQSC2ru9oPxMdJeLQi+c5TXqMyXF3367Ntk/hmSn4SMg
-	 SDrXR3Tebabfioq2JqDR7oKtxdEQOfqtXQpqJHXxfU/TNxeuAeaWhPQpgGNQ0529iV
-	 NHbYSKKeyJDur+GVemph+qWZVZyO9U8zBVTVoNoQ=
-From: Haiyang Zhang <haiyangz@linux.microsoft.com>
-To: linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Dipayaan Roy <dipayanroy@linux.microsoft.com>,
-	Aditya Garg <gargaditya@linux.microsoft.com>,
-	Breno Leitao <leitao@debian.org>,
-	linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Cc: paulros@microsoft.com
-Subject: [PATCH net-next v4] net: mana: Add Interrupt Moderation support
-Date: Mon, 29 Jun 2026 14:36:32 -0700
-Message-ID: <20260629213652.11682-1-haiyangz@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.7
+	s=arc-20240116; t=1782845945; c=relaxed/simple;
+	bh=XGgg+xXUmnlRvAbgTK542VK34Jp1hfwPb9Na535wrug=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=BMgWJglRA2H8XklqDXZCgzUUOV5xVUKDCI5E6GVnaQD2VTNJ3baj3+QZZn9LWxXAJMNt49e4GOWvaSqiBvUJfkP5/BbwHOtFw06KidyUHcN78ikvxMdvihQH+vVma72ZADIEluClco1ocakZF2tvQoXqJYBouVscdQqiLMs4f+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I/3WEowT; arc=none smtp.client-ip=209.85.214.201
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2c7f385887bso80357605ad.0
+        for <linux-hyperv@vger.kernel.org>; Tue, 30 Jun 2026 11:59:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1782845943; x=1783450743; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=e+HRXjFGgcPzOleYtd12nce6K890KkClpjKYcrzynFs=;
+        b=I/3WEowTJRiihaVlRhDqzwj+YFRhy3c6bZt1KMXwh9x+om89q3OC+JV0rMtABHuHPF
+         qKTGPEF+LctDdirA+uM3nYkHMtqx7fzxbKIo7F/ANMmPr47Kwsrrnm8E9Yb1Y2eCZ8WT
+         pb40zvGu2vMFonNzF5uChbhNUm+4Abp0wLfh+8tBFirSreUkERpYPrulspJkbT2ABs3t
+         54e3TQ4JLV7EMB4ti1zVIN8Zf+GguCJY/CTwPz2Vs6GJbsvvrBWQB+i8mbiTIY3WqJ2b
+         z/S25V9ZGlAtRn3L2wb//Dbu0OlwWKm5mOpsVZXv+wJ2t9RD6W6vx1WOb8AUFiiio86v
+         g6uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782845943; x=1783450743;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=e+HRXjFGgcPzOleYtd12nce6K890KkClpjKYcrzynFs=;
+        b=FYmpLdAhXqQqBinWefLR/ocsplvZpJpiM3RuUfBUxXVOXAWwgc87LSfO9H9kpUEGbB
+         kgKA0iyf/cy19ec+pH09aJCtpWiZJOvxtpICN0uXiz7r5kFOSAD2xkAJJoTiHnD+bCTu
+         fMZRT6wSphWwUsj62BIpx+k+x+IU52tI6TOy4HZhjbHM0rJnL+kKywdeG9SsorAk4Xla
+         k0PIEPB3aXuvb8j6QHT5woc1AjKjX0XAphKolO7urQkg2DfwUXMm45rndCwqNhAgRBEl
+         lqJBUeveLJXmoh5n4Fdhfn733cJpjGMlbZbczDZCT0aGgu6sXdSgl1fPIUfiPr8xviRX
+         m1HA==
+X-Forwarded-Encrypted: i=1; AHgh+RpoJiXr/Wg0r4SgbDb8A4JzolNeDkIu6T9XCLqScCzT8piVW9vEFFhnO257BN3g7Jq6QzBWukLMkaT05qk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzynO//1f/WtqRnJh6OB7ZYutXxen9GaTrM+vlBPK8V4bHShPkE
+	AZG8x9HPKN/Knw9Xd1L7Xusy07ZIy/lxMYRKAx/SCgGiNefFk4PgOSsBkQuLMidcvmIrvNKI3Od
+	+RpQxYA==
+X-Received: from plbko12.prod.google.com ([2002:a17:903:7cc:b0:2c6:9f66:d581])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:acd:b0:2c9:c517:d075
+ with SMTP id d9443c01a7336-2ca5a581ab5mr15124165ad.15.1782845942348; Tue, 30
+ Jun 2026 11:59:02 -0700 (PDT)
+Date: Tue, 30 Jun 2026 11:59:01 -0700
+In-Reply-To: <akJUz0kYkEBdLSZ3@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20260629060526.3638272-1-jgross@suse.com> <d7c1db52-529a-43cc-ac7d-38b52627e8bc@app.fastmail.com>
+ <c1608c48-13c2-4290-826b-28b5ca51eaf7@suse.com> <7332feff-2649-496c-8e49-b0a19eb54a32@app.fastmail.com>
+ <akJUz0kYkEBdLSZ3@gmail.com>
+Message-ID: <akQR9YMtMHReJTfB@google.com>
+Subject: Re: [PATCH 00/32] x86/msr: Drop 32-bit MSR interfaces
+From: Sean Christopherson <seanjc@google.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, 
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, x86@kernel.org, linux-acpi@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-coco@lists.linux.dev, linux-pci@vger.kernel.org, 
+	virtualization@lists.linux.dev, linux-ide@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-hyperv@vger.kernel.org, 
+	linux-hwmon@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@kernel.org>, 
+	Zhang Rui <rui.zhang@intel.com>, "lukasz.luba@arm.com" <lukasz.luba@arm.com>, 
+	Jason Baron <jbaron@akamai.com>, Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>, 
+	Yazen Ghannam <yazen.ghannam@amd.com>, Len Brown <lenb@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, "Kirill A. Shutemov" <kas@kernel.org>, 
+	Rick Edgecombe <rick.p.edgecombe@intel.com>, Pu Wen <puwen@hygon.cn>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
+	Alexey Makhalov <alexey.makhalov@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Reinette Chatre <reinette.chatre@intel.com>, 
+	Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>, 
+	Babu Moger <babu.moger@amd.com>, Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>, 
+	Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, Dave Airlie <airlied@redhat.com>, 
+	Helge Deller <deller@gmx.de>, linux-geode@lists.infradead.org, 
+	Olivia Mackall <olivia@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "K. Y. Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
+	Guenter Roeck <linux@roeck-us.net>, Peter Zijlstra <peterz@infradead.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
+	Andy Lutomirski <luto@kernel.org>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
+	Huang Rui <ray.huang@amd.com>, Mario Limonciello <mario.limonciello@amd.com>, 
+	Perry Yuan <perry.yuan@amd.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	"srinivas.pandruvada@linux.intel.com" <srinivas.pandruvada@linux.intel.com>, 
+	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Artem Bityutskiy <dedekind1@gmail.com>, 
+	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
+	Vignesh Raghavendra <vigneshr@ti.com>, Ashok Raj <ashok.raj.linux@gmail.com>, 
+	Hans de Goede <hansg@kernel.org>, 
+	"Ilpo =?utf-8?B?SsOkcnZpbmVu?=" <ilpo.jarvinen@linux.intel.com>, 
+	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, David E Box <david.e.box@intel.com>, 
+	xen-devel@lists.xenproject.org
+Content-Type: text/plain; charset="us-ascii"
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[microsoft.com:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
+	MV_CASE(0.50)[];
+	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[21];
 	MIME_TRACE(0.00)[0:+];
-	FORWARDED(0.00)[lists@lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:linux-hyperv@vger.kernel.org,m:netdev@vger.kernel.org,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:andrew+netdev@lunn.ch,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:kotaranov@microsoft.com,m:horms@kernel.org,m:ernis@linux.microsoft.com,m:dipayanroy@linux.microsoft.com,m:gargaditya@linux.microsoft.com,m:leitao@debian.org,m:linux-kernel@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:paulros@microsoft.com,m:andrew@lunn.ch,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[haiyangz@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11709-lists,linux-hyperv=lfdr.de];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[haiyangz@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11710-lists,linux-hyperv=lfdr.de];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:mingo@kernel.org,m:arnd@arndb.de,m:jgross@suse.com,m:linux-kernel@vger.kernel.org,m:linux-pm@vger.kernel.org,m:linux-edac@vger.kernel.org,m:x86@kernel.org,m:linux-acpi@vger.kernel.org,m:kvm@vger.kernel.org,m:linux-coco@lists.linux.dev,m:linux-pci@vger.kernel.org,m:virtualization@lists.linux.dev,m:linux-ide@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-fbdev@vger.kernel.org,m:linux-crypto@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:linux-hwmon@vger.kernel.org,m:linux-perf-users@vger.kernel.org,m:linux-mtd@lists.infradead.org,m:platform-driver-x86@vger.kernel.org,m:rafael@kernel.org,m:daniel.lezcano@kernel.org,m:rui.zhang@intel.com,m:lukasz.luba@arm.com,m:jbaron@akamai.com,m:bp@alien8.de,m:tony.luck@intel.com,m:yazen.ghannam@amd.com,m:lenb@kernel.org,m:pavel@kernel.org,m:tglx@kernel.org,m:mingo@redhat.com,m:dave.hansen@linux.intel.com,m:hpa@zytor.com,m:pbonzini@redhat.com,m:kas@kernel.org,m:rick.p.edgecombe@intel.
+ com,m:puwen@hygon.cn,m:bhelgaas@google.com,m:ajay.kaher@broadcom.com,m:alexey.makhalov@broadcom.com,m:bcm-kernel-feedback-list@broadcom.com,m:viresh.kumar@linaro.org,m:reinette.chatre@intel.com,m:Dave.Martin@arm.com,m:james.morse@arm.com,m:babu.moger@amd.com,m:TonyWWang-oc@zhaoxin.com,m:dlemoal@kernel.org,m:cassel@kernel.org,m:airlied@redhat.com,m:deller@gmx.de,m:linux-geode@lists.infradead.org,m:olivia@selenic.com,m:herbert@gondor.apana.org.au,m:linusw@kernel.org,m:brgl@kernel.org,m:gregkh@linuxfoundation.org,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:linux@roeck-us.net,m:peterz@infradead.org,m:acme@kernel.org,m:namhyung@kernel.org,m:mark.rutland@arm.com,m:alexander.shishkin@linux.intel.com,m:jolsa@kernel.org,m:irogers@google.com,m:adrian.hunter@intel.com,m:james.clark@linaro.org,m:jpoimboe@kernel.org,m:pawan.kumar.gupta@linux.intel.com,m:vkuznets@redhat.com,m:luto@kernel.org,m:boris.ostrovsky@oracle.com,m:ray.hu
+ ang@amd.com,m:mario.limonciello@amd.com,m:perry.yuan@amd.com,m:kprateek.nayak@amd.com,m:srinivas.pandruvada@linux.intel.com,m:artem.bityutskiy@linux.intel.com,m:dedekind1@gmail.com,m:miquel.raynal@bootlin.com,m:richard@nod.at,m:vigneshr@ti.com,m:ashok.raj.linux@gmail.com,m:hansg@kernel.org,m:ilpo.jarvinen@linux.intel.com,m:irenic.rajneesh@gmail.com,m:david.e.box@intel.com,m:xen-devel@lists.xenproject.org,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER(0.00)[seanjc@google.com,linux-hyperv@vger.kernel.org];
+	FREEMAIL_CC(0.00)[arndb.de,suse.com,vger.kernel.org,kernel.org,lists.linux.dev,lists.freedesktop.org,lists.infradead.org,intel.com,arm.com,akamai.com,alien8.de,amd.com,redhat.com,linux.intel.com,zytor.com,hygon.cn,google.com,broadcom.com,linaro.org,zhaoxin.com,gmx.de,selenic.com,gondor.apana.org.au,linuxfoundation.org,microsoft.com,roeck-us.net,infradead.org,oracle.com,gmail.com,bootlin.com,nod.at,ti.com,lists.xenproject.org];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[96];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[seanjc@google.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[google.com:+];
 	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[arndb.de:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 50B496DEE49
+X-Rspamd-Queue-Id: 94C936E75A3
 
-From: Haiyang Zhang <haiyangz@microsoft.com>
+On Mon, Jun 29, 2026, Ingo Molnar wrote:
+> * Arnd Bergmann <arnd@arndb.de> wrote:
+> 
+> > >>> Note that most patches of this series are independent from each other.
+> > >>> Only the patches removing a specific interface (patches 7, 15, 26 and
+> > >>> 30) and the last two patches of the series depend on all previous
+> > >>> patches.
+> > >> 
+> > >> It looks like you are touching most files twice or more here, to
+> > >> first convert from rdmsr to rdmsrq and then to change the
+> > >> two-argument rdmsrq() macro to a single-argument inline. If you
+> > >> introduce the inline version of rdmsrq() first, you should be
+> > >> able to skip the second step (patch 31) as they could be able
+> > >> to coexist.
+> > >
+> > > I've discussed how to structure the series with Ingo Molnar before [1]. The
+> > > current approach was his preference.
+> > 
+> > Ok.
+> 
+> Note that the individual patches are IMO significantly easier to review
+> through the actual 32-bit => 64-bit variable assignment changes done
+> in isolation (which sometimes include minor cleanups), while
+> the Coccinelle semantic patch:
+> 
+>    { a(b,c) => c = a(b) }
+> 
+> which changes both the function signature and the order of terms as
+> well, is just a single add-on treewide patch.
 
-Add Static and Dynamic Interrupt Moderation (DIM) support for
-Rx and Tx.
-Update queue creation procedure with new data struct with the related
-settings.
-Add functions to collect stat for DIM, and workers to update DIM data
-and settings.
-Update ethtool handler to get/set the moderation settings from a user.
-To avoid detach/re-attach ops, ring DIM doorbell to change settings
-at run time.
-By default, adaptive-rx/tx (DIM) are enabled if supported by HW.
-
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Reviewed-by: Simon Horman <horms@kernel.org>
----
-v4:
-  Fixed tx stat, concurrency, and mb issues from Simon's review.
-
-v3:
-  Updated to avoid detach/re-attach ops as suggested by Paolo.
-
-v2:
-  Updated with comments from Jedrzej.
-
----
- drivers/net/ethernet/microsoft/Kconfig        |   1 +
- .../net/ethernet/microsoft/mana/gdma_main.c   |  29 +++
- drivers/net/ethernet/microsoft/mana/mana_en.c | 171 ++++++++++++++++++
- .../ethernet/microsoft/mana/mana_ethtool.c    | 167 ++++++++++++++++-
- include/net/mana/gdma.h                       |  24 ++-
- include/net/mana/mana.h                       |  54 ++++++
- 6 files changed, 437 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/net/ethernet/microsoft/Kconfig b/drivers/net/ethernet/microsoft/Kconfig
-index 3f36ee6a8ece..e9be18c92ca5 100644
---- a/drivers/net/ethernet/microsoft/Kconfig
-+++ b/drivers/net/ethernet/microsoft/Kconfig
-@@ -21,6 +21,7 @@ config MICROSOFT_MANA
- 	depends on X86_64 || (ARM64 && !CPU_BIG_ENDIAN)
- 	depends on PCI_HYPERV
- 	select AUXILIARY_BUS
-+	select DIMLIB
- 	select PAGE_POOL
- 	select NET_SHAPER
- 	help
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index e8b7ffb47eb9..aef3b77229c1 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-+++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
- /* Copyright (c) 2021, Microsoft Corporation. */
- 
-+#include <linux/bitfield.h>
- #include <linux/debugfs.h>
- #include <linux/module.h>
- #include <linux/pci.h>
-@@ -466,6 +467,7 @@ static int mana_gd_disable_queue(struct gdma_queue *queue)
- #define DOORBELL_OFFSET_RQ	0x400
- #define DOORBELL_OFFSET_CQ	0x800
- #define DOORBELL_OFFSET_EQ	0xFF8
-+#define DOORBELL_OFFSET_DIM	0x820
- 
- static void mana_gd_ring_doorbell(struct gdma_context *gc, u32 db_index,
- 				  enum gdma_queue_type q_type, u32 qid,
-@@ -506,6 +508,16 @@ static void mana_gd_ring_doorbell(struct gdma_context *gc, u32 db_index,
- 		addr += DOORBELL_OFFSET_SQ;
- 		break;
- 
-+	case GDMA_DIM:
-+		e.dim.id = qid;
-+		e.dim.mod_usec = FIELD_GET(MANA_INTR_MODR_USEC_MAX, tail_ptr);
-+		e.dim.mod_usec_vld = !!(tail_ptr & MANA_INTR_MODR_USEC_VLD);
-+		e.dim.mod_comps = FIELD_GET(MANA_INTR_MODR_COMP_MASK, tail_ptr);
-+		e.dim.mod_comps_vld = num_req;
-+
-+		addr += DOORBELL_OFFSET_DIM;
-+		break;
-+
- 	default:
- 		WARN_ON(1);
- 		return;
-@@ -540,6 +552,23 @@ void mana_gd_ring_cq(struct gdma_queue *cq, u8 arm_bit)
- }
- EXPORT_SYMBOL_NS(mana_gd_ring_cq, "NET_MANA");
- 
-+void mana_gd_ring_dim(struct gdma_queue *cq, u32 mod_usec, bool mod_usec_vld,
-+		      u32 mod_comps, bool mod_comps_vld)
-+{
-+	struct gdma_context *gc = cq->gdma_dev->gdma_context;
-+	u32 dim_val;
-+
-+	/* Convert the DIM values to doorbell parameters */
-+	dim_val = FIELD_PREP(MANA_INTR_MODR_USEC_MAX, mod_usec) |
-+		  FIELD_PREP(MANA_INTR_MODR_COMP_MASK, mod_comps);
-+	if (mod_usec_vld)
-+		dim_val |= MANA_INTR_MODR_USEC_VLD;
-+
-+	mana_gd_ring_doorbell(gc, cq->gdma_dev->doorbell, GDMA_DIM, cq->id,
-+			      dim_val, mod_comps_vld);
-+}
-+EXPORT_SYMBOL_NS(mana_gd_ring_dim, "NET_MANA");
-+
- #define MANA_SERVICE_PERIOD 10
- 
- static void mana_serv_rescan(struct pci_dev *pdev)
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index 7438ea6b3f26..9391e9564605 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -1591,6 +1591,9 @@ int mana_create_wq_obj(struct mana_port_context *apc,
- 
- 	mana_gd_init_req_hdr(&req.hdr, MANA_CREATE_WQ_OBJ,
- 			     sizeof(req), sizeof(resp));
-+
-+	req.hdr.req.msg_version = GDMA_MESSAGE_V3;
-+	req.hdr.resp.msg_version = GDMA_MESSAGE_V2;
- 	req.vport = vport;
- 	req.wq_type = wq_type;
- 	req.wq_gdma_region = wq_spec->gdma_region;
-@@ -1599,6 +1602,9 @@ int mana_create_wq_obj(struct mana_port_context *apc,
- 	req.cq_size = cq_spec->queue_size;
- 	req.cq_moderation_ctx_id = cq_spec->modr_ctx_id;
- 	req.cq_parent_qid = cq_spec->attached_eq;
-+	req.req_cq_moderation = cq_spec->req_cq_moderation;
-+	req.cq_moderation_comp = cq_spec->cq_moderation_comp;
-+	req.cq_moderation_usec = cq_spec->cq_moderation_usec;
- 
- 	err = mana_send_request(apc->ac, &req, sizeof(req), &resp,
- 				sizeof(resp));
-@@ -1856,6 +1862,7 @@ static void mana_poll_tx_cq(struct mana_cq *cq)
- 	struct gdma_posted_wqe_info *wqe_info;
- 	unsigned int pkt_transmitted = 0;
- 	unsigned int wqe_unit_cnt = 0;
-+	unsigned int tx_bytes = 0;
- 	struct mana_txq *txq = cq->txq;
- 	struct mana_port_context *apc;
- 	struct netdev_queue *net_txq;
-@@ -1937,6 +1944,8 @@ static void mana_poll_tx_cq(struct mana_cq *cq)
- 
- 		mana_unmap_skb(skb, apc);
- 
-+		tx_bytes += skb->len;
-+
- 		napi_consume_skb(skb, cq->budget);
- 
- 		pkt_transmitted++;
-@@ -1967,6 +1976,10 @@ static void mana_poll_tx_cq(struct mana_cq *cq)
- 	if (atomic_sub_return(pkt_transmitted, &txq->pending_sends) < 0)
- 		WARN_ON_ONCE(1);
- 
-+	/* Feed DIM with the completion rate observed here, in NAPI context. */
-+	cq->tx_dim_pkts += pkt_transmitted;
-+	cq->tx_dim_bytes += tx_bytes;
-+
- 	cq->work_done = pkt_transmitted;
- }
- 
-@@ -2318,6 +2331,119 @@ static void mana_poll_rx_cq(struct mana_cq *cq)
- 		xdp_do_flush();
- }
- 
-+static void mana_rx_dim_work(struct work_struct *work)
-+{
-+	struct dim *dim = container_of(work, struct dim, work);
-+	struct dim_cq_moder cur_moder;
-+	struct mana_cq *cq;
-+
-+	cur_moder = net_dim_get_rx_moderation(dim->mode, dim->profile_ix);
-+	cq = container_of(dim, struct mana_cq, dim);
-+
-+	cur_moder.usec = min_t(u16, cur_moder.usec, MANA_INTR_MODR_USEC_MAX);
-+	cur_moder.pkts = min_t(u16, cur_moder.pkts, MANA_INTR_MODR_COMP_MAX);
-+
-+	mana_gd_ring_dim(cq->gdma_cq, cur_moder.usec, true,
-+			 cur_moder.pkts, true);
-+
-+	dim->state = DIM_START_MEASURE;
-+}
-+
-+static void mana_tx_dim_work(struct work_struct *work)
-+{
-+	struct dim *dim = container_of(work, struct dim, work);
-+	struct dim_cq_moder cur_moder;
-+	struct mana_cq *cq;
-+
-+	cur_moder = net_dim_get_tx_moderation(dim->mode, dim->profile_ix);
-+	cq = container_of(dim, struct mana_cq, dim);
-+
-+	cur_moder.usec = min_t(u16, cur_moder.usec, MANA_INTR_MODR_USEC_MAX);
-+	cur_moder.pkts = min_t(u16, cur_moder.pkts, MANA_INTR_MODR_COMP_MAX);
-+
-+	mana_gd_ring_dim(cq->gdma_cq, cur_moder.usec, true,
-+			 cur_moder.pkts, true);
-+
-+	dim->state = DIM_START_MEASURE;
-+}
-+
-+/* The caller must update apc->rx/tx_dim_enabled before disabling and
-+ * after enabling. And synchronize_net() before draining the DIM work,
-+ * so that NAPI cannot observe a stale flag.
-+ */
-+int mana_dim_change(struct mana_cq *cq, bool enable)
-+{
-+	bool is_rx = cq->type == MANA_CQ_TYPE_RX;
-+	struct mana_port_context *apc;
-+	work_func_t work_func;
-+	u32 usec, comp;
-+
-+	if (is_rx) {
-+		apc = netdev_priv(cq->rxq->ndev);
-+		usec = apc->intr_modr_rx_usec;
-+		comp = apc->intr_modr_rx_comp;
-+		work_func = mana_rx_dim_work;
-+	} else {
-+		apc = netdev_priv(cq->txq->ndev);
-+		usec = apc->intr_modr_tx_usec;
-+		comp = apc->intr_modr_tx_comp;
-+		work_func = mana_tx_dim_work;
-+	}
-+
-+	/* On enable, zero the DIM state so net_dim() starts measuring from
-+	 * scratch.
-+	 * On disable, drain any pending DIM work and restore the static
-+	 * moderation values.
-+	 */
-+	if (enable) {
-+		memset(&cq->dim, 0, sizeof(cq->dim));
-+		cq->dim.mode = DIM_CQ_PERIOD_MODE_START_FROM_EQE;
-+		INIT_WORK(&cq->dim.work, work_func);
-+	} else {
-+		cancel_work_sync(&cq->dim.work);
-+		mana_gd_ring_dim(cq->gdma_cq, usec, true, comp, true);
-+	}
-+
-+	return 0;
-+}
-+
-+static void mana_update_rx_dim(struct mana_cq *cq)
-+{
-+	struct mana_port_context *apc = netdev_priv(cq->rxq->ndev);
-+	struct dim_sample dim_sample = {};
-+	struct mana_rxq *rxq = cq->rxq;
-+
-+	/* Pairs with smp_store_release() in mana_set_coalesce(): observing the
-+	 * enable flag set guarantees the DIM (re)initialization is visible.
-+	 */
-+	if (!smp_load_acquire(&apc->rx_dim_enabled))
-+		return;
-+
-+	dim_update_sample(READ_ONCE(cq->dim_event_ctr), rxq->stats.packets,
-+			  rxq->stats.bytes, &dim_sample);
-+	net_dim(&cq->dim, &dim_sample);
-+}
-+
-+static void mana_update_tx_dim(struct mana_cq *cq)
-+{
-+	struct mana_port_context *apc = netdev_priv(cq->txq->ndev);
-+	struct dim_sample dim_sample = {};
-+
-+	/* Pairs with smp_store_release() in mana_set_coalesce(): observing the
-+	 * enable flag set guarantees the DIM (re)initialization is visible.
-+	 */
-+	if (!smp_load_acquire(&apc->tx_dim_enabled))
-+		return;
-+
-+	/* cq->tx_dim_pkts/bytes are accumulated in mana_poll_tx_cq(), in the
-+	 * same NAPI context as this read, so they track the hardware
-+	 * completion rate and need no u64_stats_sync protection.
-+	 */
-+	dim_update_sample(READ_ONCE(cq->dim_event_ctr), cq->tx_dim_pkts,
-+			  cq->tx_dim_bytes, &dim_sample);
-+	net_dim(&cq->dim, &dim_sample);
-+}
-+
- static int mana_cq_handler(void *context, struct gdma_queue *gdma_queue)
- {
- 	struct mana_cq *cq = context;
-@@ -2336,6 +2462,15 @@ static int mana_cq_handler(void *context, struct gdma_queue *gdma_queue)
- 	if (w < cq->budget) {
- 		mana_gd_ring_cq(gdma_queue, SET_ARM_BIT);
- 		cq->work_done_since_doorbell = 0;
-+
-+		/* Update DIM before napi_complete_done() to prevent running
-+		 * net_dim() concurrently.
-+		 */
-+		if (cq->type == MANA_CQ_TYPE_RX)
-+			mana_update_rx_dim(cq);
-+		else
-+			mana_update_tx_dim(cq);
-+
- 		napi_complete_done(&cq->napi, w);
- 	} else if (cq->work_done_since_doorbell >=
- 		   (cq->gdma_cq->queue_size / COMP_ENTRY_SIZE) * 4) {
-@@ -2368,6 +2503,7 @@ static void mana_schedule_napi(void *context, struct gdma_queue *gdma_queue)
- {
- 	struct mana_cq *cq = context;
- 
-+	WRITE_ONCE(cq->dim_event_ctr, cq->dim_event_ctr + 1);
- 	napi_schedule_irqoff(&cq->napi);
- }
- 
-@@ -2410,6 +2546,7 @@ static void mana_destroy_txq(struct mana_port_context *apc)
- 		if (apc->tx_qp[i]->txq.napi_initialized) {
- 			napi_synchronize(napi);
- 			napi_disable_locked(napi);
-+			cancel_work_sync(&apc->tx_qp[i]->tx_cq.dim.work);
- 			netif_napi_del_locked(napi);
- 			apc->tx_qp[i]->txq.napi_initialized = false;
- 		}
-@@ -2543,6 +2680,11 @@ static int mana_create_txq(struct mana_port_context *apc,
- 		cq_spec.modr_ctx_id = 0;
- 		cq_spec.attached_eq = cq->gdma_cq->cq.parent->id;
- 
-+		/* DIM setting can be changed at runtime */
-+		cq_spec.req_cq_moderation = true;
-+		cq_spec.cq_moderation_usec = apc->intr_modr_tx_usec;
-+		cq_spec.cq_moderation_comp = apc->intr_modr_tx_comp;
-+
- 		err = mana_create_wq_obj(apc, apc->port_handle, GDMA_SQ,
- 					 &wq_spec, &cq_spec,
- 					 &apc->tx_qp[i]->tx_object);
-@@ -2573,6 +2715,13 @@ static int mana_create_txq(struct mana_port_context *apc,
- 
- 		set_bit(NAPI_STATE_NO_BUSY_POLL, &cq->napi.state);
- 		netif_napi_add_locked(net, &cq->napi, mana_poll);
-+
-+		/* Initialize the DIM work before enabling NAPI, so that a poll
-+		 * cannot reach net_dim() with an uninitialized cq->dim.work.
-+		 */
-+		INIT_WORK(&cq->dim.work, mana_tx_dim_work);
-+		cq->dim.mode = DIM_CQ_PERIOD_MODE_START_FROM_EQE;
-+
- 		napi_enable_locked(&cq->napi);
- 		txq->napi_initialized = true;
- 
-@@ -2610,6 +2759,7 @@ static void mana_destroy_rxq(struct mana_port_context *apc,
- 		napi_synchronize(napi);
- 
- 		napi_disable_locked(napi);
-+		cancel_work_sync(&rxq->rx_cq.dim.work);
- 		netif_napi_del_locked(napi);
- 	}
- 
-@@ -2848,6 +2998,11 @@ static struct mana_rxq *mana_create_rxq(struct mana_port_context *apc,
- 	cq_spec.modr_ctx_id = 0;
- 	cq_spec.attached_eq = cq->gdma_cq->cq.parent->id;
- 
-+	/* DIM setting can be changed at runtime */
-+	cq_spec.req_cq_moderation = true;
-+	cq_spec.cq_moderation_usec = apc->intr_modr_rx_usec;
-+	cq_spec.cq_moderation_comp = apc->intr_modr_rx_comp;
-+
- 	err = mana_create_wq_obj(apc, apc->port_handle, GDMA_RQ,
- 				 &wq_spec, &cq_spec, &rxq->rxobj);
- 	if (err)
-@@ -2880,6 +3035,12 @@ static struct mana_rxq *mana_create_rxq(struct mana_port_context *apc,
- 	WARN_ON(xdp_rxq_info_reg_mem_model(&rxq->xdp_rxq, MEM_TYPE_PAGE_POOL,
- 					   rxq->page_pool));
- 
-+	/* Initialize the DIM work before enabling NAPI, so that a poll
-+	 * cannot reach net_dim() with an uninitialized cq->dim.work.
-+	 */
-+	INIT_WORK(&cq->dim.work, mana_rx_dim_work);
-+	cq->dim.mode = DIM_CQ_PERIOD_MODE_START_FROM_EQE;
-+
- 	napi_enable_locked(&cq->napi);
- 
- 	mana_gd_ring_cq(cq->gdma_cq, SET_ARM_BIT);
-@@ -3546,6 +3707,16 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
- 	apc->link_cfg_error = 1;
- 	apc->cqe_coalescing_enable = 0;
- 
-+	/* Initialize interrupt moderation settings if supported by HW */
-+	if (gc->pf_cap_flags1 & GDMA_PF_CAP_FLAG_1_DYN_INTERRUPT_MODERATION) {
-+		apc->intr_modr_rx_usec = MANA_INTR_MODR_USEC_DEF;
-+		apc->intr_modr_rx_comp = MANA_INTR_MODR_COMP_DEF;
-+		apc->intr_modr_tx_usec = MANA_INTR_MODR_USEC_DEF;
-+		apc->intr_modr_tx_comp = MANA_INTR_MODR_COMP_DEF;
-+		apc->rx_dim_enabled = MANA_ADAPTIVE_RX_DEF;
-+		apc->tx_dim_enabled = MANA_ADAPTIVE_TX_DEF;
-+	}
-+
- 	mutex_init(&apc->vport_mutex);
- 	apc->vport_use_count = 0;
- 
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-index 881df597d7f9..9e31e2595ae3 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-@@ -419,6 +419,15 @@ static int mana_get_coalesce(struct net_device *ndev,
- 	    !kernel_coal->rx_cqe_nsecs)
- 		kernel_coal->rx_cqe_nsecs = MANA_RX_CQE_NSEC_DEF;
- 
-+	ec->rx_coalesce_usecs = apc->intr_modr_rx_usec;
-+	ec->rx_max_coalesced_frames = apc->intr_modr_rx_comp;
-+
-+	ec->tx_coalesce_usecs = apc->intr_modr_tx_usec;
-+	ec->tx_max_coalesced_frames = apc->intr_modr_tx_comp;
-+
-+	ec->use_adaptive_rx_coalesce = apc->rx_dim_enabled;
-+	ec->use_adaptive_tx_coalesce = apc->tx_dim_enabled;
-+
- 	return 0;
- }
- 
-@@ -428,9 +437,34 @@ static int mana_set_coalesce(struct net_device *ndev,
- 			     struct netlink_ext_ack *extack)
- {
- 	struct mana_port_context *apc = netdev_priv(ndev);
--	u8 saved_cqe_coalescing_enable;
-+	struct {
-+		u16 intr_modr_rx_usec;
-+		u16 intr_modr_rx_comp;
-+		u16 intr_modr_tx_usec;
-+		u16 intr_modr_tx_comp;
-+		u8 cqe_coalescing_enable;
-+		bool rx_dim_enabled;
-+		bool tx_dim_enabled;
-+	} saved;
-+	bool modr_changed = false;
-+	bool dim_changed = false;
-+	struct gdma_context *gc;
- 	int err;
- 
-+	gc = apc->ac->gdma_dev->gdma_context;
-+
-+	/* Both static and dynamic interrupt moderation (DIM) rely on the
-+	 * same HW capability advertised by the PF.
-+	 */
-+	if ((ec->use_adaptive_rx_coalesce || ec->use_adaptive_tx_coalesce ||
-+	     ec->rx_coalesce_usecs || ec->tx_coalesce_usecs ||
-+	     ec->rx_max_coalesced_frames || ec->tx_max_coalesced_frames) &&
-+	    !(gc->pf_cap_flags1 & GDMA_PF_CAP_FLAG_1_DYN_INTERRUPT_MODERATION)) {
-+		NL_SET_ERR_MSG(extack,
-+			       "Interrupt Moderation is not supported by HW");
-+		return -EOPNOTSUPP;
-+	}
-+
- 	if (kernel_coal->rx_cqe_frames != 1 &&
- 	    kernel_coal->rx_cqe_frames != MANA_RXCOMP_OOB_NUM_PPI) {
- 		NL_SET_ERR_MSG_FMT(extack,
-@@ -440,18 +474,129 @@ static int mana_set_coalesce(struct net_device *ndev,
- 		return -EINVAL;
- 	}
- 
--	saved_cqe_coalescing_enable = apc->cqe_coalescing_enable;
-+	if (ec->rx_coalesce_usecs > MANA_INTR_MODR_USEC_MAX ||
-+	    ec->tx_coalesce_usecs > MANA_INTR_MODR_USEC_MAX) {
-+		NL_SET_ERR_MSG_FMT(extack,
-+				   "coalesce usecs must be <= %lu",
-+				   MANA_INTR_MODR_USEC_MAX);
-+		return -EINVAL;
-+	}
-+
-+	if (ec->rx_max_coalesced_frames > MANA_INTR_MODR_COMP_MAX ||
-+	    ec->tx_max_coalesced_frames > MANA_INTR_MODR_COMP_MAX) {
-+		NL_SET_ERR_MSG_FMT(extack,
-+				   "coalesce frames must be <= %lu",
-+				   MANA_INTR_MODR_COMP_MAX);
-+		return -EINVAL;
-+	}
-+
-+	if (ec->rx_coalesce_usecs != apc->intr_modr_rx_usec ||
-+	    ec->rx_max_coalesced_frames != apc->intr_modr_rx_comp ||
-+	    ec->tx_coalesce_usecs != apc->intr_modr_tx_usec ||
-+	    ec->tx_max_coalesced_frames != apc->intr_modr_tx_comp)
-+		modr_changed = true;
-+
-+	saved.intr_modr_rx_usec = apc->intr_modr_rx_usec;
-+	saved.intr_modr_rx_comp = apc->intr_modr_rx_comp;
-+	saved.intr_modr_tx_usec = apc->intr_modr_tx_usec;
-+	saved.intr_modr_tx_comp = apc->intr_modr_tx_comp;
-+
-+	apc->intr_modr_rx_usec = ec->rx_coalesce_usecs;
-+	apc->intr_modr_rx_comp = ec->rx_max_coalesced_frames;
-+	apc->intr_modr_tx_usec = ec->tx_coalesce_usecs;
-+	apc->intr_modr_tx_comp = ec->tx_max_coalesced_frames;
-+
-+	if (!!ec->use_adaptive_rx_coalesce != apc->rx_dim_enabled ||
-+	    !!ec->use_adaptive_tx_coalesce != apc->tx_dim_enabled)
-+		dim_changed = true;
-+
-+	saved.rx_dim_enabled = apc->rx_dim_enabled;
-+	saved.tx_dim_enabled = apc->tx_dim_enabled;
-+
-+	saved.cqe_coalescing_enable = apc->cqe_coalescing_enable;
- 	apc->cqe_coalescing_enable =
- 		kernel_coal->rx_cqe_frames == MANA_RXCOMP_OOB_NUM_PPI;
- 
--	if (!apc->port_is_up)
-+	if (!apc->port_is_up) {
-+		WRITE_ONCE(apc->rx_dim_enabled, !!ec->use_adaptive_rx_coalesce);
-+		WRITE_ONCE(apc->tx_dim_enabled, !!ec->use_adaptive_tx_coalesce);
- 		return 0;
-+	}
- 
--	err = mana_config_rss(apc, TRI_STATE_TRUE, false, false);
--	if (err)
--		apc->cqe_coalescing_enable = saved_cqe_coalescing_enable;
-+	if (apc->cqe_coalescing_enable != saved.cqe_coalescing_enable) {
-+		/* CQE coalescing setting is applied via RSS configuration. */
-+		err = mana_config_rss(apc, TRI_STATE_TRUE, false, false);
-+		if (err) {
-+			netdev_err(ndev, "Change CQE coalescing failed: %d\n",
-+				   err);
-+			apc->cqe_coalescing_enable =
-+				saved.cqe_coalescing_enable;
-+			apc->intr_modr_rx_usec = saved.intr_modr_rx_usec;
-+			apc->intr_modr_rx_comp = saved.intr_modr_rx_comp;
-+			apc->intr_modr_tx_usec = saved.intr_modr_tx_usec;
-+			apc->intr_modr_tx_comp = saved.intr_modr_tx_comp;
-+			return err;
-+		}
-+	}
- 
--	return err;
-+	if (modr_changed || dim_changed) {
-+		bool new_rx_dim = !!ec->use_adaptive_rx_coalesce;
-+		bool new_tx_dim = !!ec->use_adaptive_tx_coalesce;
-+		bool disable_rx_dim = saved.rx_dim_enabled && !new_rx_dim;
-+		bool disable_tx_dim = saved.tx_dim_enabled && !new_tx_dim;
-+		bool enable_rx_dim = !saved.rx_dim_enabled && new_rx_dim;
-+		bool enable_tx_dim = !saved.tx_dim_enabled && new_tx_dim;
-+		int q;
-+
-+		/* On disable: clear the per-port flag first and
-+		 * synchronize_net() so any in-flight NAPI poll observes
-+		 * the new value and will not schedule further DIM work;
-+		 * then drain pending work and restore the static
-+		 * moderation values.
-+		 */
-+		if (disable_rx_dim)
-+			WRITE_ONCE(apc->rx_dim_enabled, false);
-+		if (disable_tx_dim)
-+			WRITE_ONCE(apc->tx_dim_enabled, false);
-+		if (disable_rx_dim || disable_tx_dim)
-+			synchronize_net();
-+
-+		for (q = 0; q < apc->num_queues; q++) {
-+			struct mana_cq *rx_cq = &apc->rxqs[q]->rx_cq;
-+			struct mana_cq *tx_cq = &apc->tx_qp[q]->tx_cq;
-+
-+			if (disable_rx_dim)
-+				mana_dim_change(rx_cq, false);
-+			else if (enable_rx_dim)
-+				mana_dim_change(rx_cq, true);
-+			else if (!new_rx_dim && modr_changed)
-+				mana_gd_ring_dim(rx_cq->gdma_cq,
-+						 apc->intr_modr_rx_usec, true,
-+						 apc->intr_modr_rx_comp, true);
-+
-+			if (disable_tx_dim)
-+				mana_dim_change(tx_cq, false);
-+			else if (enable_tx_dim)
-+				mana_dim_change(tx_cq, true);
-+			else if (!new_tx_dim && modr_changed)
-+				mana_gd_ring_dim(tx_cq->gdma_cq,
-+						 apc->intr_modr_tx_usec, true,
-+						 apc->intr_modr_tx_comp, true);
-+		}
-+
-+		/* Publish the enable flag with release semantics so a
-+		 * concurrent NAPI poll that observes it set also sees the DIM
-+		 * (re)init done by mana_dim_change() above.
-+		 */
-+		if (enable_rx_dim)
-+			/* pairs with smp_load_acquire() in mana_update_rx_dim() */
-+			smp_store_release(&apc->rx_dim_enabled, true);
-+		if (enable_tx_dim)
-+			/* pairs with smp_load_acquire() in mana_update_tx_dim() */
-+			smp_store_release(&apc->tx_dim_enabled, true);
-+	}
-+
-+	return 0;
- }
- 
- /* mana_set_channels - change the number of queues on a port
-@@ -595,7 +740,13 @@ static int mana_get_link_ksettings(struct net_device *ndev,
- }
- 
- const struct ethtool_ops mana_ethtool_ops = {
--	.supported_coalesce_params = ETHTOOL_COALESCE_RX_CQE_FRAMES,
-+	.supported_coalesce_params = ETHTOOL_COALESCE_RX_CQE_FRAMES |
-+				     ETHTOOL_COALESCE_RX_USECS |
-+				     ETHTOOL_COALESCE_RX_MAX_FRAMES |
-+				     ETHTOOL_COALESCE_TX_USECS |
-+				     ETHTOOL_COALESCE_TX_MAX_FRAMES |
-+				     ETHTOOL_COALESCE_USE_ADAPTIVE_RX |
-+				     ETHTOOL_COALESCE_USE_ADAPTIVE_TX,
- 	.op_needs_rtnl		= ETHTOOL_OP_NEEDS_RTNL_SCHANNELS |
- 				  ETHTOOL_OP_NEEDS_RTNL_SRINGPARAM |
- 				  ETHTOOL_OP_NEEDS_RTNL_GLINK,
-diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
-index 0c395917b214..8529cef0d7c4 100644
---- a/include/net/mana/gdma.h
-+++ b/include/net/mana/gdma.h
-@@ -47,6 +47,7 @@ enum gdma_queue_type {
- 	GDMA_RQ,
- 	GDMA_CQ,
- 	GDMA_EQ,
-+	GDMA_DIM,
- };
- 
- enum gdma_work_request_flags {
-@@ -126,6 +127,17 @@ union gdma_doorbell_entry {
- 		u64 tail_ptr	: 31;
- 		u64 arm		: 1;
- 	} eq;
-+
-+	struct {
-+		u64 id           : 24;
-+		u64 reserved     : 8;
-+		u64 mod_usec     : 10;
-+		u64 reserve1     : 5;
-+		u64 mod_usec_vld : 1;
-+		u64 mod_comps    : 8;
-+		u64 reserve2     : 7;
-+		u64 mod_comps_vld: 1;
-+	} dim;
- }; /* HW DATA */
- 
- struct gdma_msg_hdr {
-@@ -502,6 +514,9 @@ void mana_gd_ring_cq(struct gdma_queue *cq, u8 arm_bit);
- 
- int mana_schedule_serv_work(struct gdma_context *gc, enum gdma_eqe_type type);
- 
-+void mana_gd_ring_dim(struct gdma_queue *cq, u32 mod_usec, bool mod_usec_vld,
-+		      u32 mod_comps, bool mod_comps_vld);
-+
- struct gdma_wqe {
- 	u32 reserved	:24;
- 	u32 last_vbytes	:8;
-@@ -650,6 +665,9 @@ enum {
- /* Driver supports self recovery on Hardware Channel timeouts */
- #define GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECOVERY BIT(25)
- 
-+/* Driver supports dynamic interrupt moderation - DIM */
-+#define GDMA_DRV_CAP_FLAG_1_DYN_INTERRUPT_MODERATION BIT(28)
-+
- #define GDMA_DRV_CAP_FLAGS1 \
- 	(GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
- 	 GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX | \
-@@ -665,7 +683,8 @@ enum {
- 	 GDMA_DRV_CAP_FLAG_1_PROBE_RECOVERY | \
- 	 GDMA_DRV_CAP_FLAG_1_HANDLE_STALL_SQ_RECOVERY | \
- 	 GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECOVERY | \
--	 GDMA_DRV_CAP_FLAG_1_EQ_MSI_UNSHARE_MULTI_VPORT)
-+	 GDMA_DRV_CAP_FLAG_1_EQ_MSI_UNSHARE_MULTI_VPORT | \
-+	 GDMA_DRV_CAP_FLAG_1_DYN_INTERRUPT_MODERATION)
- 
- #define GDMA_DRV_CAP_FLAGS2 0
- 
-@@ -701,6 +720,9 @@ struct gdma_verify_ver_req {
- 	u8 os_ver_str4[128];
- }; /* HW DATA */
- 
-+/* HW supports dynamic interrupt moderation - DIM */
-+#define GDMA_PF_CAP_FLAG_1_DYN_INTERRUPT_MODERATION BIT(15)
-+
- struct gdma_verify_ver_resp {
- 	struct gdma_resp_hdr hdr;
- 	u64 gdma_protocol_ver;
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index 13c87baf018e..df4c4a3f68fa 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -4,6 +4,7 @@
- #ifndef _MANA_H
- #define _MANA_H
- 
-+#include <linux/dim.h>
- #include <net/xdp.h>
- #include <net/net_shaper.h>
- 
-@@ -64,6 +65,19 @@ enum TRI_STATE {
- /* Maximum number of packets per coalesced CQE */
- #define MANA_RXCOMP_OOB_NUM_PPI 4
- 
-+/* Default/max interrupt moderation settings */
-+#define MANA_INTR_MODR_USEC_DEF 0
-+#define MANA_INTR_MODR_COMP_DEF 0
-+
-+#define MANA_ADAPTIVE_RX_DEF true
-+#define MANA_ADAPTIVE_TX_DEF true
-+
-+/* DIM doorbell value field layout */
-+#define MANA_INTR_MODR_USEC_MAX    GENMASK(9, 0)
-+#define MANA_INTR_MODR_USEC_VLD    BIT(15)
-+#define MANA_INTR_MODR_COMP_MAX    GENMASK(7, 0)
-+#define MANA_INTR_MODR_COMP_MASK   GENMASK(23, 16)
-+
- /* Update this count whenever the respective structures are changed */
- #define MANA_STATS_RX_COUNT (6 + MANA_RXCOMP_OOB_NUM_PPI - 1)
- #define MANA_STATS_TX_COUNT 11
-@@ -297,6 +311,17 @@ struct mana_cq {
- 	int work_done;
- 	int work_done_since_doorbell;
- 	int budget;
-+
-+	/* DIM - Dynamic Interrupt Moderation */
-+	struct dim dim;
-+	u16 dim_event_ctr;
-+
-+	/* Cumulative TX completions fed to DIM. Updated and read only in
-+	 * NAPI context (mana_poll_tx_cq() / mana_update_tx_dim()), so they
-+	 * measure the hardware completion rate and need no u64_stats_sync.
-+	 */
-+	u64 tx_dim_pkts;
-+	u64 tx_dim_bytes;
- };
- 
- struct mana_recv_buf_oob {
-@@ -573,6 +598,15 @@ struct mana_port_context {
- 	u8 cqe_coalescing_enable;
- 	u32 cqe_coalescing_timeout_ns;
- 
-+	/* Interrupt moderation settings */
-+	u16 intr_modr_rx_usec;
-+	u16 intr_modr_rx_comp;
-+	u16 intr_modr_tx_usec;
-+	u16 intr_modr_tx_comp;
-+
-+	bool rx_dim_enabled;
-+	bool tx_dim_enabled;
-+
- 	struct mana_ethtool_stats eth_stats;
- 
- 	struct mana_ethtool_phy_stats phy_stats;
-@@ -598,6 +632,8 @@ int mana_alloc_queues(struct net_device *ndev);
- int mana_attach(struct net_device *ndev);
- int mana_detach(struct net_device *ndev, bool from_close);
- 
-+int mana_dim_change(struct mana_cq *cq, bool enable);
-+
- int mana_probe(struct gdma_dev *gd, bool resuming);
- void mana_remove(struct gdma_dev *gd, bool suspending);
- 
-@@ -633,6 +669,9 @@ struct mana_obj_spec {
- 	u32 queue_size;
- 	u32 attached_eq;
- 	u32 modr_ctx_id;
-+	u8 req_cq_moderation;
-+	u16 cq_moderation_comp;
-+	u16 cq_moderation_usec;
- };
- 
- enum mana_command_code {
-@@ -764,6 +803,15 @@ struct mana_create_wqobj_req {
- 	u32 cq_size;
- 	u32 cq_moderation_ctx_id;
- 	u32 cq_parent_qid;
-+
-+	/* V2 */
-+	u8 allow_rqwqe_chain;
-+
-+	/* V3 */
-+	u8 req_cq_moderation;
-+	u16 cq_moderation_comp;
-+	u16 cq_moderation_usec;
-+	u8 reserved2[2];
- }; /* HW DATA */
- 
- struct mana_create_wqobj_resp {
-@@ -771,6 +819,12 @@ struct mana_create_wqobj_resp {
- 	u32 wq_id;
- 	u32 cq_id;
- 	mana_handle_t wq_obj;
-+
-+	/* V2 */
-+	u16 cq_moderation_comp;
-+	u16 cq_moderation_usec;
-+	u8 cq_moderation_enabled;
-+	u8 reserved1[3];
- }; /* HW DATA */
- 
- /* Destroy WQ Object */
--- 
-2.34.1
-
+Is the plan for subsystem maintainers to pick up the relevant patches, and then
+do the treewide change one release cycle later?
 
