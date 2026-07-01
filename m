@@ -1,64 +1,64 @@
-Return-Path: <linux-hyperv+bounces-11785-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11786-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id u8woLbBzRWoOAgsAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11785-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Jul 2026 22:08:16 +0200
+	id hgu8Ju5zRWojAgsAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11786-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Jul 2026 22:09:18 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 050576F1491
-	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Jul 2026 22:08:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E9B936F14D3
+	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Jul 2026 22:09:17 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=nZTCMV2X;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11785-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11785-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b="Au2/3tFQ";
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11786-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11786-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EA48E3011869
-	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Jul 2026 19:54:41 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4D42230CAE0C
+	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Jul 2026 19:56:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8696D431E7A;
-	Wed,  1 Jul 2026 19:54:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0374C431E7B;
+	Wed,  1 Jul 2026 19:56:54 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E8FB431E6E;
-	Wed,  1 Jul 2026 19:54:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8283431E6D;
+	Wed,  1 Jul 2026 19:56:52 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782935681; cv=none; b=tSS8mmmiPx+PqmlA6dYlCeUbeVEaSKOiICc0hj+GWspsx7+xxld1d5kravTAOL9cujS63Qb/N0A79oTatU+mRUv/IiTLzvIEo5YUbjfcZ7XQNJ1y73kmDiXLa0sT5HhqmpPoaZsO392rKYX4AZK14bUwhTGpwudKYuIZkIIHF54=
+	t=1782935813; cv=none; b=gaycBV0/O+iy4MZVTnSmVKox5kIqKSo1BujQqivK1FsVCjfsJFdyTCoFsbOYro1uTDU0tjhi3o36mrMzQY1Uh9zFwAM6aFrs1S4SODE4ulbk+XLvMqOgcyuYw0I01PfUP2LoNoBCidOPkNS0owOaIKpJcb2LSuX94t9nYzXlj2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782935681; c=relaxed/simple;
-	bh=enAhnyGQrE5rpr81VnfW8v9km9o6puMQzCNThM26N3Y=;
+	s=arc-20240116; t=1782935813; c=relaxed/simple;
+	bh=a7iaRvOquiQpkJK1Zd7auLUUbSQGKf8f8CZjv8dciwc=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=b+dLwtAm2ZeYhMkWdNziN+/fON+YwM9uFWFtMuTFCfWSBZP/a5wwHUTiRBxMeW6YOFgoHiEPoTqNMEMWT2JGfbafnGomxZGc0y0L6VD0c65o7unUzSYdLMf98Zu7b6xrvOyNWSqCGgDZ3Vjjbxchj9+GXxVd3cUAIUTUA9Ft38Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nZTCMV2X; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDB301F000E9;
-	Wed,  1 Jul 2026 19:54:39 +0000 (UTC)
+	 Message-Id; b=lkswXUJ6IBBGZvIKo+YEr3Twp02eh0Yuna/MwViZF4BKPEqBFB3/QWqw+Yd8J+1bh4g6iFODtP8zvA81Szlc8LqOCP3QS/PV9COr1mSQKC5Jei1GVUihrRRXJRryKa3NXr/myrWYqDuZRX2eH7PIUQKXDqutPO3anyaUfT78s0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Au2/3tFQ; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DEF11F000E9;
+	Wed,  1 Jul 2026 19:56:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782935680;
-	bh=NcGcxsfkrm97VIqYVzSN/seHC8ItFKZXx7nMoUKAWl4=;
+	s=k20260515; t=1782935812;
+	bh=a7iaRvOquiQpkJK1Zd7auLUUbSQGKf8f8CZjv8dciwc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=nZTCMV2X5OOrAGa9mubb85Cqc0NYAhnvu0K975CRPNBTJ+gR87fXtbMxS0TThaJTg
-	 YSth9VFsO5skT9r7Qdnv6ALbJRM7DW38uYlkCCbSAKlylu1iTjM3n5OhiZIqIfLbsE
-	 Q+oMr2pwgLY8jt9Fys4aQps0O7DsDIO7QFg39avt4/kM4OZx8p2wIrXDB0qOaV6QM6
-	 J+v93Lfkheqwg9lYBAWrcmQTveIQJzX1tunk7L0wxvL2FGTtFdG3n17SnpNKTiqDlc
-	 UlOe+OTn0WywY9EE8dWVhQnHtAPnKr2MNj9smglcgyUylMYuTwPsf/JoPc94wPGTfD
-	 t3FHS/RNtO6Bw==
+	b=Au2/3tFQW4xQfLPQ+Hl5/tDcApj/Jrkb14+gRwB2C5rCak2znQ1/V963/gg45703h
+	 tZ04x/t189CFLSP0EZZmG/lSR9E5GljXilXD8ERZVTZFO80DfY4iVbpoBKi6qfVwZM
+	 R3Q9N83fxeh+fTG7HNFwqWc/4U4gj/8etiUAteBdoie1Zi79kM7iIQrIO7UzCuJ2x2
+	 EnqB8auo1iflKgrCUtHAsemeqkxNF24jQ/6iHyu8ZIaZqU5l3zkvAzQhAKn6LamQEy
+	 XptHBqsgi9TxHPPR1a8Zm07hTI9D/HB6GSSxqu41sdCvJ7Y1VVb9pxsW+jbUJf5nwW
+	 nnAN121vz0LDQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 24/51] x86/kvm: Get CPU base frequency from CPUID
- when it's available
+Subject: Re: [PATCH v5 05/51] x86/sev: Mark TSC as reliable when configuring
+ Secure TSC
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Sean Christopherson" <seanjc@google.com>
-Cc: kvm@vger.kernel.org, linux-hyperv@vger.kernel.org
-In-Reply-To: <20260701193212.749551-25-seanjc@google.com>
+Cc: linux-hyperv@vger.kernel.org, kvm@vger.kernel.org
+In-Reply-To: <20260701193212.749551-6-seanjc@google.com>
 References: <20260701193212.749551-1-seanjc@google.com>
- <20260701193212.749551-25-seanjc@google.com>
+ <20260701193212.749551-6-seanjc@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 01 Jul 2026 19:54:39 +0000
-Message-Id: <20260701195439.EDB301F000E9@smtp.kernel.org>
+Date: Wed, 01 Jul 2026 19:56:50 +0000
+Message-Id: <20260701195652.5DEF11F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -79,9 +79,9 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	FORWARDED(0.00)[lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11785-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11786-lists,linux-hyperv=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:seanjc@google.com,m:kvm@vger.kernel.org,m:linux-hyperv@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:seanjc@google.com,m:linux-hyperv@vger.kernel.org,m:kvm@vger.kernel.org,s:lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -102,60 +102,71 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	RCPT_COUNT_THREE(0.00)[3];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,lists.linux.dev:replyto,smtp.kernel.org:mid,sashiko.dev:url]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,lists.linux.dev:replyto,smtp.kernel.org:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 050576F1491
+X-Rspamd-Queue-Id: E9B936F14D3
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] The base CPU frequency obtained from CPUID.0x16 is unconditional=
-ly clamped back to the TSC frequency if it differs by >10%, defeating the p=
-urpose of the patch.
+
+Pre-existing issues:
+- [High] This problem wasn't introduced by this patch, but a malicious hype=
+rvisor can bypass Secure TSC calibration by injecting a fake UV system tabl=
+e, forcing the guest to fall back to untrusted legacy timers.
+- [High] This problem wasn't introduced by this patch, but if the calculate=
+d Secure TSC frequency is 0, the kernel silently falls back to untrusted ti=
+mers instead of terminating the VM.
 --
 
-commit 1331572140e49219bdcc6ceabc0370555476adde
+Note: Due to system recitation restrictions, this report is provided as a f=
+ree-form summary without direct diff quoting.
+
+commit cdbd80de837f6d512a759452a18164ddd83b9b7b
 Author: Sean Christopherson <seanjc@google.com>
 
-x86/kvm: Get CPU base frequency from CPUID when it's available
+x86/sev: Mark TSC as reliable when configuring Secure TSC
 
-This commit reads CPUID.0x16 to fetch the CPU base frequency if valid.
-It then sets x86_init.hyper.get_cpu_khz to kvm_get_cpu_khz to avoid
-assuming the CPU base frequency matches the TSC frequency.
+This commit moves the setting of the X86_FEATURE_TSC_RELIABLE flag from
+sme_early_init() to snp_secure_tsc_init(). It consolidates the handling of
+known-frequency and reliable TSC flags when overriding the TSC calibration
+routine.
 
-> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> index 1cef54e1e7d9e..6c7011ff7bd13 100644
-> --- a/arch/x86/kernel/kvm.c
-> +++ b/arch/x86/kernel/kvm.c
+[Severity: High]
+This isn't a bug introduced by this patch, but does the early return in
+arch/x86/kernel/tsc.c:tsc_early_init() allow an untrusted hypervisor to
+bypass Secure TSC initialization?
 
-[ ... ]
+The tsc_early_init() function checks is_early_uv_system() before initializi=
+ng
+Secure TSC. The is_early_uv_system() check relies on the presence of
+UV_SYSTEM_TABLE_GUID in the EFI configuration tables.
 
-> @@ -1041,6 +1047,14 @@ static void __init kvm_init_platform(void)
->  		}
->  	}
-> =20
-> +	/*
-> +	 * Prefer CPUID.0x16 over KVM's PV CPUID when possible, as the base CPU
-> +	 * frequency isn't necessarily the same as the TSC frequency.
-> +	 */
-> +	kvm_cpu_khz_cpuid =3D __cpu_khz_from_cpuid();
-> +	if (kvm_cpu_khz_cpuid)
-> +		x86_init.hyper.get_cpu_khz =3D kvm_get_cpu_khz;
+Because the hypervisor can provide tables to the guest firmware which may
+expose them as EFI configuration tables, an untrusted hypervisor could inje=
+ct
+this specific GUID. Would this trick the kernel into returning early,
+bypassing both Secure TSC and TDX TSC initialization, and causing the guest
+to fall back to untrusted legacy timers?
 
-[Severity: Medium]
-Will this new CPU frequency actually be used if it diverges significantly
-from the TSC frequency?=20
+[Severity: High]
+This is also a pre-existing issue, but should the newly updated
+arch/x86/coco/sev/core.c:snp_secure_tsc_init() validate that the calculated
+frequency is non-zero before returning?
 
-Looking at determine_cpu_tsc_frequencies() in arch/x86/kernel/tsc.c, there
-is existing logic that unconditionally clamps the CPU frequency back to the
-TSC frequency if they differ by more than 10%:
+If the calculated frequency evaluates to 0, which could happen if the
+hypervisor causes MSR_AMD64_GUEST_TSC_FREQ to read as 0 or if the secrets
+factor is invalid, the function simply returns 0 instead of terminating
+the VM.
 
-	else if (abs(cpu_khz - tsc_khz) * 10 > tsc_khz)
-		cpu_khz =3D tsc_khz;
-
-Does this clamping defeat the purpose of this patch for guests running on
-hosts where the base CPU frequency and TSC frequency differ by >10%?
+The caller tsc_early_init() treats a return value of 0 as a failure to find
+a trusted frequency and gracefully falls back to x86_init.hyper.get_tsc_khz=
+()
+or legacy timers. In a confidential computing threat model, should this
+security-critical initialization fail closed and terminate the VM, rather
+than falling back to the hypervisor-controlled time sources that Secure TSC
+is designed to protect against?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260701193212.7495=
-51-1-seanjc@google.com?part=3D24
+51-1-seanjc@google.com?part=3D5
 
