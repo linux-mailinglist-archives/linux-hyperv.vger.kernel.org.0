@@ -1,74 +1,74 @@
-Return-Path: <linux-hyperv+bounces-11739-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11741-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id L8mfGd9wRWohAQsAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11739-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Jul 2026 21:56:15 +0200
+	id Zpx7EsRtRWrY/woAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11741-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Jul 2026 21:43:00 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC8F76F12B7
-	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Jul 2026 21:56:14 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 550E06F0FFE
+	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Jul 2026 21:42:59 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=google.com header.s=20251104 header.b=aZBYAt4C;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11739-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11739-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=google.com header.s=20251104 header.b=lVMfEvpv;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11741-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11741-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=reject) header.from=google.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 957003199BA2
-	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Jul 2026 19:35:01 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 809E430676D4
+	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Jul 2026 19:35:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 917EF4D9913;
-	Wed,  1 Jul 2026 19:32:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A5CF4DA52F;
+	Wed,  1 Jul 2026 19:32:45 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3074D9914
-	for <linux-hyperv@vger.kernel.org>; Wed,  1 Jul 2026 19:32:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352244DA55E
+	for <linux-hyperv@vger.kernel.org>; Wed,  1 Jul 2026 19:32:42 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782934364; cv=none; b=rJafoZSiQ2dxyJMroS62OVeLkTGFF4qP6kk+OhwxJ9m+Q2nqHHsM1RT2yKIftgXW6tXkR2sZWibXHPsgqi5OrlMUA3Fq6TkSUIJQJYumUAF4yYkCQsGTmEMc4aU/JOrle3GGKKq9+cMqcoBByBP6JdsXsQ9fKb4Wp59V4fWz4fI=
+	t=1782934365; cv=none; b=ubPGgVfqx/LvKzQbNw8luH64ka/4xfMpd9V/h91XS2t5xDpwVKCSdxarM1VcjHowSxjtW4FKMVDGuzjEO/ee3Bwb2ihECzeepkV40+LcrCHW2wTLI8PGjajfjGZRr984sFZxWAZY8dH8e7BwAjcQusU4uYd2d9ZJdT0G5fW4lVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782934364; c=relaxed/simple;
-	bh=vQr5rqbnVfhj/Q8IIvrfTuhOuv1ctDO8Y9v3PaUviPM=;
+	s=arc-20240116; t=1782934365; c=relaxed/simple;
+	bh=CiGkqE/6AT+VqdBT08JjtFv5kCcpPymLLHYJ+kIZoXI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=YyRHqZIJTxzwqx3QaniALhVVbnzVJhLB14+gVS67melL/jqz6C29N+how+ZUv3lh5cuhtqDuybk/C1oCXS7UdJsGpOFc3Qrdt771WGJgS0/J16BmTB7QPkFNIuSAoQNcxhoKJf9+/pj1CB+xiZFk1np2pqemxNZShJHe2ZUfvjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aZBYAt4C; arc=none smtp.client-ip=209.85.210.202
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-84622d6102dso1270895b3a.1
-        for <linux-hyperv@vger.kernel.org>; Wed, 01 Jul 2026 12:32:41 -0700 (PDT)
+	 To:Cc:Content-Type; b=o9Yb0aBifcVkMK57W7RJjBOPoUs6KQLUh+eWJbLe8YEhc/8jrLT/C2JWxHX4Mzf3hvIAhpW1TE4f+hQCBJ8iT7L5b/F/Juhs+gRAtExfaFqAg+Tx33IVKEe31Mjo9JnBnozAMU24eJrkrwLN/kgGHWBdP2SslPjDDKmYnIVJCYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lVMfEvpv; arc=none smtp.client-ip=209.85.210.202
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-8479b45ad08so1025950b3a.3
+        for <linux-hyperv@vger.kernel.org>; Wed, 01 Jul 2026 12:32:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1782934361; x=1783539161; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1782934362; x=1783539162; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=ReYT3wow7KWZM4WGFuJpCOGL6Ebh0IHq2felz3Yetls=;
-        b=aZBYAt4C+qdRtJy1B8y3nO0brOL0G2zKGPUUFp3Gar+8RkIJY23yZofOUQjek8B8ph
-         mKQxX/dcsZiWli/YP3qj7+nobEJ1UrqhhQvDP2YgDfxn91Oza+F+8B2+DljfC2frO5LB
-         eoV6B7qPwlUXX1EhEKnwh+c1XkODkDSpRALXh2b1RS+EntGOSo/CcYUPzrmm50b1/y8b
-         e34x685rxnhMLAPJrjd0XZHh+yavBkGLICurherbOqOZ5UzIsh2/o7Z7ieStTX1rNyX9
-         v0dQgsWWR4S88XZg2xPf4sUwMe/UoIglrr9HQIlryZQYpm3YeZKHSscBo+o0c/khzmeY
-         9IOw==
+        bh=FaUjTU3QKJy+ktbmudl/+1GzmAqwQnS7of3spvtM7gQ=;
+        b=lVMfEvpvQXxC5+fETpqFyjEWlQJQPq/56kpXbPp/syIzIFrxLUvGB0bs+pu1IlN7Ci
+         n49bmLOeisfthvCPlLb+S2VTHC234yAsPZCM/vwPD3JPebyikdXfmgooYPqtVB7TOCPM
+         RVMckaado0UrAOEc1gbhWrJJLPYBLc3DUFbruOdhSi0uDpikg/C+HLJTpMFh2i5w/zQI
+         jmORdLYQexgDboBfkhh8OYf8idrsE7xfTxfcbJod3FMKh5NQrlIs7pO3vh+6ea/MbE6M
+         xI0vCq37W7vTmgZQWSFNwnvK36WD4tfF6RITzSojHfu7ZVkEXM9Q77lHO8F69g4onlCR
+         Nz5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782934361; x=1783539161;
+        d=1e100.net; s=20251104; t=1782934362; x=1783539162;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ReYT3wow7KWZM4WGFuJpCOGL6Ebh0IHq2felz3Yetls=;
-        b=NkJ2xxQx3vTC6HSpPuZV2Giawv9ddx0s7rXo3/lA0RsC+mkQrep86XfrS/rPtDL0g7
-         AaVum9qGtrTidnZFSsl4mKDtY0vWi2vTgf9PARC70v+RX9oJlpjXOHlg+AEYcUynG5OB
-         L3Gcrc1RO1vk8LxamrDNNhU0ltf8bY6R8+NG8Un+eh/QKOAUJ14P6q7os2pExitxcFvO
-         N4hNLOwJ6C2Nyn/RSScDw6E37kLJi+YS1UufvSQkAIHr5J0zQAsv147JobRt7E6BZro/
-         5IyZwdxAqFAtZwGHJN7AlWv1KQLDeYZpvGDHB7A43bnX1yFCZgthqvL2V5jwaxHetoaS
-         CtOQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9MOMJEYNDUjTT4BDcz7irY5HGrtC8vd9oRJu10xkSVw4cSeOJZIhLSPIIkTmaEPiIp5gO3RcJ1FIrB/rc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFvljElOnlxRNufmiK9dMvPoJa3uMl6E5Hk8g2G02SWcvB1GG4
-	yOoOm4i80U/rcZ+5bS8EdSnczKtl3U3EsnNU1sia55a/GA1gxfrUjmlLEMt3wph96UpuMj+PCeS
-	oW55PVg==
-X-Received: from pfwy27.prod.google.com ([2002:a05:6a00:1c9b:b0:842:8af7:db0d])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:9a6:b0:845:ccf1:49b6
- with SMTP id d2e1a72fcca58-847c51b72d4mr2049167b3a.45.1782934360386; Wed, 01
- Jul 2026 12:32:40 -0700 (PDT)
+        bh=FaUjTU3QKJy+ktbmudl/+1GzmAqwQnS7of3spvtM7gQ=;
+        b=hjAK75u8cKvt8sESpimRB6rrV3oC7yhNTWeZ+iG65QbVSKlX+t0Zugc5vJoXHY+fFW
+         f/hhu38SQeeL4MOokWuebSegMabl1ukr8vcrhNIkg1zAwuFAnOY4p6X79tYWkGXq4qVf
+         Kz2kzePObtjsYgpGlyd5OsEf5qW3/EEP/LRZV2vBFiHrI0I0IXXnt8o2VXYK8o/16xjG
+         CeHeWuA5bMXl7WQ224FbPo41tW3Um8vxWwR8vthm66ECPRJ9cPWYPBeb5oKXatQWjQq1
+         fCS+rJeT4H57C8gSiM2XkIdzZyHSTbG+al2a9L6jHmsV2oiB8HuTDDy5jksYTDCGsEKN
+         1EnA==
+X-Forwarded-Encrypted: i=1; AFNElJ+a3Fwu5sv0kG/EgXKfZFuDnkwxYT+SKShXpB1wxYYhZWQj8s5qr5mMXaCErzIc7W6ZUzBIy6R6KRXAMRk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaTsT+QH4/sJ7gvsO6xpIARp5W4LOIJXLoMurJ7u9/Xf3HF4Q9
+	I5T6Z3Fz/mbOaSUZKfQBy+WPt6WzMFwiQxoXoY6jrylTpIn0bpmWZ0wxKfzX57j4rQ036+Z9oKp
+	MNKw1vQ==
+X-Received: from pghx17.prod.google.com ([2002:a63:f711:0:b0:c9a:53ea:434a])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:1b84:b0:398:9b42:69f7
+ with SMTP id adf61e73a8af0-3bfed3b19b0mr3536321637.39.1782934362055; Wed, 01
+ Jul 2026 12:32:42 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed,  1 Jul 2026 12:31:33 -0700
+Date: Wed,  1 Jul 2026 12:31:34 -0700
 In-Reply-To: <20260701193212.749551-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -78,9 +78,9 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260701193212.749551-1-seanjc@google.com>
 X-Mailer: git-send-email 2.55.0.rc0.799.gd6f94ed593-goog
-Message-ID: <20260701193212.749551-13-seanjc@google.com>
-Subject: [PATCH v5 12/51] x86/acrn: Register TSC/CPU frequency callbacks iff
- frequency is actually in CPUID
+Message-ID: <20260701193212.749551-14-seanjc@google.com>
+Subject: [PATCH v5 13/51] x86/acrn: Mark TSC frequency as known when using
+ ACRN for calibration
 From: Sean Christopherson <seanjc@google.com>
 To: Jonathan Corbet <corbet@lwn.net>, Paolo Bonzini <pbonzini@redhat.com>, 
 	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
@@ -110,92 +110,61 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	MV_CASE(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp];
+	TAGGED_FROM(0.00)[bounces-11741-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:corbet@lwn.net,m:pbonzini@redhat.com,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:x86@kernel.org,m:kas@kernel.org,m:rick.p.edgecombe@intel.com,m:seanjc@google.com,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:ajay.kaher@broadcom.com,m:alexey.makhalov@broadcom.com,m:jan.kiszka@siemens.com,m:luto@kernel.org,m:peterz@infradead.org,m:jgross@suse.com,m:daniel.lezcano@kernel.org,m:jstultz@google.com,m:skhan@linuxfoundation.org,m:hpa@zytor.com,m:vkuznets@redhat.com,m:bcm-kernel-feedback-list@broadcom.com,m:boris.ostrovsky@oracle.com,m:sboyd@kernel.org,m:linux-doc@vger.kernel.org,m:kvm@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-coco@lists.linux.dev,m:linux-hyperv@vger.kernel.org,m:virtualization@lists.linux.dev,m:xen-devel@lists.xenproject.org,m:thomas.lendacky@amd.com,m:nikunj@amd.com,m:dwmw@amazon.co.uk,m:dwmw2@infradead.org,m:mhklinux@outlook.com
- ,m:tglx@linutronix.de,s:lists@lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
+	FORGED_SENDER(0.00)[seanjc@google.com,linux-hyperv@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	FORGED_SENDER(0.00)[seanjc@google.com,linux-hyperv@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:corbet@lwn.net,m:pbonzini@redhat.com,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:x86@kernel.org,m:kas@kernel.org,m:rick.p.edgecombe@intel.com,m:seanjc@google.com,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:ajay.kaher@broadcom.com,m:alexey.makhalov@broadcom.com,m:jan.kiszka@siemens.com,m:luto@kernel.org,m:peterz@infradead.org,m:jgross@suse.com,m:daniel.lezcano@kernel.org,m:jstultz@google.com,m:skhan@linuxfoundation.org,m:hpa@zytor.com,m:vkuznets@redhat.com,m:bcm-kernel-feedback-list@broadcom.com,m:boris.ostrovsky@oracle.com,m:sboyd@kernel.org,m:linux-doc@vger.kernel.org,m:kvm@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-coco@lists.linux.dev,m:linux-hyperv@vger.kernel.org,m:virtualization@lists.linux.dev,m:xen-devel@lists.xenproject.org,m:thomas.lendacky@amd.com,m:nikunj@amd.com,m:dwmw@amazon.co.uk,m:dwmw2@infradead.org,m:mhklinux@outlook.com
+ ,m:tglx@linutronix.de,s:lists@lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[42];
 	FORWARDED(0.00)[lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-11739-lists,linux-hyperv=lfdr.de];
-	DKIM_TRACE(0.00)[google.com:+];
+	FREEMAIL_CC(0.00)[linuxfoundation.org,zytor.com,redhat.com,broadcom.com,oracle.com,kernel.org,vger.kernel.org,lists.linux.dev,lists.xenproject.org,amd.com,amazon.co.uk,infradead.org,outlook.com,linutronix.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	HAS_REPLYTO(0.00)[seanjc@google.com];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[seanjc@google.com,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linuxfoundation.org,zytor.com,redhat.com,broadcom.com,oracle.com,kernel.org,vger.kernel.org,lists.linux.dev,lists.xenproject.org,amd.com,amazon.co.uk,infradead.org,outlook.com,linutronix.de];
+	DKIM_TRACE(0.00)[google.com:+];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	RWL_MAILSPIKE_POSSIBLE(0.00)[104.64.211.4:from];
 	REPLYTO_EQ_FROM(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: AC8F76F12B7
+X-Rspamd-Queue-Id: 550E06F0FFE
 
-Register ACRN's TSC/CPU frequency overrides if and only if the exact TSC
-frequency is actually provided in CPUID.  This will allow marking the TSC
-as reliable as appropriate, and avoids relying on the caller to handle
-"failure".
-
-For all intents and purposes, no functional change intended.
+Mark the TSC frequency as known when using ACRN's PV CPUID information.
+Per commit 81a71f51b89e ("x86/acrn: Set up timekeeping") and common sense,
+the TSC freq is explicitly provided by the hypervisor.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kernel/cpu/acrn.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ arch/x86/kernel/cpu/acrn.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/arch/x86/kernel/cpu/acrn.c b/arch/x86/kernel/cpu/acrn.c
-index ad8f2da8003b..dc71a6fdd461 100644
+index dc71a6fdd461..3818f6ae0629 100644
 --- a/arch/x86/kernel/cpu/acrn.c
 +++ b/arch/x86/kernel/cpu/acrn.c
-@@ -19,6 +19,8 @@
- #include <asm/idtentry.h>
- #include <asm/irq_regs.h>
- 
-+static unsigned int acrn_tsc_khz_cpuid __initdata;
-+
- static u32 __init acrn_detect(void)
- {
- 	return acrn_cpuid_base();
-@@ -26,13 +28,19 @@ static u32 __init acrn_detect(void)
- 
- static unsigned int __init acrn_get_tsc_khz(void)
- {
--	return cpuid_eax(ACRN_CPUID_TIMING_INFO);
-+	return acrn_tsc_khz_cpuid;
+@@ -40,6 +40,7 @@ static void __init acrn_init_platform(void)
+ 	if (acrn_tsc_khz_cpuid) {
+ 		x86_init.hyper.get_tsc_khz = acrn_get_tsc_khz;
+ 		x86_init.hyper.get_cpu_khz = acrn_get_tsc_khz;
++		setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
+ 	}
  }
  
- static void __init acrn_init_platform(void)
- {
- 	/* Install system interrupt handler for ACRN hypervisor callback */
- 	sysvec_install(HYPERVISOR_CALLBACK_VECTOR, sysvec_acrn_hv_callback);
-+
-+	acrn_tsc_khz_cpuid = cpuid_eax(ACRN_CPUID_TIMING_INFO);
-+	if (acrn_tsc_khz_cpuid) {
-+		x86_init.hyper.get_tsc_khz = acrn_get_tsc_khz;
-+		x86_init.hyper.get_cpu_khz = acrn_get_tsc_khz;
-+	}
- }
- 
- static bool acrn_x2apic_available(void)
-@@ -80,6 +88,4 @@ const __initconst struct hypervisor_x86 x86_hyper_acrn = {
- 	.type			= X86_HYPER_ACRN,
- 	.init.init_platform     = acrn_init_platform,
- 	.init.x2apic_available  = acrn_x2apic_available,
--	.init.get_tsc_khz	= acrn_get_tsc_khz,
--	.init.get_cpu_khz	= acrn_get_tsc_khz,
- };
 -- 
 2.55.0.rc0.799.gd6f94ed593-goog
 
