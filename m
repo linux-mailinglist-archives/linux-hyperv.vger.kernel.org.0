@@ -1,187 +1,201 @@
-Return-Path: <linux-hyperv+bounces-11779-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11780-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id Ykr5AAZuRWoSAAsAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11779-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Jul 2026 21:44:06 +0200
+	id RGvNOmdwRWr7AAsAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11780-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Jul 2026 21:54:15 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 930256F103E
-	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Jul 2026 21:44:05 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 622396F1237
+	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Jul 2026 21:54:15 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=google.com header.s=20251104 header.b=CpGN1P1H;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11779-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11779-lists+linux-hyperv=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=reject) header.from=google.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=ftOPJmjN;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11780-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11780-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id D0E51305565E
-	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Jul 2026 19:43:45 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 8A8F630C74AE
+	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Jul 2026 19:47:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E98A142F8F9;
-	Wed,  1 Jul 2026 19:33:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 103D7382398;
+	Wed,  1 Jul 2026 19:46:23 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2853242E8DC
-	for <linux-hyperv@vger.kernel.org>; Wed,  1 Jul 2026 19:33:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2345431E70;
+	Wed,  1 Jul 2026 19:46:21 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782934411; cv=none; b=EaoAfVDovtVTXIxitUPMeyLqPNHemQeqr7NUnrszUtc9/if0zEHue73P+9oNeUxr330+AXnBnTOxIK26Xlq+vIujt+VE6DWoJeZTlcj0fCRek+t+A8QUwFtVdbhPD+YN+dUep6wl990wz0+5PeBlbM8qz4wGcgWc+XPhvJB3/is=
+	t=1782935183; cv=none; b=htI2WqULbcc62zPLTaS7pC9tAFAvTmKEYX2grRD1gWJ7YLgf4bJJEDvspE3r5BKHNOkFBxWepu3EoFjd0Z7PfgX4GWD/Jqj6+i9/Im5/lUU5Yn1x+bcyzKZO/Akp1y4lMAIed8wbvdAT6iI/zryPvazu75weQ8V+biE0vpPFcN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782934411; c=relaxed/simple;
-	bh=t2gV+eBO9o787fvbLEefqahl8FVWKIIpfUP+z3tzyok=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=WdHPJkoDX4z3Sz10COCSGTEj0txeIyUYp6chy3LzEq5yd8dKHo2B06Rqh/o2Q0mCW1NLSbGRVk9+sVYhm34PW0BYEKreqw+qDd3bJCg3eqJTd94CgoZKX8expYWg1q4yOJjeRXBKO+st1fLECiZgb7HknUpoNqnyCYY4yXVezFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CpGN1P1H; arc=none smtp.client-ip=209.85.216.74
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-380a0925d7bso1016316a91.2
-        for <linux-hyperv@vger.kernel.org>; Wed, 01 Jul 2026 12:33:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1782934408; x=1783539208; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=ukYnz5D3jEol4z1WUeRHDVtFiLPopAappLYurzMw/rI=;
-        b=CpGN1P1H52ALfmV+alPEufAf7OZvon8wnQ8RSUhwdN+rh0MsVG22DNGYwW1G3Sklve
-         tgpt1TlLtiRwjPGPwvHyHTE2rIINLSOL6kEpl0umVw7vVlCFFJmnawfjTtANyEacNiFC
-         QEaaSL49+7cbPBf5MI5EQrhzVS5pvCOwC8yvzAsqiIGu0G0KtuOliTEyZfpbu8KY02Ly
-         B7IBv1vk/+FcKRViRdCS2Tt/v0m+coR1rSyNmfMdlw8wN0cGTFKMaGC0XUlGnTyfCWak
-         1OkT0CyamIAagzIgBkLYnxEUb70jLJBVnkSHpckGOgj7tytUB9DEEYkZ2cbQ6NZq6kOV
-         /06Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782934408; x=1783539208;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ukYnz5D3jEol4z1WUeRHDVtFiLPopAappLYurzMw/rI=;
-        b=KD20Lv3gRNarYqT1Mgi5cwBOpC0UXGlBqamjCZx76Cvk4XPW9Exc1tL0md4Q+BAzx8
-         AJdho8x1o7LGNxolAKZug0LRPbb2QluK2hIcMk2z+8ABfqTU5RgXkf5XLZ/JrLzmLrqh
-         YJzo+jUNfEmPvmJWSpE+WHcZuioKrb0OygBrtyYx8p1GXplNp+oGaZyJKzRL2A4AD5gK
-         lw0IPK5zPRTplZy0U1sfqzLARpzrPARHO0VoVWBKf2bC9TE9DLNJ12E9VstWFU9TPOqH
-         h9MPVHjuQmSHSKhpcwKy1Z3pyghVmIY0zkSPIjUcFRVyMhLrk4RTbW9UCbhPJximhK3k
-         CLlg==
-X-Forwarded-Encrypted: i=1; AFNElJ8+tzKV4DWk/hdxmaLqP2WlNoVvJ+wfJIxZASCuKt893NExaYyMmtX8Wt2Up2LIhTvnbO2YCDqn6wm2mLU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmcpoGTtncgsTFxxYWRnAkj06WTDRaE3Bvab/XOGE82oOSt2G7
-	f6LrdorrjTbqx53eoxzyrG3o5WqV7NtTrL/U9O9w7ainoLQOarlTGZGTkySIFUTUv6uLAI0Srsk
-	pOnZ7DA==
-X-Received: from pgad26.prod.google.com ([2002:a05:6a02:4f5a:b0:c99:d21a:f6b7])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:748b:b0:3bf:d1f9:b1db
- with SMTP id adf61e73a8af0-3bfed5e1001mr3530009637.52.1782934408107; Wed, 01
- Jul 2026 12:33:28 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed,  1 Jul 2026 12:32:12 -0700
-In-Reply-To: <20260701193212.749551-1-seanjc@google.com>
+	s=arc-20240116; t=1782935183; c=relaxed/simple;
+	bh=gTqmPrSJkxG+rQXWJxdRhZrx2hwkzuaVslqB4VQDh1k=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=PvwUnmZgFISk/5YZdGdK5zgOK2apU/79mJGikam3LzDIocW518Jawd/WH/DZcuXfCk53N6oRptqAc3E5MsEOZYHFuLwxZ4wX48kT/GLYSu5A0n1BbQjHr+LD77SDLomF0z09dtfTXiGjrbWwRvQBfub3txLqUong9LcBGRYY1cA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ftOPJmjN; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BD691F000E9;
+	Wed,  1 Jul 2026 19:46:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782935181;
+	bh=UgyHLN8l2Yl0gsNzeUY9m8Up+tR/5lYEoMJTF5aAu6c=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=ftOPJmjNFjUQH2Kish3G/WUaKn2OODu461lx854Tn84bZ70tHs1sv94V06+DJXAzD
+	 KDW/TAyR379wIZY1/4BHo2m+O1d3Abk7yDACe3Y4W65rSdshl6UYgsqrej+PJ1X9OQ
+	 ImjOZJ+4bkOF6CSJ6JO45KQMQlUGWAtxZrFZAV5nF7+CuwoZcoOrzLwKOKqlY7dBin
+	 02CgpqomQ24qj+pT3+fNgeLMbRMIcNIgYPvLeHhB5AImPqiuo8iiurknnFtO+63qGm
+	 Y8eD5GX76Y07XD17ibIlfuIK8FqljT3OUphXGsWV/FoAL9dz+D913eokZrKZr4pfBg
+	 DAV45Mf7ExWsQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v5 01/51] x86/apic: Provide helpers to set local APIC
+ timer period in hz and khz
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Sean Christopherson" <seanjc@google.com>
+Cc: kvm@vger.kernel.org, linux-hyperv@vger.kernel.org
+In-Reply-To: <20260701193212.749551-2-seanjc@google.com>
+References: <20260701193212.749551-1-seanjc@google.com>
+ <20260701193212.749551-2-seanjc@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 01 Jul 2026 19:46:20 +0000
+Message-Id: <20260701194621.4BD691F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260701193212.749551-1-seanjc@google.com>
-X-Mailer: git-send-email 2.55.0.rc0.799.gd6f94ed593-goog
-Message-ID: <20260701193212.749551-52-seanjc@google.com>
-Subject: [PATCH v5 51/51] x86/kvm: Get local APIC bus frequency from PV CPUID
- Timing Info
-From: Sean Christopherson <seanjc@google.com>
-To: Jonathan Corbet <corbet@lwn.net>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	Kiryl Shutsemau <kas@kernel.org>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
-	Sean Christopherson <seanjc@google.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
-	Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov <alexey.makhalov@broadcom.com>, 
-	Jan Kiszka <jan.kiszka@siemens.com>, Andy Lutomirski <luto@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Juergen Gross <jgross@suse.com>, 
-	Daniel Lezcano <daniel.lezcano@kernel.org>, John Stultz <jstultz@google.com>
-Cc: Shuah Khan <skhan@linuxfoundation.org>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>, Stephen Boyd <sboyd@kernel.org>, linux-doc@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev, 
-	linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev, 
-	xen-devel@lists.xenproject.org, Tom Lendacky <thomas.lendacky@amd.com>, 
-	Nikunj A Dadhania <nikunj@amd.com>, David Woodhouse <dwmw@amazon.co.uk>, 
-	David Woodhouse <dwmw2@infradead.org>, Michael Kelley <mhklinux@outlook.com>, 
-	Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-3.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	MV_CASE(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:corbet@lwn.net,m:pbonzini@redhat.com,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:x86@kernel.org,m:kas@kernel.org,m:rick.p.edgecombe@intel.com,m:seanjc@google.com,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:ajay.kaher@broadcom.com,m:alexey.makhalov@broadcom.com,m:jan.kiszka@siemens.com,m:luto@kernel.org,m:peterz@infradead.org,m:jgross@suse.com,m:daniel.lezcano@kernel.org,m:jstultz@google.com,m:skhan@linuxfoundation.org,m:hpa@zytor.com,m:vkuznets@redhat.com,m:bcm-kernel-feedback-list@broadcom.com,m:boris.ostrovsky@oracle.com,m:sboyd@kernel.org,m:linux-doc@vger.kernel.org,m:kvm@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-coco@lists.linux.dev,m:linux-hyperv@vger.kernel.org,m:virtualization@lists.linux.dev,m:xen-devel@lists.xenproject.org,m:thomas.lendacky@amd.com,m:nikunj@amd.com,m:dwmw@amazon.co.uk,m:dwmw2@infradead.org,m:mhklinux@outlook.com
- ,m:tglx@linutronix.de,s:lists@lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,vger.kernel.org:from_smtp,amazon.co.uk:email];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	FORGED_SENDER(0.00)[seanjc@google.com,linux-hyperv@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[42];
 	FORWARDED(0.00)[lists@lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11780-lists,linux-hyperv=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:seanjc@google.com,m:kvm@vger.kernel.org,m:linux-hyperv@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-11779-lists,linux-hyperv=lfdr.de];
-	DKIM_TRACE(0.00)[google.com:+];
-	HAS_REPLYTO(0.00)[seanjc@google.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-hyperv@vger.kernel.org];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[seanjc@google.com,linux-hyperv@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linuxfoundation.org,zytor.com,redhat.com,broadcom.com,oracle.com,kernel.org,vger.kernel.org,lists.linux.dev,lists.xenproject.org,amd.com,amazon.co.uk,infradead.org,outlook.com,linutronix.de];
-	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NO_DN(0.00)[];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCPT_COUNT_THREE(0.00)[3];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	REPLYTO_EQ_FROM(0.00)[]
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.linux.dev:replyto,vger.kernel.org:from_smtp,smtp.kernel.org:mid,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,sashiko.dev:url]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 930256F103E
+X-Rspamd-Queue-Id: 622396F1237
 
-When running as a KVM guest with PV timing info provided by the host,
-stuff the APIC timer period/frequency with the local APIC bus frequency
-reported in CPUID.0x40000010.EBX instead of trying to calibrate/guess the
-frequency.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] The `apic_set_timer_period_khz()` and `apic_set_timer_period_hz(=
+)` helper functions accept a `const char *source` argument which is never u=
+sed, resulting in dead code and a silent loss of boot diagnostic logging on=
+ platforms where logging was removed.
+--
 
-See Documentation/virt/kvm/x86/cpuid.rst for details.
+commit 4fb576b0d909663c9b3e6628dbed45d329c08a5d
+Author: Sean Christopherson <seanjc@google.com>
 
-Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/kernel/kvm.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+x86/apic: Provide helpers to set local APIC timer period in hz and khz
 
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index f9a6346077b0..beea0b6aa78e 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -990,7 +990,7 @@ static void __init kvm_init_platform(void)
- 		.mask_lo = (u32)(~(SZ_4G - tolud - 1)) | MTRR_PHYSMASK_V,
- 		.mask_hi = (BIT_ULL(boot_cpu_data.x86_phys_bits) - 1) >> 32,
- 	};
--	u32 timing_info_leaf;
-+	u32 timing_info_leaf, apic_khz;
- 	bool tsc_is_reliable;
- 
- 	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) &&
-@@ -1052,6 +1052,11 @@ static void __init kvm_init_platform(void)
- 			x86_init.hyper.get_tsc_khz = kvm_get_tsc_khz;
- 			x86_init.hyper.get_cpu_khz = kvm_get_tsc_khz;
- 		}
-+
-+		/* The leaf also includes the local APIC bus/timer frequency.*/
-+		apic_khz = cpuid_ebx(timing_info_leaf);
-+		if (apic_khz)
-+			apic_set_timer_period_khz(apic_khz, "KVM hypervisor");
- 	}
- 
- 	/*
--- 
-2.55.0.rc0.799.gd6f94ed593-goog
+This commit adds APIs to set the local APIC timer period, abstracting the
+HZ math previously open-coded by external callers. It also changes the
+lapic_timer_period variable to be local to apic.c.
 
+> diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+> index aa1e19979aa8e..8d3d930576fd7 100644
+> --- a/arch/x86/kernel/apic/apic.c
+> +++ b/arch/x86/kernel/apic/apic.c
+
+[ ... ]
+
+> @@ -796,6 +796,16 @@ bool __init apic_needs_pit(void)
+>  	return lapic_timer_period =3D=3D 0;
+>  }
+> =20
+> +void apic_set_timer_period_khz(u64 period_khz, const char *source)
+> +{
+> +	lapic_timer_period =3D mul_u64_u32_div(period_khz, 1000, HZ);
+> +}
+> +
+> +void apic_set_timer_period_hz(u64 period_hz, const char *source)
+> +{
+> +	lapic_timer_period =3D div_u64(period_hz, HZ);
+> +}
+
+[Severity: Medium]
+It looks like the source parameter is accepted by apic_set_timer_period_khz=
+()
+and apic_set_timer_period_hz() in arch/x86/kernel/apic/apic.c but is never
+used. Was it intended to log the frequency using this source string?
+
+> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyper=
+v.c
+> index 185d4f677ec0f..87beecec76f04 100644
+> --- a/arch/x86/kernel/cpu/mshyperv.c
+> +++ b/arch/x86/kernel/cpu/mshyperv.c
+> @@ -646,10 +646,7 @@ static void __init ms_hyperv_init_platform(void)
+>  		u64	hv_lapic_frequency;
+> =20
+>  		rdmsrq(HV_X64_MSR_APIC_FREQUENCY, hv_lapic_frequency);
+> -		hv_lapic_frequency =3D div_u64(hv_lapic_frequency, HZ);
+> -		lapic_timer_period =3D hv_lapic_frequency;
+> -		pr_info("Hyper-V: LAPIC Timer Frequency: %#x\n",
+> -			lapic_timer_period);
+> +		apic_set_timer_period_hz(hv_lapic_frequency, "Hyper-V hypervisor");
+>  	}
+> =20
+
+[ ... ]
+
+> diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
+> index 34b73573b108d..36f779dd311dc 100644
+> --- a/arch/x86/kernel/cpu/vmware.c
+> +++ b/arch/x86/kernel/cpu/vmware.c
+> @@ -424,9 +424,7 @@ static void __init vmware_platform_setup(void)
+> =20
+>  #ifdef CONFIG_X86_LOCAL_APIC
+>  		/* Skip lapic calibration since we know the bus frequency. */
+> -		lapic_timer_period =3D ecx / HZ;
+> -		pr_info("Host bus clock speed read from hypervisor : %u Hz\n",
+> -			ecx);
+> +		apic_set_timer_period_hz(ecx, "VMware hypervisor");
+>  #endif
+
+[Severity: Medium]
+These changes remove the pr_info() logging of the APIC frequency during ear=
+ly
+boot APIC initialization in ms_hyperv_init_platform()
+(arch/x86/kernel/cpu/mshyperv.c) and vmware_platform_setup()
+(arch/x86/kernel/cpu/vmware.c).
+
+Since the new apic_set_timer_period_hz() helper does not log this informati=
+on,
+does this result in an unintended loss of boot diagnostic logging on these
+platforms?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260701193212.7495=
+51-1-seanjc@google.com?part=3D1
 
