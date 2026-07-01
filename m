@@ -1,74 +1,74 @@
-Return-Path: <linux-hyperv+bounces-11744-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11745-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id BFgtMBJxRWoxAQsAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11744-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Jul 2026 21:57:06 +0200
+	id 5V7VHx1xRWo1AQsAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11745-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Jul 2026 21:57:17 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D2A96F12EB
-	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Jul 2026 21:57:06 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF1836F12F6
+	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Jul 2026 21:57:16 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=google.com header.s=20251104 header.b=rZyOcNsU;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11744-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11744-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=google.com header.s=20251104 header.b=RGim8zLW;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11745-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11745-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=reject) header.from=google.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 718A93100FC6
-	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Jul 2026 19:35:53 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6B26631BAFC0
+	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Jul 2026 19:36:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0ACDC4DD6DF;
-	Wed,  1 Jul 2026 19:32:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 070F64E3763;
+	Wed,  1 Jul 2026 19:32:51 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADCE54DBD98
-	for <linux-hyperv@vger.kernel.org>; Wed,  1 Jul 2026 19:32:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23A314DC542
+	for <linux-hyperv@vger.kernel.org>; Wed,  1 Jul 2026 19:32:47 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782934369; cv=none; b=nCbM02xwJla/Pga+ZMrjeZ0/vlZmkrSHaBbwpqgGlg2hnYKp3/Nn07Yej/Bub4JEY3fkVWBGxlhOyzRce1Jjrw5P6lsU/Zl3m6LUnkrNtH11CTyFu4frI/eDVCkIQWyDP0BLPbi1MuzvLYiN0jtjG0fJ+iN5Xx1HmEWR8MiCLE4=
+	t=1782934370; cv=none; b=dYH6hjRfQ17wPljWtpqu7Z7a1z+bWh/2jxA8XdudYy2aBZdGBlkRneYdra0k1xDBxNVyia2oTWzF1q/zAw0lnxAJ1ICn52uIyzc6Udy3QCtG/uGEgc7RgZHj0auZ3x8nnbp1xtRBLbR2MZQa3/NRi3GFH9f8bLv11YapAJmtQr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782934369; c=relaxed/simple;
-	bh=1GecteZCmORDRJzv/0fTJ5eJc9riviXtHhE/GZIQN3Y=;
+	s=arc-20240116; t=1782934370; c=relaxed/simple;
+	bh=bCu106G3ke2QslwQjzoF0iFGAeRR147Dfw14C3mfIq8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=RxDy+0YMan/Z5jqV1IK+TslAeaQ4T/vxbDrb4YGj7+eA3zisRg8iXuiRIiavyx/PV8JiCqjsn+5TmzybGeqrXlNZ9JgTCycP40ipoiqKV9T2jpQimwn54GM12g4bdNAs5infaA2G9qG9lnz8aNaGBjj1iebUoEz6A0MoNMYO+Y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rZyOcNsU; arc=none smtp.client-ip=209.85.214.201
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2c9f452d260so14900555ad.2
-        for <linux-hyperv@vger.kernel.org>; Wed, 01 Jul 2026 12:32:46 -0700 (PDT)
+	 To:Cc:Content-Type; b=k5wMdhHP3XsM3ABHmNOZUxOArvMwcKg4ndDPqAO2JJea26HlJddVl+FjNHyp85JuUkHcjO1h+OwyXe8m1BeUFW263HYzQu+7CiG1GF2eeJSZGfb19kcpQxYjXy83TWD3yNBWdhtnQhseVba8VNdmAeQBhRFw3JdmFI9f1ddG0AY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RGim8zLW; arc=none smtp.client-ip=209.85.216.73
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-37c9127e316so1037520a91.1
+        for <linux-hyperv@vger.kernel.org>; Wed, 01 Jul 2026 12:32:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1782934366; x=1783539166; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1782934367; x=1783539167; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=3QmXXgqE7aLG5WH8n+yjrFm5ZX7gR61uwM9vT7lFOWU=;
-        b=rZyOcNsUKcbqzdQdFboqK41i16nBNY/Kf3E+cdGf3SB6uo5BL6CWYF+VoQJWosD0Vm
-         N6Jy6UaWALxIdKIBiyKdsjEnTxjaN2s6MCvmEi3pQDWScxanuoiamT9QdT9tC4kT9V8S
-         2ha3D/Vf0hih/yV4VGOgI8FUpj29x093+lkf/JLR0DC+LWViX/K36kLs0ryos7ylLpbv
-         7zS9xQFtOZ+S25bk50a2bCiebTESVXX7UII8K8QcCGOMrW1PhNvyRz/AvoG6CYvShDHY
-         uw34SDS4Hp/lsfhRxPtwbI7RiPbeu3QI/RUR+56eyjihGUgWbhy0pj3rlaXUuPEIKRO5
-         bcnw==
+        bh=wWnD58giubyrEvhTS3JtzvsAOScPFFHLvCt5ZIn12HI=;
+        b=RGim8zLW1wlz5dJnZqYLWL3bGdYClN515n10wiLNcVizsBIPQujENdMajLs0iWsW6O
+         O+Rx2mKWQRRHRrTpj90TOFoPGek5y9CvlljK8GTnhvSRp9QLcRy24rsh8suZh15fJuoC
+         n+5xWIeSE6kJloQzUTTtO6yv2emTebfe/s/Sn6/AotYZtsHbAIQio2FU/fxvIKFXliYe
+         gMZJLUWkCwWcwFqAMNiTLiX0Wl9+69Osa0QnHRn83EIUfNNL0IkjMwTy/pK0CnCJQ4CI
+         S4sTgzOS5lzQ+vM2PlMED5NQfi5X02T2ecSVnPIwU2Vjn7mY/8D9XAipgF8imJCB2Hlo
+         2e9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782934366; x=1783539166;
+        d=1e100.net; s=20251104; t=1782934367; x=1783539167;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3QmXXgqE7aLG5WH8n+yjrFm5ZX7gR61uwM9vT7lFOWU=;
-        b=pwXF0wICh3ykJpCwil1lLrr7KMjAxsvYUbNhOADtypn3r/Rb2OX6ic7+Z+Q4RuHdNY
-         x0KaNvIcvN5JjSj/6isAuaPNVMqakubq8dp6kPGp6kDzQOguM8qKM1iLECjJEcP+6lwE
-         XKgJWwivFytM2B620mg5EdHKJ+IFDYAXnQi1haxtI6qhtviYEA+S0cZnCZEZPyW1VE5c
-         DGOApdc50sa0BxmHF0QvL+k9IUao9GkCEdweKRjY/Co8goBU3ms6quJY+xatNRHQzx5S
-         8wvZAyhxpkrXIZrPmWxDlh8AEbdmEN76VSJT8rxB/tZvcovr+9nGcIzRaltRNrtGHGQC
-         NaxA==
-X-Forwarded-Encrypted: i=1; AHgh+RqZawdv0dFIrsjHWjetgc22f/A37sGyl3imFRGITlpnXM4oVTYA4opyPWc+jIiXMfx0yZMnzc1TN6qSnZ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5z+T3ZUN1Gmrqa+MX+vwAZBNpkmGKnAMmeFG7tjhlj8JJEyOX
-	Ks6E3DC45/HKBOblVeDIXpd/QQtcUf+bffJfJcYPZx3gUKje4PonELdCrIdCb6ferCD8JrquhOF
-	Zm0KpKA==
-X-Received: from plef18.prod.google.com ([2002:a17:902:f392:b0:2c7:eb53:9c06])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:944:b0:2ca:68b1:b64c
- with SMTP id d9443c01a7336-2ca7e75d694mr30967275ad.20.1782934365572; Wed, 01
- Jul 2026 12:32:45 -0700 (PDT)
+        bh=wWnD58giubyrEvhTS3JtzvsAOScPFFHLvCt5ZIn12HI=;
+        b=fo/rK281J5LjunD7HrNNuje8t2bRyH2aMed4NItUqbQ7fit98iFBOzczo0zPYiBq80
+         Im+UygP088W0uOxVFUKb61UU0SgTpAwoPy5+CgU9tA72I+fHdrD5BfKuzhqJZNxii0bL
+         H7NjLfdDARBv3jXrJ5tup5LAgzBmDLR2zKvw7qyGuSEsr1/mllkRt8QSWNOLhKn2s4zp
+         MUnyM4lOxD1UEXc2kE46IlZvsZNAwQiXWV57J/xIk4Ac7H9CFzqILR/oiOIBOrqli+KP
+         VnAlXrmZ94D438oeXDm+hkzOifJrElsGZQR1ll+C3Y96P/JG2e/YT/O9XC/rNHxs7TF7
+         uDOw==
+X-Forwarded-Encrypted: i=1; AHgh+RqFI3hzr2PWnFNFG4dSXB8CaACRbmk1r+rcjoFqmUwuPGvy7OjhYMM5OABF57aXp4Ju1M5zZNCTiHnfYUg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwB0U7+6Dp9nR1PlBOqlB5p0ypc/DFv9NT0IVg+zBsQJzeDxJNP
+	cFsmXtDz24Ic86tDbWTqT3gJlBL+VXMHxWnIGMoxqk/fOeqmj3xFtt8QUbtf2cSK+yF0GzF1SkA
+	AuTq32Q==
+X-Received: from pjbms18.prod.google.com ([2002:a17:90b:2352:b0:380:9651:afb9])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:e7ce:b0:37d:8426:40de
+ with SMTP id 98e67ed59e1d1-380aa0ad396mr2721883a91.1.1782934366877; Wed, 01
+ Jul 2026 12:32:46 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed,  1 Jul 2026 12:31:37 -0700
+Date: Wed,  1 Jul 2026 12:31:38 -0700
 In-Reply-To: <20260701193212.749551-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -78,8 +78,8 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260701193212.749551-1-seanjc@google.com>
 X-Mailer: git-send-email 2.55.0.rc0.799.gd6f94ed593-goog
-Message-ID: <20260701193212.749551-17-seanjc@google.com>
-Subject: [PATCH v5 16/51] x86/tsc: Rename pit_hpet_ptimer_calibrate_cpu() => native_calibrate_cpu_late()
+Message-ID: <20260701193212.749551-18-seanjc@google.com>
+Subject: [PATCH v5 17/51] x86/tsc: Fold native_calibrate_cpu() into recalibrate_cpu_khz()
 From: Sean Christopherson <seanjc@google.com>
 To: Jonathan Corbet <corbet@lwn.net>, Paolo Bonzini <pbonzini@redhat.com>, 
 	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
@@ -109,7 +109,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	MV_CASE(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -118,14 +118,14 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS(0.00)[m:corbet@lwn.net,m:pbonzini@redhat.com,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:x86@kernel.org,m:kas@kernel.org,m:rick.p.edgecombe@intel.com,m:seanjc@google.com,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:ajay.kaher@broadcom.com,m:alexey.makhalov@broadcom.com,m:jan.kiszka@siemens.com,m:luto@kernel.org,m:peterz@infradead.org,m:jgross@suse.com,m:daniel.lezcano@kernel.org,m:jstultz@google.com,m:skhan@linuxfoundation.org,m:hpa@zytor.com,m:vkuznets@redhat.com,m:bcm-kernel-feedback-list@broadcom.com,m:boris.ostrovsky@oracle.com,m:sboyd@kernel.org,m:linux-doc@vger.kernel.org,m:kvm@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-coco@lists.linux.dev,m:linux-hyperv@vger.kernel.org,m:virtualization@lists.linux.dev,m:xen-devel@lists.xenproject.org,m:thomas.lendacky@amd.com,m:nikunj@amd.com,m:dwmw@amazon.co.uk,m:dwmw2@infradead.org,m:mhklinux@outlook.com
  ,m:tglx@linutronix.de,s:lists@lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER(0.00)[seanjc@google.com,linux-hyperv@vger.kernel.org];
 	RCPT_COUNT_TWELVE(0.00)[42];
 	FORWARDED(0.00)[lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-11744-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11745-lists,linux-hyperv=lfdr.de];
 	DKIM_TRACE(0.00)[google.com:+];
 	HAS_REPLYTO(0.00)[seanjc@google.com];
 	PRECEDENCE_BULK(0.00)[];
@@ -137,52 +137,60 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	REPLYTO_EQ_FROM(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 0D2A96F12EB
+X-Rspamd-Queue-Id: CF1836F12F6
 
-Rename the late CPU calibration routine so that its relationship to the
-early routine is more obvious and intuitive.
+Fold the guts of native_calibrate_cpu() into its sole remaining caller,
+recalibrate_cpu_khz() to eliminate the extra SMP=n #ifdef, and so that it's
+more obvious that directly invoking the early vs. late calibration routines
+in determine_cpu_tsc_frequencies() is intentional.
 
 No functional change intended.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kernel/tsc.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/kernel/tsc.c | 19 +++----------------
+ 1 file changed, 3 insertions(+), 16 deletions(-)
 
 diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-index a877b82d0991..9764ac758081 100644
+index 9764ac758081..6ed6f8f012eb 100644
 --- a/arch/x86/kernel/tsc.c
 +++ b/arch/x86/kernel/tsc.c
-@@ -752,7 +752,7 @@ static unsigned long cpu_khz_from_cpuid(void)
-  * calibrate cpu using pit, hpet, and ptimer methods. They are available
-  * later in boot after acpi is initialized.
-  */
--static unsigned long pit_hpet_ptimer_calibrate_cpu(void)
-+static unsigned long native_calibrate_cpu_late(void)
- {
- 	u64 tsc1, tsc2, delta, ref1, ref2;
- 	unsigned long tsc_pit_min = ULONG_MAX, tsc_ref_min = ULONG_MAX;
-@@ -927,7 +927,7 @@ static unsigned long native_calibrate_cpu(void)
- 	unsigned long tsc_freq = native_calibrate_cpu_early();
- 
- 	if (!tsc_freq)
--		tsc_freq = pit_hpet_ptimer_calibrate_cpu();
-+		tsc_freq = native_calibrate_cpu_late();
- 
- 	return tsc_freq;
+@@ -918,21 +918,6 @@ static unsigned long native_calibrate_cpu_early(void)
+ 	return fast_calibrate;
  }
-@@ -1472,7 +1472,7 @@ static bool __init determine_cpu_tsc_frequencies(bool early,
- 		else
- 			tsc_khz = native_calibrate_tsc();
- 	} else {
--		cpu_khz = pit_hpet_ptimer_calibrate_cpu();
-+		cpu_khz = native_calibrate_cpu_late();
- 	}
  
- 	/*
+-#ifndef CONFIG_SMP
+-/**
+- * native_calibrate_cpu - calibrate the cpu
+- */
+-static unsigned long native_calibrate_cpu(void)
+-{
+-	unsigned long tsc_freq = native_calibrate_cpu_early();
+-
+-	if (!tsc_freq)
+-		tsc_freq = native_calibrate_cpu_late();
+-
+-	return tsc_freq;
+-}
+-#endif
+-
+ void recalibrate_cpu_khz(void)
+ {
+ #ifndef CONFIG_SMP
+@@ -944,7 +929,9 @@ void recalibrate_cpu_khz(void)
+ 	if (WARN_ON_ONCE(cpu_feature_enabled(X86_FEATURE_TSC_KNOWN_FREQ)))
+ 		return;
+ 
+-	cpu_khz = native_calibrate_cpu();
++	cpu_khz = native_calibrate_cpu_early();
++	if (!cpu_khz)
++		cpu_khz = native_calibrate_cpu_late();
+ 	tsc_khz = native_calibrate_tsc();
+ 	if (tsc_khz == 0)
+ 		tsc_khz = cpu_khz;
 -- 
 2.55.0.rc0.799.gd6f94ed593-goog
 
