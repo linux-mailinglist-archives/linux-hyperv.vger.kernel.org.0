@@ -1,81 +1,81 @@
-Return-Path: <linux-hyperv+bounces-11723-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11724-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id LEnTNktLRWrj+AoAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11723-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Jul 2026 19:15:55 +0200
+	id jiVsHa9KRWq5+AoAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11724-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Jul 2026 19:13:19 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5BF26F0420
-	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Jul 2026 19:15:54 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2D7E6F0382
+	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Jul 2026 19:13:18 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=baylibre.com header.s=google header.b="MJX+jwl/";
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11723-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11723-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=baylibre.com header.s=google header.b=ZHEfhP32;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11724-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11724-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	dmarc=none;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id AC2B9302B74B
-	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Jul 2026 17:05:52 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C82643143F45
+	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Jul 2026 17:05:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBAAC386C20;
-	Wed,  1 Jul 2026 17:05:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5217D38C2D4;
+	Wed,  1 Jul 2026 17:05:44 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5678F385D67
-	for <linux-hyperv@vger.kernel.org>; Wed,  1 Jul 2026 17:05:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8C5B38AC7E
+	for <linux-hyperv@vger.kernel.org>; Wed,  1 Jul 2026 17:05:42 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782925542; cv=none; b=WtySFaR31nXvqM6m9I94pbvQ4DaIv5h2mmP2zGHylsWfRCUHp6kXFJ9tuL9olfAzf8Pjt0DYLkX4L23f9PEe0KfwJOigSd/lCA+0WFwUc5E3PbrckLHAxIdGpXNND/JhRzvsteHnh0VyrZPDw++EbPr1dWSxIMbqFSq5exxNncs=
+	t=1782925544; cv=none; b=BOfPvojxAoikCSfONb+5Oef4ZK1jsvOaaJ0Ta4GEbTa3SJWxUiLlz6Ci57oygtqYfjZqM0kfZP+QWSK19HpM0JYsD9f4FzRx06AybJESkfSBrh2utWF9sJflGsfrKJXid4vF/X+l1c+WTBM0VAgcZEUMlDdm3a2/apFzYPahFcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782925542; c=relaxed/simple;
-	bh=i6kOt2YoYOTS3UNjaVCpuG2OLA3vhViUK1uSLAS/Pz4=;
+	s=arc-20240116; t=1782925544; c=relaxed/simple;
+	bh=fUoDHGx0vIkRkk7bgRX+e2vp2YXY3RA6x0vlWQS8YwE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VRT4WaqETFvCMF4QH0s7Q/CKBEDUl/WYLmD/p4VpX5o7mbvLQHPCEnTfWJLeiHKcAWmoqDHgOfZl95vXjrdxbMl1ljoRNoqhkMuE+aqs2WB4a6seZ81VJAHNhKkeAVFUc1IwhD0NyRf0IKocGV7PAL9TqLmH1aa7MWaOamYlbk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=MJX+jwl/; arc=none smtp.client-ip=209.85.221.54
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-47248615e4dso908877f8f.2
-        for <linux-hyperv@vger.kernel.org>; Wed, 01 Jul 2026 10:05:41 -0700 (PDT)
+	 MIME-Version:Content-Type; b=nHjUf0IZHb4C0VXVHBKNNJrAfwwAZr6f/nDMl2q3VwcGsDyTCFMlq8C3EkpYmDdxtcEwBiQXnMb6z9jMDG3J1cmwRsL0FTD3wKiSJ/Nay0FkfE0sdtWMf2dk5GQxBucOWC0efRLN4b/C70ujvDl7wDpSG5AHBxtopyC5ngOdzTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=ZHEfhP32; arc=none smtp.client-ip=209.85.221.48
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-474e7ba9fd6so539187f8f.1
+        for <linux-hyperv@vger.kernel.org>; Wed, 01 Jul 2026 10:05:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1782925540; x=1783530340; darn=vger.kernel.org;
+        d=baylibre.com; s=google; t=1782925541; x=1783530341; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6gf3UKUdDckwJ0S32IeJydKrzo8cm0OFmgo0J+PNmpU=;
-        b=MJX+jwl/+s7fT3DKW1aYyDoYTL/2CdKJyJznQvw5/ZfsM8u48scQR6G/0ZzN3PNSOn
-         5d0RwNy02pEfc7m2NAats2yrsX1KIvRKchUft26POcWqJ6B/ms9hS1X/fsdGLKa7j5CL
-         t28EGQuM3Mqrr9Y4sY8KqXm0bD+4eQxqMZIVy3oE3/XWVIw8Ilr+HpwXnhQte7X02tUA
-         kmUf+fS7jKNasn/1aqcZO9OPqPL9JugbrSms1vlncO0W2t2B3HIgx0D/EqSev6EXB6D5
-         0ftDzlBRv+dXZwIo46tb2DeIYjETOBwtkD3q2yz5wUrs746tgJkBsQI2hZ2CJZicbdAW
-         rhKA==
+        bh=RvMe6A/UgVrym2bRYUnF2aCflCH0pJThY0gdvMKUcgc=;
+        b=ZHEfhP32pnNyIO3ylykAATpZAIzNYbQgPnQHzYmLsTs9TQLb/YM6FbpUe6SGMZ2fxp
+         PnFUvf2nMx426FrER6xFHm+iFmx1A94GLBqgO8Hkogy3/dXp2/xERzjyCIp0nOs40dPt
+         VN/E63IihvlYofGdqLUgIwx3ZBOM9slEig4AWBjN6WJ6ZhNJmd74pgrRnBcnsTiBpgwK
+         UPrQpDt2Kynw6JT5PjnupbegfY/Ryp80pd0e8iaBb5tqBKcaw9UzUAx34BEG7ODB+UEo
+         Tb5ulKrcIEJDHjCgfjt4pdrRugow0ERESChuct2Hedm+3efwWaj+1KdM0RjINS3Xp2G9
+         w6EQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782925540; x=1783530340;
+        d=1e100.net; s=20251104; t=1782925541; x=1783530341;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=6gf3UKUdDckwJ0S32IeJydKrzo8cm0OFmgo0J+PNmpU=;
-        b=GhpCcDFEBCX8utCH1rCg1Kez9xAh1Juo51b5SZF3+BT+GqzjH47euL11wn2IcOBwiC
-         +yhwsPLw8MGefFkye/5B6CmKghbiTcGYszkLmN1KJhu78Brvz4Rc2cxFRNoBl7H4mQ9I
-         85SNZqT881DtarVtMXZuMc2/I1rHyAik4d5XRW+PHZJKM3IWtBM5nrE7fazW9islKC1v
-         f5ElR1app55gLBniCBT0XLjFSzRD1BOQZG6IRAfCPKgyi1dxIBUZlXWxnMePWr9E8hKr
-         l/2QBhIqv1zFhIhCGBLXuuD7pg/Tfjnz2ZUTFm28hIQEcMvjT0ZPp3MTdbWSgLUsmSAb
-         EugQ==
-X-Gm-Message-State: AOJu0YwVjGBBnHFFBqmHP/sVuKmOaPGT64/A69Uhzd7dLMF+PFGtNbCX
-	OUlSEFzh0ys6mV+6hqKrfBEW4b3RzGh4uYGtVWNCo6J3tmsrmMOh2qqL4K8lMz2LMyg=
-X-Gm-Gg: AfdE7cnjAD7+Lc5adaYXITkx+gc5UFx2yGhRlQueaAKYE3nXHYT3HFvrfFvmhPL7oq5
-	m46Fk3V4g4TMfePUbsBksWjcW8P7bWCQ+ir8HQ9tbP8qDWhFp0mTdv06lWUbSfgSDFYjDOn9xl2
-	BRxZ6ktMygyluX3Gseeo3iumr6rnjbriyOTtL0B3hUAm9cZCqpawT3/4YKeBdeAHzG554xSp7IF
-	B3Sps8tpxoRdgxMqRqIDZNA/Omycmq02pG99SWi7fv2XPE2gI2fCSWYfm8Tqxw63aa1R+BXz4Dg
-	ht+s7n7l9wLwoLrxPOLJkAEg+huTJY02+edMgKXuBBVJk6SkysC3qokKu1gq7ot3GVyL6QY4NrC
-	YYQOZOK+OGH9p3V+c67q/Pd4PkzijNwwo+SgKrWIbfvC+6+qDFlgXeSuAImIMxdbVch/j4uZZ1C
-	+QZamDRsYEBAxpH4Gc/9eOd/3bjdmom4kiW5EK7OqFWCe+gwLMK3WWsIF8Rdt9QQLs4PM6Mp1Z/
-	4Dm
-X-Received: by 2002:a05:600c:6d0f:b0:493:b6c2:cd96 with SMTP id 5b1f17b1804b1-493c2b4aaddmr23283325e9.12.1782925539685;
-        Wed, 01 Jul 2026 10:05:39 -0700 (PDT)
+        bh=RvMe6A/UgVrym2bRYUnF2aCflCH0pJThY0gdvMKUcgc=;
+        b=r8k5LAvWPKZXgOHilHmayAUZIdwKMjrNbLnuiKSaVymuwTvN6gQYwwJbTfTO5HhGxt
+         8FI+2zdgEOP+o74p71AovHg84tF7n2IqtxhLSAEKYBmtYwVOX0LAyiCLu5dnGRQTbb1c
+         LMjAj7a3nIMaqsSNYlmI4bfPtzrQ0EcWk2a4xQLDq2Ftw6jvbSEG0EsqfRcCtTQ36TXs
+         79DZVs/zJ8d3lfVS0gJDK6tpqf5ljYWdOlwrH1vIx1ZzZ9Ah8Dx0yKZzKxFs0IVhXdoO
+         H21VZrEudSTdeOjGU2aJ87FWtS0pkOW8wDkYDKkh7UGdc5CASFdnnLt8mTk4Re8s40ps
+         nF/A==
+X-Gm-Message-State: AOJu0Ywv+B5llk/oXw2MLdfgwyW3S6NBs09uVp9MrrY4/+c+TuSAwzjd
+	rvFhIhoUuZojhYR4H6uMjc8kD6i6aEmqfzYN15D+92sOnE3MESHhxzLa5UdAT03vY7c=
+X-Gm-Gg: AfdE7ckvhPUtPWCz+PCToltNT2HZihFQVqsA8gfnlzqjtvyzV/VCYIRkjmIY/maw7sp
+	xvcKJIURFqK19+b71xGfECohlpg+YN62rIkIgasPl0nLzt08auPpXz2W2SSKHKJGGzGHL5DonXF
+	bNBRSNLU0WAuXjkyZHaj7l+EJx0P3Xno4Gr9Zo0nRHg6TjsfTfz5Blsr48QsclLmzn8DpI9Cj57
+	m91fqtWjaXIgYOn2DQ+XCN3qft5D/ZJBQMDG1DYPbUGOc2d2vU6xc3ERJjmFuJ2jOlkUPtRO1wE
+	la6FBliBMKGpZBkq4IOrLHWVPQHZJnB2EcvhakkiCn9dvF9tKxgq7IcZ8Pu+Mpvnwx4b96j4jII
+	VolGH/5q9no/mVoMeiF6pCESM9uTpUIYuH5sGC9Ubtczo88MSvcKFAesgKegCvMQwqzLlddDecN
+	GGtjd3kt9rq+fXzdrFwP/06BLgbiZaB6BLuOiBk3xxP3goASG6xM+tt+JVdQIY3TtCkrGbNLHmc
+	3ma
+X-Received: by 2002:a05:6000:25e3:b0:475:f0f0:9eec with SMTP id ffacd0b85a97d-4775ac9f5a1mr3984906f8f.49.1782925541284;
+        Wed, 01 Jul 2026 10:05:41 -0700 (PDT)
 Received: from localhost (p200300f65f47db044d4849b7c2d3c964.dip0.t-ipconnect.de. [2003:f6:5f47:db04:4d48:49b7:c2d3:c964])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-493bef1807asm58557995e9.1.2026.07.01.10.05.38
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-477db3dbb79sm1334344f8f.2.2026.07.01.10.05.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2026 10:05:39 -0700 (PDT)
+        Wed, 01 Jul 2026 10:05:40 -0700 (PDT)
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig=20=28The=20Capable=20Hub=29?= <u.kleine-koenig@baylibre.com>
 To: Dexuan Cui <decui@microsoft.com>,
 	Long Li <longli@microsoft.com>,
@@ -88,9 +88,9 @@ To: Dexuan Cui <decui@microsoft.com>,
 Cc: linux-hyperv@vger.kernel.org,
 	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/4] drm/hyperv: Explicitly set subvendor and subdevice for pci match array
-Date: Wed,  1 Jul 2026 19:05:20 +0200
-Message-ID:  <019450ffb519d02821364afca32b9f48bcd8d2b6.1782925276.git.u.kleine-koenig@baylibre.com>
+Subject: [PATCH v1 3/4] drm/hyperv: Drop useless empty remove callback
+Date: Wed,  1 Jul 2026 19:05:21 +0200
+Message-ID:  <8a85b5f4a5ed8ec35b5a213423d4be40e34f9cb9.1782925276.git.u.kleine-koenig@baylibre.com>
 X-Mailer: git-send-email 2.55.0.11.g153666a7d9bb
 In-Reply-To: <cover.1782925276.git.u.kleine-koenig@baylibre.com>
 References: <cover.1782925276.git.u.kleine-koenig@baylibre.com>
@@ -101,14 +101,14 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1041; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=i6kOt2YoYOTS3UNjaVCpuG2OLA3vhViUK1uSLAS/Pz4=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBqRUjThIFqHXG9zdoMtK7kK980Ppa+ht6Sofbha 6k2UnGDf8eJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCakVI0wAKCRCPgPtYfRL+ Tg0pCAC4VMts/wpBY1P1Xxjfc9pRZSMqPVzxiIewQ940MT0UEQZeWMqEfHkODhvzG2CoNrvfO1M UvGG5vGQ4G7ulx0zL4RqwpGVqRGwv6ZzlVpgMazmBe/w5GT+nktfRYWRMJ5vp/95INopyieXodq 1lQCn9sKvrivaSqbVwEnDNbwdGGBwtkT+TdiAeD4lYen2tGPALvhoB6xuBm5OHIuVCzs6pJOk0x AywmPpLzK2VUbIwPHGVcLo18+BuJFLACqKjxiYo604o9XSdEB3DmnrpnCQEDGuT4FaqvEXnyzno lvyx+0i5U1dYo4NqHKStyrbfxz867rFHc4xDDjh3XexFr4hM
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1197; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=fUoDHGx0vIkRkk7bgRX+e2vp2YXY3RA6x0vlWQS8YwE=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBqRUjWB9MX8EzJiYV20ypG8q4ZDwRP5fPJyrHEQ K+R6HWFg9aJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCakVI1gAKCRCPgPtYfRL+ TsuzB/wLTW0/yBRqnX/rTnGSm2/wzLrOc1svn/RdtcUCCJqJJzoUpA0vstagpmv7W4YnUc9LGd7 Hau4gP9XyAG8CPZKqFmp+oQTm88dXMrM/Qjy2OTvns3CA19E4DqZNQ9vL33gsAYJPvh79+snr9a hbVrK5asZIuftv9GiRBDYxyVZuWmHYGVNoxzNzFDS7H0g9mj9JQ58eKQrcUv2JLhZ+in6mkw6Nu CHi+E21bFzIKBdKj/f9njge+6nU66Q84o1QQgggkaonc3bkrMrnpn/e5/g3SkIp0zgtKjWTDY/l s4tpFj4e/dCWYBnwFf0z8eWtcYT5921cDp+PtzW7bwr5p2LT
 X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[baylibre.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -121,9 +121,9 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_RECIPIENTS(0.00)[m:decui@microsoft.com,m:longli@microsoft.com,m:ssengar@linux.microsoft.com,m:maarten.lankhorst@linux.intel.com,m:mripard@kernel.org,m:tzimmermann@suse.de,m:airlied@gmail.com,m:simona@ffwll.ch,m:linux-hyperv@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
 	FREEMAIL_TO(0.00)[microsoft.com,linux.microsoft.com,linux.intel.com,kernel.org,suse.de,gmail.com,ffwll.ch];
 	DMARC_NA(0.00)[baylibre.com];
-	TAGGED_FROM(0.00)[bounces-11723-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11724-lists,linux-hyperv=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
@@ -137,35 +137,42 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: D5BF26F0420
+X-Rspamd-Queue-Id: E2D7E6F0382
 
-.subvendor and .subdevice were set to 0 implicitly, so only devices with
-these two values set to 0 in hardware can probe automatically. Make this
-requirement explicit.
+Having an empty remove callback is equivalent to no remove callback.
+(The only minor difference is that with an empty remove callback
+pm_runtime_get_sync() and pm_runtime_put_noidle() are called.)
 
-While touching this array item, also make use of the pci macro designed
-for that case.
+Drop this useless function.
 
 Signed-off-by: Uwe Kleine-König (The Capable Hub) <u.kleine-koenig@baylibre.com>
 ---
- drivers/gpu/drm/hyperv/hyperv_drm_drv.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/hyperv/hyperv_drm_drv.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
 diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-index 2e75fb793495..e766d87b7a9d 100644
+index e766d87b7a9d..e3f41336a831 100644
 --- a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
 +++ b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-@@ -51,8 +51,8 @@ static void hv_drm_pci_remove(struct pci_dev *pdev)
+@@ -45,10 +45,6 @@ static int hv_drm_pci_probe(struct pci_dev *pdev,
+ 	return 0;
+ }
  
+-static void hv_drm_pci_remove(struct pci_dev *pdev)
+-{
+-}
+-
  static const struct pci_device_id hv_drm_pci_tbl[] = {
  	{
--		.vendor = PCI_VENDOR_ID_MICROSOFT,
--		.device = PCI_DEVICE_ID_HYPERV_VIDEO,
-+		PCI_VDEVICE_SUB(MICROSOFT, PCI_DEVICE_ID_HYPERV_VIDEO,
-+				0, 0),
- 	},
- 	{ /* end of list */ }
+ 		PCI_VDEVICE_SUB(MICROSOFT, PCI_DEVICE_ID_HYPERV_VIDEO,
+@@ -64,7 +60,6 @@ static struct pci_driver hv_drm_pci_driver = {
+ 	.name =		KBUILD_MODNAME,
+ 	.id_table =	hv_drm_pci_tbl,
+ 	.probe =	hv_drm_pci_probe,
+-	.remove =	hv_drm_pci_remove,
  };
+ 
+ static int hv_drm_setup_vram(struct hv_drm_device *hv,
 -- 
 2.55.0.11.g153666a7d9bb
 
