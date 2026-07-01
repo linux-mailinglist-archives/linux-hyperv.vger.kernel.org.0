@@ -1,74 +1,74 @@
-Return-Path: <linux-hyperv+bounces-11767-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11768-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id hv3sIplyRWrPAQsAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11767-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Jul 2026 22:03:37 +0200
+	id xCyOIZ1tRWqw/woAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11768-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Jul 2026 21:42:21 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E49E86F13E8
-	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Jul 2026 22:03:36 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE8D86F0FE1
+	for <lists+linux-hyperv@lfdr.de>; Wed, 01 Jul 2026 21:42:20 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=google.com header.s=20251104 header.b=QK087GRy;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11767-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11767-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=google.com header.s=20251104 header.b=CGRt9Qfg;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11768-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11768-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=reject) header.from=google.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8E63D3265500
-	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Jul 2026 19:41:59 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 07B71301FC97
+	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Jul 2026 19:42:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE72D429DA4;
-	Wed,  1 Jul 2026 19:33:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8D504D2EE6;
+	Wed,  1 Jul 2026 19:33:19 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B1A0426424
-	for <linux-hyperv@vger.kernel.org>; Wed,  1 Jul 2026 19:33:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1E2428D18
+	for <linux-hyperv@vger.kernel.org>; Wed,  1 Jul 2026 19:33:16 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782934397; cv=none; b=EljoNGMEkuBG1ZwwV/nY/8GgfNTCAjB6p9ZjysZT4HxoMS958EsNphuEslIYzds2xNEOcZiPrTkmtymA0VSH9STFOPxG8K36NOv/6QmOYYNOYmuqcZ8sEW4WYtjqJc9KasMXqA+IP8EV6TJ4bH0foMHFPAuN8Gr/+GKff4LgL/Q=
+	t=1782934399; cv=none; b=k6JAYykVXFEUaXMIXTsuCYVBtTteyld6PH2JbV4jP8mKRYMH0H2l87mUmDYD92zi7EbIfKADQhD69DmMsQq6WRD2xjOnL0nUZE8XTjEkpVpCQH+Pi17R860pOnkNH7TJuqP6zrt0NJZdzQ1EUtl4blcBN3GxkWG9W72ruu8crwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782934397; c=relaxed/simple;
-	bh=ktUv4JiVG9cTXmS+Hdc614GouDZnZJtPdGZ3jvL606g=;
+	s=arc-20240116; t=1782934399; c=relaxed/simple;
+	bh=uS9BChC7KgGK2M+8u75Q9Ryt/QRAbZtmL5i8BGg+y40=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=XWQOMND+yXcGYWhWDsNComO6D7eJUlcJ9oV8eEWEleZzin7TCJ0x7LazBf1cmzvTSdyse9rZe6P31b844CrwpJ+emFzewXQgPgGlDDul31QtnhssWkHWlnnikSz3W1L2qFfaPgQeYbEQLP2TQN1ZQHlTtwtMpllmzyfMEDtblK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QK087GRy; arc=none smtp.client-ip=209.85.210.201
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-8479cc04d8fso1504169b3a.2
-        for <linux-hyperv@vger.kernel.org>; Wed, 01 Jul 2026 12:33:15 -0700 (PDT)
+	 To:Cc:Content-Type; b=m164jLZdyTxAFQj9eNDUXt1h4s2p55TDPmMBRgbUlBCBH81I12oXy2K49387O9x8Xv2cq2Awuh8vO7NzeDYNK20Zb4We8LXsVe1bwP4Hju1fZepEe1to/iHwbA/LIRjbLpczbjG/8wz0gTTUoEOUp1xGiw32l6dfTvNZ33L5DVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CGRt9Qfg; arc=none smtp.client-ip=209.85.210.201
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-847c3a12ce8so532790b3a.1
+        for <linux-hyperv@vger.kernel.org>; Wed, 01 Jul 2026 12:33:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1782934395; x=1783539195; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1782934396; x=1783539196; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=gy5b+9Ie1Ki1M0iB4wQwCtkzcjH6HRhEeykN2jC/eJ8=;
-        b=QK087GRySHGWHH1CjyHzwo6ORVwhgJG7MQXcopzfBiymZ5gp9awwRtHeEJYFB05knL
-         SBYHlsAzR73rp85X1vGe+h+q8ZGIgyC4ppzzrDpmpkFVaooJNcgc8Ce0QMDmN0DYvX8u
-         QSJcrtndj93Kvv5DasuYR+Fysz5QJ7gkFfjUMfuvJbc0dHZAuQZ7VTf34Syi6q4PvNdC
-         uDMxV0gWxQCnRGZJ0XhpbfPT4iOR9IG7VXDl6z+1zipeiR3+6pPLXQqodA1+AarKBEt2
-         cPRrE267+hO3EKbK25f9LrQAs4VFxoDWvTB/cs/rUmPSX21uYqHvXAQsyJOP53st1IeW
-         sX9A==
+        bh=w419X+lYiD/kBIvhKaeAU2oxypXcdz+V5rg+/s/ZS+Q=;
+        b=CGRt9QfgbZ4A0K1KvEd7oB0E5MclUUrNEZsph5oNIYNfP+sbjSBR7+iS1jJR01CMix
+         7DMJ8JYtmzETMNvFUfCm5Bf5DrelvA6Q1iXc9mNy8yZTdw0k7OmfW7SfWNTGeWBLEI+Z
+         1Js0Y7t8hNHAUOAOILmf8df3Hu4Aojz4YugYTVDBEWMqDcwPjReBlaTbeYUB40PV/v8j
+         B27FjEGoE86wdAnxLcd7nxkbCDjrdZdc/dehlitFIQdvVBYrFX50fudD0mgDZ7+K7lQI
+         mNT+ZoyAy8DUwx02z8/hNM0HLgdyUw8Lijaj6zjIv52m5hLawcNuiNW31pqeozVaP+YA
+         L+3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782934395; x=1783539195;
+        d=1e100.net; s=20251104; t=1782934396; x=1783539196;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=gy5b+9Ie1Ki1M0iB4wQwCtkzcjH6HRhEeykN2jC/eJ8=;
-        b=J8MTbMYY5ofnW7DN+v//VqZb0IHVip3d7BHabecGgG1ioQ7UNMFKOGQDJK/ZiCUvKG
-         zb1pVNm0FORiGRf09Nk8c4v9Q3gYgZNoiTa68QjqNtPyZymYIhsZ/+vpR0KHqZA0ypbx
-         OKEhBZ2MQI8WS1bcQqHH16ojUokltxg10EdDxTAlgTcVkDEls1XN//MQMXCHcs0jhJQ8
-         WDiQEcaYX5bY7Ms82tZAdiw7E04mzl2AbKJuh6XlNrGWwv/yTwU7PCvxHkKqxyB3UdSq
-         2X97zWH4TrgxPEodLthpV6fHLuzvL/zj2BpZ0hLKQViG0eMl0ghxV7iMNiMvWHDjRZGm
-         ZLPg==
-X-Forwarded-Encrypted: i=1; AHgh+RpT0bn36AcHOtK6LB8QK0tTAcWD5G7Pwqvq14WVx4KSKLct6DPdvuwHQ3G3WvHdFAH/+Pf79Ir2sx1Ct6o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6RiK33NVnky3+lXU+jS3A1k6u/34+WMCSWdPemsDVoVXZBTgE
-	z8Vmer+vRc4i9/Lg3MMejEofG7koK+FUZqSQ2W9L0W8qyqzFSvvZEbSdDHDpGMO9QGf5lYksZaU
-	nHPs2vw==
-X-Received: from pfbbk23.prod.google.com ([2002:aa7:8317:0:b0:846:7503:7350])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3d56:b0:845:36a0:9eb2
- with SMTP id d2e1a72fcca58-847c096d1f0mr2944243b3a.34.1782934394416; Wed, 01
- Jul 2026 12:33:14 -0700 (PDT)
+        bh=w419X+lYiD/kBIvhKaeAU2oxypXcdz+V5rg+/s/ZS+Q=;
+        b=pzDhWGzQpAulJwTFp2lRQ3ykBf0XSosXMzwjCZnFZTgqUDy0mgxD7DvENzoA+OgdA4
+         YZhD08eLqmUgMSk0ntWy6oMf9/a7C35fXEn4OgURhCe3ir0E5caN8EqpGFNcKtCnJwVW
+         lvTuMVVlwnmTIriaQNxefxollTU2sDd+A/uf0u5sPrvj5KTFxbvjS3m3nGTZeNkQmv9s
+         LVMg5jWqYG/0i96ryLZWW62JnnKrqU9KD0J4CwBAoAid05AxH2+tHdnnTLuvKU0ECyLb
+         0ZYeCJAgnUEzcYXxKdGNz/pr/j5Jex2puGrrzRMRjIEU+kyhTGTxmWA3EDvH7y0RjnzJ
+         djXA==
+X-Forwarded-Encrypted: i=1; AFNElJ+yyU9KosBT3dbe0Dp70G94kNtXxc+Xp0sALdDpQ0isPEPmwtHI9iOIJotHe3Aw67AjZ7MwXkkxuOhrXnA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcGb25LH223EyA+k7r90dcGAZFZUMJHMcK7QfsAmoiEe+uN88m
+	VlDtCoA3gfk6m99ZZdYzH5wisrJJ0XUn2E9iPQe2xQV/nVcm4CKi7qHoDfGTpw6IT0MAc4lnQSa
+	mvPhN0g==
+X-Received: from pfbdf8.prod.google.com ([2002:a05:6a00:4708:b0:847:a13f:28e2])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:a112:b0:847:8f7c:fa10
+ with SMTP id d2e1a72fcca58-847c0894ebamr2717987b3a.35.1782934395673; Wed, 01
+ Jul 2026 12:33:15 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed,  1 Jul 2026 12:32:00 -0700
+Date: Wed,  1 Jul 2026 12:32:01 -0700
 In-Reply-To: <20260701193212.749551-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -78,9 +78,8 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260701193212.749551-1-seanjc@google.com>
 X-Mailer: git-send-email 2.55.0.rc0.799.gd6f94ed593-goog
-Message-ID: <20260701193212.749551-40-seanjc@google.com>
-Subject: [PATCH v5 39/51] x86/pvclock: Mark setup helpers and related various
- as __init/__ro_after_init
+Message-ID: <20260701193212.749551-41-seanjc@google.com>
+Subject: [PATCH v5 40/51] x86/pvclock: WARN if pvclock's valid_flags are overwritten
 From: Sean Christopherson <seanjc@google.com>
 To: Jonathan Corbet <corbet@lwn.net>, Paolo Bonzini <pbonzini@redhat.com>, 
 	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
@@ -110,7 +109,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	MV_CASE(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -119,14 +118,14 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS(0.00)[m:corbet@lwn.net,m:pbonzini@redhat.com,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:x86@kernel.org,m:kas@kernel.org,m:rick.p.edgecombe@intel.com,m:seanjc@google.com,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:ajay.kaher@broadcom.com,m:alexey.makhalov@broadcom.com,m:jan.kiszka@siemens.com,m:luto@kernel.org,m:peterz@infradead.org,m:jgross@suse.com,m:daniel.lezcano@kernel.org,m:jstultz@google.com,m:skhan@linuxfoundation.org,m:hpa@zytor.com,m:vkuznets@redhat.com,m:bcm-kernel-feedback-list@broadcom.com,m:boris.ostrovsky@oracle.com,m:sboyd@kernel.org,m:linux-doc@vger.kernel.org,m:kvm@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-coco@lists.linux.dev,m:linux-hyperv@vger.kernel.org,m:virtualization@lists.linux.dev,m:xen-devel@lists.xenproject.org,m:thomas.lendacky@amd.com,m:nikunj@amd.com,m:dwmw@amazon.co.uk,m:dwmw2@infradead.org,m:mhklinux@outlook.com
  ,m:tglx@linutronix.de,s:lists@lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,amazon.co.uk:email,vger.kernel.org:from_smtp];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,amazon.co.uk:email,vger.kernel.org:from_smtp];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER(0.00)[seanjc@google.com,linux-hyperv@vger.kernel.org];
 	RCPT_COUNT_TWELVE(0.00)[42];
 	FORWARDED(0.00)[lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-11767-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11768-lists,linux-hyperv=lfdr.de];
 	DKIM_TRACE(0.00)[google.com:+];
 	HAS_REPLYTO(0.00)[seanjc@google.com];
 	PRECEDENCE_BULK(0.00)[];
@@ -138,48 +137,33 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	REPLYTO_EQ_FROM(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: E49E86F13E8
+X-Rspamd-Queue-Id: EE8D86F0FE1
 
-Now that Xen PV clock and kvmclock explicitly do setup only during init,
-tag the common PV clock flags/vsyscall variables and their mutators with
-__init.
+WARN if the common PV clock valid_flags are overwritten; all PV clocks
+expect that they are the one and only PV clock, i.e. don't guard against
+another PV clock having modified the flags.
 
 Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kernel/pvclock.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/kernel/pvclock.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/arch/x86/kernel/pvclock.c b/arch/x86/kernel/pvclock.c
-index b3f81379c2fc..a51adce67f92 100644
+index a51adce67f92..8d098841a225 100644
 --- a/arch/x86/kernel/pvclock.c
 +++ b/arch/x86/kernel/pvclock.c
-@@ -16,10 +16,10 @@
- #include <asm/pvclock.h>
- #include <asm/vgtod.h>
+@@ -21,6 +21,7 @@ static struct pvclock_vsyscall_time_info *pvti_cpu0_va __ro_after_init;
  
--static u8 valid_flags __read_mostly = 0;
--static struct pvclock_vsyscall_time_info *pvti_cpu0_va __read_mostly;
-+static u8 valid_flags __ro_after_init = 0;
-+static struct pvclock_vsyscall_time_info *pvti_cpu0_va __ro_after_init;
- 
--void pvclock_set_flags(u8 flags)
-+void __init pvclock_set_flags(u8 flags)
+ void __init pvclock_set_flags(u8 flags)
  {
++	WARN_ON(valid_flags);
  	valid_flags = flags;
  }
-@@ -153,7 +153,7 @@ void pvclock_read_wallclock(struct pvclock_wall_clock *wall_clock,
- 	set_normalized_timespec64(ts, now.tv_sec, now.tv_nsec);
- }
  
--void pvclock_set_pvti_cpu0_va(struct pvclock_vsyscall_time_info *pvti)
-+void __init pvclock_set_pvti_cpu0_va(struct pvclock_vsyscall_time_info *pvti)
- {
- 	WARN_ON(vclock_was_used(VDSO_CLOCKMODE_PVCLOCK));
- 	pvti_cpu0_va = pvti;
 -- 
 2.55.0.rc0.799.gd6f94ed593-goog
 
