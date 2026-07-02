@@ -1,247 +1,904 @@
-Return-Path: <linux-hyperv+bounces-11828-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11829-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id sAUNK8m2RmpZcAsAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11828-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 02 Jul 2026 21:06:49 +0200
+	id 0T56LdTfRmrOewsAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11829-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 03 Jul 2026 00:01:56 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CCFE6FC63E
-	for <lists+linux-hyperv@lfdr.de>; Thu, 02 Jul 2026 21:06:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 098C96FD1DA
+	for <lists+linux-hyperv@lfdr.de>; Fri, 03 Jul 2026 00:01:56 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=microsoft.com header.s=selector2 header.b=Y9ILAVf8;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11828-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11828-lists+linux-hyperv=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=reject) header.from=microsoft.com;
-	arc=reject ("cv is fail on i=2")
+	dkim=pass header.d=linux.microsoft.com header.s=default header.b=fgtII3Vz;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11829-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11829-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=linux.microsoft.com;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5AA09300B9D8
-	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Jul 2026 19:02:31 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id ECDA2300C01D
+	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Jul 2026 22:01:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0DE63803C2;
-	Thu,  2 Jul 2026 19:02:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BA8C38D40B;
+	Thu,  2 Jul 2026 22:01:51 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11022086.outbound.protection.outlook.com [52.101.53.86])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC3730F526;
-	Thu,  2 Jul 2026 19:02:28 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783018949; cv=fail; b=KoFt/Mu2/ekFqbk7dgRCAQ1QzGBbFORI2xA6i4Qbl3PkickTCrEA2ZRhujnuvL5s2VBFRpBnugRSvaHf8+fSFuIm82pBB0rU2SNbap6Dbx0sWrkCXUcNZqFhjMQY8oiOrBBSPEHWOueIgDH8OL2mnToUxEQ54ef9U0wFC8VUgQk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783018949; c=relaxed/simple;
-	bh=WXNoaLBTKd1nOFPLWFWuE5I2Z04+oP/D/vjULr4Oqx4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=SmXWIZu36dsFPpj0fdvmetOgMuj/ZbPZe8QuCji5D7HQ+lHq7CMGtR08WFJdc70GD4KSu5fQ+an01woFhYmQWeT2q6oFIwM6SLgggnthF0GYH0Q9mLZTe9DAfPckBSimW0qYsIDvIsuuHKb4jLFVyHaGSQmODDB/emxE68cUxrs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=Y9ILAVf8; arc=fail smtp.client-ip=52.101.53.86
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NmpKyprGL05E3+i4mk2/opqjTtfjw3/aVHhuQ6JSpYqDJ69lpOkyZFNsNsopUz5kCsuKl5qFNudk01h+zgNMjO/Jt8Z8GdGH1bU+dkWTgB4M3Ip3QXC/tpSLQnBm37MraZl+/gJLQH+D03IrwfqyyIpCOy6wsLuQnFKq27YfC65HPiXHeLRk36lj6G/avtSavgDNVkaQHXGSy6IO5trADxYG/Eka2khWiT5ZiHMqzYDPElUM7VvivrUdVWdHtp/UZveHyd9x883n+Q0DIYE94cmugX77g+t5fWRYXXQRu0qVm6H4KdjYh7xLPXMnmELZ02zJCXMRoDwX8q53bqO3Lg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WXNoaLBTKd1nOFPLWFWuE5I2Z04+oP/D/vjULr4Oqx4=;
- b=TmAvCzLOFqBSg+wr8RSg3l477fUwUWfGZU+JjUq7bGwc++CaxXT7bwgJc1/niJ605utSGqaXOKXf/5dSj3RPKaxMN0Bd+3hsfNcci4OHqMcgdebnVwhG0iWHyrk/i99T8gUP4lv5xk+o6pD1wHBOkjDUH0GXpIWcLuBrGNCLB2C4byOI2tpHC2roiNua4DYCZuZhUaTnVlYNMOMzr+3uNXqqHMhvh73UlXJ81yBH429AX7ATcvgG/B0eiDl/GUiVp6y+hrHe0p0vryK5ePZfhMFvJtoq1d/qwH+xAjSN7gXzOyww8xvrX2jie+/37UkcJzFogmqq6niYpg+Sj89cGA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WXNoaLBTKd1nOFPLWFWuE5I2Z04+oP/D/vjULr4Oqx4=;
- b=Y9ILAVf8NfqRyxONGPUYBctWlXEgz7rFDVM6GfRS8VJwMMZ9grSJcuW1W63lWaWT7/0+4fwGtWyAhjbhflNszclsqeDSknuL7FrjMbXwgXXRCJsVatozPL+viG4qnCJA87juxDFrpEw+VVhlQvOHKvSch630J4isYn9jqfAzP/c=
-Received: from SA3PR21MB3867.namprd21.prod.outlook.com (2603:10b6:806:2fc::15)
- by SA1PR21MB6778.namprd21.prod.outlook.com (2603:10b6:806:4a5::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.7; Thu, 2 Jul 2026
- 19:02:23 +0000
-Received: from SA3PR21MB3867.namprd21.prod.outlook.com
- ([fe80::d8ab:5f37:de73:8e6]) by SA3PR21MB3867.namprd21.prod.outlook.com
- ([fe80::d8ab:5f37:de73:8e6%5]) with mapi id 15.21.0181.008; Thu, 2 Jul 2026
- 19:02:23 +0000
-From: Haiyang Zhang <haiyangz@microsoft.com>
-To: Paolo Abeni <pabeni@redhat.com>, Haiyang Zhang
-	<haiyangz@linux.microsoft.com>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, KY Srinivasan <kys@microsoft.com>, Wei Liu
-	<wei.liu@kernel.org>, Dexuan Cui <DECUI@microsoft.com>, Long Li
-	<longli@microsoft.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>, Erni Sri Satya Vennela
-	<ernis@linux.microsoft.com>, Dipayaan Roy <dipayanroy@linux.microsoft.com>,
-	Aditya Garg <gargaditya@linux.microsoft.com>, Breno Leitao
-	<leitao@debian.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-rdma@vger.kernel.org"
-	<linux-rdma@vger.kernel.org>
-CC: Paul Rosswurm <paulros@microsoft.com>
-Subject: RE: [EXTERNAL] Re: [PATCH net-next v4] net: mana: Add Interrupt
- Moderation support
-Thread-Topic: [EXTERNAL] Re: [PATCH net-next v4] net: mana: Add Interrupt
- Moderation support
-Thread-Index: AQHdCA969WS5ALD9ME+/i5UEVOMaUbZZ8UUAgACn7mA=
-Date: Thu, 2 Jul 2026 19:02:23 +0000
-Message-ID:
- <SA3PR21MB3867A37EDC5D800086C4F5C6CAF52@SA3PR21MB3867.namprd21.prod.outlook.com>
-References: <20260629213652.11682-1-haiyangz@linux.microsoft.com>
- <8906f758-27fe-4ea8-8558-6d15089372d1@redhat.com>
-In-Reply-To: <8906f758-27fe-4ea8-8558-6d15089372d1@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=8e24cc55-471a-4a21-99bc-e7b07d83dbf6;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2026-07-02T18:57:42Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
- 3, 0, 1;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA3PR21MB3867:EE_|SA1PR21MB6778:EE_
-x-ms-office365-filtering-correlation-id: 59281103-979f-4396-41b9-08ded86c733d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|7416014|23010399003|366016|376014|1800799024|4143699003|11063799006|56012099006|18002099003|38070700021|22082099003|921020;
-x-microsoft-antispam-message-info:
- aZuMx1BMRNBPzCdCd1rBl7LMEtmUrzv1bohp7UlM9nj22GjbF0ttmtDo/SpnPJmmkUjE3/aI8j2aKohKkuF4b5N4HYxtGdwPOy1SbW2YuDEPtT7at/zOyfH7iyXHI8zCOpyhpCTUYH1IasAcCwK4+WD8SSY+87rjBgxXTOx7NnjTpFbqvFsu0sNJLsYOBtX7+sQ0xDlwQ3OON6H282ojNR5+0wRYhNyrCDWfvho8vEg9ZYzibDYNgd3CqoR1k4l7ZtgSHxLn0Ma5uip94c/qCFnT+LnMYJN16V4+t8S1n1N9LbPm8F9H2l7MJZXmiSUZX3VSB9MbUlDjAynWKycRtiRaZt1MTEVrH8cCOnnKICoBgNwLtx1BZlk6KSstLbGR0izi3VvulZbYIhYL2bBEClM9oBQpZGM+Hu/aK7xlXgem8tKNnh6ecaZM8sIpfOH3nan5BXQ2g3ryppmAgN8Mmzwe24NolRSyTDapvcR5hbb78FTdSF4NwxNCKESoCfFPfUr8JZIlt+VE05Sd0d9Mb5BCPaYrImQvKUj7U3arXTzJY0P8zZBO+sP6S99Xu/S00l+JH5NOWBjLLsfkBQvyCmVGRk0Gsu+U30cVaV9+Jz6iDVD6Mya9aMsEn6AJlib+1yDcdq4aWOXy91Y0N19zCtOnk6bA4Rxa3EtdvDmukIrmHyIjYwyLZOLelQ4c49FUs2rKU2GzfZ1x8ZkCj6WS1Ekh9mQat6nYEIz2JtGIhNupL9pK4rExNwcLish4p19I
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR21MB3867.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(23010399003)(366016)(376014)(1800799024)(4143699003)(11063799006)(56012099006)(18002099003)(38070700021)(22082099003)(921020);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?U0RLZGR4bGtqQllZZXY2bXRpQnBvMFVwWXRXakY4bS9xQURxejI2YWRzQVNr?=
- =?utf-8?B?eVNLYlMxcERUeThUR1VzdjZqdktsckRXRjFmeFV1OXlDZTA3aXQvMEpMVGxh?=
- =?utf-8?B?Vzk4MHlNU0JITGlUamxVV2tvdWZrY2swRi9sWFFSb2JMMWVRSTArWXJXS3Zi?=
- =?utf-8?B?cWdoM3lVc2YvU3U3YXNaWlZGVlpmUnpzZTJ0RWMvVU45ZVZMK0lQL2ljdnM2?=
- =?utf-8?B?WGVpSnhYMjNzWFE4b2VaOGRteC8wQTIrbGVtSTllanJZNUMrckM3QTVIUHVa?=
- =?utf-8?B?cXdQdS90S2V2SWlKMDBlRlY5NUwvNExnaUM2NGdpbGV3eEhJT2lmbHNDRUhF?=
- =?utf-8?B?K1dTQmY5MXBOWHU1SmdEMzBKKytGbFZDa3lONk1xdFkzMDdqUXN5MkdRcUtP?=
- =?utf-8?B?bXljNWc2aVRVcTVMZTAzOTJvVEhXK0grcFFGZnVpaXBCejVYZUk2TkZSeDlO?=
- =?utf-8?B?RExnTmVQalJJcTVnbmQ2NzFFTkxOZmhtMjFXZzBtL1VtcWcrUExIOWxvcUhL?=
- =?utf-8?B?R0xaS2dpNzVvdFV2UFdkZi9hMkdMUlJLeXFvMzd1eTVYVmRzbFFsZDN0NXM3?=
- =?utf-8?B?RnNWL0xWYjRYTSt3MUdWSGtiZGRYTG5uQ0FCek8xUGxJU1FXcGVnM1Rnanpj?=
- =?utf-8?B?cnFpNzRFWGZhaHBiRHhTcG9oNEJVbkplUUFIc20yVmRzKzRQS3BLZU5uUXA0?=
- =?utf-8?B?cXh2VDluanJLd2ZrbHBFRUgvL0JhR2ZRRHUwTEw5SXhQQlNWT3Z3cUdnMkJs?=
- =?utf-8?B?NWFzbHBsNjdIM3A5WmFqWm9KYWRmeXcxUzJEOVlpOVA3dCsvd3UvZ1RBMHZP?=
- =?utf-8?B?clJKQ29kbHBYSEphNFgrbGkrUk50MzMxeGhXOVdjcmZnWlp3WDN4bDVyWjR3?=
- =?utf-8?B?QjFSeXFFRVNhTTM3RTRVMzNlT2o2cHBqV0VrV24waUVQdHZPclJ2VUVZMk9R?=
- =?utf-8?B?SC9ZR0IxUGt6TklYUHNHVk1BWGFrSmRqOHBWTXVZNXFGTzBTaCtuZTFoeWtN?=
- =?utf-8?B?SzNmcVgxY2dqUGVDQklGd3lRVDF4aW5uc1U2Rlgxd1NTbHJRZ1VsTnlPdnpi?=
- =?utf-8?B?WHJlMUhZOUJnRkpVNWJEQVl2SXlYY1ZYejJHVW1uTGVrRzRpbFBONE5QRS9M?=
- =?utf-8?B?S3BVSWwveCtXNE9mTXdFcjk0cVZtQ1pPME4vQ0RzV3R1WVhCYUJVNkZEbTJE?=
- =?utf-8?B?NjFNY0k1cUo1MUw4WEhkMlh5UXJMcGhEcngyb0NkOHpqdEpVYm4zcmdVaEVR?=
- =?utf-8?B?QzJOWGxqc016UFFBeVJoUFFpOVlLM2QvbGJKWlFiMEV0Y3NhN0pwS241VURJ?=
- =?utf-8?B?TmZrcUlPZDV5R2tjOHBjS1U4MUhpSWxaVnJUYXF5NGp1dnhPT2djSEVPRVNP?=
- =?utf-8?B?cFBNckdmcHBmYnZuWU9qK3E0SDNEQnlXdlBWZU00SlhoM3B5TUpmR1hUQStx?=
- =?utf-8?B?NlJqMHBuNVk1aldMeWw0ZG5zWmo2a3FldHAxcTFjNEFUOHJPeDFpWU5aWUs5?=
- =?utf-8?B?WC9Ub2lPNGRaaUsycTRZQnladmJ4RFNZVG1WMURWaHRvT1FTRklVcHFmWWtn?=
- =?utf-8?B?T1BxSHNtMGl1THpLTWxmS0F2WTNMWXRFOURJb3M4UG9hRDg4cStucTljNEZh?=
- =?utf-8?B?VmpwMm1GMmtpc29QOWk5OGtNTGR4OHAyMDdVTGNJaFFaWXNYL2M0dDA4M3Zm?=
- =?utf-8?B?U2FqVWwwTS9WbEY0NDFJWjlZcDdjZVZ4Y3B5ckl1bEg4SWV1L3JlZTE1dmpM?=
- =?utf-8?B?UGhyYlhxVFhFQ29abjEvaG9ySGY3NVVROHB6L1habWZWQzIra2FhUG9KV0M1?=
- =?utf-8?B?bHVYVUpEQUEvQUU5RXpsQjFpY2duQzh6VDdSMmJwdG9KVE5wOHdnb0x0Mk1J?=
- =?utf-8?B?S2JTeWIvajdRWlR6UkdjODl1RC9pNjQ3ZmtBbkxSYndVZklJR1RrZE45TGcv?=
- =?utf-8?B?UEJvTXN2TnNMdDd0OVFaT3BhWGdwWEZ0bFJOK010c3dCRm5WTEJaMmFBY2xQ?=
- =?utf-8?B?Q3J0ZWxEeXgwV1dpUTNaV29CRkEycVByQVJXMnNHTkx1ODNxQjAxdndrU3pP?=
- =?utf-8?B?cmpjZ3lTOGJuRkRPS0pTaUt3WTZmSVJGcVpkOHhvd0hSbk5iSzZCcTdRWmU2?=
- =?utf-8?B?Z0p2dlRkNHBlZDZsc29xOGt1aEd6L2tKRkdQWWphSTJOYnVDUksyYXUweHE5?=
- =?utf-8?B?OHF2SHJEdFluNFpPVi9jekQ1aWl4ZXNDZXB1cFhnSEZGbjk4MFF4NFpOZW15?=
- =?utf-8?B?YzBRbXVkNWk1dVBQcGpiRHdSL3lHaHY3cjZFNjJzOXVxVzF1bXJ3YmNzSm82?=
- =?utf-8?B?YXBpMkhFWEsydGFJSnVzOER2dXpwcGRjMlBmOERpdFdSTExGSFNQQT09?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4734C21C173;
+	Thu,  2 Jul 2026 22:01:49 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783029711; cv=none; b=Jysp8Zde4oBCFDmdgwuqo6+euiX59EdywIh8531uQQI6jLeJ2Pd6+R8x3HS0afBFm/GugGTx+QubNHvWgGyjpX5BiP9q6m/XkYM6zfchxgnmvEnFB+LGGm5BvZlFLSWRXlHWGPUO5t6hCtN9f0IWxGILIcPIgowcmzeHiQW64Do=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783029711; c=relaxed/simple;
+	bh=6yl8CCjs0zvO6TBVRppcnA4NIQcZHcOfFccTCME6HvU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=atpvZekip8ihGcHWXMOrfky20ZnxNTfE9YGO3m3Pvz7zKUmGVwSUpwxmZc3NbUZhV/P82bvl0pHJnUtxFSRSnHyjXQapRTxF+Xzb45VpMAdApmxmedlR9Ndiib2RlR42e93jwXy/jX23sEzorth08TlLDgGtjTo9JDNGpqPfb3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=fgtII3Vz; arc=none smtp.client-ip=13.77.154.182
+Received: by linux.microsoft.com (Postfix, from userid 1006)
+	id 4681420B716C; Thu,  2 Jul 2026 15:01:47 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4681420B716C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1783029707;
+	bh=XQGUi6t1PZ9gO4iPwSpR7uhGVvo+nMKIv4lIUhR136U=;
+	h=From:To:Cc:Subject:Date:From;
+	b=fgtII3Vz2C2hLpG7wVTBX/mg1gYwYZGmyl7PwDRiqv/N32FKzNKOmBVgaf8HM+jeV
+	 ENbcye/MdErNW0fRpsITe+at5cSF6zjDKTIkqwjWpdUECNb/lwxhoAYbLVv31VarEf
+	 1Z3CukwSnt3B9SsbjoLZkt/c8gpAbm68FX/BsrMs=
+From: Haiyang Zhang <haiyangz@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Simon Horman <horms@kernel.org>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Dipayaan Roy <dipayanroy@linux.microsoft.com>,
+	Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Aditya Garg <gargaditya@linux.microsoft.com>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Breno Leitao <leitao@debian.org>,
+	linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Cc: paulros@microsoft.com
+Subject: [PATCH net-next v5] net: mana: Add Interrupt Moderation support
+Date: Thu,  2 Jul 2026 15:01:04 -0700
+Message-ID: <20260702220123.815018-1-haiyangz@linux.microsoft.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA3PR21MB3867.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 59281103-979f-4396-41b9-08ded86c733d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jul 2026 19:02:23.4120
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gxAUfC7H3L7qb6PkxSCwuS0wLavOyS2nREsQCVNXnGIvvnXjwnh9+aAxdBucCert1Cw41qzPT+9ngKTr7KmP+g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR21MB6778
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.56 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[microsoft.com:d:+,kernel.org:s:+];
 	SUSPICIOUS_RECIPS(1.50)[];
-	MIME_BASE64_TEXT_BOGUS(1.00)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[microsoft.com,reject];
-	R_DKIM_ALLOW(-0.20)[microsoft.com:s=selector2];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
-	MIME_BASE64_TEXT(0.10)[];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	TAGGED_FROM(0.00)[bounces-11828-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[23];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:pabeni@redhat.com,m:haiyangz@linux.microsoft.com,m:linux-hyperv@vger.kernel.org,m:netdev@vger.kernel.org,m:kys@microsoft.com,m:wei.liu@kernel.org,m:DECUI@microsoft.com,m:longli@microsoft.com,m:andrew+netdev@lunn.ch,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:kotaranov@microsoft.com,m:horms@kernel.org,m:ernis@linux.microsoft.com,m:dipayanroy@linux.microsoft.com,m:gargaditya@linux.microsoft.com,m:leitao@debian.org,m:linux-kernel@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:paulros@microsoft.com,m:andrew@lunn.ch,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[haiyangz@microsoft.com,linux-hyperv@vger.kernel.org];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:linux-hyperv@vger.kernel.org,m:netdev@vger.kernel.org,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:andrew+netdev@lunn.ch,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:kotaranov@microsoft.com,m:horms@kernel.org,m:ernis@linux.microsoft.com,m:dipayanroy@linux.microsoft.com,m:shradhagupta@linux.microsoft.com,m:gargaditya@linux.microsoft.com,m:sdf@fomichev.me,m:leitao@debian.org,m:linux-kernel@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:paulros@microsoft.com,m:andrew@lunn.ch,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER(0.00)[haiyangz@linux.microsoft.com,linux-hyperv@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[microsoft.com:+];
+	TAGGED_FROM(0.00)[bounces-11829-lists,linux-hyperv=lfdr.de];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[haiyangz@microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[haiyangz@linux.microsoft.com,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_SENDER_FORWARDING(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,dim.id:url,linux.microsoft.com:dkim,linux.microsoft.com:mid,linux.microsoft.com:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 1CCFE6FC63E
+X-Rspamd-Queue-Id: 098C96FD1DA
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUGFvbG8gQWJlbmkgPHBh
-YmVuaUByZWRoYXQuY29tPg0KPiBTZW50OiBUaHVyc2RheSwgSnVseSAyLCAyMDI2IDQ6NTcgQU0N
-Cj4gVG86IEhhaXlhbmcgWmhhbmcgPGhhaXlhbmd6QGxpbnV4Lm1pY3Jvc29mdC5jb20+OyBsaW51
-eC0NCj4gaHlwZXJ2QHZnZXIua2VybmVsLm9yZzsgbmV0ZGV2QHZnZXIua2VybmVsLm9yZzsgS1kg
-U3Jpbml2YXNhbg0KPiA8a3lzQG1pY3Jvc29mdC5jb20+OyBIYWl5YW5nIFpoYW5nIDxoYWl5YW5n
-ekBtaWNyb3NvZnQuY29tPjsgV2VpIExpdQ0KPiA8d2VpLmxpdUBrZXJuZWwub3JnPjsgRGV4dWFu
-IEN1aSA8REVDVUlAbWljcm9zb2Z0LmNvbT47IExvbmcgTGkNCj4gPGxvbmdsaUBtaWNyb3NvZnQu
-Y29tPjsgQW5kcmV3IEx1bm4gPGFuZHJldytuZXRkZXZAbHVubi5jaD47IERhdmlkIFMuDQo+IE1p
-bGxlciA8ZGF2ZW1AZGF2ZW1sb2Z0Lm5ldD47IEVyaWMgRHVtYXpldCA8ZWR1bWF6ZXRAZ29vZ2xl
-LmNvbT47IEpha3ViDQo+IEtpY2luc2tpIDxrdWJhQGtlcm5lbC5vcmc+OyBLb25zdGFudGluIFRh
-cmFub3YgPGtvdGFyYW5vdkBtaWNyb3NvZnQuY29tPjsNCj4gU2ltb24gSG9ybWFuIDxob3Jtc0Br
-ZXJuZWwub3JnPjsgRXJuaSBTcmkgU2F0eWEgVmVubmVsYQ0KPiA8ZXJuaXNAbGludXgubWljcm9z
-b2Z0LmNvbT47IERpcGF5YWFuIFJveQ0KPiA8ZGlwYXlhbnJveUBsaW51eC5taWNyb3NvZnQuY29t
-PjsgQWRpdHlhIEdhcmcNCj4gPGdhcmdhZGl0eWFAbGludXgubWljcm9zb2Z0LmNvbT47IEJyZW5v
-IExlaXRhbyA8bGVpdGFvQGRlYmlhbi5vcmc+OyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVs
-Lm9yZzsgbGludXgtcmRtYUB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6IFBhdWwgUm9zc3d1cm0gPHBh
-dWxyb3NAbWljcm9zb2Z0LmNvbT4NCj4gU3ViamVjdDogW0VYVEVSTkFMXSBSZTogW1BBVENIIG5l
-dC1uZXh0IHY0XSBuZXQ6IG1hbmE6IEFkZCBJbnRlcnJ1cHQNCj4gTW9kZXJhdGlvbiBzdXBwb3J0
-DQo+IA0KPiBPbiA2LzI5LzI2IDExOjM2IFBNLCBIYWl5YW5nIFpoYW5nIHdyb3RlOg0KPiA+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9taWNyb3NvZnQvbWFuYS9tYW5hX2VuLmMN
-Cj4gYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9taWNyb3NvZnQvbWFuYS9tYW5hX2VuLmMNCj4gPiBp
-bmRleCA3NDM4ZWE2YjNmMjYuLjkzOTFlOTU2NDYwNSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJz
-L25ldC9ldGhlcm5ldC9taWNyb3NvZnQvbWFuYS9tYW5hX2VuLmMNCj4gPiArKysgYi9kcml2ZXJz
-L25ldC9ldGhlcm5ldC9taWNyb3NvZnQvbWFuYS9tYW5hX2VuLmMNCj4gPiBAQCAtMTU5MSw2ICsx
-NTkxLDkgQEAgaW50IG1hbmFfY3JlYXRlX3dxX29iaihzdHJ1Y3QgbWFuYV9wb3J0X2NvbnRleHQN
-Cj4gKmFwYywNCj4gPg0KPiA+ICAJbWFuYV9nZF9pbml0X3JlcV9oZHIoJnJlcS5oZHIsIE1BTkFf
-Q1JFQVRFX1dRX09CSiwNCj4gPiAgCQkJICAgICBzaXplb2YocmVxKSwgc2l6ZW9mKHJlc3ApKTsN
-Cj4gPiArDQo+ID4gKwlyZXEuaGRyLnJlcS5tc2dfdmVyc2lvbiA9IEdETUFfTUVTU0FHRV9WMzsN
-Cj4gPiArCXJlcS5oZHIucmVzcC5tc2dfdmVyc2lvbiA9IEdETUFfTUVTU0FHRV9WMjsNCj4gDQo+
-IERvdWJsZSBjaGVja2luZyB0aGUgYWJvdmUgaXMgaW50ZW50aW9uYWw7IGl0IGZlZWxzIHN0cmFu
-Z2UgdG8gbWUgdGhhdA0KPiByZXF1ZXN0IGFuZCByZXBseSB1c2UgZGlmZmVyZW50IHZlcnNpb25z
-LiBQb3NzaWJseSBhIGNvbW1lbnQgZm9yIGZ1dHVyZQ0KPiBtZW1vcnkgd291bGQgbWFrZSBzZW5z
-ZS4NCg0KWWVzLCBpdCdzIGludGVudGlvbmFsLiBUaGUgcmVxdWVzdCBhbmQgcmVwbHkgdmVyc2lv
-bnMgY2FuIGJlIGRpZmZlcmVudC4NCkkgd2lsbCBhZGQgY29tbWVudHMuDQoNCj4gPiArDQo+ID4g
-Ky8qIFRoZSBjYWxsZXIgbXVzdCB1cGRhdGUgYXBjLT5yeC90eF9kaW1fZW5hYmxlZCBiZWZvcmUg
-ZGlzYWJsaW5nIGFuZA0KPiA+ICsgKiBhZnRlciBlbmFibGluZy4gQW5kIHN5bmNocm9uaXplX25l
-dCgpIGJlZm9yZSBkcmFpbmluZyB0aGUgRElNIHdvcmssDQo+ID4gKyAqIHNvIHRoYXQgTkFQSSBj
-YW5ub3Qgb2JzZXJ2ZSBhIHN0YWxlIGZsYWcuDQo+ID4gKyAqLw0KPiA+ICtpbnQgbWFuYV9kaW1f
-Y2hhbmdlKHN0cnVjdCBtYW5hX2NxICpjcSwgYm9vbCBlbmFibGUpDQo+IA0KPiBUaGlzIGFsd2F5
-cyByZXR1cm4gMCwgYW5kIHRoZSByZXR1cm4gdmFsdWUgaXMgbm90IGNoZWNrZWQgYnkgdGhlDQo+
-IGNhbGxlcnM7IHJldHVybiB0eXBlIHNob3VsZCBsaWtlbGx5IGNoYW5nZWQgdG8gdm9pZA0KV2ls
-bCB1cGRhdGUuDQoNClRoYW5rcywNCi0gSGFpeWFuZw0KDQo=
+From: Haiyang Zhang <haiyangz@microsoft.com>
+
+Add Static and Dynamic Interrupt Moderation (DIM) support for
+Rx and Tx.
+Update queue creation procedure with new data struct with the related
+settings.
+Add functions to collect stat for DIM, and workers to update DIM data
+and settings.
+Update ethtool handler to get/set the moderation settings from a user.
+To avoid detach/re-attach ops, ring DIM doorbell to change settings
+at run time.
+By default, adaptive-rx/tx (DIM) are enabled if supported by HW.
+
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Reviewed-by: Simon Horman <horms@kernel.org>
+---
+v5:
+  Updated function return type and comments suggested by Paolo Abeni.
+
+v4:
+  Fixed tx stat, concurrency, and mb issues from Simon's review.
+
+v3:
+  Updated to avoid detach/re-attach ops as suggested by Paolo.
+
+v2:
+  Updated with comments from Jedrzej.
+
+---
+ drivers/net/ethernet/microsoft/Kconfig        |   1 +
+ .../net/ethernet/microsoft/mana/gdma_main.c   |  29 +++
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 175 ++++++++++++++++++
+ .../ethernet/microsoft/mana/mana_ethtool.c    | 167 ++++++++++++++++-
+ include/net/mana/gdma.h                       |  24 ++-
+ include/net/mana/mana.h                       |  54 ++++++
+ 6 files changed, 441 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/net/ethernet/microsoft/Kconfig b/drivers/net/ethernet/microsoft/Kconfig
+index 3f36ee6a8ece..e9be18c92ca5 100644
+--- a/drivers/net/ethernet/microsoft/Kconfig
++++ b/drivers/net/ethernet/microsoft/Kconfig
+@@ -21,6 +21,7 @@ config MICROSOFT_MANA
+ 	depends on X86_64 || (ARM64 && !CPU_BIG_ENDIAN)
+ 	depends on PCI_HYPERV
+ 	select AUXILIARY_BUS
++	select DIMLIB
+ 	select PAGE_POOL
+ 	select NET_SHAPER
+ 	help
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index e8b7ffb47eb9..aef3b77229c1 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
+ /* Copyright (c) 2021, Microsoft Corporation. */
+ 
++#include <linux/bitfield.h>
+ #include <linux/debugfs.h>
+ #include <linux/module.h>
+ #include <linux/pci.h>
+@@ -466,6 +467,7 @@ static int mana_gd_disable_queue(struct gdma_queue *queue)
+ #define DOORBELL_OFFSET_RQ	0x400
+ #define DOORBELL_OFFSET_CQ	0x800
+ #define DOORBELL_OFFSET_EQ	0xFF8
++#define DOORBELL_OFFSET_DIM	0x820
+ 
+ static void mana_gd_ring_doorbell(struct gdma_context *gc, u32 db_index,
+ 				  enum gdma_queue_type q_type, u32 qid,
+@@ -506,6 +508,16 @@ static void mana_gd_ring_doorbell(struct gdma_context *gc, u32 db_index,
+ 		addr += DOORBELL_OFFSET_SQ;
+ 		break;
+ 
++	case GDMA_DIM:
++		e.dim.id = qid;
++		e.dim.mod_usec = FIELD_GET(MANA_INTR_MODR_USEC_MAX, tail_ptr);
++		e.dim.mod_usec_vld = !!(tail_ptr & MANA_INTR_MODR_USEC_VLD);
++		e.dim.mod_comps = FIELD_GET(MANA_INTR_MODR_COMP_MASK, tail_ptr);
++		e.dim.mod_comps_vld = num_req;
++
++		addr += DOORBELL_OFFSET_DIM;
++		break;
++
+ 	default:
+ 		WARN_ON(1);
+ 		return;
+@@ -540,6 +552,23 @@ void mana_gd_ring_cq(struct gdma_queue *cq, u8 arm_bit)
+ }
+ EXPORT_SYMBOL_NS(mana_gd_ring_cq, "NET_MANA");
+ 
++void mana_gd_ring_dim(struct gdma_queue *cq, u32 mod_usec, bool mod_usec_vld,
++		      u32 mod_comps, bool mod_comps_vld)
++{
++	struct gdma_context *gc = cq->gdma_dev->gdma_context;
++	u32 dim_val;
++
++	/* Convert the DIM values to doorbell parameters */
++	dim_val = FIELD_PREP(MANA_INTR_MODR_USEC_MAX, mod_usec) |
++		  FIELD_PREP(MANA_INTR_MODR_COMP_MASK, mod_comps);
++	if (mod_usec_vld)
++		dim_val |= MANA_INTR_MODR_USEC_VLD;
++
++	mana_gd_ring_doorbell(gc, cq->gdma_dev->doorbell, GDMA_DIM, cq->id,
++			      dim_val, mod_comps_vld);
++}
++EXPORT_SYMBOL_NS(mana_gd_ring_dim, "NET_MANA");
++
+ #define MANA_SERVICE_PERIOD 10
+ 
+ static void mana_serv_rescan(struct pci_dev *pdev)
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index 7438ea6b3f26..5ce0b96c50f6 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -1591,6 +1591,15 @@ int mana_create_wq_obj(struct mana_port_context *apc,
+ 
+ 	mana_gd_init_req_hdr(&req.hdr, MANA_CREATE_WQ_OBJ,
+ 			     sizeof(req), sizeof(resp));
++
++	/* Our driver uses different message versions for request and
++	 * response in this case.
++	 * Our firmware is forward compatible with newer message versions, so
++	 * the old firmware still properly handles this message, just the new
++	 * feature fields are ignored, and queue creation will be successful.
++	 */
++	req.hdr.req.msg_version = GDMA_MESSAGE_V3;
++	req.hdr.resp.msg_version = GDMA_MESSAGE_V2;
+ 	req.vport = vport;
+ 	req.wq_type = wq_type;
+ 	req.wq_gdma_region = wq_spec->gdma_region;
+@@ -1599,6 +1608,9 @@ int mana_create_wq_obj(struct mana_port_context *apc,
+ 	req.cq_size = cq_spec->queue_size;
+ 	req.cq_moderation_ctx_id = cq_spec->modr_ctx_id;
+ 	req.cq_parent_qid = cq_spec->attached_eq;
++	req.req_cq_moderation = cq_spec->req_cq_moderation;
++	req.cq_moderation_comp = cq_spec->cq_moderation_comp;
++	req.cq_moderation_usec = cq_spec->cq_moderation_usec;
+ 
+ 	err = mana_send_request(apc->ac, &req, sizeof(req), &resp,
+ 				sizeof(resp));
+@@ -1856,6 +1868,7 @@ static void mana_poll_tx_cq(struct mana_cq *cq)
+ 	struct gdma_posted_wqe_info *wqe_info;
+ 	unsigned int pkt_transmitted = 0;
+ 	unsigned int wqe_unit_cnt = 0;
++	unsigned int tx_bytes = 0;
+ 	struct mana_txq *txq = cq->txq;
+ 	struct mana_port_context *apc;
+ 	struct netdev_queue *net_txq;
+@@ -1937,6 +1950,8 @@ static void mana_poll_tx_cq(struct mana_cq *cq)
+ 
+ 		mana_unmap_skb(skb, apc);
+ 
++		tx_bytes += skb->len;
++
+ 		napi_consume_skb(skb, cq->budget);
+ 
+ 		pkt_transmitted++;
+@@ -1967,6 +1982,10 @@ static void mana_poll_tx_cq(struct mana_cq *cq)
+ 	if (atomic_sub_return(pkt_transmitted, &txq->pending_sends) < 0)
+ 		WARN_ON_ONCE(1);
+ 
++	/* Feed DIM with the completion rate observed here, in NAPI context. */
++	cq->tx_dim_pkts += pkt_transmitted;
++	cq->tx_dim_bytes += tx_bytes;
++
+ 	cq->work_done = pkt_transmitted;
+ }
+ 
+@@ -2318,6 +2337,117 @@ static void mana_poll_rx_cq(struct mana_cq *cq)
+ 		xdp_do_flush();
+ }
+ 
++static void mana_rx_dim_work(struct work_struct *work)
++{
++	struct dim *dim = container_of(work, struct dim, work);
++	struct dim_cq_moder cur_moder;
++	struct mana_cq *cq;
++
++	cur_moder = net_dim_get_rx_moderation(dim->mode, dim->profile_ix);
++	cq = container_of(dim, struct mana_cq, dim);
++
++	cur_moder.usec = min_t(u16, cur_moder.usec, MANA_INTR_MODR_USEC_MAX);
++	cur_moder.pkts = min_t(u16, cur_moder.pkts, MANA_INTR_MODR_COMP_MAX);
++
++	mana_gd_ring_dim(cq->gdma_cq, cur_moder.usec, true,
++			 cur_moder.pkts, true);
++
++	dim->state = DIM_START_MEASURE;
++}
++
++static void mana_tx_dim_work(struct work_struct *work)
++{
++	struct dim *dim = container_of(work, struct dim, work);
++	struct dim_cq_moder cur_moder;
++	struct mana_cq *cq;
++
++	cur_moder = net_dim_get_tx_moderation(dim->mode, dim->profile_ix);
++	cq = container_of(dim, struct mana_cq, dim);
++
++	cur_moder.usec = min_t(u16, cur_moder.usec, MANA_INTR_MODR_USEC_MAX);
++	cur_moder.pkts = min_t(u16, cur_moder.pkts, MANA_INTR_MODR_COMP_MAX);
++
++	mana_gd_ring_dim(cq->gdma_cq, cur_moder.usec, true,
++			 cur_moder.pkts, true);
++
++	dim->state = DIM_START_MEASURE;
++}
++
++/* The caller must update apc->rx/tx_dim_enabled before disabling and
++ * after enabling. And synchronize_net() before draining the DIM work,
++ * so that NAPI cannot observe a stale flag.
++ */
++void mana_dim_change(struct mana_cq *cq, bool enable)
++{
++	bool is_rx = cq->type == MANA_CQ_TYPE_RX;
++	struct mana_port_context *apc;
++	work_func_t work_func;
++	u32 usec, comp;
++
++	if (is_rx) {
++		apc = netdev_priv(cq->rxq->ndev);
++		usec = apc->intr_modr_rx_usec;
++		comp = apc->intr_modr_rx_comp;
++		work_func = mana_rx_dim_work;
++	} else {
++		apc = netdev_priv(cq->txq->ndev);
++		usec = apc->intr_modr_tx_usec;
++		comp = apc->intr_modr_tx_comp;
++		work_func = mana_tx_dim_work;
++	}
++
++	/* On enable, zero the DIM state so net_dim() starts measuring from
++	 * scratch.
++	 * On disable, drain any pending DIM work and restore the static
++	 * moderation values.
++	 */
++	if (enable) {
++		memset(&cq->dim, 0, sizeof(cq->dim));
++		cq->dim.mode = DIM_CQ_PERIOD_MODE_START_FROM_EQE;
++		INIT_WORK(&cq->dim.work, work_func);
++	} else {
++		cancel_work_sync(&cq->dim.work);
++		mana_gd_ring_dim(cq->gdma_cq, usec, true, comp, true);
++	}
++}
++
++static void mana_update_rx_dim(struct mana_cq *cq)
++{
++	struct mana_port_context *apc = netdev_priv(cq->rxq->ndev);
++	struct dim_sample dim_sample = {};
++	struct mana_rxq *rxq = cq->rxq;
++
++	/* Pairs with smp_store_release() in mana_set_coalesce(): observing the
++	 * enable flag set guarantees the DIM (re)initialization is visible.
++	 */
++	if (!smp_load_acquire(&apc->rx_dim_enabled))
++		return;
++
++	dim_update_sample(READ_ONCE(cq->dim_event_ctr), rxq->stats.packets,
++			  rxq->stats.bytes, &dim_sample);
++	net_dim(&cq->dim, &dim_sample);
++}
++
++static void mana_update_tx_dim(struct mana_cq *cq)
++{
++	struct mana_port_context *apc = netdev_priv(cq->txq->ndev);
++	struct dim_sample dim_sample = {};
++
++	/* Pairs with smp_store_release() in mana_set_coalesce(): observing the
++	 * enable flag set guarantees the DIM (re)initialization is visible.
++	 */
++	if (!smp_load_acquire(&apc->tx_dim_enabled))
++		return;
++
++	/* cq->tx_dim_pkts/bytes are accumulated in mana_poll_tx_cq(), in the
++	 * same NAPI context as this read, so they track the hardware
++	 * completion rate and need no u64_stats_sync protection.
++	 */
++	dim_update_sample(READ_ONCE(cq->dim_event_ctr), cq->tx_dim_pkts,
++			  cq->tx_dim_bytes, &dim_sample);
++	net_dim(&cq->dim, &dim_sample);
++}
++
+ static int mana_cq_handler(void *context, struct gdma_queue *gdma_queue)
+ {
+ 	struct mana_cq *cq = context;
+@@ -2336,6 +2466,15 @@ static int mana_cq_handler(void *context, struct gdma_queue *gdma_queue)
+ 	if (w < cq->budget) {
+ 		mana_gd_ring_cq(gdma_queue, SET_ARM_BIT);
+ 		cq->work_done_since_doorbell = 0;
++
++		/* Update DIM before napi_complete_done() to prevent running
++		 * net_dim() concurrently.
++		 */
++		if (cq->type == MANA_CQ_TYPE_RX)
++			mana_update_rx_dim(cq);
++		else
++			mana_update_tx_dim(cq);
++
+ 		napi_complete_done(&cq->napi, w);
+ 	} else if (cq->work_done_since_doorbell >=
+ 		   (cq->gdma_cq->queue_size / COMP_ENTRY_SIZE) * 4) {
+@@ -2368,6 +2507,7 @@ static void mana_schedule_napi(void *context, struct gdma_queue *gdma_queue)
+ {
+ 	struct mana_cq *cq = context;
+ 
++	WRITE_ONCE(cq->dim_event_ctr, cq->dim_event_ctr + 1);
+ 	napi_schedule_irqoff(&cq->napi);
+ }
+ 
+@@ -2410,6 +2550,7 @@ static void mana_destroy_txq(struct mana_port_context *apc)
+ 		if (apc->tx_qp[i]->txq.napi_initialized) {
+ 			napi_synchronize(napi);
+ 			napi_disable_locked(napi);
++			cancel_work_sync(&apc->tx_qp[i]->tx_cq.dim.work);
+ 			netif_napi_del_locked(napi);
+ 			apc->tx_qp[i]->txq.napi_initialized = false;
+ 		}
+@@ -2543,6 +2684,11 @@ static int mana_create_txq(struct mana_port_context *apc,
+ 		cq_spec.modr_ctx_id = 0;
+ 		cq_spec.attached_eq = cq->gdma_cq->cq.parent->id;
+ 
++		/* DIM setting can be changed at runtime */
++		cq_spec.req_cq_moderation = true;
++		cq_spec.cq_moderation_usec = apc->intr_modr_tx_usec;
++		cq_spec.cq_moderation_comp = apc->intr_modr_tx_comp;
++
+ 		err = mana_create_wq_obj(apc, apc->port_handle, GDMA_SQ,
+ 					 &wq_spec, &cq_spec,
+ 					 &apc->tx_qp[i]->tx_object);
+@@ -2573,6 +2719,13 @@ static int mana_create_txq(struct mana_port_context *apc,
+ 
+ 		set_bit(NAPI_STATE_NO_BUSY_POLL, &cq->napi.state);
+ 		netif_napi_add_locked(net, &cq->napi, mana_poll);
++
++		/* Initialize the DIM work before enabling NAPI, so that a poll
++		 * cannot reach net_dim() with an uninitialized cq->dim.work.
++		 */
++		INIT_WORK(&cq->dim.work, mana_tx_dim_work);
++		cq->dim.mode = DIM_CQ_PERIOD_MODE_START_FROM_EQE;
++
+ 		napi_enable_locked(&cq->napi);
+ 		txq->napi_initialized = true;
+ 
+@@ -2610,6 +2763,7 @@ static void mana_destroy_rxq(struct mana_port_context *apc,
+ 		napi_synchronize(napi);
+ 
+ 		napi_disable_locked(napi);
++		cancel_work_sync(&rxq->rx_cq.dim.work);
+ 		netif_napi_del_locked(napi);
+ 	}
+ 
+@@ -2848,6 +3002,11 @@ static struct mana_rxq *mana_create_rxq(struct mana_port_context *apc,
+ 	cq_spec.modr_ctx_id = 0;
+ 	cq_spec.attached_eq = cq->gdma_cq->cq.parent->id;
+ 
++	/* DIM setting can be changed at runtime */
++	cq_spec.req_cq_moderation = true;
++	cq_spec.cq_moderation_usec = apc->intr_modr_rx_usec;
++	cq_spec.cq_moderation_comp = apc->intr_modr_rx_comp;
++
+ 	err = mana_create_wq_obj(apc, apc->port_handle, GDMA_RQ,
+ 				 &wq_spec, &cq_spec, &rxq->rxobj);
+ 	if (err)
+@@ -2880,6 +3039,12 @@ static struct mana_rxq *mana_create_rxq(struct mana_port_context *apc,
+ 	WARN_ON(xdp_rxq_info_reg_mem_model(&rxq->xdp_rxq, MEM_TYPE_PAGE_POOL,
+ 					   rxq->page_pool));
+ 
++	/* Initialize the DIM work before enabling NAPI, so that a poll
++	 * cannot reach net_dim() with an uninitialized cq->dim.work.
++	 */
++	INIT_WORK(&cq->dim.work, mana_rx_dim_work);
++	cq->dim.mode = DIM_CQ_PERIOD_MODE_START_FROM_EQE;
++
+ 	napi_enable_locked(&cq->napi);
+ 
+ 	mana_gd_ring_cq(cq->gdma_cq, SET_ARM_BIT);
+@@ -3546,6 +3711,16 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
+ 	apc->link_cfg_error = 1;
+ 	apc->cqe_coalescing_enable = 0;
+ 
++	/* Initialize interrupt moderation settings if supported by HW */
++	if (gc->pf_cap_flags1 & GDMA_PF_CAP_FLAG_1_DYN_INTERRUPT_MODERATION) {
++		apc->intr_modr_rx_usec = MANA_INTR_MODR_USEC_DEF;
++		apc->intr_modr_rx_comp = MANA_INTR_MODR_COMP_DEF;
++		apc->intr_modr_tx_usec = MANA_INTR_MODR_USEC_DEF;
++		apc->intr_modr_tx_comp = MANA_INTR_MODR_COMP_DEF;
++		apc->rx_dim_enabled = MANA_ADAPTIVE_RX_DEF;
++		apc->tx_dim_enabled = MANA_ADAPTIVE_TX_DEF;
++	}
++
+ 	mutex_init(&apc->vport_mutex);
+ 	apc->vport_use_count = 0;
+ 
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+index 881df597d7f9..9e31e2595ae3 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+@@ -419,6 +419,15 @@ static int mana_get_coalesce(struct net_device *ndev,
+ 	    !kernel_coal->rx_cqe_nsecs)
+ 		kernel_coal->rx_cqe_nsecs = MANA_RX_CQE_NSEC_DEF;
+ 
++	ec->rx_coalesce_usecs = apc->intr_modr_rx_usec;
++	ec->rx_max_coalesced_frames = apc->intr_modr_rx_comp;
++
++	ec->tx_coalesce_usecs = apc->intr_modr_tx_usec;
++	ec->tx_max_coalesced_frames = apc->intr_modr_tx_comp;
++
++	ec->use_adaptive_rx_coalesce = apc->rx_dim_enabled;
++	ec->use_adaptive_tx_coalesce = apc->tx_dim_enabled;
++
+ 	return 0;
+ }
+ 
+@@ -428,9 +437,34 @@ static int mana_set_coalesce(struct net_device *ndev,
+ 			     struct netlink_ext_ack *extack)
+ {
+ 	struct mana_port_context *apc = netdev_priv(ndev);
+-	u8 saved_cqe_coalescing_enable;
++	struct {
++		u16 intr_modr_rx_usec;
++		u16 intr_modr_rx_comp;
++		u16 intr_modr_tx_usec;
++		u16 intr_modr_tx_comp;
++		u8 cqe_coalescing_enable;
++		bool rx_dim_enabled;
++		bool tx_dim_enabled;
++	} saved;
++	bool modr_changed = false;
++	bool dim_changed = false;
++	struct gdma_context *gc;
+ 	int err;
+ 
++	gc = apc->ac->gdma_dev->gdma_context;
++
++	/* Both static and dynamic interrupt moderation (DIM) rely on the
++	 * same HW capability advertised by the PF.
++	 */
++	if ((ec->use_adaptive_rx_coalesce || ec->use_adaptive_tx_coalesce ||
++	     ec->rx_coalesce_usecs || ec->tx_coalesce_usecs ||
++	     ec->rx_max_coalesced_frames || ec->tx_max_coalesced_frames) &&
++	    !(gc->pf_cap_flags1 & GDMA_PF_CAP_FLAG_1_DYN_INTERRUPT_MODERATION)) {
++		NL_SET_ERR_MSG(extack,
++			       "Interrupt Moderation is not supported by HW");
++		return -EOPNOTSUPP;
++	}
++
+ 	if (kernel_coal->rx_cqe_frames != 1 &&
+ 	    kernel_coal->rx_cqe_frames != MANA_RXCOMP_OOB_NUM_PPI) {
+ 		NL_SET_ERR_MSG_FMT(extack,
+@@ -440,18 +474,129 @@ static int mana_set_coalesce(struct net_device *ndev,
+ 		return -EINVAL;
+ 	}
+ 
+-	saved_cqe_coalescing_enable = apc->cqe_coalescing_enable;
++	if (ec->rx_coalesce_usecs > MANA_INTR_MODR_USEC_MAX ||
++	    ec->tx_coalesce_usecs > MANA_INTR_MODR_USEC_MAX) {
++		NL_SET_ERR_MSG_FMT(extack,
++				   "coalesce usecs must be <= %lu",
++				   MANA_INTR_MODR_USEC_MAX);
++		return -EINVAL;
++	}
++
++	if (ec->rx_max_coalesced_frames > MANA_INTR_MODR_COMP_MAX ||
++	    ec->tx_max_coalesced_frames > MANA_INTR_MODR_COMP_MAX) {
++		NL_SET_ERR_MSG_FMT(extack,
++				   "coalesce frames must be <= %lu",
++				   MANA_INTR_MODR_COMP_MAX);
++		return -EINVAL;
++	}
++
++	if (ec->rx_coalesce_usecs != apc->intr_modr_rx_usec ||
++	    ec->rx_max_coalesced_frames != apc->intr_modr_rx_comp ||
++	    ec->tx_coalesce_usecs != apc->intr_modr_tx_usec ||
++	    ec->tx_max_coalesced_frames != apc->intr_modr_tx_comp)
++		modr_changed = true;
++
++	saved.intr_modr_rx_usec = apc->intr_modr_rx_usec;
++	saved.intr_modr_rx_comp = apc->intr_modr_rx_comp;
++	saved.intr_modr_tx_usec = apc->intr_modr_tx_usec;
++	saved.intr_modr_tx_comp = apc->intr_modr_tx_comp;
++
++	apc->intr_modr_rx_usec = ec->rx_coalesce_usecs;
++	apc->intr_modr_rx_comp = ec->rx_max_coalesced_frames;
++	apc->intr_modr_tx_usec = ec->tx_coalesce_usecs;
++	apc->intr_modr_tx_comp = ec->tx_max_coalesced_frames;
++
++	if (!!ec->use_adaptive_rx_coalesce != apc->rx_dim_enabled ||
++	    !!ec->use_adaptive_tx_coalesce != apc->tx_dim_enabled)
++		dim_changed = true;
++
++	saved.rx_dim_enabled = apc->rx_dim_enabled;
++	saved.tx_dim_enabled = apc->tx_dim_enabled;
++
++	saved.cqe_coalescing_enable = apc->cqe_coalescing_enable;
+ 	apc->cqe_coalescing_enable =
+ 		kernel_coal->rx_cqe_frames == MANA_RXCOMP_OOB_NUM_PPI;
+ 
+-	if (!apc->port_is_up)
++	if (!apc->port_is_up) {
++		WRITE_ONCE(apc->rx_dim_enabled, !!ec->use_adaptive_rx_coalesce);
++		WRITE_ONCE(apc->tx_dim_enabled, !!ec->use_adaptive_tx_coalesce);
+ 		return 0;
++	}
+ 
+-	err = mana_config_rss(apc, TRI_STATE_TRUE, false, false);
+-	if (err)
+-		apc->cqe_coalescing_enable = saved_cqe_coalescing_enable;
++	if (apc->cqe_coalescing_enable != saved.cqe_coalescing_enable) {
++		/* CQE coalescing setting is applied via RSS configuration. */
++		err = mana_config_rss(apc, TRI_STATE_TRUE, false, false);
++		if (err) {
++			netdev_err(ndev, "Change CQE coalescing failed: %d\n",
++				   err);
++			apc->cqe_coalescing_enable =
++				saved.cqe_coalescing_enable;
++			apc->intr_modr_rx_usec = saved.intr_modr_rx_usec;
++			apc->intr_modr_rx_comp = saved.intr_modr_rx_comp;
++			apc->intr_modr_tx_usec = saved.intr_modr_tx_usec;
++			apc->intr_modr_tx_comp = saved.intr_modr_tx_comp;
++			return err;
++		}
++	}
+ 
+-	return err;
++	if (modr_changed || dim_changed) {
++		bool new_rx_dim = !!ec->use_adaptive_rx_coalesce;
++		bool new_tx_dim = !!ec->use_adaptive_tx_coalesce;
++		bool disable_rx_dim = saved.rx_dim_enabled && !new_rx_dim;
++		bool disable_tx_dim = saved.tx_dim_enabled && !new_tx_dim;
++		bool enable_rx_dim = !saved.rx_dim_enabled && new_rx_dim;
++		bool enable_tx_dim = !saved.tx_dim_enabled && new_tx_dim;
++		int q;
++
++		/* On disable: clear the per-port flag first and
++		 * synchronize_net() so any in-flight NAPI poll observes
++		 * the new value and will not schedule further DIM work;
++		 * then drain pending work and restore the static
++		 * moderation values.
++		 */
++		if (disable_rx_dim)
++			WRITE_ONCE(apc->rx_dim_enabled, false);
++		if (disable_tx_dim)
++			WRITE_ONCE(apc->tx_dim_enabled, false);
++		if (disable_rx_dim || disable_tx_dim)
++			synchronize_net();
++
++		for (q = 0; q < apc->num_queues; q++) {
++			struct mana_cq *rx_cq = &apc->rxqs[q]->rx_cq;
++			struct mana_cq *tx_cq = &apc->tx_qp[q]->tx_cq;
++
++			if (disable_rx_dim)
++				mana_dim_change(rx_cq, false);
++			else if (enable_rx_dim)
++				mana_dim_change(rx_cq, true);
++			else if (!new_rx_dim && modr_changed)
++				mana_gd_ring_dim(rx_cq->gdma_cq,
++						 apc->intr_modr_rx_usec, true,
++						 apc->intr_modr_rx_comp, true);
++
++			if (disable_tx_dim)
++				mana_dim_change(tx_cq, false);
++			else if (enable_tx_dim)
++				mana_dim_change(tx_cq, true);
++			else if (!new_tx_dim && modr_changed)
++				mana_gd_ring_dim(tx_cq->gdma_cq,
++						 apc->intr_modr_tx_usec, true,
++						 apc->intr_modr_tx_comp, true);
++		}
++
++		/* Publish the enable flag with release semantics so a
++		 * concurrent NAPI poll that observes it set also sees the DIM
++		 * (re)init done by mana_dim_change() above.
++		 */
++		if (enable_rx_dim)
++			/* pairs with smp_load_acquire() in mana_update_rx_dim() */
++			smp_store_release(&apc->rx_dim_enabled, true);
++		if (enable_tx_dim)
++			/* pairs with smp_load_acquire() in mana_update_tx_dim() */
++			smp_store_release(&apc->tx_dim_enabled, true);
++	}
++
++	return 0;
+ }
+ 
+ /* mana_set_channels - change the number of queues on a port
+@@ -595,7 +740,13 @@ static int mana_get_link_ksettings(struct net_device *ndev,
+ }
+ 
+ const struct ethtool_ops mana_ethtool_ops = {
+-	.supported_coalesce_params = ETHTOOL_COALESCE_RX_CQE_FRAMES,
++	.supported_coalesce_params = ETHTOOL_COALESCE_RX_CQE_FRAMES |
++				     ETHTOOL_COALESCE_RX_USECS |
++				     ETHTOOL_COALESCE_RX_MAX_FRAMES |
++				     ETHTOOL_COALESCE_TX_USECS |
++				     ETHTOOL_COALESCE_TX_MAX_FRAMES |
++				     ETHTOOL_COALESCE_USE_ADAPTIVE_RX |
++				     ETHTOOL_COALESCE_USE_ADAPTIVE_TX,
+ 	.op_needs_rtnl		= ETHTOOL_OP_NEEDS_RTNL_SCHANNELS |
+ 				  ETHTOOL_OP_NEEDS_RTNL_SRINGPARAM |
+ 				  ETHTOOL_OP_NEEDS_RTNL_GLINK,
+diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
+index 0c395917b214..8529cef0d7c4 100644
+--- a/include/net/mana/gdma.h
++++ b/include/net/mana/gdma.h
+@@ -47,6 +47,7 @@ enum gdma_queue_type {
+ 	GDMA_RQ,
+ 	GDMA_CQ,
+ 	GDMA_EQ,
++	GDMA_DIM,
+ };
+ 
+ enum gdma_work_request_flags {
+@@ -126,6 +127,17 @@ union gdma_doorbell_entry {
+ 		u64 tail_ptr	: 31;
+ 		u64 arm		: 1;
+ 	} eq;
++
++	struct {
++		u64 id           : 24;
++		u64 reserved     : 8;
++		u64 mod_usec     : 10;
++		u64 reserve1     : 5;
++		u64 mod_usec_vld : 1;
++		u64 mod_comps    : 8;
++		u64 reserve2     : 7;
++		u64 mod_comps_vld: 1;
++	} dim;
+ }; /* HW DATA */
+ 
+ struct gdma_msg_hdr {
+@@ -502,6 +514,9 @@ void mana_gd_ring_cq(struct gdma_queue *cq, u8 arm_bit);
+ 
+ int mana_schedule_serv_work(struct gdma_context *gc, enum gdma_eqe_type type);
+ 
++void mana_gd_ring_dim(struct gdma_queue *cq, u32 mod_usec, bool mod_usec_vld,
++		      u32 mod_comps, bool mod_comps_vld);
++
+ struct gdma_wqe {
+ 	u32 reserved	:24;
+ 	u32 last_vbytes	:8;
+@@ -650,6 +665,9 @@ enum {
+ /* Driver supports self recovery on Hardware Channel timeouts */
+ #define GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECOVERY BIT(25)
+ 
++/* Driver supports dynamic interrupt moderation - DIM */
++#define GDMA_DRV_CAP_FLAG_1_DYN_INTERRUPT_MODERATION BIT(28)
++
+ #define GDMA_DRV_CAP_FLAGS1 \
+ 	(GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
+ 	 GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX | \
+@@ -665,7 +683,8 @@ enum {
+ 	 GDMA_DRV_CAP_FLAG_1_PROBE_RECOVERY | \
+ 	 GDMA_DRV_CAP_FLAG_1_HANDLE_STALL_SQ_RECOVERY | \
+ 	 GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECOVERY | \
+-	 GDMA_DRV_CAP_FLAG_1_EQ_MSI_UNSHARE_MULTI_VPORT)
++	 GDMA_DRV_CAP_FLAG_1_EQ_MSI_UNSHARE_MULTI_VPORT | \
++	 GDMA_DRV_CAP_FLAG_1_DYN_INTERRUPT_MODERATION)
+ 
+ #define GDMA_DRV_CAP_FLAGS2 0
+ 
+@@ -701,6 +720,9 @@ struct gdma_verify_ver_req {
+ 	u8 os_ver_str4[128];
+ }; /* HW DATA */
+ 
++/* HW supports dynamic interrupt moderation - DIM */
++#define GDMA_PF_CAP_FLAG_1_DYN_INTERRUPT_MODERATION BIT(15)
++
+ struct gdma_verify_ver_resp {
+ 	struct gdma_resp_hdr hdr;
+ 	u64 gdma_protocol_ver;
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index 13c87baf018e..48f4445aa87a 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -4,6 +4,7 @@
+ #ifndef _MANA_H
+ #define _MANA_H
+ 
++#include <linux/dim.h>
+ #include <net/xdp.h>
+ #include <net/net_shaper.h>
+ 
+@@ -64,6 +65,19 @@ enum TRI_STATE {
+ /* Maximum number of packets per coalesced CQE */
+ #define MANA_RXCOMP_OOB_NUM_PPI 4
+ 
++/* Default/max interrupt moderation settings */
++#define MANA_INTR_MODR_USEC_DEF 0
++#define MANA_INTR_MODR_COMP_DEF 0
++
++#define MANA_ADAPTIVE_RX_DEF true
++#define MANA_ADAPTIVE_TX_DEF true
++
++/* DIM doorbell value field layout */
++#define MANA_INTR_MODR_USEC_MAX    GENMASK(9, 0)
++#define MANA_INTR_MODR_USEC_VLD    BIT(15)
++#define MANA_INTR_MODR_COMP_MAX    GENMASK(7, 0)
++#define MANA_INTR_MODR_COMP_MASK   GENMASK(23, 16)
++
+ /* Update this count whenever the respective structures are changed */
+ #define MANA_STATS_RX_COUNT (6 + MANA_RXCOMP_OOB_NUM_PPI - 1)
+ #define MANA_STATS_TX_COUNT 11
+@@ -297,6 +311,17 @@ struct mana_cq {
+ 	int work_done;
+ 	int work_done_since_doorbell;
+ 	int budget;
++
++	/* DIM - Dynamic Interrupt Moderation */
++	struct dim dim;
++	u16 dim_event_ctr;
++
++	/* Cumulative TX completions fed to DIM. Updated and read only in
++	 * NAPI context (mana_poll_tx_cq() / mana_update_tx_dim()), so they
++	 * measure the hardware completion rate and need no u64_stats_sync.
++	 */
++	u64 tx_dim_pkts;
++	u64 tx_dim_bytes;
+ };
+ 
+ struct mana_recv_buf_oob {
+@@ -573,6 +598,15 @@ struct mana_port_context {
+ 	u8 cqe_coalescing_enable;
+ 	u32 cqe_coalescing_timeout_ns;
+ 
++	/* Interrupt moderation settings */
++	u16 intr_modr_rx_usec;
++	u16 intr_modr_rx_comp;
++	u16 intr_modr_tx_usec;
++	u16 intr_modr_tx_comp;
++
++	bool rx_dim_enabled;
++	bool tx_dim_enabled;
++
+ 	struct mana_ethtool_stats eth_stats;
+ 
+ 	struct mana_ethtool_phy_stats phy_stats;
+@@ -598,6 +632,8 @@ int mana_alloc_queues(struct net_device *ndev);
+ int mana_attach(struct net_device *ndev);
+ int mana_detach(struct net_device *ndev, bool from_close);
+ 
++void mana_dim_change(struct mana_cq *cq, bool enable);
++
+ int mana_probe(struct gdma_dev *gd, bool resuming);
+ void mana_remove(struct gdma_dev *gd, bool suspending);
+ 
+@@ -633,6 +669,9 @@ struct mana_obj_spec {
+ 	u32 queue_size;
+ 	u32 attached_eq;
+ 	u32 modr_ctx_id;
++	u8 req_cq_moderation;
++	u16 cq_moderation_comp;
++	u16 cq_moderation_usec;
+ };
+ 
+ enum mana_command_code {
+@@ -764,6 +803,15 @@ struct mana_create_wqobj_req {
+ 	u32 cq_size;
+ 	u32 cq_moderation_ctx_id;
+ 	u32 cq_parent_qid;
++
++	/* V2 */
++	u8 allow_rqwqe_chain;
++
++	/* V3 */
++	u8 req_cq_moderation;
++	u16 cq_moderation_comp;
++	u16 cq_moderation_usec;
++	u8 reserved2[2];
+ }; /* HW DATA */
+ 
+ struct mana_create_wqobj_resp {
+@@ -771,6 +819,12 @@ struct mana_create_wqobj_resp {
+ 	u32 wq_id;
+ 	u32 cq_id;
+ 	mana_handle_t wq_obj;
++
++	/* V2 */
++	u16 cq_moderation_comp;
++	u16 cq_moderation_usec;
++	u8 cq_moderation_enabled;
++	u8 reserved1[3];
+ }; /* HW DATA */
+ 
+ /* Destroy WQ Object */
+-- 
+2.34.1
+
 
