@@ -1,104 +1,96 @@
-Return-Path: <linux-hyperv+bounces-11804-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11805-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id ULJsMNgpRmqIKwsAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11804-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 02 Jul 2026 11:05:28 +0200
+	id M+rxIqs0RmoRLwsAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11805-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 02 Jul 2026 11:51:39 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38CF26F50DF
-	for <lists+linux-hyperv@lfdr.de>; Thu, 02 Jul 2026 11:05:28 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D7336F5860
+	for <lists+linux-hyperv@lfdr.de>; Thu, 02 Jul 2026 11:51:37 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=D4hqxleJ;
-	dkim=pass header.d=redhat.com header.s=google header.b=of0DEcOc;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11804-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11804-lists+linux-hyperv=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=redhat.com;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=nppHb3Bt;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="kqtcr/iD";
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=nppHb3Bt;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="kqtcr/iD";
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11805-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11805-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=suse.de;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id AAAB630D4C1A
-	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Jul 2026 08:57:05 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 8AB7630625EE
+	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Jul 2026 09:15:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 036EA42B31F;
-	Thu,  2 Jul 2026 08:56:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B6AD39A4CF;
+	Thu,  2 Jul 2026 09:15:25 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FEFE420E83
-	for <linux-hyperv@vger.kernel.org>; Thu,  2 Jul 2026 08:56:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7CE390981
+	for <linux-hyperv@vger.kernel.org>; Thu,  2 Jul 2026 09:15:19 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782982609; cv=none; b=cC3/1ZYY3FCfdMZmEWqCtYRQgV7xfw/LfteLXh/XP/soH4i1IOBokQFB4R6/vmOJHzk65NUAtcsIzupODBbG7efAlf4dUl7uqYKIASSvvDbrZ/byf0kAZxLRHWJHZB3UTW1fhyXogPthtlhI7qV90kJigndc01UrxuM7jB0XH2Q=
+	t=1782983725; cv=none; b=QRxDfr/d2T1BcUOKEAvtzMiifw+tOavyOvQ4mlSyxpBviCxuH9eLzobfgna48ILpTTlpRl1UD/ZdTVoAkU7xv+rVGpeSmhdoHyoRg+dRYlJ3Rx2oXyv8uHQVMM+BIC7Qo1YWoTHiLRqDb3azvNpXW2UAGZBUw1+c7NbEI9XQUso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782982609; c=relaxed/simple;
-	bh=A8kz+z/pn/2NvDfwSoTwoXovKS5Tz/eYbUJLArUxpKk=;
+	s=arc-20240116; t=1782983725; c=relaxed/simple;
+	bh=MT9sPatuzKsWGEzTl8mSu7rJvYd56fwj8BB2rQbcNDs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eUPw5gbA7ZfgjBQ6zr5ptG2fxH2ztE5/m9JzXvlbieVcHyDIXxCVmdK0UGBs7VLZQ/9OnWQWybu2o1GqdbjAZe8Di/IHD3a1aIifHyo5KT33v0Z/0m1RAq/jF+ZEHVUAcmFmGzJ9Fzew5aI17bKHNCvOPjTQL9sSpB941lGWju8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D4hqxleJ; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=of0DEcOc; arc=none smtp.client-ip=170.10.129.124
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782982606;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 In-Reply-To:Content-Type; b=ep0TbbM6gCq8r5uii3A7TBqj4KvhLAcRGBHm1rwUmFsnnxTEJTvzGnGVZfFagsfkEpQEkXGGDvpBAmhagAdEe62RK48jlGHrymt57X/OceMZJi3M5bQ54S/xED0IRN9sYdy/cdiqwyVYVnTvw+IbnHhB/YlwPAzSLnbYQK2yJJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nppHb3Bt; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kqtcr/iD; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nppHb3Bt; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kqtcr/iD; arc=none smtp.client-ip=195.135.223.130
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 4E5D8740C9;
+	Thu,  2 Jul 2026 09:15:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1782983715; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1BNV7d13XbfTlrXrCmDz2hviM6j+trGL8vCgv7cOUtY=;
-	b=D4hqxleJkdZBfqj+z3G5439nGX4VVhektyqXOKQ1Eqdii5kT162K/bTkYjyMzFIVFDd6KW
-	SyFD8k7WkDl44QQ5QxEf0EROG0oCG2+crvtd896ccmcJ12ZXBpwEqY6HK9Rd9Zt4ff95O4
-	FOXniejmvSK/9+wAEzTAm1GG0FeGoO8=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-501-Vo0emLkkP3uCvW9nBYOowQ-1; Thu, 02 Jul 2026 04:56:44 -0400
-X-MC-Unique: Vo0emLkkP3uCvW9nBYOowQ-1
-X-Mimecast-MFC-AGG-ID: Vo0emLkkP3uCvW9nBYOowQ_1782982603
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-493ae2a6a72so12306525e9.0
-        for <linux-hyperv@vger.kernel.org>; Thu, 02 Jul 2026 01:56:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1782982603; x=1783587403; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1BNV7d13XbfTlrXrCmDz2hviM6j+trGL8vCgv7cOUtY=;
-        b=of0DEcOcwfgrXkgsIHW90sEV7PJgyLLzCILGPxXx1FAr21o3zC1XyRZnLEJ079OsJq
-         +eZ5yZY1Pxp/7WrxmjF4hZQsT0WK9GVLa+DAxNjtY56qKYS2v+luJ8aPk8+NPwYkV2oP
-         QwXPqaFlRvZtodQUWAnEC9kMxlvrgMrsjXJmhfRrski1ALfub4TA5jG+IbShwaK8Xt4f
-         se17P1smnCDMeMB4NVGdlAcf4hcKVaHXIP7OHbEnZ4vjHV/OjwrZ0QitzavUE0USnqDS
-         s3xX+q4pZdv4KGoJ2Tgg8IvBHp7FtkZhxhvbD01XG3FtEZaNnfMltXDecylGHSkoLuAE
-         Y+4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782982603; x=1783587403;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1BNV7d13XbfTlrXrCmDz2hviM6j+trGL8vCgv7cOUtY=;
-        b=cwWCdReCeh/587UvsH5aOHOZDPX4Tm1ptRheRXkgk+w/k7AfnGb9XQ3OJpqNzCEYw1
-         GxzayZsTzSyvED53H4iqnp6mReoJCxOqz0YB+htmsWOTre9dcu79VAe24OEjtO6I+wFr
-         Hq2B8ZZ1HmF43hFmWGDr2Wpxoo3IFByCNBT1sHJA5ykTOvgcUqcpeJZJ2KC95E0Ps7K1
-         QdbuJ93m3CndcsJ3mTGKfGgu+f7c1hvUxQdp/SGM/dkip9/udYR6axotwiuNbzJwSCih
-         T9yIC7mSRjSAQeC+WpGH8Q1X+30sZ+SgzBtNaGyVXzbl6jN52NRwJ8tqPVZcGhNB/Hr2
-         6GDg==
-X-Forwarded-Encrypted: i=1; AFNElJ/gAxansm9NLhvMxWY1itzFiOjV4jArBmCmwjbpkwAjkY0q6bikswSuzDvomB3Lc1ejLKNJ/U3X3KIwmXw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJ9/0sDDVUdBje5FwFgSuZsVuAIcfueSXxCt6PyMNqhKdXDGID
-	xEEVleEPjOixVabdTv3jK9TTsOffhafi3MSULN0kaN+ySGCsxTprcolzxHxXLukyF8n5dGsG2Yw
-	Cye4cJN5/fSoXwAEuiD1+NCX/LthaaojWgC7J6UXRN8JJB70nzq0fmUfrFThERwu5tA==
-X-Gm-Gg: AfdE7cm7cPmXXGVUICQHRlN/5WCQ6XIwMBT68Fb+1Kb4glByIdJDJia4qyJMLqr1Vap
-	u6S5CyeaK7z00Extlar3a9h4JI1FqBR/tySZyRdeQEO2G3D+/lVkR97dbJC7O36dni5u5HDlElW
-	xKbJb2trw6eXobn8kf2BN9rqqH1wWgyr2K7aB6xguXxmQPfkqmz+ocvFPmq3yDZWehiXmEMHXyg
-	l0UCQI88N0PrNRpLthWIv7vQ+hiVUQaoGMazzf8m51neLUGhTfT568hUC0TO9wPA6LMaTZWdk48
-	HIOb5XOnorxykz90o2HU2LHrt0YHoATW4RI/2wh/PEDUs/F1Wl66AZWZ80NlyepYd9Esn1xju1G
-	TvN2iIGL/J3RTxouUEFI+gpl8BrgRgtmk1/SxKPl3CdO+q5buN4drQD5y3QgqX4/EvDpTu0Gt1m
-	gPzdo4RGrlpQ==
-X-Received: by 2002:a05:600d:8497:10b0:493:c3e0:99ab with SMTP id 5b1f17b1804b1-493c481e706mr33395595e9.25.1782982603483;
-        Thu, 02 Jul 2026 01:56:43 -0700 (PDT)
-X-Received: by 2002:a05:600d:8497:10b0:493:c3e0:99ab with SMTP id 5b1f17b1804b1-493c481e706mr33395145e9.25.1782982602991;
-        Thu, 02 Jul 2026 01:56:42 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:5521:6b10:2eb7:f61a:75:4534? ([2a0d:3344:5521:6b10:2eb7:f61a:75:4534])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493c63172fesm55898635e9.0.2026.07.02.01.56.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jul 2026 01:56:42 -0700 (PDT)
-Message-ID: <8906f758-27fe-4ea8-8558-6d15089372d1@redhat.com>
-Date: Thu, 2 Jul 2026 10:56:40 +0200
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=gcIRMuJdnWxglX282uJMGMsZpqjvVtk2oVuBKv4zAdg=;
+	b=nppHb3Btq527MN16+7kiZ8Vogss2BzKVTjeiOzlIqC/WfmsUSHdbdzWKBtpymHwHRQOxGi
+	Qi7CJppS37VMKptdrygSmj3jHUbakQAdmIy0Nd19SornnIldWCSskLFv6J3P5lwP7pP2C0
+	T9tftyw9nXUUEgPEJ73A44HsKp+NbMU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1782983715;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=gcIRMuJdnWxglX282uJMGMsZpqjvVtk2oVuBKv4zAdg=;
+	b=kqtcr/iDCyLq64uvcEBrzOqq264UoE/k5WQBfjx8/m6a0r8ZGkjQbCoBlb5q8H55x+aZ7G
+	rRqn4JceZkU9bnDg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1782983715; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=gcIRMuJdnWxglX282uJMGMsZpqjvVtk2oVuBKv4zAdg=;
+	b=nppHb3Btq527MN16+7kiZ8Vogss2BzKVTjeiOzlIqC/WfmsUSHdbdzWKBtpymHwHRQOxGi
+	Qi7CJppS37VMKptdrygSmj3jHUbakQAdmIy0Nd19SornnIldWCSskLFv6J3P5lwP7pP2C0
+	T9tftyw9nXUUEgPEJ73A44HsKp+NbMU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1782983715;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=gcIRMuJdnWxglX282uJMGMsZpqjvVtk2oVuBKv4zAdg=;
+	b=kqtcr/iDCyLq64uvcEBrzOqq264UoE/k5WQBfjx8/m6a0r8ZGkjQbCoBlb5q8H55x+aZ7G
+	rRqn4JceZkU9bnDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 01D16779AA;
+	Thu,  2 Jul 2026 09:15:14 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id hz3QOiIsRmq4awAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Thu, 02 Jul 2026 09:15:14 +0000
+Message-ID: <4e421c5a-1ecc-4155-8262-69c163af9624@suse.de>
+Date: Thu, 2 Jul 2026 11:15:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -106,171 +98,148 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v4] net: mana: Add Interrupt Moderation support
-To: Haiyang Zhang <haiyangz@linux.microsoft.com>,
- linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>,
- Konstantin Taranov <kotaranov@microsoft.com>, Simon Horman
- <horms@kernel.org>, Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
- Dipayaan Roy <dipayanroy@linux.microsoft.com>,
- Aditya Garg <gargaditya@linux.microsoft.com>,
- Breno Leitao <leitao@debian.org>, linux-kernel@vger.kernel.org,
- linux-rdma@vger.kernel.org
-Cc: paulros@microsoft.com
-References: <20260629213652.11682-1-haiyangz@linux.microsoft.com>
-From: Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [PATCH v1 2/4] drm/hyperv: Explicitly set subvendor and subdevice
+ for pci match array
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig_=28The_Capable_Hub=29?=
+ <u.kleine-koenig@baylibre.com>
+Cc: Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
+ Saurabh Sengar <ssengar@linux.microsoft.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, linux-hyperv@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <cover.1782925276.git.u.kleine-koenig@baylibre.com>
+ <019450ffb519d02821364afca32b9f48bcd8d2b6.1782925276.git.u.kleine-koenig@baylibre.com>
+ <7a747d47-d275-48ad-a4ea-1e4897df1d28@suse.de> <akYkWQzXIo-y3n4J@monoceros>
 Content-Language: en-US
-In-Reply-To: <20260629213652.11682-1-haiyangz@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <akYkWQzXIo-y3n4J@monoceros>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Level: 
+X-Spam-Score: -5.51
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[suse.de,none];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11804-lists,linux-hyperv=lfdr.de];
+	FREEMAIL_CC(0.00)[microsoft.com,linux.microsoft.com,linux.intel.com,kernel.org,gmail.com,ffwll.ch,vger.kernel.org,lists.freedesktop.org];
+	TAGGED_FROM(0.00)[bounces-11805-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[pabeni@redhat.com,linux-hyperv@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	FORGED_RECIPIENTS(0.00)[m:haiyangz@linux.microsoft.com,m:linux-hyperv@vger.kernel.org,m:netdev@vger.kernel.org,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:andrew+netdev@lunn.ch,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:kotaranov@microsoft.com,m:horms@kernel.org,m:ernis@linux.microsoft.com,m:dipayanroy@linux.microsoft.com,m:gargaditya@linux.microsoft.com,m:leitao@debian.org,m:linux-kernel@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:paulros@microsoft.com,m:andrew@lunn.ch,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:u.kleine-koenig@baylibre.com,m:decui@microsoft.com,m:longli@microsoft.com,m:ssengar@linux.microsoft.com,m:maarten.lankhorst@linux.intel.com,m:mripard@kernel.org,m:airlied@gmail.com,m:simona@ffwll.ch,m:linux-hyperv@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	DKIM_TRACE(0.00)[redhat.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	FORGED_SENDER(0.00)[tzimmermann@suse.de,linux-hyperv@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[pabeni@redhat.com,linux-hyperv@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[tzimmermann@suse.de,linux-hyperv@vger.kernel.org];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp,suse.de:dkim,suse.de:mid,suse.de:from_mime,suse.com:url,baylibre.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 38CF26F50DF
+X-Rspamd-Queue-Id: 3D7336F5860
 
-On 6/29/26 11:36 PM, Haiyang Zhang wrote:
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> index 7438ea6b3f26..9391e9564605 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> @@ -1591,6 +1591,9 @@ int mana_create_wq_obj(struct mana_port_context *apc,
->  
->  	mana_gd_init_req_hdr(&req.hdr, MANA_CREATE_WQ_OBJ,
->  			     sizeof(req), sizeof(resp));
-> +
-> +	req.hdr.req.msg_version = GDMA_MESSAGE_V3;
-> +	req.hdr.resp.msg_version = GDMA_MESSAGE_V2;
+Hi
 
-Double checking the above is intentional; it feels strange to me that
-request and reply use different versions. Possibly a comment for future
-memory would make sense.
+Am 02.07.26 um 10:52 schrieb Uwe Kleine-König (The Capable Hub):
+> Hallo Thomas,
+>
+> On Thu, Jul 02, 2026 at 08:43:32AM +0200, Thomas Zimmermann wrote:
+>> Am 01.07.26 um 19:05 schrieb Uwe Kleine-König (The Capable Hub):
+>>> .subvendor and .subdevice were set to 0 implicitly, so only devices with
+>>> these two values set to 0 in hardware can probe automatically. Make this
+>>> requirement explicit.
+>>>
+>>> While touching this array item, also make use of the pci macro designed
+>>> for that case.
+>>>
+>>> Signed-off-by: Uwe Kleine-König (The Capable Hub) <u.kleine-koenig@baylibre.com>
+>>> ---
+>>>    drivers/gpu/drm/hyperv/hyperv_drm_drv.c | 4 ++--
+>>>    1 file changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+>>> index 2e75fb793495..e766d87b7a9d 100644
+>>> --- a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+>>> +++ b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+>>> @@ -51,8 +51,8 @@ static void hv_drm_pci_remove(struct pci_dev *pdev)
+>>>    static const struct pci_device_id hv_drm_pci_tbl[] = {
+>>>    	{
+>>> -		.vendor = PCI_VENDOR_ID_MICROSOFT,
+>>> -		.device = PCI_DEVICE_ID_HYPERV_VIDEO,
+>>> +		PCI_VDEVICE_SUB(MICROSOFT, PCI_DEVICE_ID_HYPERV_VIDEO,
+>>> +				0, 0),
+>> IDK, but it looks like an oversight to me.  Setting the sub-fields to ANY
+>> seems like the better fix.
+> That was my initial reflex, too. However while writing the commit log
+> for that change I noticed that since commit d750785f305e ("Staging: hv:
+> fix hv_utils module to properly autoload") from 2010 (applied to
+> v2.6.35-rc4) the driver never worked for hardware with .subvendor != 0
+> or .subdevice != 0. I cannot believe that something like that is
+> discovered 16 years later by chance during a rework by someone who
+> didn't try to run that hardware. And if I understand correctly, this is
+> emulated hardware and so I guess used quite a lot.
 
->  	req.vport = vport;
->  	req.wq_type = wq_type;
->  	req.wq_gdma_region = wq_spec->gdma_region;
-> @@ -1599,6 +1602,9 @@ int mana_create_wq_obj(struct mana_port_context *apc,
->  	req.cq_size = cq_spec->queue_size;
->  	req.cq_moderation_ctx_id = cq_spec->modr_ctx_id;
->  	req.cq_parent_qid = cq_spec->attached_eq;
-> +	req.req_cq_moderation = cq_spec->req_cq_moderation;
-> +	req.cq_moderation_comp = cq_spec->cq_moderation_comp;
-> +	req.cq_moderation_usec = cq_spec->cq_moderation_usec;
->  
->  	err = mana_send_request(apc->ac, &req, sizeof(req), &resp,
->  				sizeof(resp));
-> @@ -1856,6 +1862,7 @@ static void mana_poll_tx_cq(struct mana_cq *cq)
->  	struct gdma_posted_wqe_info *wqe_info;
->  	unsigned int pkt_transmitted = 0;
->  	unsigned int wqe_unit_cnt = 0;
-> +	unsigned int tx_bytes = 0;
->  	struct mana_txq *txq = cq->txq;
->  	struct mana_port_context *apc;
->  	struct netdev_queue *net_txq;
-> @@ -1937,6 +1944,8 @@ static void mana_poll_tx_cq(struct mana_cq *cq)
->  
->  		mana_unmap_skb(skb, apc);
->  
-> +		tx_bytes += skb->len;
-> +
->  		napi_consume_skb(skb, cq->budget);
->  
->  		pkt_transmitted++;
-> @@ -1967,6 +1976,10 @@ static void mana_poll_tx_cq(struct mana_cq *cq)
->  	if (atomic_sub_return(pkt_transmitted, &txq->pending_sends) < 0)
->  		WARN_ON_ONCE(1);
->  
-> +	/* Feed DIM with the completion rate observed here, in NAPI context. */
-> +	cq->tx_dim_pkts += pkt_transmitted;
-> +	cq->tx_dim_bytes += tx_bytes;
-> +
->  	cq->work_done = pkt_transmitted;
->  }
->  
-> @@ -2318,6 +2331,119 @@ static void mana_poll_rx_cq(struct mana_cq *cq)
->  		xdp_do_flush();
->  }
->  
-> +static void mana_rx_dim_work(struct work_struct *work)
-> +{
-> +	struct dim *dim = container_of(work, struct dim, work);
-> +	struct dim_cq_moder cur_moder;
-> +	struct mana_cq *cq;
-> +
-> +	cur_moder = net_dim_get_rx_moderation(dim->mode, dim->profile_ix);
-> +	cq = container_of(dim, struct mana_cq, dim);
-> +
-> +	cur_moder.usec = min_t(u16, cur_moder.usec, MANA_INTR_MODR_USEC_MAX);
-> +	cur_moder.pkts = min_t(u16, cur_moder.pkts, MANA_INTR_MODR_COMP_MAX);
-> +
-> +	mana_gd_ring_dim(cq->gdma_cq, cur_moder.usec, true,
-> +			 cur_moder.pkts, true);
-> +
-> +	dim->state = DIM_START_MEASURE;
-> +}
-> +
-> +static void mana_tx_dim_work(struct work_struct *work)
-> +{
-> +	struct dim *dim = container_of(work, struct dim, work);
-> +	struct dim_cq_moder cur_moder;
-> +	struct mana_cq *cq;
-> +
-> +	cur_moder = net_dim_get_tx_moderation(dim->mode, dim->profile_ix);
-> +	cq = container_of(dim, struct mana_cq, dim);
-> +
-> +	cur_moder.usec = min_t(u16, cur_moder.usec, MANA_INTR_MODR_USEC_MAX);
-> +	cur_moder.pkts = min_t(u16, cur_moder.pkts, MANA_INTR_MODR_COMP_MAX);
-> +
-> +	mana_gd_ring_dim(cq->gdma_cq, cur_moder.usec, true,
-> +			 cur_moder.pkts, true);
-> +
-> +	dim->state = DIM_START_MEASURE;
-> +}
-> +
-> +/* The caller must update apc->rx/tx_dim_enabled before disabling and
-> + * after enabling. And synchronize_net() before draining the DIM work,
-> + * so that NAPI cannot observe a stale flag.
-> + */
-> +int mana_dim_change(struct mana_cq *cq, bool enable)
+I wouldn't be surprised. To my knowledge, there's just one 
+implementation of this device, which is Windows. If they clear their 
+host-side structures to 0 and pass them to the guest, no one would ever 
+notice the issue. But let's see what the driver maintainers can comment 
+on the issue.
 
-This always return 0, and the return value is not checked by the
-callers; return type should likelly changed to void
+Best regards
+Thomas
 
-/P
+>
+> Best regards
+> Uwe
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstr. 146, 90461 Nürnberg, Germany, www.suse.com
+GF: Jochen Jaser, Andrew McDonald, Werner Knoblich, (HRB 36809, AG Nürnberg)
+
 
 
