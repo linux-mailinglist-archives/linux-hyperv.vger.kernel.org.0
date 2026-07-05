@@ -1,102 +1,69 @@
-Return-Path: <linux-hyperv+bounces-11831-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11832-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id zJBIMknyR2rMhwAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11831-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 03 Jul 2026 19:32:57 +0200
+	id 7mvnEmCTSmo0EwEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11832-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sun, 05 Jul 2026 19:24:48 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8672704A7B
-	for <lists+linux-hyperv@lfdr.de>; Fri, 03 Jul 2026 19:32:56 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id C454770AACB
+	for <lists+linux-hyperv@lfdr.de>; Sun, 05 Jul 2026 19:24:47 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ziepe.ca header.s=google header.b=mF1sVXMO;
-	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11831-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11831-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=linux.microsoft.com header.s=default header.b=k6EADjin;
+	dmarc=pass (policy=none) header.from=linux.microsoft.com;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11832-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11832-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 6BC8D300603A
-	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Jul 2026 17:32:53 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 413F0300D1EC
+	for <lists+linux-hyperv@lfdr.de>; Sun,  5 Jul 2026 17:24:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5B67306B31;
-	Fri,  3 Jul 2026 17:32:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB89D2F7EED;
+	Sun,  5 Jul 2026 17:24:45 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 138C31D5160
-	for <linux-hyperv@vger.kernel.org>; Fri,  3 Jul 2026 17:32:50 +0000 (UTC)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 889A129346F;
+	Sun,  5 Jul 2026 17:24:44 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783099971; cv=none; b=PjAOT3dmbN6AFx1xJRsAv5ILx1MiSKxoTRXWdAlchJ8k9fSophVbR1tiGB9WMnNUkS4as9IxaY7/L3GlCA6mQwRmVFIPFzpYEP/TF/c6fkgOllg6ucLjbOsk91YQZlm7YTQTe8ZhmHZuA2UzVHcSb3emFSOHx9WjJi/nVs8gPUY=
+	t=1783272285; cv=none; b=W7spDhtKv9pPrA8GgFi0Hz1C8iKZfYFk5dhCKeBue8nHvuidkYLkWWlpv4DZpZjPt9Jc15GG/+luHieS8E4ZMfMYeRrHEnWAcyTjz+3BbNZ45uy4s9aWm2OMP49XLm5uKEqJSNW9RukEuHvtOr/L4ejXEYedg+cpERK8LU7uaPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783099971; c=relaxed/simple;
-	bh=Wcpl1M8C6rbl+gWtOZA3jLQB6f728HV5z3+kNftSXRU=;
+	s=arc-20240116; t=1783272285; c=relaxed/simple;
+	bh=ivc2Qyu03bsUwPfyfSqWTtgsSWP9nEpWKZSwBdnTgPs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ukTTcWJu+Irz/kJYpkAmKb90iV9PfvxcFag/Gvu5yvBDVr2jO/3F4stNXGvtavKwN4qySNCkQBIalINu5NutZBZLd0GgAw574xSxoZmSYgZh/VhObGz4Xy1J+szjZZgvFkUD1itUAHlTBNpYLykvbMBykD2uq/8ShJ1Xg6iAzZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=mF1sVXMO; arc=none smtp.client-ip=209.85.160.181
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-51c21495722so4381251cf.3
-        for <linux-hyperv@vger.kernel.org>; Fri, 03 Jul 2026 10:32:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1783099969; x=1783704769; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yiTtUHYVC+sBH8N9u4bqwWOXo++BMfy79AiAKwhU9io=;
-        b=mF1sVXMOMvgQrEnwIMqB4rY7uKNNPHHW+R+o0znH9WS0jEM7MZIf+ecJ0/qLq8jPvN
-         vzRc3UN8Gq9LdcPJla0jj0lihaWdydDDuPiknHRO1irv6GcFJHK/0GbmBuW+y9xeAJ3N
-         WlGbcSggJ6kW+KZntqyr4HnCXCPlQiwTIrz77E1tIT/bB30Z0ObKmrW4i1AgRJXGwmdJ
-         X9kuKH4lUeBuRXn6m5GQSzvvgCQtvqCkFdTigKl9qByon+KreNc+XXE536/tmda5hU82
-         cXr+0NYMK1I4qXU1MNlA7nOCUgYeI8Na0eN1sBCIgycVP5FNlehXzx3rvvWxqxOHWUFM
-         WdlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783099969; x=1783704769;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yiTtUHYVC+sBH8N9u4bqwWOXo++BMfy79AiAKwhU9io=;
-        b=g52xNUC1FbzQKNItTum+qRKWhvV+sFdWABbS6eKSuKeJefvWRl39kaclEPMG8EDlbO
-         1K6pnmv7pkK4tAAlOve0BHjjep2uRGToDTT/Jg+g6ABwEvy6kFeDVc7+wcKxaKd7Lfzv
-         QdYOad+pCwLz9CJ25iteOIdgJj+c9qghPqtsUviBpu9PK6NwSw9F8vSXyL05yBBmk5Tq
-         XQI0FM3Bm/XYH4MuxioaogFCuE2+c6L/IfWvWJHbkJ1qaawFx4jctPjNZ2ZGsV8tgUcJ
-         842auW/cxQgj8k99opyOIT4oXB7U61qb5W6S+KHvPjjSCUQKu3ZsrvmlRGfyZ0rVuFQu
-         5VuQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/6mb1VUZFbC2BL5U5fal/fw546nb/tGGcLJ8IhI1IRvfyrvJPcmj45Ped3C7eNWznlP2OKakUS+qg57S8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFOKVpcJqmWr4IRNZ6VY1LLNAytO+eUVVazJu3h77PC6bAKN+s
-	CUUuZd7QpKpMV1F+P6xjrB2oMK6xXZIemDcEgTcY32sbJc3m/KKaglZwMLiRSz5aVIo=
-X-Gm-Gg: AfdE7cmsEk06sAwYc9bmnKAVZ2x+ZqoP4US7QV6JzmfJqO7wWRfv97hJbaFdU/ys9yg
-	aHEVayIbL6LpOXFVklpxiYvQw+T9FyW37JspmfAET7D7BGeRGWuIkjMXT8QWFfzI3edy5HK/Re8
-	SqB537VjYfuIfXW/EDrEvA0Xr8q+xNnSQyMXxmzNZ4r/j56xMHDNPOa0+nfDPrBscTfHBCNjwh8
-	Ykw6y1haMyfiSyiGhjMrVdfmTWvZQXuZwImFUQaHlixZSMhp4Y0geV6MCZp5phci3PKi38F6AUa
-	ufsEncUqKfMf0Huadd6i4Ihp5bLhhPPdZrrtDFSzSXmN9vQoF25tPYX5M1EtqdR9Pr+olVxY1eo
-	VIRWgEeiBTHv3vS/Nn3Xz6NnGP9YLau8sOuxuwbnvDNAYaRGUKn/JtWQkfdxW0mlvg8mByDSQ2p
-	a39jQGLbWeB/YcZGGVB+HfZJs3sI+zRnhaZe2jQkW7d5hJrsCgLJ7tuV/f/dtxQcgUREk=
-X-Received: by 2002:a05:622a:290:b0:51c:e14:87a7 with SMTP id d75a77b69052e-51c4c214c01mr7650981cf.28.1783099969076;
-        Fri, 03 Jul 2026 10:32:49 -0700 (PDT)
-Received: from ziepe.ca (crbknf0213w-47-54-130-67.pppoe-dynamic.high-speed.nl.bellaliant.net. [47.54.130.67])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8f472a9ad1fsm58402856d6.47.2026.07.03.10.32.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2026 10:32:48 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1wfhku-00000008Ink-0GPL;
-	Fri, 03 Jul 2026 14:32:48 -0300
-Date: Fri, 3 Jul 2026 14:32:48 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Yu Zhang <zhangyu1@linux.microsoft.com>
-Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	iommu@lists.linux.dev, linux-pci@vger.kernel.org,
-	linux-arch@vger.kernel.org, wei.liu@kernel.org, kys@microsoft.com,
-	haiyangz@microsoft.com, decui@microsoft.com, longli@microsoft.com,
-	joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
-	bhelgaas@google.com, kwilczynski@kernel.org, lpieralisi@kernel.org,
-	mani@kernel.org, robh@kernel.org, arnd@arndb.de,
-	mhklinux@outlook.com, jacob.pan@linux.microsoft.com,
-	tgopinath@linux.microsoft.com, easwar.hariharan@linux.microsoft.com,
-	mrathor@linux.microsoft.com
-Subject: Re: [PATCH v2 3/4] iommu/hyperv: Add para-virtualized IOMMU support
- for Hyper-V guest
-Message-ID: <20260703173248.GB1968184@ziepe.ca>
-References: <20260702160518.311234-1-zhangyu1@linux.microsoft.com>
- <20260702160518.311234-4-zhangyu1@linux.microsoft.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=kURxGnNKhYP9A4M/8UnMY+y+vYNItEOnAqOAyg387AXEZBOTmrNxU65UUBDGt4UskZnfXCLWz8fa7m5O1w/sbjBrLVQQIXI4fGxxukPrdUmS5xU/VJloIWWCObx1t+ojkuCUX7KvzFq/PqtaMehMdaETIwnetw9jKpAO1NUXeRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=k6EADjin; arc=none smtp.client-ip=13.77.154.182
+Received: by linux.microsoft.com (Postfix, from userid 1204)
+	id 3980820B7169; Sun,  5 Jul 2026 10:17:38 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3980820B7169
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1783271858;
+	bh=3dPjdWDTR7+OAoy9Jk8DWgNI00d9M34YmpuKKbFFwwk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k6EADjiny73p0uLx3h67fvzSPSoPHuvczsAtsve5HPQ8VQvD0vXYAr7SqI2hpe6ek
+	 1y4A1QT5bYx2G1q3un0T+h6eryDlWNNF0Rk7KYqb8PFUpcTLJijrlznbPZYdQnZmtg
+	 ucYKWefT4woErJlf5PLK2Je6CfmtJ/RJrFpQpOoE=
+Date: Sun, 5 Jul 2026 10:17:38 -0700
+From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+To: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	leon@kernel.org, longli@microsoft.com, kotaranov@microsoft.com,
+	horms@kernel.org, shradhagupta@linux.microsoft.com,
+	ssengar@linux.microsoft.com, ernis@linux.microsoft.com,
+	shirazsaleem@microsoft.com, linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org, stephen@networkplumber.org,
+	jacob.e.keller@intel.com, dipayanroy@microsoft.com,
+	leitao@debian.org, kees@kernel.org, john.fastabend@gmail.com,
+	hawk@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
+	ast@kernel.org, sdf@fomichev.me, yury.norov@gmail.com,
+	pavan.chebbi@broadcom.com
+Subject: Re: [PATCH net-next v11 0/2] net: mana: add ethtool private flag for
+ full-page RX buffers
+Message-ID: <akqRspl/M5mBvdsH@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20260701141808.461554-1-dipayanroy@linux.microsoft.com>
+ <akUn+nMBrjbUts2N@boxer>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -105,204 +72,130 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260702160518.311234-4-zhangyu1@linux.microsoft.com>
+In-Reply-To: <akUn+nMBrjbUts2N@boxer>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-3.66 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[microsoft.com:d:+,kernel.org:s:+];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_DKIM_ALLOW(-0.20)[ziepe.ca:s=google];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11831-lists,linux-hyperv=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:zhangyu1@linux.microsoft.com,m:linux-kernel@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:iommu@lists.linux.dev,m:linux-pci@vger.kernel.org,m:linux-arch@vger.kernel.org,m:wei.liu@kernel.org,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:decui@microsoft.com,m:longli@microsoft.com,m:joro@8bytes.org,m:will@kernel.org,m:robin.murphy@arm.com,m:bhelgaas@google.com,m:kwilczynski@kernel.org,m:lpieralisi@kernel.org,m:mani@kernel.org,m:robh@kernel.org,m:arnd@arndb.de,m:mhklinux@outlook.com,m:jacob.pan@linux.microsoft.com,m:tgopinath@linux.microsoft.com,m:easwar.hariharan@linux.microsoft.com,m:mrathor@linux.microsoft.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:maciej.fijalkowski@intel.com,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:andrew+netdev@lunn.ch,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:leon@kernel.org,m:longli@microsoft.com,m:kotaranov@microsoft.com,m:horms@kernel.org,m:shradhagupta@linux.microsoft.com,m:ssengar@linux.microsoft.com,m:ernis@linux.microsoft.com,m:shirazsaleem@microsoft.com,m:linux-hyperv@vger.kernel.org,m:netdev@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:stephen@networkplumber.org,m:jacob.e.keller@intel.com,m:dipayanroy@microsoft.com,m:leitao@debian.org,m:kees@kernel.org,m:john.fastabend@gmail.com,m:hawk@kernel.org,m:bpf@vger.kernel.org,m:daniel@iogearbox.net,m:ast@kernel.org,m:sdf@fomichev.me,m:yury.norov@gmail.com,m:pavan.chebbi@broadcom.com,m:andrew@lunn.ch,m:johnfastabend@gmail.com,m:yurynorov@gmail.com,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
-	DMARC_NA(0.00)[ziepe.ca];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[jgg@ziepe.ca,linux-hyperv@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[25];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lists.linux.dev,kernel.org,microsoft.com,8bytes.org,arm.com,google.com,arndb.de,outlook.com,linux.microsoft.com];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11832-lists,linux-hyperv=lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
-	DKIM_TRACE(0.00)[ziepe.ca:+];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	MISSING_XM_UA(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jgg@ziepe.ca,linux-hyperv@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[35];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[dipayanroy@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,ziepe.ca:from_mime,ziepe.ca:dkim,ziepe.ca:mid]
+	FORGED_SENDER_FORWARDING(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dipayanroy@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FREEMAIL_CC(0.00)[microsoft.com,kernel.org,lunn.ch,davemloft.net,google.com,redhat.com,linux.microsoft.com,vger.kernel.org,networkplumber.org,intel.com,debian.org,gmail.com,iogearbox.net,fomichev.me,broadcom.com];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: C8672704A7B
+X-Rspamd-Queue-Id: C454770AACB
 
-On Fri, Jul 03, 2026 at 12:05:17AM +0800, Yu Zhang wrote:
+On Wed, Jul 01, 2026 at 04:45:14PM +0200, Maciej Fijalkowski wrote:
+> On Wed, Jul 01, 2026 at 07:15:44AM -0700, Dipayaan Roy wrote:
+> > On some ARM64 platforms with 4K PAGE_SIZE, utilizing page_pool
+> > fragments for allocation in the RX refill path (~2kB buffer per fragment)
+> > causes 15-20% throughput regression under high connection counts
+> > (>16 TCP streams at 180+ Gbps). Using full-page buffers on these
+> > platforms shows no regression and restores line-rate performance.
+> > 
+> > This behavior is observed on a single platform; other platforms
+> > perform better with page_pool fragments, indicating this is not a
+> > page_pool issue but platform-specific.
+> > 
+> > This series adds an ethtool private flag "full-page-rx" to let the
+> > user opt in to one RX buffer per page:
+> > 
+> >   ethtool --set-priv-flags eth0 full-page-rx on
+> > 
+> > There is no behavioral change by default. The flag can be persisted
+> > via udev rule for affected platforms.
+> 
+> Were you able to track down what is the actual bottleneck on the 'broken'
+> platform? What is the performance of full-page approach on healthy
+> platforms? On changelog below you mention the frag approach 'outperforms'
+> the full-page one.
+> 
+Hi Maciej,
 
-> +static bool hv_iommu_capable(struct device *dev, enum iommu_cap cap)
-> +{
-> +	switch (cap) {
-> +	case IOMMU_CAP_CACHE_COHERENCY:
-> +		return true;
-> +	case IOMMU_CAP_DEFERRED_FLUSH:
-> +		return true;
+The HW team identified a PCIE root port stall occurring due to a PCIe
+errata in a HW IP used for this platform. Using full pages increases the
+time in packet refill path and indirectly helping to reduce the back pressure
+in NIC pipeline caused due to the stall in root port. As per them it
+will be fixed in next version of this hw which is not anytime soon.
 
-This CAP isn't necessary anymore
+On various other healthy platforms with 4k base page size we tested, we see
+improvements using page fragments than full pages around anywhere between 5 to 15%.
 
-> +static struct iommu_device *hv_iommu_probe_device(struct device *dev)
-> +{
-> +	struct pci_dev *pdev;
-> +	struct hv_iommu_endpoint *vdev;
-> +	struct hv_output_get_logical_device_property device_iommu_property = {0};
-> +
-> +	if (!dev_is_pci(dev))
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	pdev = to_pci_dev(dev);
-> +
-> +	if (hv_iommu_get_logical_device_property(dev,
-> +						 HV_LOGICAL_DEVICE_PROPERTY_PVIOMMU,
-> +						 &device_iommu_property) ||
-> +	    !(device_iommu_property.device_iommu & HV_DEVICE_IOMMU_ENABLED))
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	vdev = kzalloc_obj(*vdev, GFP_KERNEL);
-> +	if (!vdev)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	vdev->dev = dev;
-> +	vdev->hv_iommu = hv_iommu_device;
-> +	dev_iommu_priv_set(dev, vdev);
-> +
-> +	if (hv_iommu_ats_supported(hv_iommu_device->cap) &&
-> +	    pci_ats_supported(pdev))
-> +		pci_enable_ats(pdev, __ffs(hv_iommu_device->pgsize_bitmap));
+Regards
+Dipayaan Roy
 
-This can probably just be PAGE_SHIFT
-
-Also ATS shouldn't be enabled until a translation is installed,
-otherwise the driver cannot participate in the ATS error handling
-Nicolin is working on.
-
-> +static void hv_iommu_release_device(struct device *dev)
-> +{
-> +	struct hv_iommu_endpoint *vdev = dev_iommu_priv_get(dev);
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +
-> +	if (pdev->ats_enabled)
-> +		pci_disable_ats(pdev);
-> +
-> +	dev_iommu_priv_set(dev, NULL);
-
-No necessary, the caller does it
-
-> +static struct iommu_group *hv_iommu_device_group(struct device *dev)
-> +{
-> +	if (dev_is_pci(dev))
-> +		return pci_device_group(dev);
-> +
-> +	WARN_ON_ONCE(1);
-> +	return generic_device_group(dev);
-
-I think you can just return failure here instead of WARN_ON ?
-
-> +static int __init hv_initialize_static_domains(void)
-> +{
-> +	int ret;
-> +	struct hv_iommu_domain *hv_domain;
-> +
-> +	/* Default stage-1 identity domain */
-> +	hv_domain = &hv_identity_domain;
-> +
-> +	ret = hv_create_device_domain(hv_domain, HV_DEVICE_DOMAIN_TYPE_S1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = hv_configure_device_domain(hv_domain, IOMMU_DOMAIN_IDENTITY);
-> +	if (ret)
-> +		goto delete_identity_domain;
-
-IMHO I would change this around to have a single function that accepts
-a struct hv_input_configure_device_domain as input and does both of
-the hypercalls inside. Then here it is easy to directly construct the
-hv_input_configure_device_domain for blocking and identity.
-
-I'd be happy if this never touched domain_type, drivers shouldn't be
-touching that.
-
-> +static void __init hv_init_iommu_device(struct hv_iommu_dev *hv_iommu,
-> +			struct hv_output_get_iommu_capabilities *hv_iommu_cap)
-> +{
-> +	ida_init(&hv_iommu->domain_ids);
-> +
-> +	hv_iommu->cap = hv_iommu_cap->iommu_cap;
-> +	hv_iommu->max_iova_width = hv_iommu_cap->max_iova_width;
-> +	if (!hv_iommu_5lvl_supported(hv_iommu->cap) &&
-> +	    hv_iommu->max_iova_width > 48) {
-> +		pr_info("5-level paging not supported, limiting iova width to 48.\n");
-> +		hv_iommu->max_iova_width = 48;
-> +	}
-> +
-> +	hv_iommu->geometry = (struct iommu_domain_geometry) {
-> +		.aperture_start = 0,
-> +		.aperture_end = (((u64)1) << hv_iommu->max_iova_width) - 1,
-> +		.force_aperture = true,
-> +	};
-
-I don't see anything reading this, I don't expect this to be used?
-
-The max_iova_width has to be passed into the iommupt creation, which
-it does:
-
- +	cfg.common.hw_max_vasz_lg2 = hv_iommu_device->max_iova_width;
- +	cfg.common.hw_max_oasz_lg2 = 52;
- +	cfg.top_level = (hv_iommu_device->max_iova_width > 48) ? 4 : 3;
- +	ret = pt_iommu_x86_64_init(&hv_domain->pt_iommu_x86_64, &cfg, GFP_KERNEL);
- +	if (ret)
-
-So just delete hv->iommu->geometry.
-
-Also, VT-D has weirdness where the HW can require a 4 level table but
-only a 3 level worth of IOVA width is being used. This was a
-real-world bug we hit when converting to iommupt. This interaction
-with the HV doesn't seem able to represent that.
-
-> +	/*
-> +	 * The page table code only maps x86 page sizes (4K/2M/1G); require the
-> +	 * hypervisor to advertise a non-empty subset of exactly those.
-> +	 */
-> +	if (!hv_iommu_cap.pgsize_bitmap ||
-> +	    (hv_iommu_cap.pgsize_bitmap & ~(u64)(SZ_4K | SZ_2M | SZ_1G))) {
-> +		pr_err("unsupported page sizes: pgsize_bitmap=0x%llx\n",
-> +		       hv_iommu_cap.pgsize_bitmap);
-> +		return -ENODEV;
-> +	}
-
-This can just be
-
-if (!(hv_iommu_cap.pgsize_bitmap & PAGE_SHIFT)) {
-		pr_err("unsupported page sizes: pgsize_bitmap=0x%llx\n",
-		       hv_iommu_cap.pgsize_bitmap);
-}		return -ENODEV;
-
-Which is all you really need. If the HV doesn't support 1G it is
-perfectly fine, the iommupt page bitmap is already masked by this. 
-
-> +	ret = iommu_device_register(&hv_iommu->iommu, &hv_iommu_ops, NULL);
-> +	if (ret) {
-> +		pr_err("iommu_device_register failed: %d\n", ret);
-> +		goto err_sysfs_remove;
-> +	}
-> +
-> +	pr_info("successfully initialized\n");
-
-Don't log someting so vauge?
-
-Jason
+> > 
+> > This series depends on the following fixes now merged in net-next:
+> >   commit 17bfe0a8c014 ("net: mana: Add NULL guards in teardown path to prevent panic on attach failure")
+> >   commit 5b05aa36ee24 ("net: mana: Skip redundant detach on already-detached port")
+> > 
+> > Changes in v11:
+> >   - Rebased on net-next
+> > Changes in v10:
+> >   - Rebased on net-next which now includes the prerequisite fixes.
+> >   - Recovery logic in mana_set_priv_flags() leverages the idempotent
+> >     mana_detach() from the merged fixes.
+> > Changes in v9:
+> >   - Added correct tree.
+> > Changes in v8:
+> >   - Fixed queue_reset_work recovery by restoring port_is_up before
+> >     scheduling reset so the handler can properly re-attach.
+> >   - Simplified "err && schedule_port_reset" to "schedule_port_reset".
+> > Changes in v7:
+> >   - Rebased onto net-next.
+> >   - Retained private flag approach after David Wei's testing on
+> >     Grace (ARM64) confirmed that fragment mode outperforms
+> >     full-page mode on other platforms, validating this is a
+> >     single-platform workaround rather than a generic issue.
+> > Changes in v6:
+> >   - Added missed maintainers.
+> > Changes in v5:
+> >   - Split prep refactor into separate patch (patch 1/2)
+> > Changes in v4:
+> >   - Dropping the smbios string parsing and add ethtool priv flag
+> >     to reconfigure the queues with full page rx buffers.
+> > Changes in v3:
+> >   - changed u8* to char*
+> > Changes in v2:
+> >   - separate reading string index and the string, remove inline.
+> > 
+> > Dipayaan Roy (2):
+> >   net: mana: refactor mana_get_strings() and mana_get_sset_count() to
+> >     use switch
+> >   net: mana: force full-page RX buffers via ethtool private flag
+> > 
+> >  drivers/net/ethernet/microsoft/mana/mana_en.c |  22 ++-
+> >  .../ethernet/microsoft/mana/mana_ethtool.c    | 178 +++++++++++++++---
+> >  include/net/mana/mana.h                       |   8 +
+> >  3 files changed, 177 insertions(+), 31 deletions(-)
+> > 
+> > -- 
+> > 2.43.0
+> > 
+> > 
 
