@@ -1,83 +1,83 @@
-Return-Path: <linux-hyperv+bounces-11836-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11837-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id ymtUEwn1S2rIdgEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11836-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 06 Jul 2026 20:33:45 +0200
+	id +T+BOTjtS2o8dAEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11837-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 06 Jul 2026 20:00:24 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3C967148DC
-	for <lists+linux-hyperv@lfdr.de>; Mon, 06 Jul 2026 20:33:44 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7AEEC71434B
+	for <lists+linux-hyperv@lfdr.de>; Mon, 06 Jul 2026 20:00:24 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=R6yiFTI6;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=LvfSdZPe;
 	dmarc=pass (policy=none) header.from=gmail.com;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11836-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11836-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11837-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11837-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4B39A36C78C6
-	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Jul 2026 17:55:56 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id D881A30479A8
+	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Jul 2026 17:56:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19D54435ABA;
-	Mon,  6 Jul 2026 17:55:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 607DF420E72;
+	Mon,  6 Jul 2026 17:55:19 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA98436BE1
-	for <linux-hyperv@vger.kernel.org>; Mon,  6 Jul 2026 17:55:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7B8436BFC
+	for <linux-hyperv@vger.kernel.org>; Mon,  6 Jul 2026 17:55:17 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783360512; cv=none; b=Z3buREOmufLpR3sfUFwvOCVBY3S6r2IxJWw27S2qR9p3mU4+NFjnC6jVajyHBxW3Eht1wRjIS1xF0hpZ57sWhSW0wIWZN3WiP5rVBG2usQMEbkcZy2QxwDfnEBqymudXArrfQ4IJVb0MzW09/Z/ptqtud1y0Rw2Gjll6PAwNpyA=
+	t=1783360519; cv=none; b=VD8u8fbgtcuS/+Hb6ZCJTI4gEGyJ3ZdOUOh3gcdWZtSZ9GbSxvRjrry3KatlC8nEAo0/rBxUN2zfiS7C8hdBh7YBkrGmz3MeMnOxWqgd6fTqhWvBYUtPKXcvBpC78ZXW7Ff9Oi2OX/lf50Cox+o4hQWG/Xhq/LnNxmt6+Cs6nQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783360512; c=relaxed/simple;
-	bh=53AK29P86MgjUoX3f7bt3DDg0QMp64nciTDeRfStGgM=;
+	s=arc-20240116; t=1783360519; c=relaxed/simple;
+	bh=+OPiaQGLsfa6FVtK28Hyx3ULUVOK+69ZHCRYv4zCeHg=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NChK7p/Ub/3JQTQUpjNNsY7N1tPNIdL4c+K21yu4O1p8zmEwVRHR7hYQEITXHWEv93nfnDP7daF06Fy4/P7yOlYNV3DMJFoWtFbBLMjg9nypFuQIwGx7e8qxfdJlNgAVlZTzYcrkZnS1gJhGiDzVQ7XP70+yO8ExA1zNNu8qnIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R6yiFTI6; arc=none smtp.client-ip=209.85.216.41
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-3810c5d691bso2478022a91.1
-        for <linux-hyperv@vger.kernel.org>; Mon, 06 Jul 2026 10:55:10 -0700 (PDT)
+	 MIME-Version:Content-Type; b=h+CFB+/lzfqFWNC2H/acsBy7xHOm+VmsJ/vqvjK1QKmUaY4jDgUOr+GVD+4WkA01Av12i6dI3gHxS2R5GHVqGR2eXNiI97la69U9jlGe3jPSd+AF28DiiBR5hKxf2rd3ywm7WbP8/y/zqj97y6wPGYo4glvRVoAfZCDSnVrM328=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LvfSdZPe; arc=none smtp.client-ip=209.85.210.173
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-847917c3678so48723b3a.1
+        for <linux-hyperv@vger.kernel.org>; Mon, 06 Jul 2026 10:55:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783360509; x=1783965309; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1783360517; x=1783965317; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:user-agent:references
          :in-reply-to:message-id:date:cc:to:from:subject:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=WWy+bnn3yMum/vuSl7ClBqJ7Vcv4n74EsH2PruuLics=;
-        b=R6yiFTI6AFP5lpSRZ7pDAYj6F20KAF1OQ0wiZOWpB9sGvIIPE4iVukYhXZvze2IP3r
-         O1HLb3SQGC8qkF4RD2IRj05Md9Rev6gFoYn3tyCfn8rjrg+9BCOrTuME5RDfO7oVCIyH
-         llymIpm1lreIX3uH4bHqF8+PoORq00jSlSnQy9FA9Ry8JuHqsT5Q+2LOqQ4P7GbRzKPV
-         VrRPvQ/vMR6BLOq2g0Ro0F7qbdlxe4M9s/JwH0wVhtBtWIu8z5dA/WUt+mhTaWOE8HCw
-         q5yiczCJAfwstcnWH5nu1WkiHDoInO5PbKrtz7x1+VXadjlKTVBREcpN2KlpcNTL9p6w
-         M3Lg==
+        bh=ZO+FFwngeJDcSpYhEaatPCogWFYZkos6hWPOoVhGkjc=;
+        b=LvfSdZPePXF8m4uGbGO9h3tYS3/nZRCAv8dsCFlvngvypXVgTMD/WnevwBW4oiB2h0
+         rH4wAf3EuQjbjoPFpWOw9i7mXPe5n5GCB4J3Hzx/AXZTHLhrrii4DmDqABUgJAB7gmff
+         aWocFZhkWyMIEdsipQQQrXLNcbHaYNZ/rvehfG5x1MVHRhIEKhW8VB9KJB63iUZQg977
+         qD+JoUcHZCzCAVBN3TtlfVw/79cpHhnbgaqQNH0/latZHBvplHK75dCfP1gnrbymmcHk
+         ZXkGGEoaX9ttbslsRb5H8XMdMNxc8bf1gugnxhcF4zFNHfRGmmap5ZlC37QFOinaIcac
+         gPaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783360509; x=1783965309;
+        d=1e100.net; s=20251104; t=1783360517; x=1783965317;
         h=content-transfer-encoding:mime-version:user-agent:references
          :in-reply-to:message-id:date:cc:to:from:subject:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WWy+bnn3yMum/vuSl7ClBqJ7Vcv4n74EsH2PruuLics=;
-        b=WleCUco3qGIW11qk7BeFOkIYWdml92Pak5iPwTx0VYZycwNSty7/cOtqe44aBUDQbC
-         ZS13knT6JcbbppLYbzoLumJMbM9lTA9qi0rlGPXLCEwgvY3+Z5bC4DZLXxT+h8qdIyrt
-         mTjJ3vaauoKDL8jJpcbcuWFhh6ScvGwXknxIw+Y+dbeSoeehak4qIuKir/UsN3I3F03y
-         sncDA33Uy5Biff+sf2xofA9u3Z4hw+son6zwAaUJc2afgoKC31uZgk+Xdcu/KAF1jJc9
-         ZAYoUo7ifMFhCz1ojRpPexrUVhcHLuFN0xuiqozk8RALGVX9U6iA56UBiTLEmY6O4Mp/
-         wFRQ==
-X-Forwarded-Encrypted: i=1; AHgh+RqZ/yXRXQaC5PtRrzP8ofFiEHPP9VNZV8BJoIl/JtooyzZMKNPjtXyjl6jSRDiHkBDYdsbDdcL5nzIgojg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfBiFhBfPxtK3bKh86gP9kj8/TKt1McvkIDkQb9VuL20+GZ6qG
-	s7o6PRsXsF+tA+KzMdENYN8eTvab7NjmmNVid/2TgAt0H3ClUs+QoVzA9zSkqg==
-X-Gm-Gg: AfdE7cmqe9UpEmKIe4XaVsgdyvIZdpZ9KLlgJ9qrcR7PXvCuMCQ5jyzG9+LJJlWNY0F
-	19bb5Xm+SZH90q42Q+ftJ2zmobLUpL1YjUe/2ktZAiaitsrMbbomkXB3rFOntwgSnJgDVqKayiX
-	TVYfL6N5yt2KYINUTUZzdGzZ/QXrggNZiTSB8hEJwpM2IPf39/SsN8Ju5vq0YyYINeTnin8bNHZ
-	/TefBz/F5YxSnkKhbg1Mbiobg9OcILM6rcxmkgznKqKTBEgunThle/cXGnSg5+BVGsVw+R3yXUc
-	EMMUmRXx62/iLfCytBhWVkRO+NVPQkjLUQjblkN2vOQlEVTwSyTlfm0b+ejS2EXNmlAcIOkLQg+
-	TNTI0W+BJECSr1E7QRwRURuzpOXrQ9jQzEMT+Mld/q9jXSVLu7TeBsJLzh6wQtJOpVJi0Ri2A90
-	9a/Ygd41cjc8IIm5TSu1eJnoFkle9fj0k3uAZgQwraZHTFI0CJoP9Y9Kzrk5Q=
-X-Received: by 2002:a17:90b:2652:b0:37d:f206:a2ac with SMTP id 98e67ed59e1d1-38755573a58mr1666168a91.7.1783360509393;
-        Mon, 06 Jul 2026 10:55:09 -0700 (PDT)
+        bh=ZO+FFwngeJDcSpYhEaatPCogWFYZkos6hWPOoVhGkjc=;
+        b=ULvAUiU8rpwCsM+sw5ZSOz1jnxucAe2VWOdGfMOXUE4get2g4pt5Yh9jMHh6XoQwcw
+         Mka4an5oiK5Pkm1pEHuLSjXjs6TxM+r+bNbQR7SU7cwwDON66RwW2y9SSDaZeZ6lZrHG
+         0kjGDmiAGbTbjEzr4CEEwJFj1+6OkB3m17tZlbS1JU2R5nikBg+RsDjcn6ZG/5mUb756
+         agm54c5xg1jlIgc9CKOgpJC+H0eNVuodvhT50Na5mUfbV+2vhaaJs5ViG5Cm75P44e5P
+         /9ZDvWZwyaF1XvoFcj27FTRD/07K3mGcFmFkLO+W2kZjjhadjG+UYP55pehQXyP34I2b
+         m2Ig==
+X-Forwarded-Encrypted: i=1; AHgh+Roe0QJVpvfB+/aOftukb4OjfPuHRxOaqLFfXB1qMNGosC1O5c7jdKX0V2gAmxEPzp497EkYq+2g2R8YY/c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSzumXKz7FkQBavkKlW+JVt0I5MaEbkGuVPykqBZS9yzFAYJgn
+	EJr+YOsuLwX1D6ikSb4fFGrxPx1jw32EmnLFeCGUARxPLSLlgYADz1J1H5mYnA==
+X-Gm-Gg: AfdE7cmz4tewH36f8aSjZ89WnDS/+6JOpetYbEZxagqFyzRoZI+gf/o2hkoobDfVjrl
+	5pt2dCSZKGCTiUTJY/6HfpAUXnMAjRefDr1eXPXWaE1S0zU0s6HwwkknnzGf87FqjnNo06sW45y
+	7CEM2uhfliB7Hi9lTygIY5yAprveeAmaenpXSfne/yi9TjQvVPAdr+JoXwbXWZDrPnbJyZTe86S
+	1McOX14v9HHxTmn9c1+Jg8RjXgYTB30vRPub+CArbCwwhwo1VZXwCJjUZXYEWb9D7Bl92CHHegw
+	5iqhssaxZQI/uvB5662+JYvUi3UTrnY0YLIF6H06uBIkR6n7bnvJJ4zS/GA6L9cIadu7pYePbkt
+	Vfx8qZ4Yb77Lz/FzmH1DdkwosXmBoqOZOqX9ntnb2Kl3WjfDkvgFVLihHMCmiEJkp7m9G++xHKq
+	IQU6ZLcmuTgOhQQrpVHiYxKbxu79SiCD3P1c+XLUqqrCH+/O9zfNSqxnahmSHeD1Iw5tI4SA==
+X-Received: by 2002:a05:6a00:244d:b0:842:63f5:d097 with SMTP id d2e1a72fcca58-847e17360d9mr13133036b3a.3.1783360516724;
+        Mon, 06 Jul 2026 10:55:16 -0700 (PDT)
 Received: from [192.168.0.160] (c-98-225-44-182.hsd1.wa.comcast.net. [98.225.44.182])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-38127c8b700sm5654078a91.11.2026.07.06.10.55.08
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-847f6dd9237sm4266935b3a.59.2026.07.06.10.55.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2026 10:55:08 -0700 (PDT)
-Subject: [PATCH v6 2/4] mm/hmm: add hmm_range_fault_unlocked() for mmap
- lock-drop support
+        Mon, 06 Jul 2026 10:55:16 -0700 (PDT)
+Subject: [PATCH v6 3/4] selftests/mm: add userfaultfd test for HMM unlocked
+ path
 From: Stanislav Kinsburskii <skinsburskii@gmail.com>
 To: Liam.Howlett@oracle.com, akpm@linux-foundation.org,
  akpm@linux-foundation.org, david@kernel.org, jgg@ziepe.ca, corbet@lwn.net,
@@ -89,8 +89,8 @@ To: Liam.Howlett@oracle.com, akpm@linux-foundation.org,
 Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
  linux-mm@kvack.org, linux-hyperv@vger.kernel.org
-Date: Mon, 06 Jul 2026 10:55:07 -0700
-Message-ID: <178336050736.504354.6052508493877924780.stgit@skinsburskii>
+Date: Mon, 06 Jul 2026 10:55:14 -0700
+Message-ID: <178336051466.504354.2020914754190628869.stgit@skinsburskii>
 In-Reply-To: <178336023903.504354.7500950448226027718.stgit@skinsburskii>
 References: <178336023903.504354.7500950448226027718.stgit@skinsburskii>
 User-Agent: StGit/0.19
@@ -109,12 +109,12 @@ X-Spamd-Result: default: False [3.84 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11836-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11837-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_TO(0.00)[oracle.com,linux-foundation.org,kernel.org,ziepe.ca,lwn.net,suse.com,linuxfoundation.org,google.com,gmail.com,microsoft.com];
 	FORGED_SENDER(0.00)[skinsburskii@gmail.com,linux-hyperv@vger.kernel.org];
@@ -124,7 +124,7 @@ X-Spamd-Result: default: False [3.84 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
@@ -137,334 +137,351 @@ X-Spamd-Result: default: False [3.84 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,skinsburskii:mid,interval_sub.mm:url]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,vger.kernel.org:from_smtp,skinsburskii:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: D3C967148DC
+X-Rspamd-Queue-Id: 7AEEC71434B
 
-hmm_range_fault() requires the caller to hold the mmap read lock for the
-duration of the call. This is incompatible with mappings whose fault
-handler may release the mmap lock, notably userfaultfd-managed regions,
-where handle_mm_fault() can return VM_FAULT_RETRY or VM_FAULT_COMPLETED
-after dropping the lock. Drivers that need to populate device page tables
-for such mappings have no way to do so today.
+Add a selftest that exercises hmm_range_fault_unlocked() with a
+userfaultfd-backed mapping. The test:
 
-Add hmm_range_fault_unlocked() for callers that do not need to hold
-mmap_lock across any work outside the HMM fault itself. The new helper
-takes mmap_read_lock() internally, calls the common HMM fault
-implementation, and releases the lock before returning if it is still
-held.
+1. Creates an anonymous mmap region
+2. Registers it with userfaultfd (UFFDIO_REGISTER_MODE_MISSING)
+3. Spawns a handler thread that responds to page faults by filling
+   pages with a known pattern (0xAB) via UFFDIO_COPY
+4. Issues HMM_DMIRROR_READ_UNLOCKED to the test_hmm driver, which
+   calls hmm_range_fault_unlocked() internally
+5. Verifies the device read back the data provided by the userfaultfd
+   handler
 
-When handle_mm_fault() drops mmap_lock, hmm_range_fault_unlocked() returns
--EBUSY. The caller must then restart its HMM walk with a fresh
-mmu_interval_read_begin() sequence. If a fatal signal is pending after the
-lock has been dropped, -EINTR is returned instead. This gives callers a
-simple restart contract while allowing fault handlers that must drop
-mmap_lock, including userfaultfd-backed mappings, to make progress.
+This requires changes to the test_hmm kernel module:
+- New dmirror_range_fault_unlocked() that uses the new HMM API
+- New dmirror_fault_unlocked() and dmirror_read_unlocked() wrappers
+- New HMM_DMIRROR_READ_UNLOCKED ioctl (0x09)
 
-The common implementation conditionally sets FAULT_FLAG_ALLOW_RETRY and
-FAULT_FLAG_KILLABLE only for hmm_range_fault_unlocked(). The existing
-hmm_range_fault() path still passes no locked state, does not allow
-handle_mm_fault() to drop mmap_lock, and remains a thin wrapper preserving
-the existing API contract for current callers.
-
-The previous refactor that moved page fault handling out of the
-page-table walk callbacks is what makes this change small. Faults now run
-after walk_page_range() has unwound, with only mmap_lock held, so dropping
-it does not interact with the walker's pte spinlock or hugetlb_vma_lock.
-Hugetlb regions therefore participate in the unlocked path uniformly with
-PTE- and PMD-level mappings; no special case is required.
-
-Documentation/mm/hmm.rst is updated with a description of the new API and
-the recommended caller pattern.
-
+Assisted-by: GitHub-Copilot:claude-opus-4.6
 Signed-off-by: Stanislav Kinsburskii <skinsburskii@gmail.com>
 ---
- Documentation/mm/hmm.rst |   59 +++++++++++++++++++++
- include/linux/hmm.h      |    1 
- mm/hmm.c                 |  129 ++++++++++++++++++++++++++++++++++++----------
- 3 files changed, 160 insertions(+), 29 deletions(-)
+ lib/test_hmm.c                         |  114 ++++++++++++++++++++++++
+ lib/test_hmm_uapi.h                    |    1 
+ tools/testing/selftests/mm/hmm-tests.c |  149 ++++++++++++++++++++++++++++++++
+ 3 files changed, 264 insertions(+)
 
-diff --git a/Documentation/mm/hmm.rst b/Documentation/mm/hmm.rst
-index 7d61b7a8b65b..844343712abd 100644
---- a/Documentation/mm/hmm.rst
-+++ b/Documentation/mm/hmm.rst
-@@ -208,6 +208,65 @@ invalidate() callback. That lock must be held before calling
- mmu_interval_read_retry() to avoid any race with a concurrent CPU page table
- update.
- 
-+Dropping the mmap lock during page faults
-+=========================================
-+
-+Some VMAs have fault handlers that need to release the mmap lock while
-+servicing a fault (for example, regions managed by ``userfaultfd``).
-+``hmm_range_fault()`` cannot be used on such mappings because it must hold the
-+mmap lock for the duration of the call. Drivers that need to support them
-+should call::
-+
-+  int hmm_range_fault_unlocked(struct hmm_range *range);
-+
-+The caller must not hold ``mmap_read_lock`` before the call.
-+``hmm_range_fault_unlocked()`` takes the mmap read lock internally and allows
-+``handle_mm_fault()`` to drop it during fault handling. If the mmap lock is
-+dropped, the function returns ``-EBUSY``. The caller must then restart the
-+walk from ``range->start`` with a fresh notifier sequence. ``-EINTR`` is
-+returned if a fatal signal is pending during retry handling.
-+
-+A typical caller looks like this::
-+
-+ int driver_populate_range_unlocked(...)
-+ {
-+      struct hmm_range range;
-+      ...
-+
-+      range.notifier = &interval_sub;
-+      range.start = ...;
-+      range.end = ...;
-+      range.hmm_pfns = ...;
-+
-+      if (!mmget_not_zero(interval_sub.mm))
-+          return -EFAULT;
-+
-+ again:
-+      range.notifier_seq = mmu_interval_read_begin(&interval_sub);
-+      ret = hmm_range_fault_unlocked(&range);
-+      if (ret) {
-+          if (ret == -EBUSY)
-+              goto again;
-+          goto out_put;
-+      }
-+
-+      take_lock(driver->update);
-+      if (mmu_interval_read_retry(&interval_sub, range.notifier_seq)) {
-+          release_lock(driver->update);
-+          goto again;
-+      }
-+
-+      /* Use pfns array content to update device page table,
-+       * under the update lock */
-+
-+      release_lock(driver->update);
-+      ret = 0;
-+
-+ out_put:
-+      mmput(interval_sub.mm);
-+      return ret;
-+ }
-+
- Leverage default_flags and pfn_flags_mask
- =========================================
- 
-diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-index db75ffc949a7..1b584e5a2900 100644
---- a/include/linux/hmm.h
-+++ b/include/linux/hmm.h
-@@ -123,6 +123,7 @@ struct hmm_range {
-  * Please see Documentation/mm/hmm.rst for how to use the range API.
-  */
- int hmm_range_fault(struct hmm_range *range);
-+int hmm_range_fault_unlocked(struct hmm_range *range);
- 
- /*
-  * HMM_RANGE_DEFAULT_TIMEOUT - default timeout (ms) when waiting for a range
-diff --git a/mm/hmm.c b/mm/hmm.c
-index 2129b1ee4c35..316116994209 100644
---- a/mm/hmm.c
-+++ b/mm/hmm.c
-@@ -32,6 +32,7 @@
- 
- struct hmm_vma_walk {
- 	struct hmm_range	*range;
-+	int			*locked;
- 	unsigned long		last;
- 	unsigned long		end;
- 	unsigned int		required_fault;
-@@ -44,6 +45,14 @@ struct hmm_vma_walk {
-  */
- #define HMM_FAULT_PENDING	-EAGAIN
- 
-+/*
-+ * Internal sentinel returned by hmm_do_fault() when handle_mm_fault()
-+ * completes a page fault with the mmap lock dropped. hmm_do_fault() sets
-+ * *locked = 0; the outer loop consumes the sentinel and never propagates it
-+ * to the caller.
-+ */
-+#define HMM_FAULT_UNLOCKED	-ENOLCK
-+
- enum {
- 	HMM_NEED_FAULT = 1 << 0,
- 	HMM_NEED_WRITE_FAULT = 1 << 1,
-@@ -73,9 +82,9 @@ static int hmm_pfns_fill(unsigned long addr, unsigned long end,
-  *
-  * Called by the walk callbacks when they discover that part of the range
-  * needs a page fault.  The callback records what to fault and returns
-- * HMM_FAULT_PENDING; the outer loop in hmm_range_fault() drops back out of
-- * walk_page_range() and invokes handle_mm_fault() from a context where no
-- * page-table or hugetlb_vma_lock is held.
-+ * HMM_FAULT_PENDING; the outer loop in hmm_range_fault_locked() drops
-+ * back out of walk_page_range() and invokes handle_mm_fault() from a context
-+ * where no page-table or hugetlb_vma_lock is held.
-  */
- static int hmm_record_fault(unsigned long addr, unsigned long end,
- 			    unsigned int required_fault,
-@@ -624,7 +633,7 @@ static const struct mm_walk_ops hmm_walk_ops = {
- /*
-  * hmm_do_fault - fault in a range recorded by a walk callback
-  *
-- * Called from the outer loop in hmm_range_fault() after a callback
-+ * Called from the outer loop in hmm_range_fault_locked() after a callback
-  * returned HMM_FAULT_PENDING.  At this point we hold only mmap_lock;
-  * the page-table spinlock and any hugetlb_vma_lock acquired by the walk
-  * framework have already been released by the unwind.
-@@ -641,6 +650,9 @@ static int hmm_do_fault(struct mm_struct *mm,
- 	unsigned int fault_flags = FAULT_FLAG_REMOTE;
- 	struct vm_area_struct *vma;
- 
-+	if (hmm_vma_walk->locked)
-+		fault_flags |= FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_KILLABLE;
-+
- 	vma = vma_lookup(mm, addr);
- 	if (!vma)
- 		return -EFAULT;
-@@ -651,37 +663,33 @@ static int hmm_do_fault(struct mm_struct *mm,
- 		fault_flags |= FAULT_FLAG_WRITE;
- 	}
- 
--	for (; addr < end; addr += PAGE_SIZE)
--		if (handle_mm_fault(vma, addr, fault_flags, NULL) &
--		    VM_FAULT_ERROR)
--			return -EFAULT;
-+	for (; addr < end; addr += PAGE_SIZE) {
-+		vm_fault_t ret;
-+
-+		ret = handle_mm_fault(vma, addr, fault_flags, NULL);
-+
-+		if (ret & (VM_FAULT_COMPLETED | VM_FAULT_RETRY)) {
-+			*hmm_vma_walk->locked = 0;
-+			return HMM_FAULT_UNLOCKED;
-+		}
-+
-+		if (ret & VM_FAULT_ERROR) {
-+			int err = vm_fault_to_errno(ret, 0);
-+
-+			if (err)
-+				return err;
-+			BUG();
-+		}
-+	}
- 
- 	return -EBUSY;
- }
- 
--/**
-- * hmm_range_fault - try to fault some address in a virtual address range
-- * @range:	argument structure
-- *
-- * Returns 0 on success or one of the following error codes:
-- *
-- * -EINVAL:	Invalid arguments or mm or virtual address is in an invalid vma
-- *		(e.g., device file vma).
-- * -ENOMEM:	Out of memory.
-- * -EPERM:	Invalid permission (e.g., asking for write and range is read
-- *		only).
-- * -EBUSY:	The range has been invalidated and the caller needs to wait for
-- *		the invalidation to finish.
-- * -EFAULT:     A page was requested to be valid and could not be made valid
-- *              ie it has no backing VMA or it is illegal to access
-- *
-- * This is similar to get_user_pages(), except that it can read the page tables
-- * without mutating them (ie causing faults).
-- */
--int hmm_range_fault(struct hmm_range *range)
-+static int hmm_range_fault_locked(struct hmm_range *range, int *locked)
- {
- 	struct hmm_vma_walk hmm_vma_walk = {
- 		.range = range,
-+		.locked = locked,
- 		.last = range->start,
- 	};
- 	struct mm_struct *mm = range->notifier->mm;
-@@ -704,8 +712,14 @@ int hmm_range_fault(struct hmm_range *range)
- 		 * returns -EBUSY so the loop re-walks and picks up the
- 		 * now-present entries.
- 		 */
--		if (ret == HMM_FAULT_PENDING)
-+		if (ret == HMM_FAULT_PENDING) {
- 			ret = hmm_do_fault(mm, &hmm_vma_walk);
-+			if (ret == HMM_FAULT_UNLOCKED) {
-+				if (fatal_signal_pending(current))
-+					return -EINTR;
-+				return -EBUSY;
-+			}
-+		}
- 		/*
- 		 * When -EBUSY is returned the loop restarts with
- 		 * hmm_vma_walk.last set to an address that has not been stored
-@@ -715,8 +729,65 @@ int hmm_range_fault(struct hmm_range *range)
- 	} while (ret == -EBUSY);
+diff --git a/lib/test_hmm.c b/lib/test_hmm.c
+index 45c0cb992218..dcc3a23bb983 100644
+--- a/lib/test_hmm.c
++++ b/lib/test_hmm.c
+@@ -389,6 +389,76 @@ static int dmirror_range_fault(struct dmirror *dmirror,
  	return ret;
  }
-+
-+/**
-+ * hmm_range_fault - try to fault some address in a virtual address range
-+ * @range:	argument structure
-+ *
-+ * Returns 0 on success or one of the following error codes:
-+ *
-+ * -EINVAL:	Invalid arguments or mm or virtual address is in an invalid vma
-+ *		(e.g., device file vma).
-+ * -ENOMEM:	Out of memory.
-+ * -EPERM:	Invalid permission (e.g., asking for write and range is read
-+ *		only).
-+ * -EBUSY:	The range has been invalidated and the caller needs to wait for
-+ *		the invalidation to finish.
-+ * -EFAULT:     A page was requested to be valid and could not be made valid
-+ *              ie it has no backing VMA or it is illegal to access
-+ *
-+ * This is similar to get_user_pages(), except that it can read the page tables
-+ * without mutating them (ie causing faults).
-+ *
-+ * The mmap lock must be held by the caller and will remain held on return.
-+ * For a variant that allows the mmap lock to be dropped during faults (e.g.,
-+ * for userfaultfd support), see hmm_range_fault_unlocked().
-+ */
-+int hmm_range_fault(struct hmm_range *range)
-+{
-+	return hmm_range_fault_locked(range, NULL);
-+}
- EXPORT_SYMBOL(hmm_range_fault);
  
-+/**
-+ * hmm_range_fault_unlocked - fault in a range, possibly dropping the mmap lock
-+ * @range:	argument structure
-+ *
-+ * This is similar to hmm_range_fault(), except the caller must not hold the
-+ * mmap lock. The function takes the mmap read lock internally and allows
-+ * handle_mm_fault() to drop it during faults. If the lock is dropped, the
-+ * function returns -EBUSY and the caller must restart the walk with a fresh
-+ * mmu_interval_read_begin() sequence.
-+ *
-+ * Returns 0 on success or one of the error codes documented for
-+ * hmm_range_fault(). -EINTR is returned if a fatal signal is pending during
-+ * retry handling.
-+ */
-+int hmm_range_fault_unlocked(struct hmm_range *range)
++static int dmirror_range_fault_unlocked(struct dmirror *dmirror,
++					struct hmm_range *range)
 +{
-+	struct mm_struct *mm = range->notifier->mm;
-+	int locked = 1;
++	unsigned long timeout =
++		jiffies + msecs_to_jiffies(HMM_RANGE_DEFAULT_TIMEOUT);
 +	int ret;
 +
-+	mmap_read_lock(mm);
-+	ret = hmm_range_fault_locked(range, &locked);
-+	if (locked)
-+		mmap_read_unlock(mm);
++	while (true) {
++		if (time_after(jiffies, timeout)) {
++			ret = -EBUSY;
++			goto out;
++		}
 +
++		range->notifier_seq = mmu_interval_read_begin(range->notifier);
++		ret = hmm_range_fault_unlocked(range);
++		if (ret) {
++			if (ret == -EBUSY)
++				continue;
++			goto out;
++		}
++
++		mutex_lock(&dmirror->mutex);
++		if (mmu_interval_read_retry(range->notifier,
++					    range->notifier_seq)) {
++			mutex_unlock(&dmirror->mutex);
++			continue;
++		}
++		break;
++	}
++
++	ret = dmirror_do_fault(dmirror, range);
++
++	mutex_unlock(&dmirror->mutex);
++out:
 +	return ret;
 +}
-+EXPORT_SYMBOL(hmm_range_fault_unlocked);
 +
- /**
-  * hmm_dma_map_alloc - Allocate HMM map structure
-  * @dev: device to allocate structure for
++static int dmirror_fault_unlocked(struct dmirror *dmirror,
++				  unsigned long start,
++				  unsigned long end, bool write)
++{
++	struct mm_struct *mm = dmirror->notifier.mm;
++	unsigned long addr;
++	unsigned long pfns[32];
++	struct hmm_range range = {
++		.notifier = &dmirror->notifier,
++		.hmm_pfns = pfns,
++		.pfn_flags_mask = 0,
++		.default_flags =
++			HMM_PFN_REQ_FAULT | (write ? HMM_PFN_REQ_WRITE : 0),
++		.dev_private_owner = dmirror->mdevice,
++	};
++	int ret = 0;
++
++	if (!mmget_not_zero(mm))
++		return -EFAULT;
++
++	for (addr = start; addr < end; addr = range.end) {
++		range.start = addr;
++		range.end = min(addr + (ARRAY_SIZE(pfns) << PAGE_SHIFT), end);
++
++		ret = dmirror_range_fault_unlocked(dmirror, &range);
++		if (ret)
++			break;
++	}
++
++	mmput(mm);
++	return ret;
++}
++
+ static int dmirror_fault(struct dmirror *dmirror, unsigned long start,
+ 			 unsigned long end, bool write)
+ {
+@@ -488,6 +558,47 @@ static int dmirror_read(struct dmirror *dmirror, struct hmm_dmirror_cmd *cmd)
+ 	return ret;
+ }
+ 
++static int dmirror_read_unlocked(struct dmirror *dmirror,
++				 struct hmm_dmirror_cmd *cmd)
++{
++	struct dmirror_bounce bounce;
++	unsigned long start, end;
++	unsigned long size = cmd->npages << PAGE_SHIFT;
++	int ret;
++
++	start = cmd->addr;
++	end = start + size;
++	if (end < start)
++		return -EINVAL;
++
++	ret = dmirror_bounce_init(&bounce, start, size);
++	if (ret)
++		return ret;
++
++	while (1) {
++		mutex_lock(&dmirror->mutex);
++		ret = dmirror_do_read(dmirror, start, end, &bounce);
++		mutex_unlock(&dmirror->mutex);
++		if (ret != -ENOENT)
++			break;
++
++		start = cmd->addr + (bounce.cpages << PAGE_SHIFT);
++		ret = dmirror_fault_unlocked(dmirror, start, end, false);
++		if (ret)
++			break;
++		cmd->faults++;
++	}
++
++	if (ret == 0) {
++		if (copy_to_user(u64_to_user_ptr(cmd->ptr), bounce.ptr,
++				 bounce.size))
++			ret = -EFAULT;
++	}
++	cmd->cpages = bounce.cpages;
++	dmirror_bounce_fini(&bounce);
++	return ret;
++}
++
+ static int dmirror_do_write(struct dmirror *dmirror, unsigned long start,
+ 			    unsigned long end, struct dmirror_bounce *bounce)
+ {
+@@ -1572,6 +1683,9 @@ static long dmirror_fops_unlocked_ioctl(struct file *filp,
+ 		dmirror->flags = cmd.npages;
+ 		ret = 0;
+ 		break;
++	case HMM_DMIRROR_READ_UNLOCKED:
++		ret = dmirror_read_unlocked(dmirror, &cmd);
++		break;
+ 
+ 	default:
+ 		return -EINVAL;
+diff --git a/lib/test_hmm_uapi.h b/lib/test_hmm_uapi.h
+index f94c6d457338..ea9b0ec404fb 100644
+--- a/lib/test_hmm_uapi.h
++++ b/lib/test_hmm_uapi.h
+@@ -38,6 +38,7 @@ struct hmm_dmirror_cmd {
+ #define HMM_DMIRROR_CHECK_EXCLUSIVE	_IOWR('H', 0x06, struct hmm_dmirror_cmd)
+ #define HMM_DMIRROR_RELEASE		_IOWR('H', 0x07, struct hmm_dmirror_cmd)
+ #define HMM_DMIRROR_FLAGS		_IOWR('H', 0x08, struct hmm_dmirror_cmd)
++#define HMM_DMIRROR_READ_UNLOCKED	_IOWR('H', 0x09, struct hmm_dmirror_cmd)
+ 
+ #define HMM_DMIRROR_FLAG_FAIL_ALLOC	(1ULL << 0)
+ 
+diff --git a/tools/testing/selftests/mm/hmm-tests.c b/tools/testing/selftests/mm/hmm-tests.c
+index 2f2b9879d100..71765c4d80f3 100644
+--- a/tools/testing/selftests/mm/hmm-tests.c
++++ b/tools/testing/selftests/mm/hmm-tests.c
+@@ -29,6 +29,10 @@
+ #include <sys/mman.h>
+ #include <sys/ioctl.h>
+ #include <sys/time.h>
++#include <sys/syscall.h>
++#include <sys/eventfd.h>
++#include <linux/userfaultfd.h>
++#include <poll.h>
+ 
+ /*
+  * This is a private UAPI to the kernel test module so it isn't exported
+@@ -2949,4 +2953,149 @@ TEST_F_TIMEOUT(hmm, benchmark_thp_migration, 120)
+ 					&thp_results, &regular_results);
+ 	}
+ }
++/*
++ * Test that HMM can fault in pages backed by userfaultfd using the
++ * hmm_range_fault_unlocked() path. This exercises the lock-drop retry
++ * logic in the HMM framework.
++ */
++struct uffd_thread_args {
++	int uffd;
++	int stop_fd;
++	void *page_buffer;
++	unsigned long page_size;
++};
++
++static void *uffd_handler_thread(void *arg)
++{
++	struct uffd_thread_args *args = arg;
++	struct uffd_msg msg;
++	struct uffdio_copy copy;
++	struct pollfd pollfd[2];
++	int ret;
++
++	pollfd[0].fd = args->uffd;
++	pollfd[0].events = POLLIN;
++	pollfd[1].fd = args->stop_fd;
++	pollfd[1].events = POLLIN;
++
++	while (1) {
++		ret = poll(pollfd, 2, -1);
++		if (ret <= 0)
++			break;
++		if (pollfd[1].revents)
++			break;
++		if (!(pollfd[0].revents & POLLIN))
++			break;
++
++		ret = read(args->uffd, &msg, sizeof(msg));
++		if (ret != sizeof(msg))
++			break;
++
++		if (msg.event != UFFD_EVENT_PAGEFAULT)
++			break;
++
++		/* Fill the page with a known pattern */
++		memset(args->page_buffer, 0xAB, args->page_size);
++
++		copy.dst = msg.arg.pagefault.address & ~(args->page_size - 1);
++		copy.src = (unsigned long)args->page_buffer;
++		copy.len = args->page_size;
++		copy.mode = 0;
++		copy.copy = 0;
++
++		ret = ioctl(args->uffd, UFFDIO_COPY, &copy);
++		if (ret < 0)
++			break;
++	}
++
++	return NULL;
++}
++
++TEST_F(hmm, userfaultfd_read)
++{
++	struct hmm_buffer *buffer;
++	struct uffd_thread_args uffd_args;
++	unsigned long npages;
++	unsigned long size;
++	unsigned long i;
++	unsigned char *ptr;
++	pthread_t thread;
++	int uffd;
++	int stop_fd;
++	int ret;
++	struct uffdio_api api;
++	struct uffdio_register reg;
++	uint64_t stop = 1;
++	ssize_t nwrite;
++
++	npages = 4;
++	size = npages << self->page_shift;
++
++	/* Create userfaultfd */
++	uffd = syscall(__NR_userfaultfd, O_CLOEXEC | O_NONBLOCK);
++	if (uffd < 0)
++		SKIP(return, "userfaultfd not available");
++
++	api.api = UFFD_API;
++	api.features = 0;
++	ret = ioctl(uffd, UFFDIO_API, &api);
++	ASSERT_EQ(ret, 0);
++
++	buffer = malloc(sizeof(*buffer));
++	ASSERT_NE(buffer, NULL);
++
++	buffer->fd = -1;
++	buffer->size = size;
++	buffer->mirror = malloc(size);
++	ASSERT_NE(buffer->mirror, NULL);
++
++	/* Create anonymous mapping */
++	buffer->ptr = mmap(NULL, size,
++			   PROT_READ | PROT_WRITE,
++			   MAP_PRIVATE | MAP_ANONYMOUS,
++			   -1, 0);
++	ASSERT_NE(buffer->ptr, MAP_FAILED);
++
++	/* Register the region with userfaultfd */
++	reg.range.start = (unsigned long)buffer->ptr;
++	reg.range.len = size;
++	reg.mode = UFFDIO_REGISTER_MODE_MISSING;
++	ret = ioctl(uffd, UFFDIO_REGISTER, &reg);
++	ASSERT_EQ(ret, 0);
++
++	/* Set up the handler thread */
++	uffd_args.uffd = uffd;
++	stop_fd = eventfd(0, EFD_CLOEXEC);
++	ASSERT_GE(stop_fd, 0);
++	uffd_args.stop_fd = stop_fd;
++	uffd_args.page_buffer = malloc(self->page_size);
++	ASSERT_NE(uffd_args.page_buffer, NULL);
++	uffd_args.page_size = self->page_size;
++
++	ret = pthread_create(&thread, NULL, uffd_handler_thread, &uffd_args);
++	ASSERT_EQ(ret, 0);
++
++	/*
++	 * Use the unlocked read path which allows the mmap lock to be
++	 * dropped during the fault, enabling userfaultfd resolution.
++	 */
++	ret = hmm_dmirror_cmd(self->fd, HMM_DMIRROR_READ_UNLOCKED,
++			      buffer, npages);
++	ASSERT_EQ(ret, 0);
++	ASSERT_EQ(buffer->cpages, npages);
++
++	/* Verify the device read the data filled by the uffd handler */
++	ptr = buffer->mirror;
++	for (i = 0; i < size; ++i)
++		ASSERT_EQ(ptr[i], (unsigned char)0xAB);
++
++	nwrite = write(stop_fd, &stop, sizeof(stop));
++	ASSERT_EQ(nwrite, sizeof(stop));
++	pthread_join(thread, NULL);
++	close(stop_fd);
++	free(uffd_args.page_buffer);
++	close(uffd);
++	hmm_buffer_free(buffer);
++}
++
+ TEST_HARNESS_MAIN
 
 
 
