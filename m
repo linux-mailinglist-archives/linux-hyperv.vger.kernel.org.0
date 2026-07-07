@@ -1,252 +1,319 @@
-Return-Path: <linux-hyperv+bounces-11854-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11855-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id b1M2J2lYTWqwygEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11854-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 07 Jul 2026 21:50:01 +0200
+	id zvroEmNrTWrzzgEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11855-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 07 Jul 2026 23:10:59 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id A008D71F63F
-	for <lists+linux-hyperv@lfdr.de>; Tue, 07 Jul 2026 21:50:00 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8FA6971FAFB
+	for <lists+linux-hyperv@lfdr.de>; Tue, 07 Jul 2026 23:10:58 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=P2lstC0n;
-	dmarc=pass (policy=none) header.from=gmail.com;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11854-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11854-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=linux.microsoft.com header.s=default header.b=Rskp2gQn;
+	dmarc=pass (policy=none) header.from=linux.microsoft.com;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11855-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11855-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 7267F301A37E
-	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Jul 2026 19:47:52 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D69DB303FF84
+	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Jul 2026 21:10:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB174387346;
-	Tue,  7 Jul 2026 19:47:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF86837F723;
+	Tue,  7 Jul 2026 21:10:56 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 771FC3B9618
-	for <linux-hyperv@vger.kernel.org>; Tue,  7 Jul 2026 19:47:46 +0000 (UTC)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DE0630C167;
+	Tue,  7 Jul 2026 21:10:54 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783453667; cv=none; b=A++SqELg6CYexDLfBAOvNzbr5wIHkz26pf3xqy55FfVFbm31+e2/ck2nfpe6oXrjD+HZOE9Mr9LfNeogo6uyjWQ+ucwRX6GkC08LIuHGag/cbg3NEAWZKIdytp82spsjKiWzuexgQ+aIMETtk1VpSWtYH8z4i1P/kTyyo2iJQ1M=
+	t=1783458656; cv=none; b=Pu4iS4czRvMFfA2se/vMx+vyVD7dArSixe8/sBXrBTGQaAuYcaDJyPEUiNB9rzaCktR5sKBRO1FZF9IuEHamHB26xpYiwDmztbnz487ktrZ2nfPhKAjCUvzHJn1jNd0cEo+81H8yfi/byPl2s7/ltXGGPpuH5qdeZiEB9SRSE8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783453667; c=relaxed/simple;
-	bh=Jv1y8m8D6x2KYmcmzXGqhn/fhSnu37R26ZRIePclFU0=;
-	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZbXjdwUr+XvsYasWGEqMpI8HvYTxAIiI5+qSBYGqqDz5qxRh6r9FggPwrWUWYiJhFrSF9S8YuTY0HHMKuBk/Q+0hOAxvDwraVeN3u7/di3TrMz+4+dPYSSe4LaOyKXzMoCwGk85HpK+bh3FGOgYEZmM0kx1/8wLBz31R76FEnrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P2lstC0n; arc=none smtp.client-ip=209.85.210.171
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-847d1e9db22so5061430b3a.2
-        for <linux-hyperv@vger.kernel.org>; Tue, 07 Jul 2026 12:47:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783453666; x=1784058466; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:user-agent
-         :references:in-reply-to:message-id:date:cc:to:from:subject:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=CyXJGY0usHae+LXmamNtPRV/qmWOdkzAleKaxE3NMCI=;
-        b=P2lstC0npA4x5UUpkz5rt0EviBkV+UCDuKsg/eu0vqeo6e5gCXc3tYpHWNP3MC8u0Z
-         CG0AebqOS5Tw0VXyXK7D8QxkU/69nBjX1+nyiMqwYk8E//niBEvV+zdefSr7dpYa4Lr/
-         vOXtsAXWxisSJWizsfpTIf9JQTpVJ27ghFB7+4M5w9sxbyGcdOQ9XxPES0ghgKyic04+
-         gz/E50TxBJs2VbdaijLWnw+cBQi9xclObLVAUAhbTef0opcR48Y8Afe5ILfX0X8JS85L
-         MBKtsEk3ayzwcgZMzp8fwGpGkcrqPtoCb2GoXWx5jWVrFVCOClzpQP9eGVJ+vJ6I5R21
-         RyoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783453666; x=1784058466;
-        h=content-transfer-encoding:content-type:mime-version:user-agent
-         :references:in-reply-to:message-id:date:cc:to:from:subject:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=CyXJGY0usHae+LXmamNtPRV/qmWOdkzAleKaxE3NMCI=;
-        b=Sr9gAtVzSx9QpWdJMMICRuLPaXpoEJgRPYwFELvDBCafapICGJu4nABdvUd6hs2kwq
-         q9HoHpcqb3xxG7o5/rF+DO2a6CEqrKFomRuEtEWx1AYz1730QZhx0EEfPyr2Plc7FujW
-         Kr4d6TP8HuCgC4UJoggvyyQgjbOPOpKqDdf4OKPL94fhA3cZgw38SvcuqNazA3PKEAfB
-         D6kECsYikNQtGU0JV2VwEYc3T5maTG0wql35zAr8Q8bfFztBo9Jj2NjZRKNT7BdwN4w9
-         d4XKmqq+tXzrVHcQUvwH0IAPDQzeoFsiu0R1IDrGMfkMMbqiaS2Dh5WXwXl7gRIs8h0a
-         IZrA==
-X-Forwarded-Encrypted: i=1; AHgh+RpVeOHoU0x3ghPP8MzV5yzVMhKoMG0bbZjXk6qJ4D8XWSUrU17Yx8u4VuzkkkhvumJNvIC1NthRvC6/1t8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxok8q6RXHddexCwJzx5Gvd2ZMx6cRPmGF6U76eEmqMHAD1laOn
-	47X3hW7swj06Zz+nmR7LlY2YhhD9FeXbahpgrsY7QnrBdYjX5kT8vhrP
-X-Gm-Gg: AfdE7cndCGFQKeNH0etgDfCzBAUcYwhwG+sDj7gNqSMfEBWjN+urlgZid/OJnhD8UDe
-	YwpFurkj9/cM4jtCa1wjVjwQWZCIZukSH+jeeLWBac6+ORLxNflPPdlxy8q0sP1AySF/fLBoNVZ
-	HTd38Y/7F4C9YnewAmfDU0U0KICAldcSrsdmNiLiOXq6Iw1GNhr563sMDwdBsdU7FLcRsCJsCHA
-	7jDhftI1NyFYFibMRCRzpWqeHa3WLY9mz6sdo2OUqEOImqQEPlmS8j37F7rDfzjaeVABuZvwBJs
-	M84bExXCuInf8WD1NK1TlLUNLIzsy+Tnhpv8ZUvwhyW7mB3gdlyxQZCKAC5LFHjObUBFERQNao1
-	xJ8XTOpS4grYTj5DUSmZMof8XzRj19EhKvJxBlgMGmPorhWgdvcEYsOmCiOXMsdJyNtzVdb0RzV
-	3lDJwKl7jQBu4SZoE/J4LEIWEDRmO1fnr0ORH5LBI9uTeNtk3JaXrHm3TgJs8=
-X-Received: by 2002:a05:6a00:b89:b0:845:cf73:c1d8 with SMTP id d2e1a72fcca58-84826c09c93mr6251882b3a.14.1783453665761;
-        Tue, 07 Jul 2026 12:47:45 -0700 (PDT)
-Received: from [192.168.0.160] (c-98-225-44-182.hsd1.wa.comcast.net. [98.225.44.182])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8483dc66f2asm280202b3a.24.2026.07.07.12.47.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2026 12:47:45 -0700 (PDT)
-Subject: [PATCH v7 8/8] drm/gpusvm: Use hmm_range_fault_unlocked_timeout() for
- range faults
-From: Stanislav Kinsburskii <skinsburskii@gmail.com>
-To: airlied@gmail.com, akhilesh@ee.iitb.ac.in, akpm@linux-foundation.org,
- corbet@lwn.net, dakr@kernel.org, david@kernel.org, decui@microsoft.com,
- haiyangz@microsoft.com, jgg@ziepe.ca, kees@kernel.org, kys@microsoft.com,
- leon@kernel.org, liam@infradead.org, lizhi.hou@amd.com, ljs@kernel.org,
- longli@microsoft.com, lyude@redhat.com, maarten.lankhorst@linux.intel.com,
- mamin506@gmail.com, mhocko@suse.com, mripard@kernel.org,
- nouveau@lists.freedesktop.org, ogabbay@kernel.org, oleg@redhat.com,
- rppt@kernel.org, shuah@kernel.org, simona@ffwll.ch,
- skhan@linuxfoundation.org, skinsburskii@gmail.com, surenb@google.com,
- tzimmermann@suse.de, vbabka@kernel.org, wei.liu@kernel.org,
- skinsburskii@gmail.com
-Cc: dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-rdma@vger.kernel.org
-Date: Tue, 07 Jul 2026 12:47:43 -0700
-Message-ID: <178345366389.660027.12986386801605494596.stgit@skinsburskii>
-In-Reply-To: <178345345668.660027.2952911919681614557.stgit@skinsburskii>
-References: <178345345668.660027.2952911919681614557.stgit@skinsburskii>
-User-Agent: StGit/0.19
+	s=arc-20240116; t=1783458656; c=relaxed/simple;
+	bh=1/y3KjQ2fjlRD1cyuJqrpsmwbxft2UO8DFm9hMzhE/k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=o7fe+CCHcuFf9OJ6nZA1qyyE/ZZ38QzBFq8UqBUMiw0TcEI4bYft9rWBwrvStvSDCXns17rOwAhTE1FiY0KwLmWW3Ga9GDE7a0YKQsXTYIZwwStCZYqNQRwGJmwNyGcoXT3ZyD16za1aYpTLT4FWZVhBYqZZpgtz7SoZe7x8xi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Rskp2gQn; arc=none smtp.client-ip=13.77.154.182
+Received: from [100.93.96.56] (unknown [40.86.181.13])
+	by linux.microsoft.com (Postfix) with ESMTPSA id C7A4820B7166;
+	Tue,  7 Jul 2026 14:10:42 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C7A4820B7166
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1783458643;
+	bh=6ZuqzjFeYeI8YCp2Qv7P1iu3j5Efggu6mHkwGAeF6FE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Rskp2gQnhnj0cYn4aI9k+LX+HRw1X1zUgMQypRfmf1aLFz1I2KEdfKGB2KGqEKwre
+	 4qMCYpCQ8FP3o/gOup/xktdEl4Nm9KiobnOfP28nTXO0emiAg4Lw5I4shYs6N9pNXU
+	 IMRCiI6W40amC8bxZ+DrUZl9RRovo5JFOJ+NPsv8=
+Message-ID: <9e999605-0527-f1c1-5c82-0055ede045b5@linux.microsoft.com>
+Date: Tue, 7 Jul 2026 14:10:46 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH v2 1/4] hyperv: Introduce new hypercall interfaces used by
+ Hyper-V guest IOMMU
+Content-Language: en-US
+To: Yu Zhang <zhangyu1@linux.microsoft.com>, linux-kernel@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, iommu@lists.linux.dev,
+ linux-pci@vger.kernel.org, linux-arch@vger.kernel.org
+Cc: wei.liu@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+ decui@microsoft.com, longli@microsoft.com, joro@8bytes.org, will@kernel.org,
+ robin.murphy@arm.com, bhelgaas@google.com, kwilczynski@kernel.org,
+ lpieralisi@kernel.org, mani@kernel.org, robh@kernel.org, arnd@arndb.de,
+ jgg@ziepe.ca, mhklinux@outlook.com, jacob.pan@linux.microsoft.com,
+ tgopinath@linux.microsoft.com, easwar.hariharan@linux.microsoft.com
+References: <20260702160518.311234-1-zhangyu1@linux.microsoft.com>
+ <20260702160518.311234-2-zhangyu1@linux.microsoft.com>
+From: Mukesh R <mrathor@linux.microsoft.com>
+In-Reply-To: <20260702160518.311234-2-zhangyu1@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [3.84 / 15.00];
-	MID_END_EQ_FROM_USER_PART(4.00)[];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-5.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[microsoft.com:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11854-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11855-lists,linux-hyperv=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:zhangyu1@linux.microsoft.com,m:linux-kernel@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:iommu@lists.linux.dev,m:linux-pci@vger.kernel.org,m:linux-arch@vger.kernel.org,m:wei.liu@kernel.org,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:decui@microsoft.com,m:longli@microsoft.com,m:joro@8bytes.org,m:will@kernel.org,m:robin.murphy@arm.com,m:bhelgaas@google.com,m:kwilczynski@kernel.org,m:lpieralisi@kernel.org,m:mani@kernel.org,m:robh@kernel.org,m:arnd@arndb.de,m:jgg@ziepe.ca,m:mhklinux@outlook.com,m:jacob.pan@linux.microsoft.com,m:tgopinath@linux.microsoft.com,m:easwar.hariharan@linux.microsoft.com,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com,ee.iitb.ac.in,linux-foundation.org,lwn.net,kernel.org,microsoft.com,ziepe.ca,infradead.org,amd.com,redhat.com,linux.intel.com,suse.com,lists.freedesktop.org,ffwll.ch,linuxfoundation.org,google.com,suse.de];
-	FORGED_SENDER(0.00)[skinsburskii@gmail.com,linux-hyperv@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[41];
-	FORGED_RECIPIENTS(0.00)[m:airlied@gmail.com,m:akhilesh@ee.iitb.ac.in,m:akpm@linux-foundation.org,m:corbet@lwn.net,m:dakr@kernel.org,m:david@kernel.org,m:decui@microsoft.com,m:haiyangz@microsoft.com,m:jgg@ziepe.ca,m:kees@kernel.org,m:kys@microsoft.com,m:leon@kernel.org,m:liam@infradead.org,m:lizhi.hou@amd.com,m:ljs@kernel.org,m:longli@microsoft.com,m:lyude@redhat.com,m:maarten.lankhorst@linux.intel.com,m:mamin506@gmail.com,m:mhocko@suse.com,m:mripard@kernel.org,m:nouveau@lists.freedesktop.org,m:ogabbay@kernel.org,m:oleg@redhat.com,m:rppt@kernel.org,m:shuah@kernel.org,m:simona@ffwll.ch,m:skhan@linuxfoundation.org,m:skinsburskii@gmail.com,m:surenb@google.com,m:tzimmermann@suse.de,m:vbabka@kernel.org,m:wei.liu@kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-mm@kvack.org,m:linux-doc@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-kselftest@vger.kernel.org,m:linux-rdma@vger.kernel.org,s:lists@lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER(0.00)[mrathor@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[25];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	FREEMAIL_CC(0.00)[kernel.org,microsoft.com,8bytes.org,arm.com,google.com,arndb.de,ziepe.ca,outlook.com,linux.microsoft.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[skinsburskii@gmail.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	TO_DN_NONE(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
 	ALIAS_RESOLVED(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mrathor@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[skinsburskii:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,linux.microsoft.com:from_mime,linux.microsoft.com:dkim,linux.microsoft.com:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: A008D71F63F
+X-Rspamd-Queue-Id: 8FA6971FAFB
 
-Several GPU SVM paths take mmap_read_lock() only to call hmm_range_fault(),
-then retry -EBUSY until HMM_RANGE_DEFAULT_TIMEOUT expires. Those paths use
-MMU interval notifiers whose mm matches the mm that was locked for the HMM
-fault.
+On 7/2/26 09:05, Yu Zhang wrote:
+> From: Wei Liu <wei.liu@kernel.org>
+> 
+> Hyper-V guest IOMMU is a para-virtualized IOMMU based on hypercalls.
+> Introduce the hypercalls used by the child partition to interact with
+> this facility.
+> 
+> These hypercalls fall into below categories:
+> - Detection and capability: HVCALL_GET_IOMMU_CAPABILITIES is used to
+>    detect the existence and capabilities of the guest IOMMU.
+> 
+> - Device management: HVCALL_GET_LOGICAL_DEVICE_PROPERTY is used to
+>    check whether an endpoint device is managed by the guest IOMMU.
+> 
+> - Domain management: A set of hypercalls is provided to handle the
+>    creation, configuration, and deletion of guest domains, as well as
+>    the attachment/detachment of endpoint devices to/from those domains.
+> 
+> - IOTLB flushing: HVCALL_FLUSH_DEVICE_DOMAIN is used to ask Hyper-V
+>    for a domain-selective IOTLB flush (which in its handler may flush
+>    the device TLB as well).
+> 
+> Signed-off-by: Wei Liu <wei.liu@kernel.org>
+> Co-developed-by: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
+> Signed-off-by: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
+> Co-developed-by: Yu Zhang <zhangyu1@linux.microsoft.com>
+> Signed-off-by: Yu Zhang <zhangyu1@linux.microsoft.com>
+> ---
+>   include/hyperv/hvgdk_mini.h |   8 +++
+>   include/hyperv/hvhdk_mini.h | 124 ++++++++++++++++++++++++++++++++++++
+>   2 files changed, 132 insertions(+)
+> 
+> diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
+> index 6a4e8b9d570f..5bdbb44da112 100644
+> --- a/include/hyperv/hvgdk_mini.h
+> +++ b/include/hyperv/hvgdk_mini.h
+> @@ -486,10 +486,16 @@ union hv_vp_assist_msr_contents {	 /* HV_REGISTER_VP_ASSIST_PAGE */
+>   #define HVCALL_GET_VP_INDEX_FROM_APIC_ID		0x009a
+>   #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_SPACE	0x00af
+>   #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_LIST	0x00b0
+> +#define HVCALL_CREATE_DEVICE_DOMAIN			0x00b1
+> +#define HVCALL_ATTACH_DEVICE_DOMAIN			0x00b2
+>   #define HVCALL_SIGNAL_EVENT_DIRECT			0x00c0
+>   #define HVCALL_POST_MESSAGE_DIRECT			0x00c1
+>   #define HVCALL_DISPATCH_VP				0x00c2
+> +#define HVCALL_DETACH_DEVICE_DOMAIN			0x00c4
+> +#define HVCALL_DELETE_DEVICE_DOMAIN			0x00c5
+>   #define HVCALL_GET_GPA_PAGES_ACCESS_STATES		0x00c9
+> +#define HVCALL_CONFIGURE_DEVICE_DOMAIN			0x00ce
+> +#define HVCALL_FLUSH_DEVICE_DOMAIN			0x00d0
+>   #define HVCALL_ACQUIRE_SPARSE_SPA_PAGE_HOST_ACCESS	0x00d7
+>   #define HVCALL_RELEASE_SPARSE_SPA_PAGE_HOST_ACCESS	0x00d8
+>   #define HVCALL_MODIFY_SPARSE_GPA_PAGE_HOST_VISIBILITY	0x00db
+> @@ -502,6 +508,8 @@ union hv_vp_assist_msr_contents {	 /* HV_REGISTER_VP_ASSIST_PAGE */
+>   #define HVCALL_MMIO_READ				0x0106
+>   #define HVCALL_MMIO_WRITE				0x0107
+>   #define HVCALL_DISABLE_HYP_EX                           0x010f
+> +#define HVCALL_GET_IOMMU_CAPABILITIES			0x0125
+> +#define HVCALL_GET_LOGICAL_DEVICE_PROPERTY		0x0127
+>   #define HVCALL_MAP_STATS_PAGE2				0x0131
+>   
+>   /* HV_HYPERCALL_INPUT */
+> diff --git a/include/hyperv/hvhdk_mini.h b/include/hyperv/hvhdk_mini.h
+> index b4cb2fa26e9b..493608e791b4 100644
+> --- a/include/hyperv/hvhdk_mini.h
+> +++ b/include/hyperv/hvhdk_mini.h
+> @@ -547,4 +547,128 @@ union hv_device_id {		/* HV_DEVICE_ID */
+>   	} acpi;
+>   } __packed;
+>   
+> +/* Device domain types */
+> +#define HV_DEVICE_DOMAIN_TYPE_S1	1 /* Stage 1 domain */
+> +
+> +/* ID for default domain and NULL domain */
+> +#define HV_DEVICE_DOMAIN_ID_DEFAULT 0
+> +#define HV_DEVICE_DOMAIN_ID_NULL    0xFFFFFFFFULL
+> +
+> +union hv_device_domain_id {
+> +	u64 as_uint64;
+> +	struct {
+> +		u32 type: 4;
+> +		u32 reserved: 28;
+> +		u32 id;
+> +	} __packed;
+> +};
+> +
+> +struct hv_input_device_domain {
+> +	u64 partition_id;
+> +	union hv_input_vtl owner_vtl;
+> +	u8 padding[7];
+> +	union hv_device_domain_id domain_id;
+> +} __packed;
+> +
+> +union hv_create_device_domain_flags {
+> +	u32 as_uint32;
+> +	struct {
+> +		u32 forward_progress_required: 1;
+> +		u32 inherit_owning_vtl: 1;
+> +		u32 reserved: 30;
+> +	} __packed;
+> +};
+> +
+> +struct hv_input_create_device_domain {
+> +	struct hv_input_device_domain device_domain;
+> +	union hv_create_device_domain_flags create_device_domain_flags;
+> +} __packed;
+> +
+> +struct hv_input_delete_device_domain {
+> +	struct hv_input_device_domain device_domain;
+> +} __packed;
+> +
+> +struct hv_input_attach_device_domain {
+> +	struct hv_input_device_domain device_domain;
+> +	union hv_device_id device_id;
+> +} __packed;
+> +
+> +struct hv_input_detach_device_domain {
+> +	u64 partition_id;
+> +	union hv_device_id device_id;
+> +} __packed;
+> +
+> +struct hv_device_domain_settings {
+> +	struct {
+> +		/*
+> +		 * Enable translations. If not enabled, all transaction bypass
+> +		 * S1 translations.
+> +		 */
+> +		u64 translation_enabled: 1;
+> +		u64 blocked: 1;
+> +		/*
+> +		 * First stage address translation paging mode:
+> +		 * 0: 4-level paging (default)
+> +		 * 1: 5-level paging
+> +		 */
+> +		u64 first_stage_paging_mode: 1;
+> +		u64 reserved: 61;
+> +	} flags;
+> +
+> +	/* Address of translation table */
+> +	u64 page_table_root;
+> +} __packed;
+> +
+> +struct hv_input_configure_device_domain {
+> +	struct hv_input_device_domain device_domain;
+> +	struct hv_device_domain_settings settings;
+> +} __packed;
+> +
+> +struct hv_input_get_iommu_capabilities {
+> +	u64 partition_id;
+> +	u64 reserved;
+> +} __packed;
+> +
+> +struct hv_output_get_iommu_capabilities {
+> +	u32 size;
+> +	u16 reserved;
+> +	u8  max_iova_width;
+> +	u8  max_pasid_width;
+> +
+> +#define HV_IOMMU_CAP_PRESENT (1ULL << 0)
+> +#define HV_IOMMU_CAP_S2 (1ULL << 1)
+> +#define HV_IOMMU_CAP_S1 (1ULL << 2)
+> +#define HV_IOMMU_CAP_S1_5LVL (1ULL << 3)
+> +#define HV_IOMMU_CAP_PASID (1ULL << 4)
+> +#define HV_IOMMU_CAP_ATS (1ULL << 5)
+> +#define HV_IOMMU_CAP_PRI (1ULL << 6)
+> +
+> +	u64 iommu_cap;
+> +	u64 pgsize_bitmap;
+> +} __packed;
+> +
+> +enum hv_logical_device_property_code {
+> +	HV_LOGICAL_DEVICE_PROPERTY_PVIOMMU = 10,
+> +};
+> +
+> +struct hv_input_get_logical_device_property {
+> +	u64 partition_id;
+> +	u64 logical_device_id;
+> +	/* Takes values from enum hv_logical_device_property_code. */
+> +	u32 code;
+> +	u32 reserved;
+> +} __packed;
+> +
+> +struct hv_output_get_logical_device_property {
+> +#define HV_DEVICE_IOMMU_ENABLED (1ULL << 0)
+> +	u64 device_iommu;
+> +	u64 reserved;
+> +} __packed;
+> +
+> +struct hv_input_flush_device_domain {
+> +	struct hv_input_device_domain device_domain;
+> +	u32 flags;
+> +	u32 reserved;
+> +} __packed;
+> +
+>   #endif /* _HV_HVHDK_MINI_H */
 
-Use hmm_range_fault_unlocked_timeout() for those faults and pass the
-remaining retry budget to HMM. The helper owns mmap_lock acquisition and
-refreshes range->notifier_seq internally for each retry, while GPU SVM
-keeps its existing driver-lock validation with mmu_interval_read_retry()
-after a successful fault.
 
-Leave drm_gpusvm_check_pages() on hmm_range_fault() because that path is
-called with the mmap lock already held by its caller.
+Please add tags to all structs, like,
 
-Signed-off-by: Stanislav Kinsburskii <skinsburskii@gmail.com>
----
- drivers/gpu/drm/drm_gpusvm.c |   52 ++++++------------------------------------
- 1 file changed, 7 insertions(+), 45 deletions(-)
+struct hv_input_device_domain { /* HV_INPUT_DEVICE_DOMAIN */
 
-diff --git a/drivers/gpu/drm/drm_gpusvm.c b/drivers/gpu/drm/drm_gpusvm.c
-index 958cb605aedd..2601b793428c 100644
---- a/drivers/gpu/drm/drm_gpusvm.c
-+++ b/drivers/gpu/drm/drm_gpusvm.c
-@@ -788,22 +788,8 @@ enum drm_gpusvm_scan_result drm_gpusvm_scan_mm(struct drm_gpusvm_range *range,
- 	hmm_range.hmm_pfns = pfns;
- 
- retry:
--	hmm_range.notifier_seq = mmu_interval_read_begin(notifier);
--	mmap_read_lock(range->gpusvm->mm);
--
--	while (true) {
--		err = hmm_range_fault(&hmm_range);
--		if (err == -EBUSY) {
--			if (time_after(jiffies, timeout))
--				break;
--
--			hmm_range.notifier_seq =
--				mmu_interval_read_begin(notifier);
--			continue;
--		}
--		break;
--	}
--	mmap_read_unlock(range->gpusvm->mm);
-+	err = hmm_range_fault_unlocked_timeout(&hmm_range,
-+				max_t(long, timeout - jiffies, 1));
- 	if (err)
- 		goto err_free;
- 
-@@ -1439,21 +1425,8 @@ int drm_gpusvm_get_pages(struct drm_gpusvm *gpusvm,
- 	}
- 
- 	hmm_range.hmm_pfns = pfns;
--	while (true) {
--		mmap_read_lock(mm);
--		err = hmm_range_fault(&hmm_range);
--		mmap_read_unlock(mm);
--
--		if (err == -EBUSY) {
--			if (time_after(jiffies, timeout))
--				break;
--
--			hmm_range.notifier_seq =
--				mmu_interval_read_begin(notifier);
--			continue;
--		}
--		break;
--	}
-+	err = hmm_range_fault_unlocked_timeout(&hmm_range,
-+				max_t(long, timeout - jiffies, 1));
- 	mmput(mm);
- 	if (err)
- 		goto err_free;
-@@ -1736,24 +1709,13 @@ int drm_gpusvm_range_evict(struct drm_gpusvm *gpusvm,
- 		return -ENOMEM;
- 
- 	hmm_range.hmm_pfns = pfns;
--	while (!time_after(jiffies, timeout)) {
--		hmm_range.notifier_seq = mmu_interval_read_begin(notifier);
--		if (time_after(jiffies, timeout)) {
--			err = -ETIME;
--			break;
--		}
--
--		mmap_read_lock(mm);
--		err = hmm_range_fault(&hmm_range);
--		mmap_read_unlock(mm);
--		if (err != -EBUSY)
--			break;
--	}
-+	err = hmm_range_fault_unlocked_timeout(&hmm_range,
-+				max_t(long, timeout - jiffies, 1));
- 
- 	kvfree(pfns);
- 	mmput(mm);
- 
--	return err;
-+	return err == -EBUSY ? -ETIME : err;
- }
- EXPORT_SYMBOL_GPL(drm_gpusvm_range_evict);
- 
+
+Or just wait for my patches.
+
+Thanks,
+-Mukesh
 
 
 
