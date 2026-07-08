@@ -1,64 +1,63 @@
-Return-Path: <linux-hyperv+bounces-11860-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11861-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id xJSNEbXXTWry+wEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11860-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 08 Jul 2026 06:53:09 +0200
+	id Zu77AS7YTWoZ/AEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11861-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 08 Jul 2026 06:55:10 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E5A9721A49
-	for <lists+linux-hyperv@lfdr.de>; Wed, 08 Jul 2026 06:53:08 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 57217721A66
+	for <lists+linux-hyperv@lfdr.de>; Wed, 08 Jul 2026 06:55:09 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=amd.com header.s=selector1 header.b=f7tCGI8h;
+	dkim=pass header.d=amd.com header.s=selector1 header.b=Byzqzadf;
 	dmarc=pass (policy=quarantine) header.from=amd.com;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11860-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11860-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11861-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11861-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1F525301F5FF
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Jul 2026 04:52:45 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id DF8D8301C172
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Jul 2026 04:55:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37330377558;
-	Wed,  8 Jul 2026 04:52:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D9F1375F96;
+	Wed,  8 Jul 2026 04:55:07 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010016.outbound.protection.outlook.com [40.93.198.16])
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010066.outbound.protection.outlook.com [40.93.198.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779EA23BD06;
-	Wed,  8 Jul 2026 04:52:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51F423BD06;
+	Wed,  8 Jul 2026 04:55:05 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783486364; cv=fail; b=rY8ygrjCFjBB9bepU/xs6xU1jcliTcB6AkJw+ikzz2IC7xBCQL7JSBYddbWj8zyYFLcjQznPekha3e6g8atw533Yru6cAGOPTLRVE/MAekCFTRXzZz6SX+WtYatsVn6k+h+NeREIJBrjZx0DHywQ9fMaZ1kQ1hCxTzPmJuJAjOI=
+	t=1783486507; cv=fail; b=KqILABOEUbM7joYF09oWrff7C5QhuLJBP8T4+dI2+srLxGFpl0uLyx/qgMaY3tNq/uoX0+S9nM8+VR81rwgyCvlsR0llSa7T+qDnUBMQLs4EnNc0+ftgyhZybYtBgWA+ngBVeq6POT+12x+hC4CKSPZjYQV3aAhcyjxA0kp0rLo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783486364; c=relaxed/simple;
-	bh=Kj8zK7dp27d1KKmXvWZuN2pzWYoXNW90QVOE00DK+3U=;
+	s=arc-20240116; t=1783486507; c=relaxed/simple;
+	bh=wYGztEHur/+UC83iouitqslsFqtesyuE4dG4V3n5VPI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=FgsB4SAdoJwHOYQNU43a8FmrcRWcFLhqCJzl0znXEX+IMUUVJpM15XniWDLnnnDJIoDD+NA8qv6X/1bMHHkTrVgdRSqbBlboW6H4W/VN2yrqqwUNR9Q0XOW4uDNwbsgcXOmoevSw+QP2Q1/sjZ2bCoKfLXMg3xhWrTJ8Ei5ra9E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=f7tCGI8h; arc=fail smtp.client-ip=40.93.198.16
+	 In-Reply-To:Content-Type; b=DrFXlwQWKX4Ddfh36BmU0Nr5xvJonC9ovQUxTf8QLG7r1V72JimPQLQJS0DZPVtGxtwuD2ZPIbhvh0Meezqkyz3d592Y3ZBZEckPdCDhp11lw3J1exGSsdmzf5I4PshqylN8z7gWOMX169HGa+E3lroSJy3gG21uO6i6xrkVnRs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Byzqzadf; arc=fail smtp.client-ip=40.93.198.66
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iH11X8l0wQaiz4mtUMOCFsKSiDn3VTh+ubRI0d+Zk4N8o2JQjR+9+NeSR7rcBqInR7kNnjA53W/Oxd24A8cKY+r6ytS7JHmQSEpR4cZuAgNlQGEwU/bRBYrq3a8TnymMxZYz3s7kmYFenptmNsWirpFUlTmXOR4yZW0lDFWmcLiBfj+onD38KuMzVThCGhIR9kA5ySEJaUYqpyUgEp8SLF9Wz24GrvF5BB8mc+U3/VSuNl+jAkgx4P8o94i1XWIkzH/Z/SA+pv42nkRYpXKv9aGSKJr8r0YCbdPXZW1HeulRkS94vIJ3gAJZbdxxt3bSIIjdeCJ/xKTFox2fb4LqgQ==
+ b=muck2zV8SaUyK1PkyvdQ2Ely+k1o8peyyDSIPc0ZqhGLEKWZZ8/L48dCtIrZQpKgoKYVtQcQn3L7zD9yiU2PDsmLrJ4CF+35nTsz55ferSyHq9z3PsDZCwjZovjkUJ8vUZ+yDJ6LVygsrvVw5avkQ7uO3iQmFLYTUg0Y+5XlNIOBxTYRewa9qN+U7j5DTtEnqJ1L4hkXLv/d1LSnNSO2pPWQG1hWll7t67f1mFTaIm+Q50BCjtl3xMpLLqWOSHgFcfq+1lVBqnCNiOjvmSvAGsnnpb+980Iy6X7W50KKqbZ4HtH/MSISyOCoMQU6IWdWsn7aQPo8wGTj4c1re7JuJw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ei0d+QTfykHeiOAHu1tWpX6WZ1Hr1ps4k7WhbCYRX0E=;
- b=Zm9Lv/JOG8wS7G60L2wgnbsLzf2abbea0DvyhBbQHk8CN/ftX4BlKaqY15bZnAdCv/xa0SEe82dX2vQ05qDvprCw2Yffk1FXWW4Yw3FpR4PkSYZ6JTnuO/5fLpzkZ2qO+teVqJNodRq3einpfy0Cuzle/oqpvXrYIqkYwYVx2JlJsCBowvCH8whCGCjJgTpeAiMgzGN0sz6gezp1gJpBECCxv0moQv1Is54xBCwq0e0vAMIxEtWWviyyzPItpAFMDLbZ3IQx0hO0CDYP+fznkdUfnc9YGmXi51kqMpw/k9qcv3b55abwNdZloAvGKmc+2PoZdBJsMLtwNe+afMOjSA==
+ bh=SZ5GDmkLZWd8J5P94VDAI93X1gZGJarzQBk2DH3fIMM=;
+ b=X1iU6hK27j3SotgDmlGq5tHaQ8cESXQ3tO5dx3gf51fPmhTKH1dP2VjVTdkJ56kHQrxtIxxgIsKV3m4pB/lveXu8ajoSMnvVr/Va+gJN0v1z7gaYqDd+g1T/mJvK08CXKiHsk7qEUfLJeSqYjKsqZhy4IiCTxv7C/oyMkYh/KZz8YnpOQYcgl6S6tAM0cx18Ef54OxRkpb/nc2wUjgCaRY5tslm/Pmjis+7LtenZXvkAGUbSzaJYQ13zxhOiV7AToitRxrWkXt+UKjTKvNRfPR8Knh4BygLZ8UJg8510CeXoxfOw5t92/7ZN79CVAasctrSmXmwS9noU84hq156zKA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ei0d+QTfykHeiOAHu1tWpX6WZ1Hr1ps4k7WhbCYRX0E=;
- b=f7tCGI8ht0nTD1k6xFTevhEwNAU/gaASJuv6Wh17c5WZGimf9SKadjXju/StHRhF0zpiyczzRsHMUQRIr1f7rZKwKxEeKpqzfbUGHtslNs/B4VTC9WmMBNF1ORoGDC5u3nAZRYZsCLOSHvE21QTZfO3A6nFjsuLqBf4LM/IBCYw=
-Received: from CH0PR04CA0071.namprd04.prod.outlook.com (2603:10b6:610:74::16)
- by DS0PR12MB8528.namprd12.prod.outlook.com (2603:10b6:8:160::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.11; Wed, 8 Jul
- 2026 04:52:36 +0000
-Received: from CH2PEPF00000148.namprd02.prod.outlook.com
- (2603:10b6:610:74:cafe::94) by CH0PR04CA0071.outlook.office365.com
- (2603:10b6:610:74::16) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.202.9 via Frontend Transport; Wed, 8
- Jul 2026 04:52:36 +0000
+ bh=SZ5GDmkLZWd8J5P94VDAI93X1gZGJarzQBk2DH3fIMM=;
+ b=Byzqzadf4RqBBuyOB/9ulLcKrFNAA0r7xyTdZa92ndPqrS7AUZHodUoQN2bthMb38CjrMMfYMIZg1ZIQD4hK1okK+/bDbqENvVo4hW9ytrf+jizVmsbaU10iJYxWX8heP6MMHASHYUBNGJUpI+j+WrJTPcDUJht4jHPKtry0OvI=
+Received: from MW4PR04CA0341.namprd04.prod.outlook.com (2603:10b6:303:8a::16)
+ by DM4PR12MB6135.namprd12.prod.outlook.com (2603:10b6:8:ac::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.181.10; Wed, 8 Jul 2026 04:55:00 +0000
+Received: from CO1PEPF00012E62.namprd05.prod.outlook.com
+ (2603:10b6:303:8a:cafe::55) by MW4PR04CA0341.outlook.office365.com
+ (2603:10b6:303:8a::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.181.9 via Frontend Transport; Wed, 8
+ Jul 2026 04:55:00 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -66,22 +65,22 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
 Received: from satlexmb07.amd.com (165.204.84.17) by
- CH2PEPF00000148.mail.protection.outlook.com (10.167.244.105) with Microsoft
+ CO1PEPF00012E62.mail.protection.outlook.com (10.167.249.71) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.181.6 via Frontend Transport; Wed, 8 Jul 2026 04:52:36 +0000
+ 15.21.181.6 via Frontend Transport; Wed, 8 Jul 2026 04:55:00 +0000
 Received: from satlexmb10.amd.com (10.181.42.219) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Tue, 7 Jul
- 2026 23:52:35 -0500
+ 2026 23:55:00 -0500
 Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb10.amd.com
  (10.181.42.219) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Tue, 7 Jul
- 2026 23:52:35 -0500
+ 2026 23:54:59 -0500
 Received: from [10.252.210.85] (10.180.168.240) by satlexmb08.amd.com
  (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.41 via Frontend
- Transport; Tue, 7 Jul 2026 23:52:23 -0500
-Message-ID: <40e20edb-48f4-4f50-b5e4-d6e771235b4a@amd.com>
-Date: Wed, 8 Jul 2026 10:22:17 +0530
+ Transport; Tue, 7 Jul 2026 23:54:49 -0500
+Message-ID: <42708d69-42ff-48ec-bd54-0e683c440ae8@amd.com>
+Date: Wed, 8 Jul 2026 10:24:43 +0530
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -89,8 +88,8 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 08/51] x86/sev: Shove SNP's secure/trusted TSC
- frequency directly into "calibration"
+Subject: Re: [PATCH v5 06/51] x86/sev: Don't override CPU frequency
+ calibration for SNP's Secure TSC
 To: Sean Christopherson <seanjc@google.com>, Jonathan Corbet <corbet@lwn.net>,
 	Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, "Ingo
  Molnar" <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
@@ -114,48 +113,48 @@ CC: Shuah Khan <skhan@linuxfoundation.org>, "H. Peter Anvin" <hpa@zytor.com>,
 	David Woodhouse <dwmw@amazon.co.uk>, David Woodhouse <dwmw2@infradead.org>,
 	Michael Kelley <mhklinux@outlook.com>, Thomas Gleixner <tglx@linutronix.de>
 References: <20260701193212.749551-1-seanjc@google.com>
- <20260701193212.749551-9-seanjc@google.com>
+ <20260701193212.749551-7-seanjc@google.com>
 Content-Language: en-US
 From: "Nikunj A. Dadhania" <nikunj@amd.com>
-In-Reply-To: <20260701193212.749551-9-seanjc@google.com>
+In-Reply-To: <20260701193212.749551-7-seanjc@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PEPF00000148:EE_|DS0PR12MB8528:EE_
-X-MS-Office365-Filtering-Correlation-Id: 354d1e25-cfa8-4149-4105-08dedcacbae7
+X-MS-TrafficTypeDiagnostic: CO1PEPF00012E62:EE_|DM4PR12MB6135:EE_
+X-MS-Office365-Filtering-Correlation-Id: 162212d4-dfcb-4a25-3888-08dedcad1125
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|7416014|376014|1800799024|32650700020|23010399003|36860700016|921020|3023799007|18002099003|22082099003|11063799006|4143699003|56012099006;
+	BCL:0;ARA:13230040|1800799024|32650700020|23010399003|7416014|82310400026|376014|36860700016|6133799003|921020|3023799007|18002099003|22082099003|4143699003|11063799006|56012099006;
 X-Microsoft-Antispam-Message-Info:
-	zSazxnvGOuts/WNto6Qd6Wf4r/P9sqd09K5D2puyLqZ4pEyEZNoTRkTgLaZfL5QG8xxWcXJPW65egFexsW5+vb1r7g3lV6Wyv8vz2MQ++08z4dKKdErOg5fJc792NWTB8Gm5TLC0odjoP1+/rsi0+9hdAieR+SIToCobAtypB06p5oHfqwiHsNrBU1z6NyhdN7rbjtxikwsEKN4vHTEgHBkQufXwiSXxO7cWDC3UZWnv6aMc6yD7O/5MauoBpufAb9g/JxMF1tyzlqKOPQYUYxK+AZCLc8LGlL5z+ELrAqjghaBZ3xc9ldhtAMDqfgAKJIRJ6XrrZwaoXlAfeuCP6CEYmZi9KlDGk9bSa7x7shLawjE4XDmfYnYxIFlObPc+44bMEcrKDqy7GxBsrsP6xnr3P5tMGXBFkEMtfjaYDCQFAlhjE4OlD4b1yQZdQapDAwuyBCYsUs5L/2wwFb46BxF+CDXJHHeaiBtx38MOkZfdlMn96JPuZ424S4bQSgs415oDq/ou0hbKw13UlcSfLngNDcK3kzTNkHwvqLu2UkxggeC4wLf5mllYfRT/Anoh9uBiB6CDCZt+M07Be3OYJRQ9/Yxqk+66zXRQusfIwnWn5Xnu/qZIPtIVgbNxMephxjGZIzzwKBVSy0i5l7n4QsD1SQKLChEVEybcevrsUpmluDPP+p6WCoKcxpkTlAh0RZE4+DwJ71qFRopJm+HeGqsE4QxQAVkhjymn8NcxUR+/pAdFqixwvUvQDe6VYoFB
+	MhZdQQ5WQce4My/DtjEsGnXBCV401gswIsS7mXg6sHA+jS3dKPLv9bhlsOSW+PgXUqq24ehiXRKmCXee7KIAUZpniARNORz336IHWocle1CQNu3H5VOv/WplcTvPKuIFZQaqCKEghQwJmLsxwMpRxh4AYs0X3FsevuRJ6PhKPBIbCaBp7l03e/WQXCuMFp9bkY762K2HLPexq74B0sVq19YSoAtx6K4SWr1ObM7MzlD9cSm2FnLtD4NOgzJb5TsgtG0768blna0D4X1sUI6RJyQn92F30AuyoXsLVGJOD+aVlNE7uQRNby77xREvOEO77ferIlEezky6qOGbLXjkvXeuZriyLvfwTe67p/0LB8YGHzV8F76yXKdYBa3mP9u2FMlqTcfyR98LycSQFFKcUKYqsyTnd9uz2vUptUB83EpoD5oVGdMh14zIu3RvThkaSB1O2gxN5Yybt8E/B3h46S2R1H+TxQuIjAlj4suP/KTPOLCAO0kwoR6VuckSH6MmA+PxFbFFGXcZdrtZTcO2f7h1wGNqXMhaxob3Fp79KDflY/Lzq+gA3gHrlAN7e8koytdKxWrBfcnXgrNi5Qols+pbj/lcH3tEE5ch1o0cT0ykHcd3BRTkKdXi59MlTFa39s3qi5HCzXgmIRnNNb/xPStcPhbDbLWOhdj0KL8dJjyGc1AM8h99/dCGUYYqhd06qBKvWPzvMuonNs0MxiWuD6D/IK4DIWbr46CsbajuKUHwSsKZuYHh2SkIZkjnalRy
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(376014)(1800799024)(32650700020)(23010399003)(36860700016)(921020)(3023799007)(18002099003)(22082099003)(11063799006)(4143699003)(56012099006);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(32650700020)(23010399003)(7416014)(82310400026)(376014)(36860700016)(6133799003)(921020)(3023799007)(18002099003)(22082099003)(4143699003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	8oZhG7HxMEJzegkI9/kQ+k3b+X5K44QoYv3u7161yaJazWoV9bLbwBPcUf33s6heL5gj37WDbRSZJDwc9zw/9agj5/ie69Gkg5eQc6uBV0Xosa1NryXlFnVHJON/PQ6kBZHHpepHs6Vv46bv5hJBO3xWU4ppj/qClvOiVLmc8itTDbhb1ujyZns29ZEVhtpf7u7X8bZam20vVHfj60JHWMY3IJ/KVFbe7spun+F15KtluVfP6cr2R8RbkpXkMnnzI8EFgXokkEiXWsPqGLkxYIwJUIt0mZor/5KCB8EkbOCo7mpG95HYgDereND0gk3H0F2oAL5jcZk7zEXjGYYCIrwkKM2Od1klQSWsj/4WIWfG1j+JznHwpcWApnQHNWuj24F9+sS6dIvdpz/htCndsEQgUei0zdfR6W0oUM76RhgwKbyPjVCIIU4tNd8qjPQl
+	k/vu6e0T2XlctZLtJdyr6MexpXA2QcnV3xEzcFHJPOr/EVdlmu5jyyjU3hTpkaj5sh8Q2y3b/oi2T6yg5BS4I2gkl3iwOY4W8YI0JYQn4qaUozlGtxruJH8ND67IXFH5zEGYOYaV/0OXdww5VFZi13//IA5WtOyUwh16xmnxbaWAEukUp8EMHCFs/m2RgKsJ02i5bbFAOJLM3+63L9EcgZBkAwu92lj4C3kZfQh3fSf2EYP4LTnxGc6551h1t5bca8bJI7bILyDm8jjXR3zGD7CVA5v4AF2ZpRuiFHauy3oxqkmM2IaFsrtWN/Gkal6K/iafbEZoOVceprE2xzZiQ0ePte4wrSzkYgnG5cHDAtbS8ilBBRfKoJ6rfSUH3DkVcnHHqNZNReQnzrp4rohh+VZI4K75igXJuV9+fqIV5LaVkRY69kxkt1NWz8UA5DQz
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2026 04:52:36.0842
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2026 04:55:00.6860
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 354d1e25-cfa8-4149-4105-08dedcacbae7
+X-MS-Exchange-CrossTenant-Network-Message-Id: 162212d4-dfcb-4a25-3888-08dedcad1125
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CH2PEPF00000148.namprd02.prod.outlook.com
+	CO1PEPF00012E62.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8528
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6135
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-0.16 / 15.00];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11860-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11861-lists,linux-hyperv=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[41];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
@@ -176,195 +175,51 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	RCVD_COUNT_SEVEN(0.00)[9]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 8E5A9721A49
+X-Rspamd-Queue-Id: 57217721A66
 
 
 
 On 7/2/2026 1:01 AM, Sean Christopherson wrote:
-> As a first step towards dropping .calibrate_{cpu,tsc}() and explicitly
-> defining precedence/priority for "calibration" routines, pass the secure
-> TSC frequency obtained from SNP firmware directly to
-> determine_cpu_tsc_frequencies() instead of overriding the .calibrate_tsc()
-> hook.
+> Don't override the kernel's CPU frequency calibration routine when
+> registering SNP's Secure TSC calibration routine.  SNP (the architecture)
+> provides zero guarantees that the CPU runs at the same frequency as the
+> TSC.  The justification for clobbering the CPU routine was:
 > 
-> Unlike the native calibration routines, all of the paravirtual overrides,
-> including SNP and TDX, are constant in the sense that the frequency
-> provided by the hypervisor or trusted firmware is fixed, known, and always
-> available during early boot.  More importantly, for CoCo (SNP and TDX) VMs,
-> it's imperative that the kernel uses the frequency provided by the trusted
-> firmware, not by the untrusted hypervisor.  Enforcing the priority between
-> sources by carefully ordering seemingly unrelated init calls, so that the
-> trusted override "wins", is brittle and all but impossible to follow.
+>   Since the difference between CPU base and TSC frequency does not apply
+>   in this case, the same callback is being used.
 > 
-> Explicitly ignore tsc_early_khz if the exact TSC frequency was obtained
-> from trusted firmware, as per commit bd35c77e32e4 ("x86/tsc: Add
-> tsc_early_khz command line parameter"), the goal of the param is to play
-> nice with setups that provide partial frequency information in CPUID, i.e.
-> is NOT intended to be a hard override.  Neither SNP's secure TSC nor TDX
-> was supported when commit bd35c77e32e4 landed back in 2020, i.e. lack of
-> consideration for the interaction was purely due to oversight when SNP and
-> TDX support came along.
+> but that's simply not true.  E.g. if APERF/MPERF is exposed to the VM, then
+> the CPU frequency absolutely does matter.
 > 
+> While relying on heuristics and/or the untrusted hypervisor to provide the
+> CPU frequency isn't ideal, it's at least not outright wrong.
+> 
+> Fixes: 73bbf3b0fbba ("x86/tsc: Init the TSC for Secure TSC guests")
+> Cc: Nikunj A Dadhania <nikunj@amd.com>
+> Cc: Tom Lendacky <thomas.lendacky@amd.com>
 > Signed-off-by: Sean Christopherson <seanjc@google.com>
+
+Reviewed-by: Nikunj A Dadhania <nikunj@amd.com>
+
 > ---
->  .../admin-guide/kernel-parameters.txt         |  4 +++
->  arch/x86/coco/sev/core.c                      | 14 +++--------
->  arch/x86/include/asm/sev.h                    |  4 +--
->  arch/x86/kernel/tsc.c                         | 25 ++++++++++++++-----
->  4 files changed, 29 insertions(+), 18 deletions(-)
+>  arch/x86/coco/sev/core.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index b5493a7f8f22..181149f633c3 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -7946,6 +7946,10 @@ Kernel parameters
->  			with CPUID.16h support and partial CPUID.15h support.
->  			Format: <unsigned int>
->  
-> +			Note, tsc_early_khz is ignored if the TSC frequency is
-> +			provided by trusted firmware when running as an SNP
-> +			guest.
-> +
->  	tsx=		[X86] Control Transactional Synchronization
->  			Extensions (TSX) feature in Intel processors that
->  			support TSX control.
 > diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-> index 403dcea86452..bc5ae9ef74da 100644
+> index ed0ac52a765e..665de1aea0ee 100644
 > --- a/arch/x86/coco/sev/core.c
 > +++ b/arch/x86/coco/sev/core.c
-> @@ -99,7 +99,6 @@ static const char * const sev_status_feat_names[] = {
->   */
->  static u64 snp_tsc_scale __ro_after_init;
->  static u64 snp_tsc_offset __ro_after_init;
-> -static unsigned long snp_tsc_freq_khz __ro_after_init;
->  
->  DEFINE_PER_CPU(struct sev_es_runtime_data*, runtime_data);
->  DEFINE_PER_CPU(struct sev_es_save_area *, sev_vmsa);
-> @@ -2014,15 +2013,10 @@ void __init snp_secure_tsc_prepare(void)
->  	pr_debug("SecureTSC enabled");
->  }
->  
-> -static unsigned long securetsc_get_tsc_khz(void)
-> -{
-> -	return snp_tsc_freq_khz;
-> -}
-> -
-> -void __init snp_secure_tsc_init(void)
-> +unsigned int __init snp_secure_tsc_init(void)
->  {
-> +	unsigned long snp_tsc_freq_khz, tsc_freq_mhz;
->  	struct snp_secrets_page *secrets;
-> -	unsigned long tsc_freq_mhz;
->  	void *mem;
->  
->  	mem = early_memremap_encrypted(sev_secrets_pa, PAGE_SIZE);
-> @@ -2043,7 +2037,7 @@ void __init snp_secure_tsc_init(void)
+> @@ -2046,7 +2046,6 @@ void __init snp_secure_tsc_init(void)
 >  
 >  	snp_tsc_freq_khz = SNP_SCALE_TSC_FREQ(tsc_freq_mhz * 1000, secrets->tsc_factor);
 >  
-> -	x86_platform.calibrate_tsc = securetsc_get_tsc_khz;
-> -
+> -	x86_platform.calibrate_cpu = securetsc_get_tsc_khz;
+>  	x86_platform.calibrate_tsc = securetsc_get_tsc_khz;
+>  
 >  	early_memunmap(mem, PAGE_SIZE);
-> +
-> +	return snp_tsc_freq_khz;
->  }
-> diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-> index 594cfa19cbd4..05ebf0b73ef4 100644
-> --- a/arch/x86/include/asm/sev.h
-> +++ b/arch/x86/include/asm/sev.h
-> @@ -530,7 +530,7 @@ int snp_send_guest_request(struct snp_msg_desc *mdesc, struct snp_guest_req *req
->  int snp_svsm_vtpm_send_command(u8 *buffer);
->  
->  void __init snp_secure_tsc_prepare(void);
-> -void __init snp_secure_tsc_init(void);
-> +unsigned int snp_secure_tsc_init(void);
-
-It seems __init got dropped here accidentally?
-
-Apart from this:
-
-Reviewed-by: Nikunj A Dadhania <nikunj@amd.com>
-Tested-by: Nikunj A Dadhania <nikunj@amd.com>
-
->  enum es_result savic_register_gpa(u64 gpa);
->  enum es_result savic_unregister_gpa(u64 *gpa);
->  u64 savic_ghcb_msr_read(u32 reg);
-> @@ -637,7 +637,7 @@ static inline int snp_send_guest_request(struct snp_msg_desc *mdesc,
->  					 struct snp_guest_req *req) { return -ENODEV; }
->  static inline int snp_svsm_vtpm_send_command(u8 *buffer) { return -ENODEV; }
->  static inline void __init snp_secure_tsc_prepare(void) { }
-> -static inline void __init snp_secure_tsc_init(void) { }
-> +static inline unsigned int __init snp_secure_tsc_init(void) { return 0; }
->  static inline void sev_evict_cache(void *va, int npages) {}
->  static inline enum es_result savic_register_gpa(u64 gpa) { return ES_UNSUPPORTED; }
->  static inline enum es_result savic_unregister_gpa(u64 *gpa) { return ES_UNSUPPORTED; }
-> diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-> index 8f1604ffe986..f049c126e47c 100644
-> --- a/arch/x86/kernel/tsc.c
-> +++ b/arch/x86/kernel/tsc.c
-> @@ -1440,15 +1440,16 @@ static int __init init_tsc_clocksource(void)
->   */
->  device_initcall(init_tsc_clocksource);
->  
-> -static bool __init determine_cpu_tsc_frequencies(bool early)
-> +static bool __init determine_cpu_tsc_frequencies(bool early,
-> +						 unsigned int known_tsc_khz)
->  {
->  	/* Make sure that cpu and tsc are not already calibrated */
->  	WARN_ON(cpu_khz || tsc_khz);
->  
->  	if (early) {
->  		cpu_khz = x86_platform.calibrate_cpu();
-> -		if (tsc_early_khz)
-> -			tsc_khz = tsc_early_khz;
-> +		if (known_tsc_khz)
-> +			tsc_khz = known_tsc_khz;
->  		else
->  			tsc_khz = x86_platform.calibrate_tsc();
->  	} else {
-> @@ -1503,6 +1504,8 @@ static void __init tsc_enable_sched_clock(void)
->  
->  void __init tsc_early_init(void)
->  {
-> +	unsigned int known_tsc_khz = 0;
-> +
->  	if (!boot_cpu_has(X86_FEATURE_TSC))
->  		return;
->  	/* Don't change UV TSC multi-chassis synchronization */
-> @@ -1510,9 +1513,19 @@ void __init tsc_early_init(void)
->  		return;
->  
->  	if (cc_platform_has(CC_ATTR_GUEST_SNP_SECURE_TSC))
-> -		snp_secure_tsc_init();
-> +		known_tsc_khz = snp_secure_tsc_init();
->  
-> -	if (!determine_cpu_tsc_frequencies(true))
-> +	/*
-> +	 * Ignore the user-provided TSC frequency if the exact frequency was
-> +	 * obtained from trusted firmware, as the user-provided frequency is
-> +	 * intended as a "starting point", not a known, guaranteed frequency.
-> +	 */
-> +	if (!known_tsc_khz)
-> +		known_tsc_khz = tsc_early_khz;
-> +	else if (tsc_early_khz)
-> +		pr_err("Ignoring 'tsc_early_khz' in favor of trusted firmware.\n");
-> +
-> +	if (!determine_cpu_tsc_frequencies(true, known_tsc_khz))
->  		return;
->  	tsc_enable_sched_clock();
->  }
-> @@ -1533,7 +1546,7 @@ void __init tsc_init(void)
->  
->  	if (!tsc_khz) {
->  		/* We failed to determine frequencies earlier, try again */
-> -		if (!determine_cpu_tsc_frequencies(false)) {
-> +		if (!determine_cpu_tsc_frequencies(false, 0)) {
->  			mark_tsc_unstable("could not calculate TSC khz");
->  			setup_clear_cpu_cap(X86_FEATURE_TSC_DEADLINE_TIMER);
->  			return;
 
 
