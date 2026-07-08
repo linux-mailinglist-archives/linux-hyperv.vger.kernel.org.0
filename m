@@ -1,368 +1,294 @@
-Return-Path: <linux-hyperv+bounces-11875-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11876-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id YsxyHv1zTmo9NAIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11875-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 08 Jul 2026 17:59:57 +0200
+	id sYSXDYm5TmobTAIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11876-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 08 Jul 2026 22:56:41 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B3927285DE
-	for <lists+linux-hyperv@lfdr.de>; Wed, 08 Jul 2026 17:59:57 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1D4672A58B
+	for <lists+linux-hyperv@lfdr.de>; Wed, 08 Jul 2026 22:56:40 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=F5Wu84Vj;
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11875-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11875-lists+linux-hyperv=lfdr.de@vger.kernel.org";
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=pass header.d=microsoft.com header.s=selector2 header.b=NZeUKFtS;
+	dmarc=pass (policy=reject) header.from=microsoft.com;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11876-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11876-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 14B11302FD55
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Jul 2026 15:59:47 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D5317302C909
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Jul 2026 20:52:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D45741CB3B;
-	Wed,  8 Jul 2026 15:59:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F8453E7BCF;
+	Wed,  8 Jul 2026 20:52:32 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11020115.outbound.protection.outlook.com [52.101.56.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD41E377003;
-	Wed,  8 Jul 2026 15:59:36 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783526378; cv=none; b=MqT7u/hjuwpBEAk1JkTgaqUYSC2ESb9clo3FexhLHd2LGUW81ref4mfi2A72nekL9SshnxYuUvCJSpVEKYAqG1WE2WQlvEFCGSPqC6G8XKeY8N1SNV/wsMPtN9FssQQ6sVMkIRGGviA9+NtT+nJmD146rmlvWqhX7bIhDzNyrrY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783526378; c=relaxed/simple;
-	bh=egFSGt8kcBq7+3KTBcUr6rEZnhx2TON5wudYFkUgVRY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eaC5HssKQa3kBn1DNC9GlFYMJk4oW3Tsrda363/OkpvngeGapVzmdOyMc4N6pBtWNZnG81ZpS1UVFCIYr+4hWJRMazlIFkVVoiodZYdnxRp+Jjl4A9P9My2kYiGQFkksM4hqw2zRRmehfIPwwAhvvpAEzU6Vc1WHJ0lS3Z3XvBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F5Wu84Vj; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 236761F00A3D;
-	Wed,  8 Jul 2026 15:59:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783526376;
-	bh=bgHMjrz0F2NAw+WlnQWaUmYDJnFaPfiIHTo3qBDjSJY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=F5Wu84Vj55NlW+FO4CJe3VrjQ/dlbsOXnA6UuuZEYS/0GobWaudc4wJv7O0ESBN+p
-	 oXAl89FDn+G1JdiKRN8YMsY1+PvNd/vEKtclVXXzsOXbTsUbkrL+yg9E35muXyJ8m9
-	 3f57sVzFqlbr6y8M4GfR13FuhXFvwCev0bcRVZAulCZNl/S3siAbWlH5AvDPld9xl1
-	 bZRdR5acXvg8lRNMe0yqaoCbu19CQJ7gKAcSzIyKAg6esgbP6YQ+c1swqZqQFy2k4o
-	 5m5O445imASy8joEwTnsqqKMsS5x9115GCVYiIkabHX7I2wXJQcm6Z5uJ+Pvclmlcw
-	 YppmNw5DaJuuA==
-From: Simon Horman <horms@kernel.org>
-To: dipayanroy@linux.microsoft.com
-Cc: Simon Horman <horms@kernel.org>,
-	kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	leon@kernel.org,
-	longli@microsoft.com,
-	kotaranov@microsoft.com,
-	shradhagupta@linux.microsoft.com,
-	ssengar@linux.microsoft.com,
-	ernis@linux.microsoft.com,
-	shirazsaleem@microsoft.com,
-	linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	stephen@networkplumber.org,
-	jacob.e.keller@intel.com,
-	dipayanroy@microsoft.com,
-	leitao@debian.org,
-	kees@kernel.org,
-	john.fastabend@gmail.com,
-	hawk@kernel.org,
-	bpf@vger.kernel.org,
-	daniel@iogearbox.net,
-	ast@kernel.org,
-	sdf@fomichev.me,
-	yury.norov@gmail.com,
-	pavan.chebbi@broadcom.com
-Subject: Re: [PATCH net-next v11 2/2] net: mana: force full-page RX buffers via ethtool private flag
-Date: Wed,  8 Jul 2026 16:57:42 +0100
-Message-ID: <20260708155741.1509815-2-horms@kernel.org>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260701141808.461554-3-dipayanroy@linux.microsoft.com>
-References: <20260701141808.461554-3-dipayanroy@linux.microsoft.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C73F3E6DC8;
+	Wed,  8 Jul 2026 20:52:30 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783543952; cv=fail; b=JUlB4MWK/LQgqQmDDLHIRLUOQxVEV9phztd8FOlyg9sOmOGK8Z9tHdw3xYUSIyIlWxDpvuTCmZ4EVVumv5L0dubVClo8K0FQmLNcoGh6EUAGouEeGxma9X4FOn6xBZQ7BCNRKLhfSIrsREq3GUKhvcR446hRt9MkP61wR3DO7S4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783543952; c=relaxed/simple;
+	bh=V3tcwAmamNP3U0FtU0nbdXsN3gs+QB18HRAa01DsH/8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Ian2BzuX622z7BkT/M54uOe42vmCVGS57HJoDreticznZZYNUzWeNAx/dlcuV6e5rsfYEXs4yi6jeVX2v6gUadhTdsbx1nqywKPkqNrMggPeQMQHJim83jQ1Qwo0Ccm2btXyeqGfoV2ptaMuoN6pZx9jJ+uuqW2FZ83wJ6C47SM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=NZeUKFtS; arc=fail smtp.client-ip=52.101.56.115
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=v09Cnlp0HkS3SOVQmZNWZN7FiV17xnAaRgFfgMjNO9VIm+aajZHNWzJagcCTgZvPTAF8yfp00oYJpy+zUt7sF5rSFpJ6nY/aEkop05s6/PEDQ/n6tEKYrF5sf/PzsnH7XW93EKVj0rBeBteWdvCz2+mxS+BosrKJolHYKPTO9w1/ZVhtsbMDpxExlKQA+cYhGy6yZ4s384IxVC/AXk56q2fgVBBGYgmUWkJpzeaaCaUUZe+v4AkAh9I3NeAfF7u0h1p2M0tR4MCp27NZD75+KdJYCWX2KFOJa//HQkCuhZvtlhsBWqaoqxhIZ5LuTQywka/HfnUN4jjkG1vefX/PJQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JievpMki2BNvz2AZE4jC/0HDkNvVUBBeFEiVXSB2deQ=;
+ b=hYIjJ1RhN6Xk1nBlB+Ls6DNjWxtKBPmSIs7cymckRL+IKcR/dBWqaZ6n/1iynJZv5nGEtBbRJDGkOJ3zrx3Sb16LDGjBTYcMPsB6oE+L35KczjMbx8lhUJkty5SfAmSR5Ka9OatKTCtCvgElLJVKm4wPtlcCTGUsGI6MoaxoT4Gae4/KBaqFmEKlFnn7KzkmySOku/6xLoLTvc33Hhy3YGQdBjnCn0WYmQGtsxde97gstW/uEqBhQWDz1K8T7xsq1HSLtmkaWJ9BZhpNdt/Jd07Yi9v2JldGVM+VQ3RFYMZV0tUw1O4qGKGbgcS2wou5shWbIGhjIxv+P/hekj4azw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JievpMki2BNvz2AZE4jC/0HDkNvVUBBeFEiVXSB2deQ=;
+ b=NZeUKFtSeKu6oegLySW3F93FgksgvKTqw57ax2p4PPi49qt5BhUgL15EGWAku1QAysRYPx6LlJcEujuS8fVrWEkfV8iFJuq7GgxJvcD9BkOSf6/Iy3P3h0kaWOfs/lxa1R9+Xbh+tYZJjp/CULSpMwk1d25B9OKmyWvLkplON2M=
+Received: from LV5PR21MB4704.namprd21.prod.outlook.com (2603:10b6:408:307::7)
+ by LV5PR21MB5137.namprd21.prod.outlook.com (2603:10b6:408:307::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.223.3; Wed, 8 Jul 2026
+ 20:52:27 +0000
+Received: from LV5PR21MB4704.namprd21.prod.outlook.com
+ ([fe80::144b:98da:1262:2ebb]) by LV5PR21MB4704.namprd21.prod.outlook.com
+ ([fe80::144b:98da:1262:2ebb%6]) with mapi id 15.21.0223.002; Wed, 8 Jul 2026
+ 20:52:27 +0000
+From: Haiyang Zhang <haiyangz@microsoft.com>
+To: Paolo Abeni <pabeni@redhat.com>, "haiyangz@linux.microsoft.com"
+	<haiyangz@linux.microsoft.com>
+CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, KY Srinivasan
+	<kys@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>, Dexuan Cui
+	<DECUI@microsoft.com>, Long Li <longli@microsoft.com>,
+	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>, "davem@davemloft.net"
+	<davem@davemloft.net>, "edumazet@google.com" <edumazet@google.com>,
+	"kuba@kernel.org" <kuba@kernel.org>, "horms@kernel.org" <horms@kernel.org>,
+	"ernis@linux.microsoft.com" <ernis@linux.microsoft.com>,
+	"dipayanroy@linux.microsoft.com" <dipayanroy@linux.microsoft.com>,
+	"gargaditya@linux.microsoft.com" <gargaditya@linux.microsoft.com>,
+	"shradhagupta@linux.microsoft.com" <shradhagupta@linux.microsoft.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Paul Rosswurm
+	<paulros@microsoft.com>
+Subject: RE: [EXTERNAL] Re: [PATCH net-next v2] net: mana: Add handler for
+ sriov configure
+Thread-Topic: [EXTERNAL] Re: [PATCH net-next v2] net: mana: Add handler for
+ sriov configure
+Thread-Index: AQHdCYO4UEKqbe3S7Um7CSrPXTXPZbZjTwEAgADUuCA=
+Date: Wed, 8 Jul 2026 20:52:27 +0000
+Message-ID:
+ <LV5PR21MB4704E2BAE81785FF87887F77CAFF2@LV5PR21MB4704.namprd21.prod.outlook.com>
+References: <20260701180116.507690-1-haiyangz@linux.microsoft.com>
+ <20260708080854.64655-1-pabeni@redhat.com>
+In-Reply-To: <20260708080854.64655-1-pabeni@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9838eb2b-3496-4941-9584-0e7991e8a061;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2026-07-08T20:50:14Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
+ 3, 0, 1;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: LV5PR21MB4704:EE_|LV5PR21MB5137:EE_
+x-ms-office365-filtering-correlation-id: a6bc621f-41bc-4d7a-0823-08dedd32d1e4
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|23010399003|7416014|376014|38070700021|18002099003|4143699003|5023799004|4133799003|11063799006|6133799003|22082099003|7053199004|56012099006;
+x-microsoft-antispam-message-info:
+ vsEB3IVSLqIrWccc4zg4XYVzGAyYlKh/z7amnriw0ipyxgWl2ETS+EXq2lPCq1IMvsuLPuRR5dqooYaa4lrq8LC2mvmxMGtKM7pjKNqgIAXUAVMYqfLMFbQO60sxsk+RIuGoWa4w9NJPGI3rW8Z6nJnAwuwmw7sU8POdaBnkSknbcObzU/dSQTlz2TjhfHytdjM8ekSN4ZbjWN9bb44QiMB9X3I7nqmwf65KQQmOttb/6d6k0cae8Nv6iJXJeLolHMwoX+fwv9jgbEbvMqgAa1u8kjI90Ug/aQYal6ws09yWvdTNbflnRLbUwFUnvb/iLMDeE3bYnZmhUyRfT+98qam0AaiGB55dGFjkp1B5y48zxlbxXVImPxsfYorvvXJm/1PKXB1WokKkBYtLaSr+iIYInIwLSu6iNOedWHGMMdOkjpPoyvOecWrDgNH3iYoxfe8gwWeczCjwqCne+Q52kDjGDbeQRjhiByQOBAXKwuWwqLQDWvHTL39rWOVUBlvpFIfauEFlpxOuN+hiLX4V4MiijMfKjhUjxfZY6HdeD1y8/zEU1OCcCQX8bwv+lfTWw1zyfLJW12Ks0emgKQI18PxIJE9o0UHU2OO4iIJxliLqOoLf/4gqvRYzXKTJeKHGNtAUksNjPWzE1DArtjbQrKYroUhV0Ogg7rdaYuoqoILV53PV2ReZ7HgUuhHMTkpG7xvvkf+CcZVvC+IvRwQvZ7rCCAKMb6eph/iEpr5qwJ8=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV5PR21MB4704.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(23010399003)(7416014)(376014)(38070700021)(18002099003)(4143699003)(5023799004)(4133799003)(11063799006)(6133799003)(22082099003)(7053199004)(56012099006);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?TDk0AMop/KKjYKIqbXjunN5s12MyqHqiNCb2QqSO1cB61uOdD3KndyHlVplt?=
+ =?us-ascii?Q?SkQvhzZj7Afet0/KrvGtlYiXnIFDgo8OMhjzeerfhBisixGam2Do6EJG3+4i?=
+ =?us-ascii?Q?6QNeUxOfZR3R7t9VpTFazw3u6vyL4DbuDm8OXLqvUz3LvutqSqOdVvZhe51L?=
+ =?us-ascii?Q?E+7oeM97qROJ9cqXe2ieJLwAkjImbkd2aEQkqTT2xHAdnXCdZvIB7+diCfQ9?=
+ =?us-ascii?Q?7iiRCT6biQBG8kC1Oac1rD6BXs2R7IGimjkGeSAurA9LWtZjsHbUNSTfFmhS?=
+ =?us-ascii?Q?JTzxZHGE+4UBRi9nDndN8djmNRfZV1ba1FlpJPp8Akp3gqR9aAJbfBwc2jjk?=
+ =?us-ascii?Q?MTeRROVssWo6W3em1TLYU8GFjZ4CUM7cVlo82qne445Mg5I3qmi77dLrbcN/?=
+ =?us-ascii?Q?ONT2WsUhqHP/E80FzhKlZ2zO418H1jf840pA5K1cntZsPsa8DXw1R9yz0MF8?=
+ =?us-ascii?Q?h1CBHWVKe8l8aCtVBd9XohLNm+Uw6OmvCMNut8h5N4wxorqdOYFME6ybUSQO?=
+ =?us-ascii?Q?vUnjwhNwbL3rkZPfRO6K4w5vjbLJu2aAZPrDqMytq+wnpHRQIrq2C011EB/j?=
+ =?us-ascii?Q?JKITI2zm8T5K74DQxKT1Gn6RwC73NpCyZMS99bGkh2M3D0OuyaurXrb8TF+h?=
+ =?us-ascii?Q?1iBCzOzyWwpckc+f/zNKyl6wyz/XOAGKK37nKnDgYxvLPyz3/T9ddu2FP4I/?=
+ =?us-ascii?Q?wtDE26rRHH6DFAV8JtgfXl+qqY3yiOuK0cJtpAl9KC8dznykK0SSeFLoY+0j?=
+ =?us-ascii?Q?JOLTmFSXXXOaUOdfb2MlswA7m1MRPq7LzQaxIwSfu0Znl81wBBzOzIn/o1ur?=
+ =?us-ascii?Q?x5YJ4lhxhstxPggx+nlDFIWEILy5z6m8fbQpu4GkjJLTViBE4GxfzoXORVuP?=
+ =?us-ascii?Q?biZKy7svqVm57jO2JSRRhqkdinXUgHXoGxfVTplkQPncOLoV8pQFgAcIeJ03?=
+ =?us-ascii?Q?BUpfniTHlHk4Ry8t8C1FNCWIc5hyI7aiiAE/054Qr9aH7m83GDyTYARnpjx+?=
+ =?us-ascii?Q?unu21+iIfMJPUKuINf6/zTnSlod++WyzCWnc1Bgr0MOB1WYwucATkfZvUg8b?=
+ =?us-ascii?Q?iKLIHqVYwgDCHF9N6hZUdCTXX8q5yR1df9UImkGRsJOOPHz9MKN5M+i/C2J5?=
+ =?us-ascii?Q?kDmBuDQMipsTjvjkZbkbkEbd6GyIzGg4eJvZCdRdxs7cxQR1k3+XjskamtA5?=
+ =?us-ascii?Q?n8TFjmdPru/SWIEi45YGtP+SImML+eRqBTM2YrYLLubY2mSsjtE30ZKCljh5?=
+ =?us-ascii?Q?/1J8HkanqVSe7jXr/7Ex+4EdRPq95DaqklQtEBlrDiAI+fyscIJslEOvvJC1?=
+ =?us-ascii?Q?2lY06ksYEm5oH3zw8kLw6/aMj2vsaINBSX7UszuNRd9+TQNEcMASOnlVjeXa?=
+ =?us-ascii?Q?Ss7WqxyDrsTxIRjHbfuv8qkE/rM+78KaDf4gqu8+hezJR8UnIsojBUZ8cqY/?=
+ =?us-ascii?Q?SYIWIQzETrodHEddJyvvv3+eLQSYPCaIu8sklPN1fsgytsA46YEnnmfB6p1P?=
+ =?us-ascii?Q?v3YUYWOxLwJmzuNvAJIxN8ZivSDQq+w2rTqZdglKF76OObSexDGH+7c9VNvZ?=
+ =?us-ascii?Q?cJnZe4qudhadHxn2DBIKh/84Dv5Xt3GxWEBz3b7JvZVQU73BUe+0CvpGDcXT?=
+ =?us-ascii?Q?k7BmXIx6EmekB2qWditHTS4BSxkoWnt2C3feRpWTV2F/Y8JMFLt2ycLMd9F+?=
+ =?us-ascii?Q?5Vy1AZmysYv8eT4/JxWpT72wO5+B8wyg4bHFGt5Sc0ExxSN0zOaIVonRRQ6t?=
+ =?us-ascii?Q?EvJosCOl2A=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: LV5PR21MB4704.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a6bc621f-41bc-4d7a-0823-08dedd32d1e4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2026 20:52:27.2336
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Anh9AJmpmHwnR9QajDhBny+OG8nnAp6ZFTmWQFwJgd7iq9bNNr3oFZfjROnWMpJyp1/YBMEZkbf1PdjgM+vUYA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV5PR21MB5137
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-1.66 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[microsoft.com:d:+,kernel.org:s:+];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[microsoft.com,reject];
+	R_DKIM_ALLOW(-0.20)[microsoft.com:s=selector2];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11875-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11876-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:dipayanroy@linux.microsoft.com,m:horms@kernel.org,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:andrew+netdev@lunn.ch,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:leon@kernel.org,m:longli@microsoft.com,m:kotaranov@microsoft.com,m:shradhagupta@linux.microsoft.com,m:ssengar@linux.microsoft.com,m:ernis@linux.microsoft.com,m:shirazsaleem@microsoft.com,m:linux-hyperv@vger.kernel.org,m:netdev@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:stephen@networkplumber.org,m:jacob.e.keller@intel.com,m:dipayanroy@microsoft.com,m:leitao@debian.org,m:kees@kernel.org,m:john.fastabend@gmail.com,m:hawk@kernel.org,m:bpf@vger.kernel.org,m:daniel@iogearbox.net,m:ast@kernel.org,m:sdf@fomichev.me,m:yury.norov@gmail.com,m:pavan.chebbi@broadcom.com,m:andrew@lunn.ch,m:johnfastabend@gmail.com,m:yurynorov@gmail.com,s:lists@lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[35];
-	FORWARDED(0.00)[lists@lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[horms@kernel.org,linux-hyperv@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:pabeni@redhat.com,m:haiyangz@linux.microsoft.com,m:linux-hyperv@vger.kernel.org,m:netdev@vger.kernel.org,m:kys@microsoft.com,m:wei.liu@kernel.org,m:DECUI@microsoft.com,m:longli@microsoft.com,m:andrew+netdev@lunn.ch,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:horms@kernel.org,m:ernis@linux.microsoft.com,m:dipayanroy@linux.microsoft.com,m:gargaditya@linux.microsoft.com,m:shradhagupta@linux.microsoft.com,m:linux-kernel@vger.kernel.org,m:paulros@microsoft.com,m:andrew@lunn.ch,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[haiyangz@microsoft.com,linux-hyperv@vger.kernel.org];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TO_DN_SOME(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[19];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[horms@kernel.org,linux-hyperv@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[haiyangz@microsoft.com,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,microsoft.com,lunn.ch,davemloft.net,google.com,redhat.com,linux.microsoft.com,vger.kernel.org,networkplumber.org,intel.com,debian.org,gmail.com,iogearbox.net,fomichev.me,broadcom.com];
-	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[microsoft.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,vger.kernel.org:from_smtp,linux.dev:url]
+	MISSING_XM_UA(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 3B3927285DE
+X-Rspamd-Queue-Id: C1D4672A58B
 
-This is an AI-generated review of your patch. The human sending this
-email has considered the AI review valid, or at least plausible.
-Full review at: https://netdev-ai.bots.linux.dev/sashiko/
----
-net: mana: force full-page RX buffers via ethtool private flag
 
-This adds an ethtool private flag "full-page-rx" that forces one RX buffer
-per page to avoid a page_pool fragment path throughput regression on some
-4K PAGE_SIZE ARM64 platforms. Toggling the flag while the port is up
-triggers a mana_detach() + mana_attach() reconfiguration to apply the new
-buffer layout.
 
-A few questions inline.
+> -----Original Message-----
+> From: Paolo Abeni <pabeni@redhat.com>
+> Sent: Wednesday, July 8, 2026 4:09 AM
+> To: haiyangz@linux.microsoft.com
+> Cc: linux-hyperv@vger.kernel.org; netdev@vger.kernel.org; KY Srinivasan
+> <kys@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>;
+> wei.liu@kernel.org; Dexuan Cui <DECUI@microsoft.com>; Long Li
+> <longli@microsoft.com>; andrew+netdev@lunn.ch; davem@davemloft.net;
+> edumazet@google.com; kuba@kernel.org; pabeni@redhat.com; horms@kernel.org=
+;
+> ernis@linux.microsoft.com; dipayanroy@linux.microsoft.com;
+> gargaditya@linux.microsoft.com; shradhagupta@linux.microsoft.com; linux-
+> kernel@vger.kernel.org; Paul Rosswurm <paulros@microsoft.com>
+> Subject: [EXTERNAL] Re: [PATCH net-next v2] net: mana: Add handler for
+> sriov configure
+>=20
+> From: AI Reviewer <ai@example.com>
+>=20
+> This is an AI-generated review of your patch. The human sending this
+> email has considered the AI review valid, or at least plausible.
+> Full review at:
+> https://nam06.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fsashi=
+ko.
+> dev%2F&data=3D05%7C02%7Chaiyangz%40microsoft.com%7C27add93a1c4b4c0c7b4808=
+ded
+> cc833d4%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C639190949593984694%7=
+C
+> Unknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJ=
+X
+> aW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=3DqLm%2BrL1nE=
+F6%
+> 2FlF2%2Fmed2mnc%2BVR4Vp9P6G6i5Im1PquU%3D&reserved=3D0
+> ---
+> net: mana: Add handler for sriov configure
+>=20
+> Add callback function for the pci_driver / sriov_configure.
+>=20
+> It asks the NIC to provide certain number of VFs, or disable
+> VFs if the request is zero.
+>=20
+> > diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> > index e8b7ffb47eb98..f7a79874fd0eb 100644
+> > --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> > +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> > @@ -2496,6 +2496,20 @@ static void mana_gd_shutdown(struct pci_dev
+> *pdev)
+> >  	pci_disable_device(pdev);
+> >  }
+>=20
+> [Severity: High]
+> With the addition of SR-IOV support in this patch, do mana_gd_shutdown()
+> and
+> mana_gd_remove() need to call pci_disable_sriov()?
+>=20
+> If a user enables VFs via sysfs and then unbinds the driver or shuts down
+> the
+> system, could this omission introduce a regression where orphaned, dead V=
+F
+> PCI
+> devices are left in the kernel?
+>=20
+> Accessing these orphaned VFs might trigger use-after-free crashes or
+> hardware
+> faults, as the underlying PF hardware and driver context have been
+> destroyed.
+Will fix.
 
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> index 7438ea6b3f26..38f50b4eef87 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+>=20
+> > +static int mana_sriov_configure(struct pci_dev *pdev, int numvfs)
+> > +{
+> > +	int err =3D 0;
+> > +
+> > +	dev_info(&pdev->dev, "Requested num VFs: %d\n", numvfs);
+> > +
+> > +	if (numvfs > 0)
+> > +		err =3D pci_enable_sriov(pdev, numvfs);
+> > +	else
+> > +		pci_disable_sriov(pdev);
+>=20
+> [Severity: High]
+> Should this path check if the VFs are currently assigned to a guest VM
+> before
+> disabling SR-IOV?
+>=20
+> If a privileged user writes 0 to sriov_numvfs while VFs are actively
+> assigned
+> to a VM (e.g., via vfio-pci), could forcefully removing the PCI devices
+> cause
+> a regression resulting in host IOMMU faults and guest kernel panics?
+>=20
+> Would it be better to check pci_vfs_assigned(pdev) here, or use the
+> pci_sriov_configure_simple() helper to safely enforce this?
 
-[ ... mana_use_single_rxbuf_per_page() and mana_get_rxbuf_cfg() hunks
-      unrelated to the comments below ... ]
+Will update.
+I will send out an updated patch soon.
 
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-> index 3531abfdaf43..24f6ce63b031 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-
-[ ... ]
-
-> @@ -611,6 +630,88 @@ static int mana_get_link_ksettings(struct net_device *ndev,
->  	return 0;
->  }
->  
-> +static u32 mana_get_priv_flags(struct net_device *ndev)
-> +{
-> +	struct mana_port_context *apc = netdev_priv(ndev);
-> +
-> +	return apc->priv_flags;
-> +}
-> +
-> +static int mana_set_priv_flags(struct net_device *ndev, u32 priv_flags)
-> +{
-> +	struct mana_port_context *apc = netdev_priv(ndev);
-> +	u32 changed = apc->priv_flags ^ priv_flags;
-> +	u32 old_priv_flags = apc->priv_flags;
-> +	bool schedule_port_reset = false;
-> +	int err = 0;
-> +
-> +	if (!changed)
-> +		return 0;
-> +
-> +	/* Reject unknown bits */
-> +	if (priv_flags & ~GENMASK(MANA_PRIV_FLAG_MAX - 1, 0))
-> +		return -EINVAL;
-> +
-> +	if (changed & BIT(MANA_PRIV_FLAG_USE_FULL_PAGE_RXBUF)) {
-> +		apc->priv_flags = priv_flags;
-
-[Low]
-Is the storage of priv_flags intentionally nested inside the per-flag
-branch?  With only one flag today this is fine, but when a second bit is
-added to enum mana_priv_flag_bits, a user toggling only the new bit
-passes the !changed and unknown-bits checks, the outer if is skipped,
-apc->priv_flags is never updated, and mana_set_priv_flags() returns 0
-while mana_get_priv_flags() keeps reporting the old state.
-
-Would it be cleaner to store priv_flags unconditionally after validation
-and use per-flag if (changed & BIT(...)) blocks only for the
-flag-specific reconfiguration?
-
-> +
-> +		if (!apc->port_is_up) {
-> +			/* Port is down, flag updated to apply on next up
-> +			 * so just return.
-> +			 */
-> +			return 0;
-> +		}
-> +
-> +		/* Pre-allocate buffers to prevent failure in mana_attach
-> +		 * later
-> +		 */
-> +		err = mana_pre_alloc_rxbufs(apc, ndev->mtu, apc->num_queues);
-
-[Low]
-When the MTU is already jumbo (mtu + MANA_RXBUF_PAD > PAGE_SIZE / 2) or
-XDP is attached, mana_use_single_rxbuf_per_page() already returns true
-regardless of the new priv flag:
-
-	if (apc->priv_flags & BIT(MANA_PRIV_FLAG_USE_FULL_PAGE_RXBUF))
-		return true;
-
-	/* For xdp and jumbo frames make sure only one packet fits per page. */
-	if (mtu + MANA_RXBUF_PAD > PAGE_SIZE / 2 || mana_xdp_get(apc))
-		return true;
-
-In that case mana_get_rxbuf_cfg() produces identical output whether the
-new flag is on or off, yet toggling the flag here always performs a full
-mana_pre_alloc_rxbufs() + mana_detach() + mana_attach() cycle and flaps
-the link.
-
-Would a pre/post comparison of mana_get_rxbuf_cfg() output be worth
-adding to skip the reconfiguration when nothing actually changes?
-
-[High]
-mana_set_priv_flags() drives the same detach/attach sequence used by
-mana_set_channels() and mana_per_port_queue_reset_work_handler(), but
-does not take apc->vport_mutex and set apc->channel_changing = true
-across the window.
-
-The struct comment on channel_changing spells out the invariant:
-
-	/* Set by mana_set_channels() under vport_mutex to block RDMA
-	 * from grabbing the vport during the detach/attach window.
-	 * Checked by mana_cfg_vport() when called from the RDMA path.
-	 */
-	bool channel_changing;
-
-Without it, after mana_detach() uncfg's the vport an RDMA client can
-call mana_cfg_vport() and bump vport_use_count, and then mana_attach()
-will fail with -EBUSY when it re-cfg's the vport.
-
-There is also no equivalent of the '!port_is_up && vport_use_count'
-early -EBUSY check that mana_set_channels() performs, so is the flag
-allowed to be changed silently while an RDMA client is using the vport?
-
-> +		if (err) {
-> +			netdev_err(ndev,
-> +				   "Insufficient memory for new allocations\n");
-> +			apc->priv_flags = old_priv_flags;
-> +			return err;
-> +		}
-> +
-> +		err = mana_detach(ndev, false);
-
-[High]
-mana_detach() begins with ASSERT_RTNL(), and so does mana_attach()
-called below.  Is RTNL guaranteed to be held on the SET priv-flags path?
-
-mana registers net_shaper_ops in mana_devops, which makes it an
-ops-locked driver, so netdev_need_ops_lock() is true and the ethtool
-core acquires rtnl only when the driver opts in via
-ETHTOOL_OP_NEEDS_RTNL_* for that specific command.
-
-Looking at mana_ethtool_ops.op_needs_rtnl:
-
-	.op_needs_rtnl		= ETHTOOL_OP_NEEDS_RTNL_SCHANNELS |
-				  ETHTOOL_OP_NEEDS_RTNL_SRINGPARAM |
-				  ETHTOOL_OP_NEEDS_RTNL_GLINK,
-
-ETHTOOL_OP_NEEDS_RTNL_SPFLAGS is not listed, so ASSERT_RTNL() in the
-detach/attach helpers below will WARN, and the code races with
-RTNL-serialized mutators (mana_open, mana_close, mana_change_mtu,
-mana_tx_timeout) that read and write apc->port_is_up, apc->rxqs,
-apc->tx_qp and apc->port_st_save.
-
-Should ETHTOOL_OP_NEEDS_RTNL_SPFLAGS be added to op_needs_rtnl, matching
-what is already done for SET channels?
-
-> +		if (err) {
-> +			netdev_err(ndev, "mana_detach failed: %d\n", err);
-> +			apc->priv_flags = old_priv_flags;
-> +
-> +			/* Port is in an inconsistent state. Restore
-> +			 * 'port_is_up' so that queue reset work handler
-> +			 * can properly detach and re-attach.
-> +			 */
-> +			apc->port_is_up = true;
-> +			schedule_port_reset = true;
-> +			goto out;
-> +		}
-> +
-> +		err = mana_attach(ndev);
-> +		if (err) {
-> +			netdev_err(ndev, "mana_attach failed: %d\n", err);
-> +			apc->priv_flags = old_priv_flags;
-> +
-> +			/* Restore 'port_is_up' so the reset work handler
-> +			 * can properly detach/attach. Without this,
-> +			 * the handler sees port_is_up=false and skips
-> +			 * queue allocation, leaving the port dead.
-> +			 */
-> +			apc->port_is_up = true;
-> +			schedule_port_reset = true;
-
-[High]
-On this branch, mana_detach() has already succeeded and run
-mana_cleanup_port_context(), so apc->rxqs is NULL and queues are torn
-down.  Setting apc->port_is_up = true here between now and when
-queue_reset_work runs opens a window where callers gate on port_is_up
-as their "safe to access rxqs/tx_qp" predicate.
-
-For example, mana_get_ethtool_stats() does:
-
-	if (!apc->port_is_up)
-		return;
-	...
-	rxq = apc->rxqs[q];
-	...
-
-A concurrent ethtool -S invocation during that window will pass the
-port_is_up gate and dereference apc->rxqs[q]->stats on a NULL rxqs.
-
-Is the port_is_up restore actually needed for the reset work handler's
-mana_detach() call?  On the reset path, mana_detach() takes its early
-return when !netif_device_present(ndev):
-
-	if (!from_close && !netif_device_present(ndev))
-		return 0;
-
-That early return does not touch apc->port_st_save, so the saved state
-from the earlier successful mana_detach() should already be intact for
-the follow-up mana_attach().
-
-There is also no smp_wmb() paired with this write, unlike the pattern
-used inside mana_detach()/mana_attach() proper.
-
-> +		}
-> +	}
-> +
-> +out:
-> +	mana_pre_dealloc_rxbufs(apc);
-> +
-> +	if (schedule_port_reset)
-> +		queue_work(apc->ac->per_port_queue_reset_wq,
-> +			   &apc->queue_reset_work);
-> +
-> +	return err;
-> +}
-> +
-
-[ ... remaining hunks unrelated to the comments above ... ]
+Thanks,
+- Haiyang
 
