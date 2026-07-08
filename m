@@ -1,386 +1,346 @@
-Return-Path: <linux-hyperv+bounces-11864-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11865-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id P5+bDMIaTmpkDQIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11864-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 08 Jul 2026 11:39:14 +0200
+	id 5IkADzIpTmpCEQIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11865-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 08 Jul 2026 12:40:50 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75709723D25
-	for <lists+linux-hyperv@lfdr.de>; Wed, 08 Jul 2026 11:39:13 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A977E7246BC
+	for <lists+linux-hyperv@lfdr.de>; Wed, 08 Jul 2026 12:40:49 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=fXYDQMR0;
-	dmarc=pass (policy=quarantine) header.from=redhat.com;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11864-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11864-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=linux.microsoft.com header.s=default header.b=Sr78UQcR;
+	dmarc=pass (policy=none) header.from=linux.microsoft.com;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11865-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11865-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id F36C73044551
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Jul 2026 09:35:54 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E5B123064A95
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Jul 2026 10:33:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 814B33F8EAF;
-	Wed,  8 Jul 2026 09:35:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C19B3C1411;
+	Wed,  8 Jul 2026 10:33:27 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B8CE41A77F
-	for <linux-hyperv@vger.kernel.org>; Wed,  8 Jul 2026 09:35:49 +0000 (UTC)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90E723BE627;
+	Wed,  8 Jul 2026 10:33:18 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783503352; cv=none; b=G/ld6v4djzFtmYMv/7YF67NrIicx9RSxYrTF6MwSpG0pG2EKGzIW5xodGnIoFKh4IoINalDE4u1PFrM4Pq0lNf6sWtCA3y7IxMwYL4HaagCwzjIL9M//IYnFyInOZ8QGB13FVm6Zv8ra/g8KGFNd9YD4DdyKaMxeIhSEFVD7hVY=
+	t=1783506806; cv=none; b=G800AtFPRxlBnonKMHLGlX08zoBrRcCTubW7Uyae0DKMh3IwDVfenBYn6/JRTD/WcmpkTqfWGgCzpzbtq1sk222PXDhvLUlGoc2Abi4EA2Ne8N6JRcbuQrQz5iUxxndUKzRRoqmwtHwU+jqRRkNo4wEzbnyGRerm6jipDLf9idw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783503352; c=relaxed/simple;
-	bh=StteSp9fRcSPzilMyJoQaXo0nUGQEkeryVKN26Ddpbk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dZO7DzXyaVg/d/WB8dNOfKmBi6ngaASqkZ074+rtyGg0icVY9+EOVcHWlzQm+QvyV4PemIXuR9euxDgWFXDbHO972EYhZdvcWFoF/K+H0U5E24mzcHH9o3rl/rKApWxz6IEmwQ1F1FE5jAt9UQGrldTjK/58FLjodL64Au0cDdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fXYDQMR0; arc=none smtp.client-ip=170.10.133.124
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783503347;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WANXkYn/R4DaHane7E5z4t8hUV+EyVL6+p1Ml7qoTi0=;
-	b=fXYDQMR0EHZECzsQyB5C/oJKVXrvQ0xeFLD2+MmLvu9tGQT8s/uTp69pe7zVReftFiSJwX
-	o6Ha7Oh4k20q138WmU6IdHcmvhVzbZKAGsx0Pfs/+o5Q45YBbALYop42dvcbNWQ8GQXsg5
-	Qr5f35YX0HMKnY84WGeGHuhNsEMFcSY=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-488-6PA1K0UrPjKq-PzooXSccA-1; Wed,
- 08 Jul 2026 05:35:43 -0400
-X-MC-Unique: 6PA1K0UrPjKq-PzooXSccA-1
-X-Mimecast-MFC-AGG-ID: 6PA1K0UrPjKq-PzooXSccA_1783503340
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 675121956051;
-	Wed,  8 Jul 2026 09:35:39 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.44.49.133])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B7B321800480;
-	Wed,  8 Jul 2026 09:35:29 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: dipayanroy@linux.microsoft.com
-Cc: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	leon@kernel.org,
-	longli@microsoft.com,
-	kotaranov@microsoft.com,
-	horms@kernel.org,
-	shradhagupta@linux.microsoft.com,
-	ssengar@linux.microsoft.com,
-	ernis@linux.microsoft.com,
-	shirazsaleem@microsoft.com,
-	linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	stephen@networkplumber.org,
-	jacob.e.keller@intel.com,
-	dipayanroy@microsoft.com,
-	leitao@debian.org,
-	kees@kernel.org,
-	john.fastabend@gmail.com,
-	hawk@kernel.org,
-	bpf@vger.kernel.org,
-	daniel@iogearbox.net,
-	ast@kernel.org,
-	sdf@fomichev.me,
-	yury.norov@gmail.com,
-	pavan.chebbi@broadcom.com
-Subject: Re: [PATCH net-next v11 2/2] net: mana: force full-page RX buffers via ethtool private flag
-Date: Wed,  8 Jul 2026 11:35:24 +0200
-Message-ID: <20260708093524.130524-1-pabeni@redhat.com>
-In-Reply-To: <20260701141808.461554-3-dipayanroy@linux.microsoft.com>
-References: <20260701141808.461554-3-dipayanroy@linux.microsoft.com>
+	s=arc-20240116; t=1783506806; c=relaxed/simple;
+	bh=KOfxWwqthP89d883QEsbCbM2ovIyad53dh00YEqUADw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WlFyHdQ1Jw5DjlkfRUpEGipa+WBUud/xcMej2nGfQqC3gwETkmUmkG+rliH1nb6YlFUVwd7M9hvCODu/Qjaj76dIaemEib/wJgRxcx/Bhcd2InfIDC+zjMknUp8rXzVrgo8cFm0FP4Z7Lljz1gE92qUPPiA5341lThQ32Tntg7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Sr78UQcR; arc=none smtp.client-ip=13.77.154.182
+Received: from localhost (unknown [167.220.233.38])
+	by linux.microsoft.com (Postfix) with ESMTPSA id D5C4D20B7166;
+	Wed,  8 Jul 2026 03:33:07 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D5C4D20B7166
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1783506788;
+	bh=vKK52gM9w8/zMLU0AJulU3rrns4vwDO+QxLbjmC5IBM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Sr78UQcRnCYTn1/xwmJMo2d+1aFNNywFHRhXQCDH0X+7etsiUg54EDSsmazCGRL5i
+	 jgqLm8vhzXMzQhIHs0MX+01zUIOGdVHjAVVLUP+/qXRlSfRwZAxJ2qfm493XAGxNBO
+	 mDMoAhmWQw21//CwGcbOlUJqy4FdpFIEtS2QHAYE=
+Date: Wed, 8 Jul 2026 18:33:10 +0800
+From: Yu Zhang <zhangyu1@linux.microsoft.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+	iommu@lists.linux.dev, linux-pci@vger.kernel.org, linux-arch@vger.kernel.org, 
+	wei.liu@kernel.org, kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com, 
+	longli@microsoft.com, joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, 
+	bhelgaas@google.com, kwilczynski@kernel.org, lpieralisi@kernel.org, mani@kernel.org, 
+	robh@kernel.org, arnd@arndb.de, mhklinux@outlook.com, 
+	jacob.pan@linux.microsoft.com, tgopinath@linux.microsoft.com, 
+	easwar.hariharan@linux.microsoft.com, mrathor@linux.microsoft.com
+Subject: Re: [PATCH v2 3/4] iommu/hyperv: Add para-virtualized IOMMU support
+ for Hyper-V guest
+Message-ID: <rlbiupxg2prmkacggcv6prqlybwcnmwkgno4ggyjbhwesr4k6r@dvpt2o72ba3r>
+References: <20260702160518.311234-1-zhangyu1@linux.microsoft.com>
+ <20260702160518.311234-4-zhangyu1@linux.microsoft.com>
+ <20260703173248.GB1968184@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260703173248.GB1968184@ziepe.ca>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [0.84 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-4.66 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[microsoft.com:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[microsoft.com,kernel.org,lunn.ch,davemloft.net,google.com,redhat.com,linux.microsoft.com,vger.kernel.org,networkplumber.org,intel.com,debian.org,gmail.com,iogearbox.net,fomichev.me,broadcom.com];
-	TAGGED_FROM(0.00)[bounces-11864-lists,linux-hyperv=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER(0.00)[pabeni@redhat.com,linux-hyperv@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:dipayanroy@linux.microsoft.com,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:andrew+netdev@lunn.ch,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:leon@kernel.org,m:longli@microsoft.com,m:kotaranov@microsoft.com,m:horms@kernel.org,m:shradhagupta@linux.microsoft.com,m:ssengar@linux.microsoft.com,m:ernis@linux.microsoft.com,m:shirazsaleem@microsoft.com,m:linux-hyperv@vger.kernel.org,m:netdev@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:stephen@networkplumber.org,m:jacob.e.keller@intel.com,m:dipayanroy@microsoft.com,m:leitao@debian.org,m:kees@kernel.org,m:john.fastabend@gmail.com,m:hawk@kernel.org,m:bpf@vger.kernel.org,m:daniel@iogearbox.net,m:ast@kernel.org,m:sdf@fomichev.me,m:yury.norov@gmail.com,m:pavan.chebbi@broadcom.com,m:andrew@lunn.ch,m:johnfastabend@gmail.com,m:yurynorov@gmail.com,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[redhat.com:+];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[35];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[pabeni@redhat.com,linux-hyperv@vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:jgg@ziepe.ca,m:linux-kernel@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:iommu@lists.linux.dev,m:linux-pci@vger.kernel.org,m:linux-arch@vger.kernel.org,m:wei.liu@kernel.org,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:decui@microsoft.com,m:longli@microsoft.com,m:joro@8bytes.org,m:will@kernel.org,m:robin.murphy@arm.com,m:bhelgaas@google.com,m:kwilczynski@kernel.org,m:lpieralisi@kernel.org,m:mani@kernel.org,m:robh@kernel.org,m:arnd@arndb.de,m:mhklinux@outlook.com,m:jacob.pan@linux.microsoft.com,m:tgopinath@linux.microsoft.com,m:easwar.hariharan@linux.microsoft.com,m:mrathor@linux.microsoft.com,s:lists@lfdr.de];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
+	FORGED_SENDER(0.00)[zhangyu1@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[25];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11865-lists,linux-hyperv=lfdr.de];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TO_DN_NONE(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[zhangyu1@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.linux.dev,kernel.org,microsoft.com,8bytes.org,arm.com,google.com,arndb.de,outlook.com,linux.microsoft.com];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,linux.dev:url]
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[dvpt2o72ba3r:mid,linux.microsoft.com:from_mime,linux.microsoft.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 75709723D25
+X-Rspamd-Queue-Id: A977E7246BC
 
-From: AI Reviewer <ai@example.com>
+On Fri, Jul 03, 2026 at 02:32:48PM -0300, Jason Gunthorpe wrote:
+> On Fri, Jul 03, 2026 at 12:05:17AM +0800, Yu Zhang wrote:
+> 
+> > +static bool hv_iommu_capable(struct device *dev, enum iommu_cap cap)
+> > +{
+> > +	switch (cap) {
+> > +	case IOMMU_CAP_CACHE_COHERENCY:
+> > +		return true;
+> > +	case IOMMU_CAP_DEFERRED_FLUSH:
+> > +		return true;
+> 
+> This CAP isn't necessary anymore
+> 
 
-This is an AI-generated review of your patch. The human sending this
-email has considered the AI review valid, or at least plausible.
-Full review at: https://netdev-ai.bots.linux.dev/sashiko/
----
-net: mana: force full-page RX buffers via ethtool private flag
+Right, thanks for pointing this out!
 
-This adds an ethtool private flag "full-page-rx" that forces one RX buffer
-per page to avoid a page_pool fragment path throughput regression on some
-4K PAGE_SIZE ARM64 platforms. Toggling the flag while the port is up
-triggers a mana_detach() + mana_attach() reconfiguration to apply the new
-buffer layout.
+> > +static struct iommu_device *hv_iommu_probe_device(struct device *dev)
+> > +{
+> > +	struct pci_dev *pdev;
+> > +	struct hv_iommu_endpoint *vdev;
+> > +	struct hv_output_get_logical_device_property device_iommu_property = {0};
+> > +
+> > +	if (!dev_is_pci(dev))
+> > +		return ERR_PTR(-ENODEV);
+> > +
+> > +	pdev = to_pci_dev(dev);
+> > +
+> > +	if (hv_iommu_get_logical_device_property(dev,
+> > +						 HV_LOGICAL_DEVICE_PROPERTY_PVIOMMU,
+> > +						 &device_iommu_property) ||
+> > +	    !(device_iommu_property.device_iommu & HV_DEVICE_IOMMU_ENABLED))
+> > +		return ERR_PTR(-ENODEV);
+> > +
+> > +	vdev = kzalloc_obj(*vdev, GFP_KERNEL);
+> > +	if (!vdev)
+> > +		return ERR_PTR(-ENOMEM);
+> > +
+> > +	vdev->dev = dev;
+> > +	vdev->hv_iommu = hv_iommu_device;
+> > +	dev_iommu_priv_set(dev, vdev);
+> > +
+> > +	if (hv_iommu_ats_supported(hv_iommu_device->cap) &&
+> > +	    pci_ats_supported(pdev))
+> > +		pci_enable_ats(pdev, __ffs(hv_iommu_device->pgsize_bitmap));
+> 
+> This can probably just be PAGE_SHIFT
 
-A few questions inline.
+Indeed. 
 
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> index 7438ea6b3f26..38f50b4eef87 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> 
+> Also ATS shouldn't be enabled until a translation is installed,
+> otherwise the driver cannot participate in the ATS error handling
+> Nicolin is working on.
+> 
 
-[ ... mana_use_single_rxbuf_per_page() and mana_get_rxbuf_cfg() hunks
-      unrelated to the comments below ... ]
+Yes.I'll move ATS enablement into a paging-domain-specific attach wrapper
+that calls pci_enable_ats(pdev, PAGE_SHIFT) after the attach hypercall
+succeeds. And maybe blocking attach shall also call pci_disable_ats()
+before  the hypercall to prevent stale ATC entries from bypassing the
+block?
 
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-> index 3531abfdaf43..24f6ce63b031 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+Something like:
 
-[ ... ]
+    static int hv_iommu_paging_attach_dev(...)
+    {
+        ret = hv_iommu_attach_dev(domain, dev, old);
+        if (ret)
+            return ret;
+        if (!pdev->ats_enabled && ats_supported)
+            pci_enable_ats(pdev, PAGE_SHIFT);
+        return 0;
+    }
 
-> @@ -611,6 +630,88 @@ static int mana_get_link_ksettings(struct net_device *ndev,
->  	return 0;
->  }
->  
-> +static u32 mana_get_priv_flags(struct net_device *ndev)
-> +{
-> +	struct mana_port_context *apc = netdev_priv(ndev);
-> +
-> +	return apc->priv_flags;
-> +}
-> +
-> +static int mana_set_priv_flags(struct net_device *ndev, u32 priv_flags)
-> +{
-> +	struct mana_port_context *apc = netdev_priv(ndev);
-> +	u32 changed = apc->priv_flags ^ priv_flags;
-> +	u32 old_priv_flags = apc->priv_flags;
-> +	bool schedule_port_reset = false;
-> +	int err = 0;
-> +
-> +	if (!changed)
-> +		return 0;
-> +
-> +	/* Reject unknown bits */
-> +	if (priv_flags & ~GENMASK(MANA_PRIV_FLAG_MAX - 1, 0))
-> +		return -EINVAL;
-> +
-> +	if (changed & BIT(MANA_PRIV_FLAG_USE_FULL_PAGE_RXBUF)) {
-> +		apc->priv_flags = priv_flags;
+    static int hv_iommu_blocking_attach_dev(...)
+    {
+        if (pdev->ats_enabled)
+            pci_disable_ats(pdev);
+        ret = hv_iommu_attach_dev(domain, dev, old);
+        ...
+    }
 
-[Low]
-Is the storage of priv_flags intentionally nested inside the per-flag
-branch?  With only one flag today this is fine, but when a second bit is
-added to enum mana_priv_flag_bits, a user toggling only the new bit
-passes the !changed and unknown-bits checks, the outer if is skipped,
-apc->priv_flags is never updated, and mana_set_priv_flags() returns 0
-while mana_get_priv_flags() keeps reporting the old state.
+Does this look right?
 
-Would it be cleaner to store priv_flags unconditionally after validation
-and use per-flag if (changed & BIT(...)) blocks only for the
-flag-specific reconfiguration?
+> > +static void hv_iommu_release_device(struct device *dev)
+> > +{
+> > +	struct hv_iommu_endpoint *vdev = dev_iommu_priv_get(dev);
+> > +	struct pci_dev *pdev = to_pci_dev(dev);
+> > +
+> > +	if (pdev->ats_enabled)
+> > +		pci_disable_ats(pdev);
+> > +
+> > +	dev_iommu_priv_set(dev, NULL);
+> 
+> No necessary, the caller does it
+> 
 
-> +
-> +		if (!apc->port_is_up) {
-> +			/* Port is down, flag updated to apply on next up
-> +			 * so just return.
-> +			 */
-> +			return 0;
-> +		}
-> +
-> +		/* Pre-allocate buffers to prevent failure in mana_attach
-> +		 * later
-> +		 */
-> +		err = mana_pre_alloc_rxbufs(apc, ndev->mtu, apc->num_queues);
+Yes. Thanks!
 
-[Low]
-When the MTU is already jumbo (mtu + MANA_RXBUF_PAD > PAGE_SIZE / 2) or
-XDP is attached, mana_use_single_rxbuf_per_page() already returns true
-regardless of the new priv flag:
+> > +static struct iommu_group *hv_iommu_device_group(struct device *dev)
+> > +{
+> > +	if (dev_is_pci(dev))
+> > +		return pci_device_group(dev);
+> > +
+> > +	WARN_ON_ONCE(1);
+> > +	return generic_device_group(dev);
+> 
+> I think you can just return failure here instead of WARN_ON ?
+> 
 
-	if (apc->priv_flags & BIT(MANA_PRIV_FLAG_USE_FULL_PAGE_RXBUF))
-		return true;
+Yes, will change to return ERR_PTR(-ENODEV).
 
-	/* For xdp and jumbo frames make sure only one packet fits per page. */
-	if (mtu + MANA_RXBUF_PAD > PAGE_SIZE / 2 || mana_xdp_get(apc))
-		return true;
+> > +static int __init hv_initialize_static_domains(void)
+> > +{
+> > +	int ret;
+> > +	struct hv_iommu_domain *hv_domain;
+> > +
+> > +	/* Default stage-1 identity domain */
+> > +	hv_domain = &hv_identity_domain;
+> > +
+> > +	ret = hv_create_device_domain(hv_domain, HV_DEVICE_DOMAIN_TYPE_S1);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = hv_configure_device_domain(hv_domain, IOMMU_DOMAIN_IDENTITY);
+> > +	if (ret)
+> > +		goto delete_identity_domain;
+> 
+> IMHO I would change this around to have a single function that accepts
+> a struct hv_input_configure_device_domain as input and does both of
+> the hypercalls inside. Then here it is easy to directly construct the
+> hv_input_configure_device_domain for blocking and identity.
+> 
+> I'd be happy if this never touched domain_type, drivers shouldn't be
+> touching that.
+> 
 
-In that case mana_get_rxbuf_cfg() produces identical output whether the
-new flag is on or off, yet toggling the flag here always performs a full
-mana_pre_alloc_rxbufs() + mana_detach() + mana_attach() cycle and flaps
-the link.
+Good idea. Maybe we can just change hv_configure_device_domain()
+to take a "struct hv_device_domain_settings *" directly - that way each
+caller constructs the HW settings explicitly and domain_type is not
+needed at all. Does that sound right?
 
-Would a pre/post comparison of mana_get_rxbuf_cfg() output be worth
-adding to skip the reconfiguration when nothing actually changes?
+> > +static void __init hv_init_iommu_device(struct hv_iommu_dev *hv_iommu,
+> > +			struct hv_output_get_iommu_capabilities *hv_iommu_cap)
+> > +{
+> > +	ida_init(&hv_iommu->domain_ids);
+> > +
+> > +	hv_iommu->cap = hv_iommu_cap->iommu_cap;
+> > +	hv_iommu->max_iova_width = hv_iommu_cap->max_iova_width;
+> > +	if (!hv_iommu_5lvl_supported(hv_iommu->cap) &&
+> > +	    hv_iommu->max_iova_width > 48) {
+> > +		pr_info("5-level paging not supported, limiting iova width to 48.\n");
+> > +		hv_iommu->max_iova_width = 48;
+> > +	}
+> > +
+> > +	hv_iommu->geometry = (struct iommu_domain_geometry) {
+> > +		.aperture_start = 0,
+> > +		.aperture_end = (((u64)1) << hv_iommu->max_iova_width) - 1,
+> > +		.force_aperture = true,
+> > +	};
+> 
+> I don't see anything reading this, I don't expect this to be used?
+> 
+> The max_iova_width has to be passed into the iommupt creation, which
+> it does:
+> 
+>  +	cfg.common.hw_max_vasz_lg2 = hv_iommu_device->max_iova_width;
+>  +	cfg.common.hw_max_oasz_lg2 = 52;
+>  +	cfg.top_level = (hv_iommu_device->max_iova_width > 48) ? 4 : 3;
+>  +	ret = pt_iommu_x86_64_init(&hv_domain->pt_iommu_x86_64, &cfg, GFP_KERNEL);
+>  +	if (ret)
+> 
+> So just delete hv->iommu->geometry.
+> 
 
-[High]
-mana_set_priv_flags() drives the same detach/attach sequence used by
-mana_set_channels() and mana_per_port_queue_reset_work_handler(), but
-does not take apc->vport_mutex and set apc->channel_changing = true
-across the window.
+Right. Will remove.
 
-The struct comment on channel_changing spells out the invariant:
+> Also, VT-D has weirdness where the HW can require a 4 level table but
+> only a 3 level worth of IOVA width is being used. This was a
+> real-world bug we hit when converting to iommupt. This interaction
+> with the HV doesn't seem able to represent that.
+> 
 
-	/* Set by mana_set_channels() under vport_mutex to block RDMA
-	 * from grabbing the vport during the detach/attach window.
-	 * Checked by mana_cfg_vport() when called from the RDMA path.
-	 */
-	bool channel_changing;
+Is this the issue fixed by commit d856f9d27885 ("iommupt/vtd: Allow
+VT-d to have a larger table top than the vasz requires")? For pvIOMMU
+the first-stage table is either 4-level (max_iova_width <= 48) or
+5-level (max_iova_width > 48 && 5lvl cap set). Is there a scenario
+where this would still be a problem?
 
-Without it, after mana_detach() uncfg's the vport an RDMA client can
-call mana_cfg_vport() and bump vport_use_count, and then mana_attach()
-will fail with -EBUSY when it re-cfg's the vport.
+> > +	/*
+> > +	 * The page table code only maps x86 page sizes (4K/2M/1G); require the
+> > +	 * hypervisor to advertise a non-empty subset of exactly those.
+> > +	 */
+> > +	if (!hv_iommu_cap.pgsize_bitmap ||
+> > +	    (hv_iommu_cap.pgsize_bitmap & ~(u64)(SZ_4K | SZ_2M | SZ_1G))) {
+> > +		pr_err("unsupported page sizes: pgsize_bitmap=0x%llx\n",
+> > +		       hv_iommu_cap.pgsize_bitmap);
+> > +		return -ENODEV;
+> > +	}
+> 
+> This can just be
+> 
+> if (!(hv_iommu_cap.pgsize_bitmap & PAGE_SHIFT)) {
+> 		pr_err("unsupported page sizes: pgsize_bitmap=0x%llx\n",
+> 		       hv_iommu_cap.pgsize_bitmap);
+> }		return -ENODEV;
+> 
+> Which is all you really need. If the HV doesn't support 1G it is
+> perfectly fine, the iommupt page bitmap is already masked by this. 
+> 
 
-There is also no equivalent of the '!port_is_up && vport_use_count'
-early -EBUSY check that mana_set_channels() performs, so is the flag
-allowed to be changed silently while an RDMA client is using the vport?
+Good point, it's much simpler.
+And I assume you meant PAGE_SIZE / SZ_4K instead of PAGE_SHIFT here. :) 
 
-> +		if (err) {
-> +			netdev_err(ndev,
-> +				   "Insufficient memory for new allocations\n");
-> +			apc->priv_flags = old_priv_flags;
-> +			return err;
-> +		}
-> +
-> +		err = mana_detach(ndev, false);
+> > +	ret = iommu_device_register(&hv_iommu->iommu, &hv_iommu_ops, NULL);
+> > +	if (ret) {
+> > +		pr_err("iommu_device_register failed: %d\n", ret);
+> > +		goto err_sysfs_remove;
+> > +	}
+> > +
+> > +	pr_info("successfully initialized\n");
+> 
+> Don't log someting so vauge?
+> 
 
-[High]
-mana_detach() begins with ASSERT_RTNL(), and so does mana_attach()
-called below.  Is RTNL guaranteed to be held on the SET priv-flags path?
+With pr_fmt defined as "Hyper-V pvIOMMU: ", this shows up as
+"Hyper-V pvIOMMU: successfully initialized" in dmesg. I'd like to
+keep some indication that pvIOMMU init succeeded at boot. Is this
+still too vague? Would it be better if I also print capabilities
+like IOVA width and supported page sizes here? Thanks!
 
-mana registers net_shaper_ops in mana_devops, which makes it an
-ops-locked driver, so netdev_need_ops_lock() is true and the ethtool
-core acquires rtnl only when the driver opts in via
-ETHTOOL_OP_NEEDS_RTNL_* for that specific command.
+B.R.
+Yu
 
-Looking at mana_ethtool_ops.op_needs_rtnl:
-
-	.op_needs_rtnl		= ETHTOOL_OP_NEEDS_RTNL_SCHANNELS |
-				  ETHTOOL_OP_NEEDS_RTNL_SRINGPARAM |
-				  ETHTOOL_OP_NEEDS_RTNL_GLINK,
-
-ETHTOOL_OP_NEEDS_RTNL_SPFLAGS is not listed, so ASSERT_RTNL() in the
-detach/attach helpers below will WARN, and the code races with
-RTNL-serialized mutators (mana_open, mana_close, mana_change_mtu,
-mana_tx_timeout) that read and write apc->port_is_up, apc->rxqs,
-apc->tx_qp and apc->port_st_save.
-
-Should ETHTOOL_OP_NEEDS_RTNL_SPFLAGS be added to op_needs_rtnl, matching
-what is already done for SET channels?
-
-> +		if (err) {
-> +			netdev_err(ndev, "mana_detach failed: %d\n", err);
-> +			apc->priv_flags = old_priv_flags;
-> +
-> +			/* Port is in an inconsistent state. Restore
-> +			 * 'port_is_up' so that queue reset work handler
-> +			 * can properly detach and re-attach.
-> +			 */
-> +			apc->port_is_up = true;
-> +			schedule_port_reset = true;
-> +			goto out;
-> +		}
-> +
-> +		err = mana_attach(ndev);
-> +		if (err) {
-> +			netdev_err(ndev, "mana_attach failed: %d\n", err);
-> +			apc->priv_flags = old_priv_flags;
-> +
-> +			/* Restore 'port_is_up' so the reset work handler
-> +			 * can properly detach/attach. Without this,
-> +			 * the handler sees port_is_up=false and skips
-> +			 * queue allocation, leaving the port dead.
-> +			 */
-> +			apc->port_is_up = true;
-> +			schedule_port_reset = true;
-
-[High]
-On this branch, mana_detach() has already succeeded and run
-mana_cleanup_port_context(), so apc->rxqs is NULL and queues are torn
-down.  Setting apc->port_is_up = true here between now and when
-queue_reset_work runs opens a window where callers gate on port_is_up
-as their "safe to access rxqs/tx_qp" predicate.
-
-For example, mana_get_ethtool_stats() does:
-
-	if (!apc->port_is_up)
-		return;
-	...
-	rxq = apc->rxqs[q];
-	...
-
-A concurrent ethtool -S invocation during that window will pass the
-port_is_up gate and dereference apc->rxqs[q]->stats on a NULL rxqs.
-
-Is the port_is_up restore actually needed for the reset work handler's
-mana_detach() call?  On the reset path, mana_detach() takes its early
-return when !netif_device_present(ndev):
-
-	if (!from_close && !netif_device_present(ndev))
-		return 0;
-
-That early return does not touch apc->port_st_save, so the saved state
-from the earlier successful mana_detach() should already be intact for
-the follow-up mana_attach().
-
-There is also no smp_wmb() paired with this write, unlike the pattern
-used inside mana_detach()/mana_attach() proper.
-
-> +		}
-> +	}
-> +
-> +out:
-> +	mana_pre_dealloc_rxbufs(apc);
-> +
-> +	if (schedule_port_reset)
-> +		queue_work(apc->ac->per_port_queue_reset_wq,
-> +			   &apc->queue_reset_work);
-> +
-> +	return err;
-> +}
-> +
-
-[ ... remaining hunks unrelated to the comments above ... ]
--- 
-This is an AI-generated review.
-
+> Jason
+> 
 
