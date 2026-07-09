@@ -1,380 +1,217 @@
-Return-Path: <linux-hyperv+bounces-11883-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11884-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id rtw8AGLDT2oToAIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11883-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 09 Jul 2026 17:50:58 +0200
+	id p/5PDOTJT2qToQIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11884-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 09 Jul 2026 18:18:44 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 572B77331E2
-	for <lists+linux-hyperv@lfdr.de>; Thu, 09 Jul 2026 17:50:57 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 312D7733625
+	for <lists+linux-hyperv@lfdr.de>; Thu, 09 Jul 2026 18:18:43 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linux.microsoft.com header.s=default header.b=ECJiMV3l;
-	dmarc=pass (policy=none) header.from=linux.microsoft.com;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11883-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11883-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=web.de header.s=s29768273 header.b=ltRhibzM;
+	dmarc=pass (policy=quarantine) header.from=web.de;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11884-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11884-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 197CB303C7D6
-	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Jul 2026 15:48:13 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id B0CE13063DC6
+	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Jul 2026 16:05:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1ADE423A6A;
-	Thu,  9 Jul 2026 15:48:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A009A42E8F1;
+	Thu,  9 Jul 2026 16:05:38 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D940426694;
-	Thu,  9 Jul 2026 15:48:08 +0000 (UTC)
+Received: from mout.web.de (mout.web.de [212.227.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D03C427A0C;
+	Thu,  9 Jul 2026 16:05:35 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783612091; cv=none; b=EXRxQFjifsFOjk9hiZ+qakn2CyFCOBWLUImlbdvBsa6VWeTE67r+ts4Nrt7inrwPqmDGCWBcHcGu43R96QoqeMhiBIGO1Ym8QsmIBVDzQLXBmj48JKig0gh6rPtPiCDAJUE7kVwXTiHAMyoEEYLXma8h82xHOa2aGShBgWsW11s=
+	t=1783613138; cv=none; b=J7YmBMoRtuLaB+lA4RSzOuEfwSThCoZhM2R65JFp6tJHdmN6m9AYBtIq9d27kRYytb55qb8MgnVEo2PLVvuXB9JyksdB4dJ5YFE7d5rb9hTVcd4ygWA1hTCJiqwWmno+PIu/Q33iawkTsali7T3WOS8ZZYtD+dxcRVttMHMdxLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783612091; c=relaxed/simple;
-	bh=Gx3BetVdOhK9tL3J4kYCUB6lFM5K/OloIYl5fsDDOFQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QxgeSQEfIQQPWeSNYLLnwq/PaUNrNgx9g1d8wc+/t9taQ94rKlrH6ySRkRvazFjxROYzaVqm5anRqfk6/rteT43IU94waTjqJ/U8T1SH+uQm2SFvE4nsUyet93KPkH04XKM1bmwrdCYlDNjHCEoRdZXyCMSIHbwpwCuyP/Tz9nY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ECJiMV3l; arc=none smtp.client-ip=13.77.154.182
-Received: by linux.microsoft.com (Postfix, from userid 1204)
-	id 1852720B716D; Thu,  9 Jul 2026 08:48:03 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1852720B716D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1783612083;
-	bh=KrNo05al+iHU65EqWsm2pT9OTDN3Qql+zzSQH5XVV/o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ECJiMV3l1QuK0yFx8wTLGR+6qMqz3l/AwK74cYG7G/q0DsO9ufiapDLnJulAJdhxn
-	 iTsI/WZQrL25aOZYr8+bbdAUrTxPlfgUth1SLpdHeSd6P/welskVBuGGl0VRn6a1Qe
-	 4AKFz8rByCM3n2haE/ILCOdfP2VGxXoUhvN3rc4c=
-Date: Thu, 9 Jul 2026 08:48:03 -0700
-From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
-To: Simon Horman <horms@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	leon@kernel.org, longli@microsoft.com, kotaranov@microsoft.com,
-	shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com,
-	ernis@linux.microsoft.com, shirazsaleem@microsoft.com,
-	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-	stephen@networkplumber.org, jacob.e.keller@intel.com,
-	dipayanroy@microsoft.com, leitao@debian.org, kees@kernel.org,
-	john.fastabend@gmail.com, hawk@kernel.org, bpf@vger.kernel.org,
-	daniel@iogearbox.net, ast@kernel.org, sdf@fomichev.me,
-	yury.norov@gmail.com, pavan.chebbi@broadcom.com
-Subject: Re: [PATCH net-next v11 2/2] net: mana: force full-page RX buffers
- via ethtool private flag
-Message-ID: <ak/Cs/qWVJD57qgl@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <20260701141808.461554-3-dipayanroy@linux.microsoft.com>
- <20260708155741.1509815-2-horms@kernel.org>
+	s=arc-20240116; t=1783613138; c=relaxed/simple;
+	bh=3qGERBjwIsu2SRW/VWNmeqamu1vmEeoG0Ypy5Joc/q8=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=Kw+GdYNVw2NYsWTvvRS8YLxLzKNoF/b2s2sAz2hY6cfbs2E8SK/WUK8hYDQTVDxXxvbxen0nX9lHlV9lCiLqXNRYBWHAq05oXTtbGPUzri08Ub2VzD/5pECgXlNK38joMah8pydbho8HvJDYjq/c+LClvqBKp2Sq9PTLzjcZo08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=ltRhibzM; arc=none smtp.client-ip=212.227.17.11
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1783613121; x=1784217921; i=markus.elfring@web.de;
+	bh=3qGERBjwIsu2SRW/VWNmeqamu1vmEeoG0Ypy5Joc/q8=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=ltRhibzM50z/yN7svMcJgK+NAPNULATZRdrY7fm2b5GvQFy8mvOdrJCFV5qVtCIv
+	 nsbmq9BebCODREbpnzR9ZYVPNTlGfqCCwE3xBSxdWUzpXMq7vbjioaEH+mqwlcjmU
+	 eK7COusyC/Ic4CigAIQ/Cpie6j1S4+emQD5yNdjZn0PdK0riPgkhD+4mrqx+9owOX
+	 /1ualzBIdTWk56rHFt+5vEuqV4KIu3nr3TaTK267X48tMYBCR+NM+andITDuY/P4j
+	 TguTcndyNw5pl3ouK6TTM7KeeMK07N4WmlNDPGi/p83AOnpc9+k/LfwhrcIqaTzlq
+	 IzCZ1J/l2jgsEi2/NQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from client.hidden.invalid by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MlsKH-1xOvRa0zi7-00kBSR; Thu, 09
+ Jul 2026 18:05:21 +0200
+Message-ID: <79383daa-8c38-4858-8ed1-f6e69aeeec42@web.de>
+Date: Thu, 9 Jul 2026 18:05:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260708155741.1509815-2-horms@kernel.org>
+User-Agent: Mozilla Thunderbird
+To: Yi Xie <xieyi@kylinos.cn>, linux-hyperv@vger.kernel.org,
+ Haiyang Zhang <haiyangz@microsoft.com>,
+ Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>, Wei Liu <wei.liu@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <20260708012852.36824-1-xieyi@kylinos.cn>
+Subject: Re: [PATCH] mshv: fix fd leak in mshv_ioctl_create_vtl()
+Content-Language: en-GB, de-DE
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20260708012852.36824-1-xieyi@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:grqdu1mnoUcnHt7Inw/1aX/JXyCddWKjB8PltBkXqc6D4otVtnO
+ kXt8FQ+U9BattavRsB4d6OgiZqjNgAqlaBO7U4//tPxMWVkcI9pNXv240Zd5fakJunPxkGF
+ +mapndwh1UBxPXwqaBrd6Kf67dShW5R78X+SrtdjksHcbZ+z8d5wJRX4Zzkyts56FLSPFlB
+ jTLzsec1ZSsUZu8VQg/jQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:YBJnfdIsOag=;HEUJ+r40YBwvpgyg5AOzpGy/7Ed
+ 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
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.66 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[microsoft.com:d:+,kernel.org:s:+];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[web.de,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[web.de:s=s29768273];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:horms@kernel.org,m:pabeni@redhat.com,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:andrew+netdev@lunn.ch,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:leon@kernel.org,m:longli@microsoft.com,m:kotaranov@microsoft.com,m:shradhagupta@linux.microsoft.com,m:ssengar@linux.microsoft.com,m:ernis@linux.microsoft.com,m:shirazsaleem@microsoft.com,m:linux-hyperv@vger.kernel.org,m:netdev@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:stephen@networkplumber.org,m:jacob.e.keller@intel.com,m:dipayanroy@microsoft.com,m:leitao@debian.org,m:kees@kernel.org,m:john.fastabend@gmail.com,m:hawk@kernel.org,m:bpf@vger.kernel.org,m:daniel@iogearbox.net,m:ast@kernel.org,m:sdf@fomichev.me,m:yury.norov@gmail.com,m:pavan.chebbi@broadcom.com,m:andrew@lunn.ch,m:johnfastabend@gmail.com,m:yurynorov@gmail.com,s:lists@lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-11883-lists,linux-hyperv=lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[35];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[dipayanroy@linux.microsoft.com,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	TAGGED_FROM(0.00)[bounces-11884-lists,linux-hyperv=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:xieyi@kylinos.cn,m:linux-hyperv@vger.kernel.org,m:haiyangz@microsoft.com,m:hamzamahfooz@linux.microsoft.com,m:kys@microsoft.com,m:wei.liu@kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[Markus.Elfring@web.de,linux-hyperv@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	DKIM_TRACE(0.00)[web.de:+];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FREEMAIL_FROM(0.00)[web.de];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dipayanroy@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	FREEMAIL_CC(0.00)[microsoft.com,kernel.org,lunn.ch,davemloft.net,google.com,redhat.com,linux.microsoft.com,vger.kernel.org,networkplumber.org,intel.com,debian.org,gmail.com,iogearbox.net,fomichev.me,broadcom.com];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	FROM_NEQ_ENVFROM(0.00)[Markus.Elfring@web.de,linux-hyperv@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,linux.dev:url,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.microsoft.com:from_mime,linux.microsoft.com:dkim,linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net:mid]
+	RCPT_COUNT_SEVEN(0.00)[7];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 572B77331E2
+X-Rspamd-Queue-Id: 312D7733625
 
-On Wed, Jul 08, 2026 at 04:57:42PM +0100, Simon Horman wrote:
-> This is an AI-generated review of your patch. The human sending this
-> email has considered the AI review valid, or at least plausible.
-> Full review at: https://netdev-ai.bots.linux.dev/sashiko/
-> ---
-> net: mana: force full-page RX buffers via ethtool private flag
-> 
-> This adds an ethtool private flag "full-page-rx" that forces one RX buffer
-> per page to avoid a page_pool fragment path throughput regression on some
-> 4K PAGE_SIZE ARM64 platforms. Toggling the flag while the port is up
-> triggers a mana_detach() + mana_attach() reconfiguration to apply the new
-> buffer layout.
-> 
-> A few questions inline.
-> 
-> > diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> > index 7438ea6b3f26..38f50b4eef87 100644
-> > --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> > +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> 
-> [ ... mana_use_single_rxbuf_per_page() and mana_get_rxbuf_cfg() hunks
->       unrelated to the comments below ... ]
-> 
-> > diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-> > index 3531abfdaf43..24f6ce63b031 100644
-> > --- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-> > +++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-> 
-> [ ... ]
-> 
-> > @@ -611,6 +630,88 @@ static int mana_get_link_ksettings(struct net_device *ndev,
-> >  	return 0;
-> >  }
-> >  
-> > +static u32 mana_get_priv_flags(struct net_device *ndev)
-> > +{
-> > +	struct mana_port_context *apc = netdev_priv(ndev);
-> > +
-> > +	return apc->priv_flags;
-> > +}
-> > +
-> > +static int mana_set_priv_flags(struct net_device *ndev, u32 priv_flags)
-> > +{
-> > +	struct mana_port_context *apc = netdev_priv(ndev);
-> > +	u32 changed = apc->priv_flags ^ priv_flags;
-> > +	u32 old_priv_flags = apc->priv_flags;
-> > +	bool schedule_port_reset = false;
-> > +	int err = 0;
-> > +
-> > +	if (!changed)
-> > +		return 0;
-> > +
-> > +	/* Reject unknown bits */
-> > +	if (priv_flags & ~GENMASK(MANA_PRIV_FLAG_MAX - 1, 0))
-> > +		return -EINVAL;
-> > +
-> > +	if (changed & BIT(MANA_PRIV_FLAG_USE_FULL_PAGE_RXBUF)) {
-> > +		apc->priv_flags = priv_flags;
-> 
-> [Low]
-> Is the storage of priv_flags intentionally nested inside the per-flag
-> branch?  With only one flag today this is fine, but when a second bit is
-> added to enum mana_priv_flag_bits, a user toggling only the new bit
-> passes the !changed and unknown-bits checks, the outer if is skipped,
-> apc->priv_flags is never updated, and mana_set_priv_flags() returns 0
-> while mana_get_priv_flags() keeps reporting the old state.
-> 
-> Would it be cleaner to store priv_flags unconditionally after validation
-> and use per-flag if (changed & BIT(...)) blocks only for the
-> flag-specific reconfiguration?
-> 
+> put_unused_fd() if anon_inode_getfile() fails.
 
-Hi Simon, Paolo,
+How do you think about to add any tags (like =E2=80=9CFixes=E2=80=9D and =
+=E2=80=9CCc=E2=80=9D) accordingly?
 
-Agreed on this future concern,
-but also we donot plan to have another mana driver private flag.
+See also:
+* https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/=
+Documentation/process/submitting-patches.rst?h=3Dv7.2-rc2#n145
+* https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/=
+Documentation/process/stable-kernel-rules.rst?h=3Dv7.2-rc2#n34
 
 
-> > +
-> > +		if (!apc->port_is_up) {
-> > +			/* Port is down, flag updated to apply on next up
-> > +			 * so just return.
-> > +			 */
-> > +			return 0;
-> > +		}
-> > +
-> > +		/* Pre-allocate buffers to prevent failure in mana_attach
-> > +		 * later
-> > +		 */
-> > +		err = mana_pre_alloc_rxbufs(apc, ndev->mtu, apc->num_queues);
-> 
-> [Low]
-> When the MTU is already jumbo (mtu + MANA_RXBUF_PAD > PAGE_SIZE / 2) or
-> XDP is attached, mana_use_single_rxbuf_per_page() already returns true
-> regardless of the new priv flag:
-> 
-> 	if (apc->priv_flags & BIT(MANA_PRIV_FLAG_USE_FULL_PAGE_RXBUF))
-> 		return true;
-> 
-> 	/* For xdp and jumbo frames make sure only one packet fits per page. */
-> 	if (mtu + MANA_RXBUF_PAD > PAGE_SIZE / 2 || mana_xdp_get(apc))
-> 		return true;
-> 
-> In that case mana_get_rxbuf_cfg() produces identical output whether the
-> new flag is on or off, yet toggling the flag here always performs a full
-> mana_pre_alloc_rxbufs() + mana_detach() + mana_attach() cycle and flaps
-> the link.
-> 
-> Would a pre/post comparison of mana_get_rxbuf_cfg() output be worth
-> adding to skip the reconfiguration when nothing actually changes?
-Good point will add a pre and post comparison as well to skip the
-detach/attach when already in that configuration.
 
-> 
-> [High]
-> mana_set_priv_flags() drives the same detach/attach sequence used by
-> mana_set_channels() and mana_per_port_queue_reset_work_handler(), but
-> does not take apc->vport_mutex and set apc->channel_changing = true
-> across the window.
-> 
-> The struct comment on channel_changing spells out the invariant:
-> 
-> 	/* Set by mana_set_channels() under vport_mutex to block RDMA
-> 	 * from grabbing the vport during the detach/attach window.
-> 	 * Checked by mana_cfg_vport() when called from the RDMA path.
-> 	 */
-> 	bool channel_changing;
-> 
-> Without it, after mana_detach() uncfg's the vport an RDMA client can
-> call mana_cfg_vport() and bump vport_use_count, and then mana_attach()
-> will fail with -EBUSY when it re-cfg's the vport.
-> 
-> There is also no equivalent of the '!port_is_up && vport_use_count'
-> early -EBUSY check that mana_set_channels() performs, so is the flag
-> allowed to be changed silently while an RDMA client is using the vport?
-> 
-Agreed. Will add the same vport_mutex + channel_changing pattern used by
-mana_set_channels() and mana_per_port_queue_reset_work_handler() to
-block RDMA from grabbing the vport during the detach/attach window.
+* Would you like to complete the exception handling by using another goto =
+chain?
 
-> > +		if (err) {
-> > +			netdev_err(ndev,
-> > +				   "Insufficient memory for new allocations\n");
-> > +			apc->priv_flags = old_priv_flags;
-> > +			return err;
-> > +		}
-> > +
-> > +		err = mana_detach(ndev, false);
-> 
-> [High]
-> mana_detach() begins with ASSERT_RTNL(), and so does mana_attach()
-> called below.  Is RTNL guaranteed to be held on the SET priv-flags path?
-> 
-> mana registers net_shaper_ops in mana_devops, which makes it an
-> ops-locked driver, so netdev_need_ops_lock() is true and the ethtool
-> core acquires rtnl only when the driver opts in via
-> ETHTOOL_OP_NEEDS_RTNL_* for that specific command.
-> 
-> Looking at mana_ethtool_ops.op_needs_rtnl:
-> 
-> 	.op_needs_rtnl		= ETHTOOL_OP_NEEDS_RTNL_SCHANNELS |
-> 				  ETHTOOL_OP_NEEDS_RTNL_SRINGPARAM |
-> 				  ETHTOOL_OP_NEEDS_RTNL_GLINK,
-> 
-> ETHTOOL_OP_NEEDS_RTNL_SPFLAGS is not listed, so ASSERT_RTNL() in the
-> detach/attach helpers below will WARN, and the code races with
-> RTNL-serialized mutators (mana_open, mana_close, mana_change_mtu,
-> mana_tx_timeout) that read and write apc->port_is_up, apc->rxqs,
-> apc->tx_qp and apc->port_st_save.
-> 
-> Should ETHTOOL_OP_NEEDS_RTNL_SPFLAGS be added to op_needs_rtnl, matching
-> what is already done for SET channels?
-> 
-Agreed, Will add ETHTOOL_OP_NEEDS_RTNL_SPFLAGS to .op_needs_rtnl.
-> > +		if (err) {
-> > +			netdev_err(ndev, "mana_detach failed: %d\n", err);
-> > +			apc->priv_flags = old_priv_flags;
-> > +
-> > +			/* Port is in an inconsistent state. Restore
-> > +			 * 'port_is_up' so that queue reset work handler
-> > +			 * can properly detach and re-attach.
-> > +			 */
-> > +			apc->port_is_up = true;
-> > +			schedule_port_reset = true;
-> > +			goto out;
-> > +		}
-> > +
-> > +		err = mana_attach(ndev);
-> > +		if (err) {
-> > +			netdev_err(ndev, "mana_attach failed: %d\n", err);
-> > +			apc->priv_flags = old_priv_flags;
-> > +
-> > +			/* Restore 'port_is_up' so the reset work handler
-> > +			 * can properly detach/attach. Without this,
-> > +			 * the handler sees port_is_up=false and skips
-> > +			 * queue allocation, leaving the port dead.
-> > +			 */
-> > +			apc->port_is_up = true;
-> > +			schedule_port_reset = true;
-> 
-> [High]
-> On this branch, mana_detach() has already succeeded and run
-> mana_cleanup_port_context(), so apc->rxqs is NULL and queues are torn
-> down.  Setting apc->port_is_up = true here between now and when
-> queue_reset_work runs opens a window where callers gate on port_is_up
-> as their "safe to access rxqs/tx_qp" predicate.
-> 
-> For example, mana_get_ethtool_stats() does:
-> 
-> 	if (!apc->port_is_up)
-> 		return;
-> 	...
-> 	rxq = apc->rxqs[q];
-> 	...
-> 
-> A concurrent ethtool -S invocation during that window will pass the
-> port_is_up gate and dereference apc->rxqs[q]->stats on a NULL rxqs.
-> 
-> Is the port_is_up restore actually needed for the reset work handler's
-> mana_detach() call?  On the reset path, mana_detach() takes its early
-> return when !netif_device_present(ndev):
-> 
-> 	if (!from_close && !netif_device_present(ndev))
-> 		return 0;
-> 
-> That early return does not touch apc->port_st_save, so the saved state
-> from the earlier successful mana_detach() should already be intact for
-> the follow-up mana_attach().
-> 
-> There is also no smp_wmb() paired with this write, unlike the pattern
-> used inside mana_detach()/mana_attach() proper.
-> 
-
-For the mana_attach() failure path: agreed, will remove port_is_up =
-true. After a successful mana_detach(ndev, false), netif_device_detach()
-has already been called so the reset handler's mana_detach() takes the
-early return via !netif_device_present(), preserving port_st_save for
-the subsequent mana_attach().
-
-For the mana_detach() failure path: keeping port_is_up = true is
-intentional. Here netif_device_detach() was never reached, so the reset
-handler's mana_detach() would re-enter fully and overwrite port_st_save
-from port_is_up, if left as false, mana_attach() would skip queue
-allocation and leave the port dead.
+* How do you think about to increase the application of scope-based resour=
+ce management?
 
 
-> > +		}
-> > +	}
-> > +
-> > +out:
-> > +	mana_pre_dealloc_rxbufs(apc);
-> > +
-> > +	if (schedule_port_reset)
-> > +		queue_work(apc->ac->per_port_queue_reset_wq,
-> > +			   &apc->queue_reset_work);
-> > +
-> > +	return err;
-> > +}
-> > +
-> 
-> [ ... remaining hunks unrelated to the comments above ... ]
-
-Thanks for the review comments, I will address them in the next
-version.
-
-
-Regards
-Dipayaan Roy
+Regards,
+Markus
 
