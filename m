@@ -1,343 +1,380 @@
-Return-Path: <linux-hyperv+bounces-11882-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11883-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id zXB2EYGJT2pxjAIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11882-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Thu, 09 Jul 2026 13:44:01 +0200
+	id rtw8AGLDT2oToAIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11883-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Thu, 09 Jul 2026 17:50:58 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7BE673086E
-	for <lists+linux-hyperv@lfdr.de>; Thu, 09 Jul 2026 13:44:00 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 572B77331E2
+	for <lists+linux-hyperv@lfdr.de>; Thu, 09 Jul 2026 17:50:57 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linux.microsoft.com header.s=default header.b=hovpNZ3T;
+	dkim=pass header.d=linux.microsoft.com header.s=default header.b=ECJiMV3l;
 	dmarc=pass (policy=none) header.from=linux.microsoft.com;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11882-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11882-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11883-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11883-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 887B431088AE
-	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Jul 2026 11:35:24 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 197CB303C7D6
+	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Jul 2026 15:48:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C73041CB48;
-	Thu,  9 Jul 2026 11:33:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1ADE423A6A;
+	Thu,  9 Jul 2026 15:48:11 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C78141B37F;
-	Thu,  9 Jul 2026 11:33:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D940426694;
+	Thu,  9 Jul 2026 15:48:08 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783596830; cv=none; b=VmYftbZuqx/g+0Yz/k/UXSY55T2LQUt+uwVfu2hrsKpU9xJ5C4BkMQk7488CEgAGISI9P9LW3YoaqoWsn+fRez72EnxIlLcmAnUTDFwsoQ+KSR2+f2BwUzdOEVqyUg/RZdXcZUFsoFa6bNK9qR896EYU9muX9IGR4VfQZAuESrs=
+	t=1783612091; cv=none; b=EXRxQFjifsFOjk9hiZ+qakn2CyFCOBWLUImlbdvBsa6VWeTE67r+ts4Nrt7inrwPqmDGCWBcHcGu43R96QoqeMhiBIGO1Ym8QsmIBVDzQLXBmj48JKig0gh6rPtPiCDAJUE7kVwXTiHAMyoEEYLXma8h82xHOa2aGShBgWsW11s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783596830; c=relaxed/simple;
-	bh=K0THlXNwZqipz/KEI06FjAdUeSpg5s7LDONtQ2Zte8g=;
+	s=arc-20240116; t=1783612091; c=relaxed/simple;
+	bh=Gx3BetVdOhK9tL3J4kYCUB6lFM5K/OloIYl5fsDDOFQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A3Of4dP9I/Akf5phD5Z5OgdQCrc3odfuk4wDVOHz02BSvv8k6XYtKkFOG5H5bw31MAUFu16bOjfnb+bRjoYpYcPypj2/pXTOMSboGVQiTAjZnU1oQ5LA+3/HRkj4kK22CVIEMh1v3SWZRKZgQRxFJWd9ud3HMMPnzHz6wmIGKuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=hovpNZ3T; arc=none smtp.client-ip=13.77.154.182
-Received: from localhost (unknown [167.220.233.38])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 4A43420B716B;
-	Thu,  9 Jul 2026 04:33:38 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4A43420B716B
+	 Content-Type:Content-Disposition:In-Reply-To; b=QxgeSQEfIQQPWeSNYLLnwq/PaUNrNgx9g1d8wc+/t9taQ94rKlrH6ySRkRvazFjxROYzaVqm5anRqfk6/rteT43IU94waTjqJ/U8T1SH+uQm2SFvE4nsUyet93KPkH04XKM1bmwrdCYlDNjHCEoRdZXyCMSIHbwpwCuyP/Tz9nY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ECJiMV3l; arc=none smtp.client-ip=13.77.154.182
+Received: by linux.microsoft.com (Postfix, from userid 1204)
+	id 1852720B716D; Thu,  9 Jul 2026 08:48:03 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1852720B716D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1783596818;
-	bh=LJd/+GU+PpP/Ium6hNk30csI0fmCJwtgCwZHUVsgKho=;
+	s=default; t=1783612083;
+	bh=KrNo05al+iHU65EqWsm2pT9OTDN3Qql+zzSQH5XVV/o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hovpNZ3TPhHx/HgG/98cgurUwIpqSkztqwDe0evKW+PVJY8k7FqGSIMz2PlREZPEW
-	 5FRx12WtVtyS1Sjp6ozdvLGdCLoGIMag2WiCU2x6FgNo6nsSQ7VensjxunuGYb+i+H
-	 undDj7/2n65it5yFFcbnKT4Asefw6BMab67xV/Nk=
-Date: Thu, 9 Jul 2026 19:33:41 +0800
-From: Yu Zhang <zhangyu1@linux.microsoft.com>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>, 
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, 
-	"wei.liu@kernel.org" <wei.liu@kernel.org>, "kys@microsoft.com" <kys@microsoft.com>, 
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>, "decui@microsoft.com" <decui@microsoft.com>, 
-	"longli@microsoft.com" <longli@microsoft.com>, "joro@8bytes.org" <joro@8bytes.org>, 
-	"will@kernel.org" <will@kernel.org>, "robin.murphy@arm.com" <robin.murphy@arm.com>, 
-	"bhelgaas@google.com" <bhelgaas@google.com>, "kwilczynski@kernel.org" <kwilczynski@kernel.org>, 
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>, "mani@kernel.org" <mani@kernel.org>, 
-	"robh@kernel.org" <robh@kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "jgg@ziepe.ca" <jgg@ziepe.ca>, 
-	"jacob.pan@linux.microsoft.com" <jacob.pan@linux.microsoft.com>, "tgopinath@linux.microsoft.com" <tgopinath@linux.microsoft.com>, 
-	"easwar.hariharan@linux.microsoft.com" <easwar.hariharan@linux.microsoft.com>, "mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>
-Subject: Re: [PATCH v2 2/4] Drivers: hv: Add logical device ID registry for
- vPCI devices
-Message-ID: <ja2drof5i7xjhpj4vbpavnphtn6cx4y5d3337vjrofxr47gxtq@msvg6xpbkb2h>
-References: <20260702160518.311234-1-zhangyu1@linux.microsoft.com>
- <20260702160518.311234-3-zhangyu1@linux.microsoft.com>
- <SN6PR02MB415798534DFCC14E5202D021D4FF2@SN6PR02MB4157.namprd02.prod.outlook.com>
- <u2l4lz5skybcukrb6hwp2u6v3jdibrugokxmclgv3uq4ljj3vw@x7mlfvuwb5f4>
- <BN7PR02MB4148C8DB748CFD863B97D1B7D4FF2@BN7PR02MB4148.namprd02.prod.outlook.com>
+	b=ECJiMV3l1QuK0yFx8wTLGR+6qMqz3l/AwK74cYG7G/q0DsO9ufiapDLnJulAJdhxn
+	 iTsI/WZQrL25aOZYr8+bbdAUrTxPlfgUth1SLpdHeSd6P/welskVBuGGl0VRn6a1Qe
+	 4AKFz8rByCM3n2haE/ILCOdfP2VGxXoUhvN3rc4c=
+Date: Thu, 9 Jul 2026 08:48:03 -0700
+From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+To: Simon Horman <horms@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	leon@kernel.org, longli@microsoft.com, kotaranov@microsoft.com,
+	shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com,
+	ernis@linux.microsoft.com, shirazsaleem@microsoft.com,
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+	stephen@networkplumber.org, jacob.e.keller@intel.com,
+	dipayanroy@microsoft.com, leitao@debian.org, kees@kernel.org,
+	john.fastabend@gmail.com, hawk@kernel.org, bpf@vger.kernel.org,
+	daniel@iogearbox.net, ast@kernel.org, sdf@fomichev.me,
+	yury.norov@gmail.com, pavan.chebbi@broadcom.com
+Subject: Re: [PATCH net-next v11 2/2] net: mana: force full-page RX buffers
+ via ethtool private flag
+Message-ID: <ak/Cs/qWVJD57qgl@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20260701141808.461554-3-dipayanroy@linux.microsoft.com>
+ <20260708155741.1509815-2-horms@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <BN7PR02MB4148C8DB748CFD863B97D1B7D4FF2@BN7PR02MB4148.namprd02.prod.outlook.com>
+In-Reply-To: <20260708155741.1509815-2-horms@kernel.org>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.66 / 15.00];
+X-Spamd-Result: default: False [-3.66 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[microsoft.com:d:+,kernel.org:s:+];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:mhklinux@outlook.com,m:linux-kernel@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:iommu@lists.linux.dev,m:linux-pci@vger.kernel.org,m:linux-arch@vger.kernel.org,m:wei.liu@kernel.org,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:decui@microsoft.com,m:longli@microsoft.com,m:joro@8bytes.org,m:will@kernel.org,m:robin.murphy@arm.com,m:bhelgaas@google.com,m:kwilczynski@kernel.org,m:lpieralisi@kernel.org,m:mani@kernel.org,m:robh@kernel.org,m:arnd@arndb.de,m:jgg@ziepe.ca,m:jacob.pan@linux.microsoft.com,m:tgopinath@linux.microsoft.com,m:easwar.hariharan@linux.microsoft.com,m:mrathor@linux.microsoft.com,s:lists@lfdr.de];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[25];
-	FREEMAIL_TO(0.00)[outlook.com];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER(0.00)[zhangyu1@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:horms@kernel.org,m:pabeni@redhat.com,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:andrew+netdev@lunn.ch,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:leon@kernel.org,m:longli@microsoft.com,m:kotaranov@microsoft.com,m:shradhagupta@linux.microsoft.com,m:ssengar@linux.microsoft.com,m:ernis@linux.microsoft.com,m:shirazsaleem@microsoft.com,m:linux-hyperv@vger.kernel.org,m:netdev@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:stephen@networkplumber.org,m:jacob.e.keller@intel.com,m:dipayanroy@microsoft.com,m:leitao@debian.org,m:kees@kernel.org,m:john.fastabend@gmail.com,m:hawk@kernel.org,m:bpf@vger.kernel.org,m:daniel@iogearbox.net,m:ast@kernel.org,m:sdf@fomichev.me,m:yury.norov@gmail.com,m:pavan.chebbi@broadcom.com,m:andrew@lunn.ch,m:johnfastabend@gmail.com,m:yurynorov@gmail.com,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-11883-lists,linux-hyperv=lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[35];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[dipayanroy@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[zhangyu1@linux.microsoft.com,linux-hyperv@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-11882-lists,linux-hyperv=lfdr.de];
+	FROM_NEQ_ENVFROM(0.00)[dipayanroy@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FREEMAIL_CC(0.00)[microsoft.com,kernel.org,lunn.ch,davemloft.net,google.com,redhat.com,linux.microsoft.com,vger.kernel.org,networkplumber.org,intel.com,debian.org,gmail.com,iogearbox.net,fomichev.me,broadcom.com];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,linux.dev:url,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.microsoft.com:from_mime,linux.microsoft.com:dkim,linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: A7BE673086E
+X-Rspamd-Queue-Id: 572B77331E2
 
-On Wed, Jul 08, 2026 at 01:28:42PM +0000, Michael Kelley wrote:
-> From: Yu Zhang <zhangyu1@linux.microsoft.com> Sent: Wednesday, July 8, 2026 6:09 AM
-> > 
-> > On Wed, Jul 08, 2026 at 02:52:43AM +0000, Michael Kelley wrote:
-> > > From: Yu Zhang <zhangyu1@linux.microsoft.com> Sent: Thursday, July 2, 2026 9:05 AM
-> > > >
-> > > > From: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
-> > > >
-> > > > Hyper-V identifies each PCI pass-thru device by a logical device ID in
-> > > > its hypercall interface. This ID consists of a per-bus prefix, derived
-> > > > from the VMBus device instance GUID, combined with the PCI function
-> > > > number of the endpoint device.
-> > > >
-> > > > Add a small registry in hv_common.c that maps a PCI domain number to its
-> > > > logical device ID prefix. The vPCI bus driver (pci-hyperv) registers the
-> > > > prefix when a bus is probed and unregisters it when the bus is removed.
-> > > > Consumers such as the para-virtualized IOMMU driver look up the prefix
-> > > > by PCI domain number and combine it with the function number to form the
-> > > > complete logical device ID for hypercalls.
-> > > >
-> > > > The prefix construction is shared via hv_build_logical_dev_id_prefix() so
-> > > > that pci-hyperv's interrupt retargeting path and the registry use exactly
-> > > > the same byte layout. It is derived on demand from the constant hv_device
-> > > > instance GUID rather than cached in struct hv_pcibus_device, which is
-> > > > private to the pci-hyperv module; this keeps the interface narrow and
-> > > > avoids depending on pci-hyperv internals.
-> > > >
-> > > > Co-developed-by: Yu Zhang <zhangyu1@linux.microsoft.com>
-> > > > Signed-off-by: Yu Zhang <zhangyu1@linux.microsoft.com>
-> > > > Signed-off-by: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
-> > > > ---
-> > > >  drivers/hv/hv_common.c              | 95 +++++++++++++++++++++++++++++
-> > > >  drivers/pci/controller/pci-hyperv.c | 21 +++++--
-> > > >  include/asm-generic/mshyperv.h      | 13 ++++
-> > > >  include/linux/hyperv.h              |  8 +++
-> > > >  4 files changed, 132 insertions(+), 5 deletions(-)
-> > > >
-> > > > diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-> > > > index 6b67ac616789..53493f8d14dc 100644
-> > > > --- a/drivers/hv/hv_common.c
-> > > > +++ b/drivers/hv/hv_common.c
-> > > > @@ -26,6 +26,8 @@
-> > > >  #include <linux/kmsg_dump.h>
-> > > >  #include <linux/sizes.h>
-> > > >  #include <linux/slab.h>
-> > > > +#include <linux/list.h>
-> > > > +#include <linux/spinlock.h>
-> > > >  #include <linux/dma-map-ops.h>
-> > > >  #include <linux/set_memory.h>
-> > > >  #include <hyperv/hvhdk.h>
-> > > > @@ -863,3 +865,96 @@ const char *hv_result_to_string(u64 status)
-> > > >  	return "Unknown";
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(hv_result_to_string);
-> > > > +
-> > > > +#ifdef CONFIG_HYPERV_PVIOMMU
-> > > > +/*
-> > > > + * Logical device ID registry shared between the vPCI bus driver
-> > > > + * (pci-hyperv) and the para-virtualized IOMMU driver. The vPCI driver
-> > > > + * registers the per-bus logical device ID prefix at bus probe time, and
-> > > > + * the pvIOMMU driver looks it up to build the full logical device ID used
-> > > > + * in IOMMU hypercalls.
-> > > > + */
-> > > > +struct hv_pci_busdata {
-> > > > +	int		 pci_domain_nr;
-> > > > +	u32		 logical_dev_id_prefix;
-> > > > +	struct list_head list;
-> > > > +};
-> > > > +
-> > > > +static LIST_HEAD(hv_pci_bus_list);
-> > > > +static DEFINE_SPINLOCK(hv_pci_bus_lock);
-> > > > +
-> > > > +int hv_iommu_register_pci_bus(int pci_domain_nr, u32 logical_dev_id_prefix)
-> > > > +{
-> > > > +	struct hv_pci_busdata *bus, *new;
-> > > > +	int ret = 0;
-> > > > +
-> > > > +	new = kzalloc_obj(*new, GFP_KERNEL);
-> > > > +	if (!new)
-> > > > +		return -ENOMEM;
-> > > > +
-> > > > +	spin_lock(&hv_pci_bus_lock);
-> > > > +	list_for_each_entry(bus, &hv_pci_bus_list, list) {
-> > > > +		if (bus->pci_domain_nr != pci_domain_nr)
-> > > > +			continue;
-> > > > +
-> > > > +		if (bus->logical_dev_id_prefix != logical_dev_id_prefix) {
-> > > > +			pr_err("stale registration for PCI domain %d (old prefix 0x%08x, new 0x%08x)\n",
-> > > > +			       pci_domain_nr, bus->logical_dev_id_prefix,
-> > > > +			       logical_dev_id_prefix);
-> > > > +			ret = -EEXIST;
-> > > > +		}
-> > > > +
-> > > > +		goto out_free;
-> > > > +	}
-> > > > +
-> > > > +	new->pci_domain_nr = pci_domain_nr;
-> > > > +	new->logical_dev_id_prefix = logical_dev_id_prefix;
-> > > > +	list_add(&new->list, &hv_pci_bus_list);
-> > > > +	spin_unlock(&hv_pci_bus_lock);
-> > > > +	return 0;
-> > > > +
-> > > > +out_free:
-> > > > +	spin_unlock(&hv_pci_bus_lock);
-> > > > +	kfree(new);
-> > > > +	return ret;
-> > > > +}
-> > > > +EXPORT_SYMBOL_FOR_MODULES(hv_iommu_register_pci_bus, "pci-hyperv");
-> > > > +
-> > > > +void hv_iommu_unregister_pci_bus(int pci_domain_nr)
-> > > > +{
-> > > > +	struct hv_pci_busdata *bus, *tmp;
-> > > > +
-> > > > +	spin_lock(&hv_pci_bus_lock);
-> > > > +	list_for_each_entry_safe(bus, tmp, &hv_pci_bus_list, list) {
-> > > > +		if (bus->pci_domain_nr == pci_domain_nr) {
-> > > > +			list_del(&bus->list);
-> > > > +			kfree(bus);
-> > > > +			break;
-> > > > +		}
-> > > > +	}
-> > > > +	spin_unlock(&hv_pci_bus_lock);
-> > > > +}
-> > > > +EXPORT_SYMBOL_FOR_MODULES(hv_iommu_unregister_pci_bus, "pci-hyperv");
-> > > > +
-> > > > +/*
-> > > > + * Look up the logical device ID prefix registered for @pci_domain_nr.
-> > > > + * Returns 0 on success with *prefix filled in; -ENODEV if no entry is
-> > > > + * registered for that PCI domain.
-> > > > + */
-> > > > +int hv_iommu_lookup_logical_dev_id(int pci_domain_nr, u32 *prefix)
-> > > > +{
-> > > > +	struct hv_pci_busdata *bus;
-> > > > +	int ret = -ENODEV;
-> > > > +
-> > > > +	spin_lock(&hv_pci_bus_lock);
-> > > > +	list_for_each_entry(bus, &hv_pci_bus_list, list) {
-> > > > +		if (bus->pci_domain_nr == pci_domain_nr) {
-> > > > +			*prefix = bus->logical_dev_id_prefix;
-> > > > +			ret = 0;
-> > > > +			break;
-> > > > +		}
-> > > > +	}
-> > > > +	spin_unlock(&hv_pci_bus_lock);
-> > > > +	return ret;
-> > > > +}
-> > >
-> > > I started thinking about the mechanism here because it's somewhat
-> > > annoying that it takes 77 lines of code (sans comments) to manage
-> > > this simple little mapping. I also started thinking about how many entries
-> > > are likely to be in the mapping. A guest VM probably has fewer than 10
-> > > entries unless it has multiple NICs and maybe some GPUs. But this code
-> > > is also intended to be used by the Linux-as-root code, and I'm thinking
-> > > that the number of PCI devices managed by the root could easily be a
-> > > hundred or more if the root is managing a couple dozen VMs on a large
-> > > physical server. Searching a linked list with 100 or more entries could be
-> > > a bit slow.
-> > >
-> > > If only the guest scenario were needed, you could declare a static
-> > > array with 64 entries (64 is an arbitrary upper bound), and just search
-> > > through the array instead of having to allocate memory, deal with
-> > > allocation failures, and deal with linked lists. But a fixed size array
-> > > would need to be much bigger for the root scenario, and you would
-> > > still be doing a linear search.
-> > >
-> > > A better alternative to consider is rhashtable, which is an existing
-> > > Linux kernel facility. Based on what an AI bot generated for me, the
-> > > code for setting up and using rhashtable is straightforward, and
-> > > would probably result in far fewer than 77 lines of code. Lookups
-> > > would also be faster than a linear search, at least for the root case
-> > > with more than just a few entries. I'd suggest looking at rhashtable
-> > > to see whether you like how the resulting code comes out for this
-> > > use case, and whether it really is simpler than a roll-your-own linked
-> > > list.
-> > >
-> > 
-> > Thank you so much for thinking this through, Michael! That is really
-> > a valid concern.
-> > 
-> > How about using XArray? It might be more lightweight compared with
-> > rhashtable. Using pci_domain_nr as the key and prefix as the value.
-> > Maybe sth. like:
-> >                                                                                                                                                         ┃
-> > 	static DEFINE_XARRAY(hv_pci_bus_xa);
-> > 
-> > 	int hv_iommu_register_pci_bus(int domain_nr, u32 prefix)
-> > 	{
-> > 		return xa_insert(&hv_pci_bus_xa, domain_nr,
-> > 				xa_mk_value(prefix), GFP_KERNEL);
-> > 	}                                                                                                                                                ┃
-> > 
-> > 	void hv_iommu_unregister_pci_bus(int domain_nr)
-> > 	{
-> > 		xa_erase(&hv_pci_bus_xa, domain_nr);
-> > 	}
-> > 
-> > 	int hv_iommu_lookup_logical_dev_id(int domain_nr, u32 *prefix)
-> > 	{
-> > 		void *entry = xa_load(&hv_pci_bus_xa, domain_nr);
-> > 		if (!entry)
-> > ┃
-> > 			return -ENODEV;
-> > 		*prefix = xa_to_value(entry);
-> > 		return 0;
-> > ┃
-> > 	}
-> > 
+On Wed, Jul 08, 2026 at 04:57:42PM +0100, Simon Horman wrote:
+> This is an AI-generated review of your patch. The human sending this
+> email has considered the AI review valid, or at least plausible.
+> Full review at: https://netdev-ai.bots.linux.dev/sashiko/
+> ---
+> net: mana: force full-page RX buffers via ethtool private flag
 > 
-> xarray is best where the keys are dense or mostly dense integers. In
-> this use case, the pci_domain_nr keys are essentially random 16-bit
-> values, which doesn't fit xarray as well. It would work, but wouldn't
-> be very efficient. See the 2nd paragraph of the documentation here:
+> This adds an ethtool private flag "full-page-rx" that forces one RX buffer
+> per page to avoid a page_pool fragment path throughput regression on some
+> 4K PAGE_SIZE ARM64 platforms. Toggling the flag while the port is up
+> triggers a mana_detach() + mana_attach() reconfiguration to apply the new
+> buffer layout.
 > 
-> https://www.kernel.org/doc/html/latest/core-api/xarray.html#xarray
+> A few questions inline.
+> 
+> > diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> > index 7438ea6b3f26..38f50b4eef87 100644
+> > --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> > +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> 
+> [ ... mana_use_single_rxbuf_per_page() and mana_get_rxbuf_cfg() hunks
+>       unrelated to the comments below ... ]
+> 
+> > diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+> > index 3531abfdaf43..24f6ce63b031 100644
+> > --- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+> > +++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+> 
+> [ ... ]
+> 
+> > @@ -611,6 +630,88 @@ static int mana_get_link_ksettings(struct net_device *ndev,
+> >  	return 0;
+> >  }
+> >  
+> > +static u32 mana_get_priv_flags(struct net_device *ndev)
+> > +{
+> > +	struct mana_port_context *apc = netdev_priv(ndev);
+> > +
+> > +	return apc->priv_flags;
+> > +}
+> > +
+> > +static int mana_set_priv_flags(struct net_device *ndev, u32 priv_flags)
+> > +{
+> > +	struct mana_port_context *apc = netdev_priv(ndev);
+> > +	u32 changed = apc->priv_flags ^ priv_flags;
+> > +	u32 old_priv_flags = apc->priv_flags;
+> > +	bool schedule_port_reset = false;
+> > +	int err = 0;
+> > +
+> > +	if (!changed)
+> > +		return 0;
+> > +
+> > +	/* Reject unknown bits */
+> > +	if (priv_flags & ~GENMASK(MANA_PRIV_FLAG_MAX - 1, 0))
+> > +		return -EINVAL;
+> > +
+> > +	if (changed & BIT(MANA_PRIV_FLAG_USE_FULL_PAGE_RXBUF)) {
+> > +		apc->priv_flags = priv_flags;
+> 
+> [Low]
+> Is the storage of priv_flags intentionally nested inside the per-flag
+> branch?  With only one flag today this is fine, but when a second bit is
+> added to enum mana_priv_flag_bits, a user toggling only the new bit
+> passes the !changed and unknown-bits checks, the outer if is skipped,
+> apc->priv_flags is never updated, and mana_set_priv_flags() returns 0
+> while mana_get_priv_flags() keeps reporting the old state.
+> 
+> Would it be cleaner to store priv_flags unconditionally after validation
+> and use per-flag if (changed & BIT(...)) blocks only for the
+> flag-specific reconfiguration?
 > 
 
-Thanks for pointing out the documentation. You're right. With sparse
-16-bit keys, a hash-based data structure makes more sense than a
-radix-based one. I'll try reworking it with rhashtable and let you
-know if it doesn't work out.
+Hi Simon, Paolo,
 
-B.R.
-Yu
-> Michael
+Agreed on this future concern,
+but also we donot plan to have another mana driver private flag.
+
+
+> > +
+> > +		if (!apc->port_is_up) {
+> > +			/* Port is down, flag updated to apply on next up
+> > +			 * so just return.
+> > +			 */
+> > +			return 0;
+> > +		}
+> > +
+> > +		/* Pre-allocate buffers to prevent failure in mana_attach
+> > +		 * later
+> > +		 */
+> > +		err = mana_pre_alloc_rxbufs(apc, ndev->mtu, apc->num_queues);
+> 
+> [Low]
+> When the MTU is already jumbo (mtu + MANA_RXBUF_PAD > PAGE_SIZE / 2) or
+> XDP is attached, mana_use_single_rxbuf_per_page() already returns true
+> regardless of the new priv flag:
+> 
+> 	if (apc->priv_flags & BIT(MANA_PRIV_FLAG_USE_FULL_PAGE_RXBUF))
+> 		return true;
+> 
+> 	/* For xdp and jumbo frames make sure only one packet fits per page. */
+> 	if (mtu + MANA_RXBUF_PAD > PAGE_SIZE / 2 || mana_xdp_get(apc))
+> 		return true;
+> 
+> In that case mana_get_rxbuf_cfg() produces identical output whether the
+> new flag is on or off, yet toggling the flag here always performs a full
+> mana_pre_alloc_rxbufs() + mana_detach() + mana_attach() cycle and flaps
+> the link.
+> 
+> Would a pre/post comparison of mana_get_rxbuf_cfg() output be worth
+> adding to skip the reconfiguration when nothing actually changes?
+Good point will add a pre and post comparison as well to skip the
+detach/attach when already in that configuration.
+
+> 
+> [High]
+> mana_set_priv_flags() drives the same detach/attach sequence used by
+> mana_set_channels() and mana_per_port_queue_reset_work_handler(), but
+> does not take apc->vport_mutex and set apc->channel_changing = true
+> across the window.
+> 
+> The struct comment on channel_changing spells out the invariant:
+> 
+> 	/* Set by mana_set_channels() under vport_mutex to block RDMA
+> 	 * from grabbing the vport during the detach/attach window.
+> 	 * Checked by mana_cfg_vport() when called from the RDMA path.
+> 	 */
+> 	bool channel_changing;
+> 
+> Without it, after mana_detach() uncfg's the vport an RDMA client can
+> call mana_cfg_vport() and bump vport_use_count, and then mana_attach()
+> will fail with -EBUSY when it re-cfg's the vport.
+> 
+> There is also no equivalent of the '!port_is_up && vport_use_count'
+> early -EBUSY check that mana_set_channels() performs, so is the flag
+> allowed to be changed silently while an RDMA client is using the vport?
+> 
+Agreed. Will add the same vport_mutex + channel_changing pattern used by
+mana_set_channels() and mana_per_port_queue_reset_work_handler() to
+block RDMA from grabbing the vport during the detach/attach window.
+
+> > +		if (err) {
+> > +			netdev_err(ndev,
+> > +				   "Insufficient memory for new allocations\n");
+> > +			apc->priv_flags = old_priv_flags;
+> > +			return err;
+> > +		}
+> > +
+> > +		err = mana_detach(ndev, false);
+> 
+> [High]
+> mana_detach() begins with ASSERT_RTNL(), and so does mana_attach()
+> called below.  Is RTNL guaranteed to be held on the SET priv-flags path?
+> 
+> mana registers net_shaper_ops in mana_devops, which makes it an
+> ops-locked driver, so netdev_need_ops_lock() is true and the ethtool
+> core acquires rtnl only when the driver opts in via
+> ETHTOOL_OP_NEEDS_RTNL_* for that specific command.
+> 
+> Looking at mana_ethtool_ops.op_needs_rtnl:
+> 
+> 	.op_needs_rtnl		= ETHTOOL_OP_NEEDS_RTNL_SCHANNELS |
+> 				  ETHTOOL_OP_NEEDS_RTNL_SRINGPARAM |
+> 				  ETHTOOL_OP_NEEDS_RTNL_GLINK,
+> 
+> ETHTOOL_OP_NEEDS_RTNL_SPFLAGS is not listed, so ASSERT_RTNL() in the
+> detach/attach helpers below will WARN, and the code races with
+> RTNL-serialized mutators (mana_open, mana_close, mana_change_mtu,
+> mana_tx_timeout) that read and write apc->port_is_up, apc->rxqs,
+> apc->tx_qp and apc->port_st_save.
+> 
+> Should ETHTOOL_OP_NEEDS_RTNL_SPFLAGS be added to op_needs_rtnl, matching
+> what is already done for SET channels?
+> 
+Agreed, Will add ETHTOOL_OP_NEEDS_RTNL_SPFLAGS to .op_needs_rtnl.
+> > +		if (err) {
+> > +			netdev_err(ndev, "mana_detach failed: %d\n", err);
+> > +			apc->priv_flags = old_priv_flags;
+> > +
+> > +			/* Port is in an inconsistent state. Restore
+> > +			 * 'port_is_up' so that queue reset work handler
+> > +			 * can properly detach and re-attach.
+> > +			 */
+> > +			apc->port_is_up = true;
+> > +			schedule_port_reset = true;
+> > +			goto out;
+> > +		}
+> > +
+> > +		err = mana_attach(ndev);
+> > +		if (err) {
+> > +			netdev_err(ndev, "mana_attach failed: %d\n", err);
+> > +			apc->priv_flags = old_priv_flags;
+> > +
+> > +			/* Restore 'port_is_up' so the reset work handler
+> > +			 * can properly detach/attach. Without this,
+> > +			 * the handler sees port_is_up=false and skips
+> > +			 * queue allocation, leaving the port dead.
+> > +			 */
+> > +			apc->port_is_up = true;
+> > +			schedule_port_reset = true;
+> 
+> [High]
+> On this branch, mana_detach() has already succeeded and run
+> mana_cleanup_port_context(), so apc->rxqs is NULL and queues are torn
+> down.  Setting apc->port_is_up = true here between now and when
+> queue_reset_work runs opens a window where callers gate on port_is_up
+> as their "safe to access rxqs/tx_qp" predicate.
+> 
+> For example, mana_get_ethtool_stats() does:
+> 
+> 	if (!apc->port_is_up)
+> 		return;
+> 	...
+> 	rxq = apc->rxqs[q];
+> 	...
+> 
+> A concurrent ethtool -S invocation during that window will pass the
+> port_is_up gate and dereference apc->rxqs[q]->stats on a NULL rxqs.
+> 
+> Is the port_is_up restore actually needed for the reset work handler's
+> mana_detach() call?  On the reset path, mana_detach() takes its early
+> return when !netif_device_present(ndev):
+> 
+> 	if (!from_close && !netif_device_present(ndev))
+> 		return 0;
+> 
+> That early return does not touch apc->port_st_save, so the saved state
+> from the earlier successful mana_detach() should already be intact for
+> the follow-up mana_attach().
+> 
+> There is also no smp_wmb() paired with this write, unlike the pattern
+> used inside mana_detach()/mana_attach() proper.
+> 
+
+For the mana_attach() failure path: agreed, will remove port_is_up =
+true. After a successful mana_detach(ndev, false), netif_device_detach()
+has already been called so the reset handler's mana_detach() takes the
+early return via !netif_device_present(), preserving port_st_save for
+the subsequent mana_attach().
+
+For the mana_detach() failure path: keeping port_is_up = true is
+intentional. Here netif_device_detach() was never reached, so the reset
+handler's mana_detach() would re-enter fully and overwrite port_st_save
+from port_is_up, if left as false, mana_attach() would skip queue
+allocation and leave the port dead.
+
+
+> > +		}
+> > +	}
+> > +
+> > +out:
+> > +	mana_pre_dealloc_rxbufs(apc);
+> > +
+> > +	if (schedule_port_reset)
+> > +		queue_work(apc->ac->per_port_queue_reset_wq,
+> > +			   &apc->queue_reset_work);
+> > +
+> > +	return err;
+> > +}
+> > +
+> 
+> [ ... remaining hunks unrelated to the comments above ... ]
+
+Thanks for the review comments, I will address them in the next
+version.
+
+
+Regards
+Dipayaan Roy
 
