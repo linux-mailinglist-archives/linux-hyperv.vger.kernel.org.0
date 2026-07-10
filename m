@@ -1,86 +1,86 @@
-Return-Path: <linux-hyperv+bounces-11906-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11907-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id UMu3JSoiUWoD/wIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11906-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jul 2026 18:47:38 +0200
+	id 9xrwM1AhUWri/gIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11907-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jul 2026 18:44:00 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15ABD73CB01
-	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jul 2026 18:47:38 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F70473CAAE
+	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jul 2026 18:44:00 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ziepe.ca header.s=google header.b=MTVA1wSc;
+	dkim=pass header.d=ziepe.ca header.s=google header.b=AyS1Bxmo;
 	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11906-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11906-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11907-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11907-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 7970C3013883
-	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jul 2026 16:43:16 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 47D38301EF72
+	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jul 2026 16:43:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A20EF43B3D4;
-	Fri, 10 Jul 2026 16:43:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D20C43C05B;
+	Fri, 10 Jul 2026 16:43:49 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21DE43B3EF
-	for <linux-hyperv@vger.kernel.org>; Fri, 10 Jul 2026 16:43:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C5A43B3E6
+	for <linux-hyperv@vger.kernel.org>; Fri, 10 Jul 2026 16:43:48 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783701795; cv=none; b=TO/ciPIUaZDgcWxdAPObWfuB3kEysUdlTlAmUAKrOmFnzp6+kY/2tZ6YwccUIOJjfUCJqBg14UJ8N5LoaZuTYKZ+QN0ytFVrxPhCO95FjNgXz5eqZqaq9gIDy2+kRO6a/8Rpld3Uk229dfw2S1UgJ0wqYKFQVnhwKw0uZChKIvw=
+	t=1783701829; cv=none; b=hgwYHlfKSvwnmMO3FhKAHBgK53KUH2hFDa7+nFOcQZJNuxr8yu+qE4ZFkmyeHMXg2Ml4V40FN7MN5va2fr9hD63DIzSA3OVGVbwzB9GE/eaB30fM2L1w4FVTx8yTdpaGYn8jhlToAeqvoDhShJtpbCFTAgiclmvdAsSRlL95ntE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783701795; c=relaxed/simple;
-	bh=ZL2zX2D9UZwwCtPCpSQDsF4TpGKLC8vJlz83DhiVqG4=;
+	s=arc-20240116; t=1783701829; c=relaxed/simple;
+	bh=uIhVIgctXUQcWy00AudXCG6kW+KyBF/3q5iL5v2zEVg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=isuunAmyjS1UDFRMUVyAuFUbOF5+wzfjgNE66yVUxkMWqq8+H9WmZYlGjNAhVtZDIdPYMRAwLV6FKZt1GfzmGA0y6FeehwpYaUTBLyhDTNeA7kQ1u1aALNXpmMVltQ0jbOjXBjVY/UZEkpFk3K7nyEZ/PQcxR3x5f7HHS8D0Njo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=MTVA1wSc; arc=none smtp.client-ip=209.85.219.54
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-8efcfdb2b43so7500666d6.3
-        for <linux-hyperv@vger.kernel.org>; Fri, 10 Jul 2026 09:43:13 -0700 (PDT)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qkdg3NQuhztfCyfbGG5w5EvB6CoDc8ssTpnFWTrm9w7mbgwejXPyfqWw4mxR+4D41RK3UNIvRsAX7PwSG9OIt58Rj9NlNoG0GV26rMuQdmikFQPbQFIR9JGJZW1vJ6QKHHY9X7+WkwuIhLf9H+7n/nQeG/LTMPMJLfbyAWNGmDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=AyS1Bxmo; arc=none smtp.client-ip=209.85.222.169
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-920f33347f5so58828985a.3
+        for <linux-hyperv@vger.kernel.org>; Fri, 10 Jul 2026 09:43:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1783701793; x=1784306593; darn=vger.kernel.org;
+        d=ziepe.ca; s=google; t=1783701827; x=1784306627; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=cCrA5GvcNcomQ8YHAskvpnsx6mUAVwyB/JWdGkfbiJc=;
-        b=MTVA1wScQzJ9mlsaDCFYAeIc6xDO4WA4Ha4RmRKgQuysCFeal1CB14Sstfu4qFZ55f
-         5cmlur51RFp7E08XP0GP0n+sZtz0fWTWn9KAeT+6cdTgXgk34jVkAL2//BWc+AE0eh/o
-         pVATPDZeP9aLep4mUYpOaw5F8BtOjdTkDlFFtCYDYFB30W/Ghd/j3osldimeaWfpiVXF
-         eWKYnURUzVLAc1nLwCsM4FJLlramamUsaud7zt/S+jZKmlI4H5rpUl06VdgG6YIGp1PF
-         bBsToAihc8O4hRIFyPSAuyBXyTdFTL5VmCtZBBTfB+Qaq1KgIVsfqYJIuAv6sv+JXdkA
-         wJGg==
+        bh=WXM4slhr2CFKJAVwVD2VemgO6fJY6jlNQ4kyqua9fHY=;
+        b=AyS1Bxmo0N6YHkVKH9oyazzctAf/4C32alIBv/QFTAAa8UmyfwpnYGzVReGFWv+DP3
+         VcpePWyG1bS/CSWG/+IpVMdTuFeZrVes+MBNYw+9jRJF8pK+0K9aHMt4bLIgaQ/7/9hy
+         VEfaWMdWITdKdLpPAeSE7Qtwa29EwC4oxt3cBiOlEwjIPNBgoy3jXc7Geh1fAHMdfQfZ
+         Kmmja0r7dBY5Rh+6mWUg0+qVA8QOzx1s2Y0bHZcGk6L+fiUylkBBPLREklZMk2T+VfcS
+         x9bojoZx144A8gDBS9ilm5M0wynR0XIEzLUj2z+6xCiHnXv+Il1atWK2ekrdouHfCya1
+         A7aQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783701793; x=1784306593;
+        d=1e100.net; s=20251104; t=1783701827; x=1784306627;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=cCrA5GvcNcomQ8YHAskvpnsx6mUAVwyB/JWdGkfbiJc=;
-        b=Wx0Rnna6PCUoeEWAleXi9t65w7H0gKFuZ+d2CIIXh2nN9OnNwCFDgVbhFKb9p5SjO7
-         zMopwzz/0hvl/C6rFFX2zXFg9W0G0VMrAR/TnN4DlEhOsIAUgaRt9VWVJvbir2zcTwob
-         zG50o0XrstIxwwuenCyZFLLg6mAyBPw4pKJdFc6d9O9R1i3ejI7Fm9T7qxtGGfnBQYD3
-         HmHurnKAtFB8ywV6L+iDgGMbeywDyAjqfhko3RrzrXFz7M1bgJuFKMiESz6DmbvALggB
-         rx4gy+OBCognbsVdbFsRskx7jM9aFrMsq/2fcUU8wwkcyeQ77PCfVp2NOiwFn9kAlFRt
-         sXog==
-X-Forwarded-Encrypted: i=1; AHgh+RpiebSiIuABgraeCmq0VgY+Dl2lr7XKaFyisDBnli3yUazx43HuFoI3H3weRu0LJfwXt4fY4C5cH+/wsmo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7rcV+Qks0dw2YZDJyriS8FEYhcpM63ZdatTOoIei3maIUYss+
-	4/1v1PlZZEiNrbJfyrxbjwYaphqcsOd2Djklj2p2YSbl6UViTqoip73r0xKsLeB2zkU=
-X-Gm-Gg: AfdE7cnPBSgU8DKEpmHWNW8o0oTo8k4qVc9omTLgwZfLSHe47ZpD1FRo8EXNAsZgL1N
-	kYIs+6GmDqgoDsw95MiSrlpvl6l4aHF4+q428bsMJ9Pq4K9cbtzAvH1x7IXpgg1a6AgFEJTR0wY
-	q/7nG9tswFjpnpPzJVho6Kk1sktfrwBTGHWQp+c+mTUK2rMbbXv2hw9eLrhfKWDDTzWKkqcSCQ+
-	noFW01IJir30wWrDdQFkXSFf5JzRvMhESkKUd5zNvIRVj30Y5bIArpvDJvM9G5x0ANc6MH2sJvr
-	8NtrGKYQVxADYRhmRRPUd+Rixd9ngCjEhXpogx1Z5oSq/nhiiWPg25QC652T05adMT+4opldasU
-	2QgRSHOZ5+XGcs2joOdyG1FIfxY34e1GNoNCuHZLYrzxLvC6dNC6gIl6KqhZQ
-X-Received: by 2002:a05:6214:43c8:b0:8f4:4d6:8adb with SMTP id 6a1803df08f44-8fec1d808a6mr146369176d6.22.1783701792723;
-        Fri, 10 Jul 2026 09:43:12 -0700 (PDT)
+        bh=WXM4slhr2CFKJAVwVD2VemgO6fJY6jlNQ4kyqua9fHY=;
+        b=ezvnMK2OKlg7SXCbzWJEe8qq+Soqi1bNnAwYjoLUlA9pjz97hmu9liP7lv9Eq4qFIa
+         Ye+q+K8+sa7qidJPHGXx9gKITN1zlY+YzVUbpm4+fV6cVY8UpMa6M4d4r2CjjbbbMjpM
+         k8jyh8XO5W91kYU3VIdgDLV8zgNlFLt4svIjHHpj0QA+wcSOYW4GqFvijQAGy/NR0Xws
+         5VccSAIoeLZ2HgsQthptcuUfBwHlvo29Z0W8L9EXufvPd3Cep06pTJNVIOPGIPZvCdJu
+         RtIN8Hvva2i6xsT1xPrAyOKcVhwVw4MFGTGmNWwFwoAk/YzFZNtSZqK0Xmfkj8cgmkAm
+         XnRg==
+X-Forwarded-Encrypted: i=1; AHgh+Rrb3tP0OQC0ePkN2He2vfNVH0nltmo4PnhekqB85P1FOq17O7ZBCuf4nAuEvfhRNAUnx8PQrmzXeQ/vk64=@vger.kernel.org
+X-Gm-Message-State: AOJu0YweJEbbsuObD4wbjYTUu+yYBRxBAiRjpkZ01Vs5MrbwHUfR+WQD
+	qCLRfONatNSf+xqFtAMgr6RCSXqPeIMFOsxr0g2bvK+lK48eEYppL3YtSRX/C0a/OII=
+X-Gm-Gg: AfdE7cmXPLvTp4x5yY4myfly2UvuCzXQELiC/dRTnzwzay+Xx3TdZk7prTxi0bk2khj
+	af/lG8GAFOX48eXPSUqZ/Geh64N/pUm50RxUNvK7SDlC65dexZxMIHEAIEcUU5+n5SOl173TFGT
+	UcfQdSBZn3jzsWIoyjquMMA3NJDzV0vFk0+BzDfmZW38ZPudFecmOATtEjvjzG67hcgCmLnBmG3
+	7R+4LS94l1MRoO8DOVAZAxKxYfvdSYt7hd+S6dLM/IRdDHlXVei1PTx8iPrARbJoLW2pbhCNWz0
+	95/uKZdXgMH1waY8EzzaalkHx3qskoad1JvHiyFb6rNN6Qbtwk+Y7X+rNzlTnmH04Ea/xQhFtvx
+	cgvW7fyRPHPj/Q5t2O9YTM+1fZC9n+IANdnWGedvis4tO1uK+MMy3aEfJhIsQhniaAgTOdEY=
+X-Received: by 2002:a05:620a:240f:20b0:92e:e569:dc20 with SMTP id af79cd13be357-92ee569e3c8mr347342685a.78.1783701827057;
+        Fri, 10 Jul 2026 09:43:47 -0700 (PDT)
 Received: from ziepe.ca ([159.2.72.92])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-900a7f8f5d6sm30725036d6.15.2026.07.10.09.43.11
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-92ee59223e7sm237517985a.0.2026.07.10.09.43.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2026 09:43:12 -0700 (PDT)
+        Fri, 10 Jul 2026 09:43:46 -0700 (PDT)
 Received: from jgg by wakko with local (Exim 4.97)
 	(envelope-from <jgg@ziepe.ca>)
-	id 1wiEJj-00000007Yof-1AFg;
-	Fri, 10 Jul 2026 13:43:11 -0300
-Date: Fri, 10 Jul 2026 13:43:11 -0300
+	id 1wiEKH-00000007YpZ-3qzk;
+	Fri, 10 Jul 2026 13:43:45 -0300
+Date: Fri, 10 Jul 2026 13:43:45 -0300
 From: Jason Gunthorpe <jgg@ziepe.ca>
 To: Stanislav Kinsburskii <skinsburskii@gmail.com>
 Cc: airlied@gmail.com, akhilesh@ee.iitb.ac.in, akpm@linux-foundation.org,
@@ -98,11 +98,11 @@ Cc: airlied@gmail.com, akhilesh@ee.iitb.ac.in, akpm@linux-foundation.org,
 	linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
 	linux-rdma@vger.kernel.org
-Subject: Re: [PATCH v7 6/8] RDMA/umem: Use hmm_range_fault_unlocked_timeout()
- for ODP faults
-Message-ID: <20260710164311.GU118978@ziepe.ca>
+Subject: Re: [PATCH v7 7/8] accel/amdxdna: Use
+ hmm_range_fault_unlocked_timeout() for range population
+Message-ID: <20260710164345.GV118978@ziepe.ca>
 References: <178345345668.660027.2952911919681614557.stgit@skinsburskii>
- <178345364975.660027.8790629832830633290.stgit@skinsburskii>
+ <178345365679.660027.16671418103486907555.stgit@skinsburskii>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -111,19 +111,19 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <178345364975.660027.8790629832830633290.stgit@skinsburskii>
+In-Reply-To: <178345365679.660027.16671418103486907555.stgit@skinsburskii>
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_DKIM_ALLOW(-0.20)[ziepe.ca:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FROM_HAS_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:skinsburskii@gmail.com,m:airlied@gmail.com,m:akhilesh@ee.iitb.ac.in,m:akpm@linux-foundation.org,m:corbet@lwn.net,m:dakr@kernel.org,m:david@kernel.org,m:decui@microsoft.com,m:haiyangz@microsoft.com,m:kees@kernel.org,m:kys@microsoft.com,m:leon@kernel.org,m:liam@infradead.org,m:lizhi.hou@amd.com,m:ljs@kernel.org,m:longli@microsoft.com,m:lyude@redhat.com,m:maarten.lankhorst@linux.intel.com,m:mamin506@gmail.com,m:mhocko@suse.com,m:mripard@kernel.org,m:nouveau@lists.freedesktop.org,m:ogabbay@kernel.org,m:oleg@redhat.com,m:rppt@kernel.org,m:shuah@kernel.org,m:simona@ffwll.ch,m:skhan@linuxfoundation.org,m:surenb@google.com,m:tzimmermann@suse.de,m:vbabka@kernel.org,m:wei.liu@kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-mm@kvack.org,m:linux-doc@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-kselftest@vger.kernel.org,m:linux-rdma@vger.kernel.org,s:lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-11906-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11907-lists,linux-hyperv=lfdr.de];
 	DMARC_NA(0.00)[ziepe.ca];
 	FREEMAIL_TO(0.00)[gmail.com];
 	FORGED_SENDER(0.00)[jgg@ziepe.ca,linux-hyperv@vger.kernel.org];
@@ -142,32 +142,32 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:email,ziepe.ca:from_mime,ziepe.ca:dkim,ziepe.ca:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ziepe.ca:from_mime,ziepe.ca:dkim,ziepe.ca:mid,nvidia.com:email,vger.kernel.org:from_smtp,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 15ABD73CB01
+X-Rspamd-Queue-Id: 7F70473CAAE
 
-On Tue, Jul 07, 2026 at 12:47:29PM -0700, Stanislav Kinsburskii wrote:
-> ib_umem_odp_map_dma_and_lock() takes mmap_read_lock() only around
-> hmm_range_fault(), then retries -EBUSY until HMM_RANGE_DEFAULT_TIMEOUT
-> expires.
+On Tue, Jul 07, 2026 at 12:47:36PM -0700, Stanislav Kinsburskii wrote:
+> aie2_populate_range() takes mmap_read_lock() only around hmm_range_fault().
+> It keeps a single HMM_RANGE_DEFAULT_TIMEOUT deadline for the populate pass
+> and retries -EBUSY until that deadline expires.
 > 
 > Use hmm_range_fault_unlocked_timeout() instead. The HMM helper now owns
-> the mmap lock and refreshes range->notifier_seq for its internal retries.
-> ODP keeps using HMM_RANGE_DEFAULT_TIMEOUT for each HMM fault attempt,
-> while interval invalidation retries continue to be handled by the existing
-> outer loop.
+> the mmap lock and refreshes mapp->range.notifier_seq for its internal
+> retries. Pass the remaining jiffies from the existing deadline to HMM,
+> while preserving the driver's existing outer loop for interval invalidation
+> retries and for selecting the next invalid mapping.
 > 
-> ODP still validates the interval notifier sequence while holding umem_mutex
-> before DMA mapping pages.
+> Keep returning -ETIME when the retry budget expires, matching the driver's
+> existing timeout error convention.
 > 
 > Signed-off-by: Stanislav Kinsburskii <skinsburskii@gmail.com>
 > ---
->  drivers/infiniband/core/umem_odp.c |   18 +++++-------------
->  1 file changed, 5 insertions(+), 13 deletions(-)
+>  drivers/accel/amdxdna/aie2_ctx.c |   17 +++--------------
+>  1 file changed, 3 insertions(+), 14 deletions(-)
 
 Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
