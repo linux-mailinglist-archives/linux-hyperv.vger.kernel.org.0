@@ -1,198 +1,252 @@
-Return-Path: <linux-hyperv+bounces-11914-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11915-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id H3KtIQ02UWprAwMAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11914-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jul 2026 20:12:29 +0200
+	id //3pIf1FUWq1BgMAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11915-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jul 2026 21:20:29 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB84B73D43D
-	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jul 2026 20:12:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 09F9173DAD0
+	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jul 2026 21:20:29 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=G+mmqZdc;
-	dmarc=pass (policy=none) header.from=gmail.com;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11914-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11914-lists+linux-hyperv=lfdr.de@vger.kernel.org";
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=pass header.d=microsoft.com header.s=selector2 header.b=R5wnscnf;
+	dmarc=pass (policy=reject) header.from=microsoft.com;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11915-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11915-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 175C53061817
-	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jul 2026 18:07:46 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2B3EC303609D
+	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jul 2026 19:20:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7C6337AA79;
-	Fri, 10 Jul 2026 18:07:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38230380FC0;
+	Fri, 10 Jul 2026 19:20:01 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11022095.outbound.protection.outlook.com [40.107.200.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E933803F4
-	for <linux-hyperv@vger.kernel.org>; Fri, 10 Jul 2026 18:07:27 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783706858; cv=none; b=W2xMZDJrAPiKTERzEZhibzsMdeUE8qn6KvsoXsnpailve+uum/5oxCbjPVfmIlP+k8QAztwPVo74RBS/d+wYk2PIBxGgsc3Tr5f4OTJWxw3L0kh3KM5HSbkISTwO/8yyf26PIGwutLsv89ECatM9D07NWZIIXzfoO/QqH8CaevQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783706858; c=relaxed/simple;
-	bh=O6OimzKD1xlS6Frl91Eg4/jvdk/NA4Un3exe+7jonxg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qenJmDAk+LKRCPUKBdf+ssGvI7qfHtWbCvjjVWQNEzLt2gvUshJgqo0joCuQVQEn8eJ5IWnqVCDIEVKwBaS3dxvn9Z0Vm6yx0B/KhQ7FRWAFsLiPfYrs+BfwAfijXPsYjnKI2Dp0BNluEyIvJmu+wMliQbAm0lSYordSfiFOc4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G+mmqZdc; arc=none smtp.client-ip=209.85.214.180
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2cacb8416a1so10507735ad.1
-        for <linux-hyperv@vger.kernel.org>; Fri, 10 Jul 2026 11:07:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783706847; x=1784311647; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=vK1yycrFvPnOHneU0oNi6DrjeWKqgXkTtqXMvxDGhZQ=;
-        b=G+mmqZdcs0jO8PwuouqUz0af25DOsf8ysUuT6w/JdUZb+86uc/n1BimKSReR18OYbe
-         9PkImlmJYekN/rctDqMv722YFQbGc2miKIz//KKcS18x756BAUG+70UV100zLJdYIdPe
-         OS19SaJBHmrsHD0pqZdoubdYrky89nXRiGoTmYNmZCejXcRXuOtliw6+NG/7FtsTixdp
-         gwRWecJb33MKp3I4QDqGw/46GM9u1GJnbpZ+Umbassa4Y0V+jH+xvonuYtWP4hCR7pOt
-         2gU11ttWG8V0k/7ObjIPilGj4NEepzXluwL+HEfOqrzAKOp+iXkZIEXngdF/VkMaNtFM
-         s5sA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783706847; x=1784311647;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=vK1yycrFvPnOHneU0oNi6DrjeWKqgXkTtqXMvxDGhZQ=;
-        b=IdmwLBhOTvCbyV7e1gbKON8dQOULiWPjzzOjH5xo3oR8o3239OxawwInL80qzQwN6+
-         cHdhtKbDVc7NMkvmLa9fd1PdB3VHXxvbD0BBIukFYbCKd38cH+7A7ROVw3LG4ptYgori
-         RoiMDSiy4wR3PhhSDvKZ7mZNM5DAiGTZVI2MUpAPb+EQWzWiHfMJusO67gCDWNpucoLc
-         8OfmlxW/f2L9EhSAyGQKIrKTrdMMRnq1lUv+/euEwMKVzzostu5aOt1mHZ3EWtL4E8Iw
-         U+FodvdMNbnvswad6GS55r1KGT6P1I0S3enx6c7r2onfqUAE0e3Qw5sAzc9dfUHqpy3E
-         NDQw==
-X-Forwarded-Encrypted: i=1; AHgh+RpcPhb5Fn3RyJPQy0dFqS9a0kkLekYKbtr5575DnpqCxMaXD7g5SOdYJ1Pq43AotzoHLQTrDPC9+kssaro=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBSaVlsXJTb/jnvVlK8sxiR2l0H5EDIqfU1YgxSY/M44zY8Jvp
-	md1fxsMdr+l9upAPBOr/7BuAwi639MMhdY54deBaJqCNc9dhUjamgHXk
-X-Gm-Gg: AfdE7cnQ6GIWlMkH05HkOyHjDpfNOC1jnLcpyQfoND6UyPYotrMUOCK0VBQXLQVMtFK
-	lm8VtAqoGX3xqz+xbAGd3/xN7KteuLYJi8kDQnURjNW6eo3sCwTeli5wJ2VWCB63zLqe8o/CN0+
-	ZxRCr8ZKOLiO+3rzjAndybRfU1jg8w0h6+YuEGQ1N7iYxuHWifIY9y90wDTtP0YUcHiUN+UYS/o
-	WXAv8jNNrFhSXQvuRxik9xxj8XSCJx3lwWHbz8iaRynPNJbaLaIPv+9LopnTz5pHJrOl18juh8b
-	lXeFtRd+EUT7ok47PRKqQpr+s4ER4tXL0BfyCX8T9LlGVytrgn2a1PoAF2yQ/z6/XJ4TPn5Z8jV
-	5ixc/ANRQheseJdQqlenKIECo2spklWlUCMH6Kc5izxAnR0i5g2fHn34SDQ0dciuNb7uc+khTdO
-	xAYFqB9/NIwzhmLF3AJs2F0fyQw57BhhmbY22ypXn1q14WZiaqGtdEwVU=
-X-Received: by 2002:a17:903:2a88:b0:2c9:d8c6:1db8 with SMTP id d9443c01a7336-2ce9f284e45mr2337085ad.28.1783706847144;
-        Fri, 10 Jul 2026 11:07:27 -0700 (PDT)
-Received: from skinsburskii (c-98-225-44-182.hsd1.wa.comcast.net. [98.225.44.182])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ccc9bf74cbsm63356135ad.18.2026.07.10.11.07.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2026 11:07:26 -0700 (PDT)
-Date: Fri, 10 Jul 2026 11:07:23 -0700
-From: Stanislav Kinsburskii <skinsburskii@gmail.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: airlied@gmail.com, akhilesh@ee.iitb.ac.in, akpm@linux-foundation.org,
-	corbet@lwn.net, dakr@kernel.org, david@kernel.org,
-	decui@microsoft.com, haiyangz@microsoft.com, kees@kernel.org,
-	kys@microsoft.com, leon@kernel.org, liam@infradead.org,
-	lizhi.hou@amd.com, ljs@kernel.org, longli@microsoft.com,
-	lyude@redhat.com, maarten.lankhorst@linux.intel.com,
-	mamin506@gmail.com, mhocko@suse.com, mripard@kernel.org,
-	nouveau@lists.freedesktop.org, ogabbay@kernel.org, oleg@redhat.com,
-	rppt@kernel.org, shuah@kernel.org, simona@ffwll.ch,
-	skhan@linuxfoundation.org, surenb@google.com, tzimmermann@suse.de,
-	vbabka@kernel.org, wei.liu@kernel.org,
-	dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
-	linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Subject: Re: [PATCH v7 2/8] mm/hmm: add hmm_range_fault_unlocked_timeout()
- for mmap lock-drop support
-Message-ID: <alE028DsCGeUwNh6@skinsburskii>
-References: <178345345668.660027.2952911919681614557.stgit@skinsburskii>
- <178345362182.660027.12809852179204464964.stgit@skinsburskii>
- <20260710162749.GP118978@ziepe.ca>
- <20260710164743.GX118978@ziepe.ca>
- <alElv0EKjLQXMNK8@skinsburskii>
- <20260710180312.GD1803712@ziepe.ca>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6FE21624C5;
+	Fri, 10 Jul 2026 19:19:59 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783711201; cv=fail; b=KvPx2UWmF0GSFJt3qUORtSBD2HDzL+tVa+qZ/Pm3gYd7M3i0QnflX04eHympYs0z36/c02K4yda4mkKtjvIxNHB+FpZzdouYYyDi47wgvM2uSq+IPNKbiRRWnn7drgUdYeuiIPy22j3pRGo/5MfZ0NWg0MqIRYzhlHdl/UqUakE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783711201; c=relaxed/simple;
+	bh=zYEjGsOJxqsvMbKbre0f4kcNsCF0kqyc9MLiZSJrZJs=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=T4ceMae8dfsCMuw9ycBx5n8NUpX3hHFlKGO6Un0y+hf6+oaJ22zfEopw9ys2W3I9+yui+yAMwKnU/cX6Iqfq1B6z404Gsn4iHzJBG4Zr3y66jDJXojoJ0Ri7c+nwK8RsCY74oxqfT4BxbGhhPUlocZMktDisalopHAnoYH9yCmw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=R5wnscnf; arc=fail smtp.client-ip=40.107.200.95
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ub0oQrgDE/IkNn5xzXphLK+217s6vz7tx5x2Cvk0Bb1CrpZ9OKFo4bg46O33dxiSyDU+8g+yceSBN4d4TGs4hi0DvmAMY4vzHrwuFIAYZfSdPf9ltkZ7LDAeXKWizQE6cXMJRkGZosWgfgZdnHALbAhas1bi0Oe2JtjgeHG4iuOSSN0Jwn76woLHIn8pqaAwNxEYClvoN05WoJXzSKEuin6zlbcxVZp05Dav0HeLmWeyjv22u+q2Ai/beqYi8EZkKPc+IhA3s1722eK59RHSCmF6s3hgCiUDnql5wjFZyfBwVI4fQVLjCeEqM8vd/OqqqdCJg6IedXFPNfWTZZyjjw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rB3YJ3Zb7szqayxOxbE0zWMSxVrsiYEi/2OPFWi7jEw=;
+ b=RI5ViXkvHD/d35Q7VFT0RhMjHtFPyTvictDMk5ceb40zQ33y0h9waMO58g0rQbG0E7bHoQV/v0ngepw1n0Y0aui0RS1JYTi26iBW876UrFahpWGFexQ95Na2+G1J0MgiQk0Kiq3hXxYgW46jOliye0kThgaxKMNkTXe6lPtnNIGprArEeXowUCDH41eYAnfct3YL+kRAuavrO7JgKnWGKP3W7q6IyXjhaS7qAp0Beg1/jI4cPmqKVCOotZ2tX6CIJ6cuusM2Ucyv6wY5RpP1OKQvt3cq6QtAcJMcY+xB8+gx8NcrIMVb4m+UxaBPa1yQhJjGEfhyqrqV04odP/MLdQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rB3YJ3Zb7szqayxOxbE0zWMSxVrsiYEi/2OPFWi7jEw=;
+ b=R5wnscnfU/EsLfDoF6g72Cz1gt+0npdqDi7EFcWY68XvTRUrbmVlmjKVlKpkXNRl5UZ6yuMBW6/F/js+JaFb/pqz4fWV0CO+gHCbYwVOih94fImP88GAmTrOldqfHvNCmNwM09KTP5ERRaHews1pq2w3Fe4kmPuaT0Q8h1SgJMQ=
+Received: from LV5PR21MB4704.namprd21.prod.outlook.com (2603:10b6:408:307::7)
+ by LV2PR21MB6160.namprd21.prod.outlook.com (2603:10b6:408:34d::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.202.8; Fri, 10 Jul
+ 2026 19:19:56 +0000
+Received: from LV5PR21MB4704.namprd21.prod.outlook.com
+ ([fe80::144b:98da:1262:2ebb]) by LV5PR21MB4704.namprd21.prod.outlook.com
+ ([fe80::144b:98da:1262:2ebb%6]) with mapi id 15.21.0223.005; Fri, 10 Jul 2026
+ 19:19:56 +0000
+From: Haiyang Zhang <haiyangz@microsoft.com>
+To: Haiyang Zhang <haiyangz@linux.microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, KY Srinivasan
+	<kys@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
+	<DECUI@microsoft.com>, Long Li <longli@microsoft.com>, Andrew Lunn
+	<andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Erni Sri Satya Vennela
+	<ernis@linux.microsoft.com>, Dipayaan Roy <dipayanroy@linux.microsoft.com>,
+	Aditya Garg <gargaditya@linux.microsoft.com>, Shradha Gupta
+	<shradhagupta@linux.microsoft.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+CC: Paul Rosswurm <paulros@microsoft.com>
+Subject: RE: [PATCH net-next v3] net: mana: Add handler for sriov configure
+Thread-Topic: [PATCH net-next v3] net: mana: Add handler for sriov configure
+Thread-Index: AQHdDxzRuwpAv3AkSEm3Nb+ln6fZ8LZnItnA
+Date: Fri, 10 Jul 2026 19:19:56 +0000
+Message-ID:
+ <LV5PR21MB470461A0C1153760D4C14645CAFD2@LV5PR21MB4704.namprd21.prod.outlook.com>
+References: <20260708205924.2408673-1-haiyangz@linux.microsoft.com>
+In-Reply-To: <20260708205924.2408673-1-haiyangz@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=4887e6d9-7f0e-4329-ad3e-5d18e8fa4bcb;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2026-07-10T19:15:58Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
+ 3, 0, 1;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: LV5PR21MB4704:EE_|LV2PR21MB6160:EE_
+x-ms-office365-filtering-correlation-id: 2c46991c-f255-473b-0a12-08dedeb83a57
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|23010399003|1800799024|7416014|376014|7053199004|38070700021|921020|11063799006|56012099006|18002099003|22082099003;
+x-microsoft-antispam-message-info:
+ jwAnouHZ31dge/PJm5K1k3XP7KGESTnfM1ETjQKi7WU+E0t7PXX72QHdbdDRaZGGTq5j+VXe5TzZ/XxUETIOc3c3yA9J9nFc3b6tiVOUfwmcP6fXAl6f7C8qQR2KhZok4eIyIpDz9y1Km1+v62YUvLIUJYS7boV0ujWINQaOU5C+h/wfoaFvTueVKoMm2HlJUV3EvOYf5gmH6TGsQUI2DAUERGbWPO+6IgeZJKrvRipRYF6vUnEKfAwkonhob/KWIZZnVZ6xY74ybX7vuTAGLnDTjZBvA/rdzxLGsG18ScMy5b5GDDEJtOcVcJadBVbCTbS4/DYqmnryVM7vACqLvPrynw3/Ji3VS+4UC9tKi6Rbhs8zv5smTYpf8bv9//DjV2Wiu4ZDlxNRoZdq1UjELHO+ccUFcEbFhMEwDngrr3xdUJ4hu3hmDSBgpOWUjL9vj2+WZYhWbh3lTWhwAQOZT2F4KB8KTv+y5qD68ctDSNGdqSm3Uo7TObvp6X9dTE8Vff6YouL12HNDsCDpuncvRKCyIvBj/pkhLdULjftLV2IREIIzxHm+oRf7uI5xNQeo3nLS0/DyVp2aOfDZY4rh0R9lbSIMXL7HJ0K/lCg4Ukt+TNWAbgtNay/9guQqf0xuXuckl4swlweKV7a53eGTo5FJBrhhWireW9QAdrKfLM+zjTZ3Ym5Dqba+tsBpm/ANe9wrQbcdATwG6z6exXncABKEPMSGKjCGHhPe4Tl3IgtIYeOLqS1ybUFt3QjQW3y9
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV5PR21MB4704.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(1800799024)(7416014)(376014)(7053199004)(38070700021)(921020)(11063799006)(56012099006)(18002099003)(22082099003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?XP99cptgBGIpkIKH7sK2EpnYNmr5YwjoWVm56xEZy0cIcwczj3R+OEJ1lVyS?=
+ =?us-ascii?Q?khAq2PBkaNVYGyiMKzm4lJwei6TOYZYLGJbXBcaUVPmFHXzwUl6mLHsDtnjr?=
+ =?us-ascii?Q?iwlG+E1byw+4eTC6ODANWyNCrwcFmp8d2Vlwdg15BIKWRhtqfgFW6uBXVOnh?=
+ =?us-ascii?Q?PhqAnrQOY+vzJI15Bk89RKyZ+YlWHgh86MODtbdEabZA1SsbfQ17nY897v5h?=
+ =?us-ascii?Q?01h4rXJr3KRG34cqzWWjnxpI86mziDlNIDQpfgMHxZsGKCvKKj7aFd22z/qx?=
+ =?us-ascii?Q?EjAzfexPDCCUp/beIf4f2ZAOZV9HXfu887pEvLQ0QI0KEhAP+/H5zO7b7Ynk?=
+ =?us-ascii?Q?yMZDm5nEtt04I1Z+WlliLSAvAXuVotwBtTHckIdeEZqqWHuX25LUtlLaSXvb?=
+ =?us-ascii?Q?m78+H/GzFp0psPYu4rrIx/uimRmxxYftVAtQxh49Q8l4YlAge+3SAySNAqtt?=
+ =?us-ascii?Q?eDVyJsrjnbVwTLzwbMGkoiw5R2iIc7rvYCC5oBzWUih0BnAsWVQgYzBJc1+t?=
+ =?us-ascii?Q?1S4kU64X5QDb86vGx8kFwITnqheh+WdVFW9LYMe3pIrF+Co9pyhUeihQG+x+?=
+ =?us-ascii?Q?sYHNLVog0mBos3wXjvQgJmZu5HZBE0hZvwk2qLETT7vn8ALBoMUB08XY1w+c?=
+ =?us-ascii?Q?df6DxcDpXVbyH2MBZ4+GpQk7FkTZPUBI6sf5s6XUrUAo6lBenhvFoxW9PYGf?=
+ =?us-ascii?Q?R/kRCXdGC0yi/f//2f9hbWRynf9d8QyUmz6xaIEj+CF0mpKAEsihspzI/m0l?=
+ =?us-ascii?Q?rffc6aPqgmPi23daClWqmCKsslSvlbpk7LVTSxaWapZblMtQiDAKXJyQnnZj?=
+ =?us-ascii?Q?Rzc98rP3qGXvtl3jKPuVmKIQoMOhufrOjCyrWs7Dgye3pMNW9ZkVUPw33qUD?=
+ =?us-ascii?Q?NgD4djXV5Uqdxp+UFr98RfOfW6rms0/q7WmXvXEjywhhYGupJcWVjfF7Gtmn?=
+ =?us-ascii?Q?gPMO+4FwpTjENZRc3fuQSoUkpPNz3bstqyryI4gN5HM0QWBp0+4RdBOZRpzL?=
+ =?us-ascii?Q?TsiVmSu+uLZ3waFwoRiVFDD00cDCmGLDa2xwUIygkzJILBFLDmURyIK9Glsj?=
+ =?us-ascii?Q?88iN0KPW/U6E/UfMhov83aCKD2mvo6hq0tdSMSWetv0M/q05h8QNghp+k+fF?=
+ =?us-ascii?Q?zsTi+ENOH6WtyBsbtVfbuM/zUGfWOXACVhwnQD5PlBBsyJzHPoOhjsY33BLJ?=
+ =?us-ascii?Q?qu8B+7xTzwxFu+H1Qia5gyyZZK6XMAhVYHgrrkStG+lQLgggmmfCcZGFwukq?=
+ =?us-ascii?Q?ltx/7tORlKPz7zBCQA/K6a68w/aDVLOmtVEmUN24UZx+kOZLEpq09t8tUOZE?=
+ =?us-ascii?Q?eoEdLzvCnHK0AmfWAxfQwFlFCpJ0y+bSpPybEubuCIe6XfrXgqQY6nsb0w/h?=
+ =?us-ascii?Q?FIUEpVqY7pOhtWzxNoQ0bFAB8Q0lPzpGScpF6RYvpv1wR0Fbu3i2lWT4wKdp?=
+ =?us-ascii?Q?wxarFDs50Hfb+yT8+VCEVRp7NVryVxkwIx5fGwwSxqhNtGDx4Dua+iKh6wZO?=
+ =?us-ascii?Q?F30zLsCuPivycSQyWFEr36yaiudvS5EP6IbRN7v3xAiCn9YuvnBAPDFfsYAL?=
+ =?us-ascii?Q?CsA1vXl+cSIJUCMiIhL/5iqT71XdyZuBf2RpLcYi1OgNc6O65jdZPYha6MpN?=
+ =?us-ascii?Q?ec4jBfcgzBPTH5RuQQE6/yzAKb+BQeJP7v+GeLCYO6g1AW7McrVcwYgL2I66?=
+ =?us-ascii?Q?0P1XLP67NZFih3N1U26IMasvynu+TNWuXwHqnzF6oPZvGxix/r3dAXb3vtMC?=
+ =?us-ascii?Q?GTUxOn0stA=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260710180312.GD1803712@ziepe.ca>
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: LV5PR21MB4704.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2c46991c-f255-473b-0a12-08dedeb83a57
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2026 19:19:56.6664
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ppyOQ+boyCPgbGPMEzwEw9SOLnviNcDBp09Op/rAmc1a3qFZaUmV1A8PjJXLRzPFGXFjgPLa2G3jtvuqdh5kRQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR21MB6160
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [2.34 / 15.00];
-	MID_END_EQ_FROM_USER_PART(4.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+X-Spamd-Result: default: False [-1.66 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[microsoft.com:d:+,kernel.org:s:+];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[microsoft.com,reject];
+	R_DKIM_ALLOW(-0.20)[microsoft.com:s=selector2];
 	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[39];
-	TAGGED_FROM(0.00)[bounces-11914-lists,linux-hyperv=lfdr.de];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-11915-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:haiyangz@linux.microsoft.com,m:linux-hyperv@vger.kernel.org,m:netdev@vger.kernel.org,m:kys@microsoft.com,m:wei.liu@kernel.org,m:DECUI@microsoft.com,m:longli@microsoft.com,m:andrew+netdev@lunn.ch,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:horms@kernel.org,m:ernis@linux.microsoft.com,m:dipayanroy@linux.microsoft.com,m:gargaditya@linux.microsoft.com,m:shradhagupta@linux.microsoft.com,m:linux-kernel@vger.kernel.org,m:paulros@microsoft.com,m:andrew@lunn.ch,s:lists@lfdr.de];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FORGED_SENDER(0.00)[haiyangz@microsoft.com,linux-hyperv@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:jgg@ziepe.ca,m:airlied@gmail.com,m:akhilesh@ee.iitb.ac.in,m:akpm@linux-foundation.org,m:corbet@lwn.net,m:dakr@kernel.org,m:david@kernel.org,m:decui@microsoft.com,m:haiyangz@microsoft.com,m:kees@kernel.org,m:kys@microsoft.com,m:leon@kernel.org,m:liam@infradead.org,m:lizhi.hou@amd.com,m:ljs@kernel.org,m:longli@microsoft.com,m:lyude@redhat.com,m:maarten.lankhorst@linux.intel.com,m:mamin506@gmail.com,m:mhocko@suse.com,m:mripard@kernel.org,m:nouveau@lists.freedesktop.org,m:ogabbay@kernel.org,m:oleg@redhat.com,m:rppt@kernel.org,m:shuah@kernel.org,m:simona@ffwll.ch,m:skhan@linuxfoundation.org,m:surenb@google.com,m:tzimmermann@suse.de,m:vbabka@kernel.org,m:wei.liu@kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-mm@kvack.org,m:linux-doc@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-kselftest@vger.kernel.org,m:linux-rdma@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FREEMAIL_CC(0.00)[gmail.com,ee.iitb.ac.in,linux-foundation.org,lwn.net,kernel.org,microsoft.com,infradead.org,amd.com,redhat.com,linux.intel.com,suse.com,lists.freedesktop.org,ffwll.ch,linuxfoundation.org,google.com,suse.de,kvack.org,vger.kernel.org];
-	FORGED_SENDER(0.00)[skinsburskii@gmail.com,linux-hyperv@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	RCPT_COUNT_TWELVE(0.00)[19];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[skinsburskii@gmail.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[haiyangz@microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[microsoft.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[skinsburskii:mid,vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: EB84B73D43D
+X-Rspamd-Queue-Id: 09F9173DAD0
 
-On Fri, Jul 10, 2026 at 03:03:12PM -0300, Jason Gunthorpe wrote:
-> On Fri, Jul 10, 2026 at 10:02:55AM -0700, Stanislav Kinsburskii wrote:
-> > The main customer for this new feature I have in mind is the MSHV driver
-> > which backs VMs memory with HMM, requires userfaultfd support for
-> > post-copy live migration and fast restore and it doesn't timeout.
-> > 
-> > I agree, that this current timeout value used by the other callers might
-> > not be enough to repopulate the mappings with userfaultfd, but there
-> > drivers would get -EFAULT for uderfaultfd-backed mappings without this
-> > change anyway, so getting -EBUSY with the change instead doesn't look
-> > like a significant change to the behaviour from my POV.
-> 
-> It sounds like it won't be reliable either then.
-> 
-> > > So, maybe the deadline should be resetting after every handled fault?
-> > > ie the timeout really is only about the mmu notifier and we don't
-> > > count the time spent handling faults or walking?
-> >
-> > The timeout was inherited from existing HMM users rather than introduced
-> > as a new HMM policy. Some GPU drivers use HMM_RANGE_DEFAULT_TIMEOUT as a
-> > budget for the whole range population operation, including HMM retries
-> > and subsequent driver mapping work.
-> 
-> Yes, because we always had a timeout around the notifier because that
-> scheme can sort of live lock. The timeout was to protect that only, ie
-> limit the number of notifier retries.
-> 
-> Expanding the timeout to be outside what is bounded by the notifier
-> retry is not right, and heavy stuff like mapping should be done after
-> the hmm side succeeds and the notifiers concluded so they can rely on
-> normal locking instead.
-> 
-> This is why I'm suggesting to reset the deadline as hmm makes forward
-> progress, we really only want to bound the notifier retry loop not
-> anything else.
-> 
 
-Sure, I'll modify accordingly.
 
-Thanks,
-Stanislav
+> -----Original Message-----
+> From: Haiyang Zhang <haiyangz@linux.microsoft.com>
+> Sent: Wednesday, July 8, 2026 4:59 PM
+> To: linux-hyperv@vger.kernel.org; netdev@vger.kernel.org; KY Srinivasan
+> <kys@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>; Wei Liu
+> <wei.liu@kernel.org>; Dexuan Cui <DECUI@microsoft.com>; Long Li
+> <longli@microsoft.com>; Andrew Lunn <andrew+netdev@lunn.ch>; David S.
+> Miller <davem@davemloft.net>; Eric Dumazet <edumazet@google.com>; Jakub
+> Kicinski <kuba@kernel.org>; Paolo Abeni <pabeni@redhat.com>; Simon Horman
+> <horms@kernel.org>; Erni Sri Satya Vennela <ernis@linux.microsoft.com>;
+> Dipayaan Roy <dipayanroy@linux.microsoft.com>; Aditya Garg
+> <gargaditya@linux.microsoft.com>; Shradha Gupta
+> <shradhagupta@linux.microsoft.com>; linux-kernel@vger.kernel.org
+> Cc: Paul Rosswurm <paulros@microsoft.com>
+> Subject: [PATCH net-next v3] net: mana: Add handler for sriov configure
+>=20
+> From: Haiyang Zhang <haiyangz@microsoft.com>
+>=20
+> Add callback function for the pci_driver / sriov_configure.
+>=20
+> It asks the NIC to provide certain number of VFs, or disable
+> VFs if the request is zero.
+>=20
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+> ---
+> v3:
+>   Updated sriov disabling paths suggested by Paolo Abeni
+>=20
+> v2:
+>   No longer change VF autoprobe as discussed with Leon Romanovsky and
+> Bjorn Helgaas.
+>=20
+> ---
+>  .../net/ethernet/microsoft/mana/gdma_main.c   | 26 +++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>=20
+> diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> index aef3b77229c1..80a9118a90bc 100644
+> --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> @@ -2456,6 +2456,8 @@ static void mana_gd_remove(struct pci_dev *pdev)
+>  {
+>  	struct gdma_context *gc =3D pci_get_drvdata(pdev);
+>=20
+> +	pci_disable_sriov(pdev);
+> +
+>  	mana_rdma_remove(&gc->mana_ib);
+>  	mana_remove(&gc->mana, false);
+>=20
+> @@ -2517,6 +2519,8 @@ static void mana_gd_shutdown(struct pci_dev *pdev)
+>=20
+>  	dev_info(&pdev->dev, "Shutdown was called\n");
+>=20
+> +	pci_disable_sriov(pdev);
+> +
 
-> Jason
+I will remove this unnecessary pci_disable_sriov() as found by AI review,
+and submit an updated patch.
+
+- Haiyang
+
 
