@@ -1,80 +1,82 @@
-Return-Path: <linux-hyperv+bounces-11889-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11890-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id FyTKAPlYUGqAxAIAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11889-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jul 2026 04:29:13 +0200
+	id fCVzMA9ZUGqJxAIAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11890-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jul 2026 04:29:35 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71839736A93
-	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jul 2026 04:29:12 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3564B736AAA
+	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jul 2026 04:29:33 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=Fp6qZNcy;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=dwzJ0DGW;
 	dmarc=pass (policy=none) header.from=gmail.com;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11889-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11889-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11890-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11890-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 733723025C5B
-	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jul 2026 02:29:05 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 7D75D300F0E9
+	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jul 2026 02:29:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BA302BEFF5;
-	Fri, 10 Jul 2026 02:29:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50BE92DF3DA;
+	Fri, 10 Jul 2026 02:29:04 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF9BD2C3255
-	for <linux-hyperv@vger.kernel.org>; Fri, 10 Jul 2026 02:29:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E04E2D3A7C
+	for <linux-hyperv@vger.kernel.org>; Fri, 10 Jul 2026 02:29:02 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783650542; cv=none; b=rnBBtzjuLK6YL1wPgGufmP6PSHHeDol12WuraVsPI59BqoO9QxTXiem/k1s7e3hftEYp3cUQ4H2EQ9/aUpGMnjhSBIAMhlqPx/YjcAWHvZ1MMR+k7QwbumnNE0/qCvZmqZS0CBlRNTlQg3BmqEp2bBNAcpAZSLVyS4TqdjK3Mro=
+	t=1783650544; cv=none; b=r0eEtCthxddJxzOHd0CtuzVWBvmJ4h9NcEJ96Km1GHWhgBMV67fwcKlJys6YoRsFBvYcProbbkW5rTTmXl31UrCraJXPm978oSVnzE0Ofc4lOS9FzU7puZOWPS/0wwE/YfU5ngGrBkTWFBVTjXEgaLuBEQQWXIFU5RzDmpLkke8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783650542; c=relaxed/simple;
-	bh=IJkqPJypQc7GLzpERLUahs7dKBADnN+RxSys4p0uAWw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=njoruulTtHALIuwLxRlS04KKgb/To6dXyT53tNssn430kiuviw0CrUDwZXb26iGRIDJ6eI3JkpOYEiqPTm3xJj4Ux9eYyF1b/bzeZa+3dPJAs1jhDjpqO7tJp8pthX6y4hXodAqnpSwkHqJs0+rCy+LiUPrHW03yts5cDWthlrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fp6qZNcy; arc=none smtp.client-ip=209.85.222.181
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-92ed3993c1eso23139585a.1
-        for <linux-hyperv@vger.kernel.org>; Thu, 09 Jul 2026 19:29:00 -0700 (PDT)
+	s=arc-20240116; t=1783650544; c=relaxed/simple;
+	bh=Xw9MV5+tUH91OggMUmq95ucMnBMqMCwFdkfsgGxUsO0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JI3F4JWW6w28h+FgSUHK0+HT/+w+yHt/c2+1EaiI4hKq5JNbgxa1gRcYhXR4f1X1heuLj2rZou/kpNy+BiY1SG0T5vGlsLDBwvuICVRoSCN4l/tUcaonb/QdoT5B+PnY1/WxkW0ppVQh71cuH0EMmEuVhLAuIhvQaX7n/nJFSiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dwzJ0DGW; arc=none smtp.client-ip=209.85.222.179
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-92b21f65b60so95657785a.1
+        for <linux-hyperv@vger.kernel.org>; Thu, 09 Jul 2026 19:29:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783650540; x=1784255340; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=eokHULuHuReut0+2I3ViyzYy6XEeFIbj+NJmSsqM9JY=;
-        b=Fp6qZNcysCjj+oR7YU6eK/Kxtf/8NwStFvYDclOODYj3LicZoJ0/QPDC1Ew6D0gWtL
-         ZTlrPmUc7UhNVa4DKAfaKjklPqXHOUFCftLJgIbtkdGgdJKqy6bY6qqSW7Xqbcf8LZMC
-         UNpafK8KLzIPgEXMgq2xPC/WxrmtrqMU43d3QKJWRrdUfQEgQ4tpDqdvI5EZ3gd06+Dr
-         7LvF/B7HJqWYhWKhnvTZS/frP8zVwhXhalppioD8rbO9a2b0N9DTNPzGS4dDxJ/dovi2
-         bpigm1dlqcyIBuflepWSp+PDoHeAZ1G96GAvqJCLQ+6HPqWpGGxG1Shw4Qu65twkyTvd
-         sEmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783650540; x=1784255340;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1783650541; x=1784255341; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=eokHULuHuReut0+2I3ViyzYy6XEeFIbj+NJmSsqM9JY=;
-        b=QZV/JocaofjiuVfHbBnN+0X+yfp0RRelHnnpjC4jmfwZG7niz6DYfHlr//81qYcAie
-         7MtiHZwXZu5Wf3/bBRFYWl8mMO0kcEBRKd6MX/ds1kNjqzbqV5NI3Gr8oMK4tRZveo9G
-         Ytcr10MSSk2Rc8dFlP3aVk09p/5w+pD6IIQIW8GeChH9ZyPKAZsx9jXErXVSV5udPiAO
-         0friwftNS+6Iv6GpXwXZwe8WcrqkttxOYOJ4vMru2y4Lrcgqd/5P2UDJ7YaZ4FbvFdbT
-         HnGMTrQXzn+7oDG6yrA74oWX0KVSFFIWZqfaK3cZ7xA4TnQdBe5dgT0wqKPCg0cgk9Y6
-         pnfQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rq86e8zxYGixwXoRqILXQutNinfggEp1dcY7x69UqEEiZC1EsoLZWFDlRFekNOr0kHuaalS7P/rG85GV8s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXldYeimSLFEr32B3rdStyUE86YQ6emVWS/Jhfv7hkGSMpbYX0
-	X8Wu2HM5VrpgDkepqVqRrMC40IHRdhClr2g2xDWWwi56fMp3XOKDbZWS
-X-Gm-Gg: AfdE7cnuexex156h5Ngl5VHTHrln/bEGeXtwtUS4s6RqWUKcOxoopAa+3bllkHdnQyq
-	GxmbB/PDbQKFbR76xuKKUe7rKGGrZ0/OhcV7I/cxcVVfy3nI3L2aw57mIbr6T1NwAe6Mk2lUkfQ
-	/1gvKwbYnno8dLBqSxpo7UWQIPPnnZKd2+Hs0uCw57C3qh4nuhs4s5XlMsgKTj3kryqJmjta7SF
-	XMIi0e3tX4faXCZNKsuEwRKvrtD50AaoLYV5wjW5GcAU7kyRnn+nuSNqGdJy2BoAdSBn6apWSLC
-	MvWdV/THGuIu+ecItOP/3L2C1gt9grggtTO3hQdjWIusbfqXIkc3emEZzFFUZTxct/pH6srDJis
-	yjAJCD65F51oY3jNAWziqPi5r0tY6EaNkr4nWcb5UOxryXHlyyej1KYnK93Vxecb0ygGPc6u8FP
-	/AYsIuOSzpKzN+9vXKxih50n3lXJUD55SYJMNzT6uhBlR7AFVSFxNQYZbJxOTj7495PvQhZCbo5
-	21zK7z/iJG2yjmgYZQwd8qDouIPzFLG
-X-Received: by 2002:a05:620a:46a9:b0:92b:67e6:8ac2 with SMTP id af79cd13be357-92ecf6b4bedmr1085970385a.60.1783650539736;
-        Thu, 09 Jul 2026 19:28:59 -0700 (PDT)
+        bh=qddLIoiRhTm7oXx/mi01gsuC6rzOXTw4K1iEgY1KrG0=;
+        b=dwzJ0DGW7BUBPpqc5p98Oq48MJutxTn3/qCpjSJKkMsrM1TeqTp9lGJC+C1F/LJhbi
+         YJbQU45ADJCa4/PsiaR9iIF0Ot2qf7WZtV5f+bRq/sxGTYvUya8sZA3AjejiAg8StKX6
+         1IzlGG+fJzr3+QyVcgRgwbYP1d23+7sw5tDgw4Prtb3cCK8RYkhJrmhXn9XTDq6YXACY
+         fzI7LHe8lL9m0zhM+tuhW7wBSFagbcRDoc1oygJeDHRBADFNj90v+tEr1jX1FH1+QZjM
+         51+chwgWvMKx0FGCeDAwZCKQ0KHgiyMfpSHLac3QZtn7nR/JJswCN7Iq8yXymyRyf+f2
+         JXqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783650541; x=1784255341;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=qddLIoiRhTm7oXx/mi01gsuC6rzOXTw4K1iEgY1KrG0=;
+        b=n4lTpDXyZ3kMTQJ4ZAF5KtTWubmOn+QyLyLupx5vxraU/BIcic2Stwj8uZHQtDEBOv
+         +CKjBb+7rzCES5dcZntzuNwBckkKssArWOGHWPxsM5YQ0cCdqQpwrMwi1g+M4dTKgZva
+         FfZ1kO+mvI/0QPhlJR/31yC5vXv+nuohypGzwcE/hymlg4trUnm7aKY5Duf4FlwsOsS2
+         sn+tkjm+GH1ORcSt1SKUFD858KLpTiB43/VFCXfmqqWNntrnsft43l8pS6iCQTA1jJI6
+         cTdmCGgl6ICSA2HqbmRkljARtuodukLh2ux+8A2FgRbtfFmnrfDvVMKCvsi1sgCZbowI
+         08xQ==
+X-Forwarded-Encrypted: i=1; AHgh+RpJzQjmwGQ+dki0WzC1vlOyLViTAfxRZwRDAVHEkPIeddPUyILKlvx+V7woFDNJ30nGmLKX3cxnmGltPJs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYna5V7OFuSM5HfyTFKTP5fBuN0Swx3YKvJd6KWrlQOhc5xKlR
+	iP1buoCOh3mjnKpo2Z6jJrCWdIKw3ZgBijXXrqKbyUj7vbFgYzMXK2ST
+X-Gm-Gg: AfdE7ck6XB7ZQ+pfOyBQ+bXpLFYAgzYpGJIpIpBC4LL7ABo8U0Bijruw/jvqhY3ChAP
+	gisDe4it88TQGLaO/gop5mc9TnlFk1MSOUAl0+ueVRMhmC+4xq+zHVAsl0xtLy8tXqNNeYqYs+i
+	TOPtq1doGO0OHxRkga+iw5oSwggsOur6L74GtoCstaphIkatI2ljqLe/etEOFS2xAExfMYdyhEB
+	kf53kxW1Gxf5yibl2GNSgO3A+3kIbm37QOJ3D3obUhLt7wYILgKrTvxtfSvx42x6V0FXbgejKMS
+	jvmrPyQ8STyq/0Q3bo3QM79Pfb8RkTLwlq/zTbYiOCUwWUI4mT/Be1PJwoU5jU2dGSnBrVk+C03
+	va5H1bEHrFsdtgVEQ+WlEnsWGEwuoe+CAlXnX1BMe+WDr9s5chqr/82iWx0B/+fL1uL+Z//y3mb
+	Pa8lQ7qNPXVRitKS720iws4bRx0NB/ISrASnqlH2E+mWGtdH0BvfSRSDJ83PDb5nBSPhXv1cilZ
+	RFmoRIU7PjOkvV1y3L3skrpdZu5mfha
+X-Received: by 2002:a05:620a:1993:b0:92e:7d7f:9102 with SMTP id af79cd13be357-92ee54ab5d8mr206888585a.2.1783650541428;
+        Thu, 09 Jul 2026 19:29:01 -0700 (PDT)
 Received: from server0.tail6e7dd.ts.net (c-68-48-65-54.hsd1.mi.comcast.net. [68.48.65.54])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-92ee5b86276sm90507885a.11.2026.07.09.19.28.58
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-92ee5b86276sm90507885a.11.2026.07.09.19.28.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2026 19:28:59 -0700 (PDT)
+        Thu, 09 Jul 2026 19:29:00 -0700 (PDT)
 From: Michael Bommarito <michael.bommarito@gmail.com>
 To: Jiri Kosina <jikos@kernel.org>,
 	Benjamin Tissoires <bentiss@kernel.org>,
@@ -87,10 +89,12 @@ Cc: Dexuan Cui <decui@microsoft.com>,
 	linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Subject: [PATCH 0/2] HID: hyperv: bound initial device info descriptor
-Date: Thu,  9 Jul 2026 22:28:52 -0400
-Message-ID: <20260710022854.3739558-1-michael.bommarito@gmail.com>
+Subject: [PATCH 1/2] HID: hyperv: validate initial device info bounds
+Date: Thu,  9 Jul 2026 22:28:53 -0400
+Message-ID: <20260710022854.3739558-2-michael.bommarito@gmail.com>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260710022854.3739558-1-michael.bommarito@gmail.com>
+References: <20260710022854.3739558-1-michael.bommarito@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -102,12 +106,12 @@ X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11889-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11890-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:jikos@kernel.org,m:bentiss@kernel.org,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:linux-input@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:stable@vger.kernel.org,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
@@ -118,7 +122,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
@@ -130,38 +134,102 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 71839736A93
+X-Rspamd-Queue-Id: 3564B736AAA
 
-A malicious Hyper-V host or backend can crash a guest with a short
-SYNTH_HID_INITIAL_DEVICE_INFO message. mousevsc_on_receive_device_info()
-trusts the HID descriptor bLength and wDescriptorLength without checking
-that the received VMBus packet actually contains both byte ranges, so a
-truncated packet with an oversized report-descriptor length makes the
-guest read past the received packet while copying the descriptor. This
-matters most for a confidential guest, where the host is outside the trust
-boundary.
+The Hyper-V synthetic HID host supplies SYNTH_HID_INITIAL_DEVICE_INFO
+messages that contain a HID descriptor followed by the report descriptor
+bytes. mousevsc_on_receive_device_info() trusts bLength and
+wDescriptorLength without checking that the received packet contains both
+byte ranges.
 
-Patch 1 passes the received initial-device-info size into the parser and
-rejects descriptor lengths that exceed the packet. Patch 2 adds
-same-translation-unit KUnit coverage: a well-formed message that must
-still parse and the truncated/oversized message that must now be rejected.
+A malformed host or backend message can therefore make the guest read
+past the received VMBus packet while copying the report descriptor. Pass
+the received initial-device-info size into the parser and reject
+descriptor lengths that exceed the packet.
 
-Reproduced with the KUnit/KASAN test: stock reads past the packet on the
-short message after the benign control passes; patched rejects it and both
-cases pass.
+Impact: A malicious Hyper-V host or backend can crash a guest by sending
+a short initial device-info message with an oversized HID report
+descriptor length.
 
+Fixes: b95f5bcb811e ("HID: Move the hid-hyperv driver out of staging")
 Cc: stable@vger.kernel.org
+Assisted-by: Codex:gpt-5-5-xhigh
+Signed-off-by: Michael Bommarito <michael.bommarito@gmail.com>
+---
+ drivers/hid/hid-hyperv.c | 27 ++++++++++++++++++++++++---
+ 1 file changed, 24 insertions(+), 3 deletions(-)
 
-Michael Bommarito (2):
-  HID: hyperv: validate initial device info bounds
-  HID: hyperv: add KUnit coverage for device info bounds
-
- drivers/hid/Kconfig      |  10 +++
- drivers/hid/hid-hyperv.c | 144 ++++++++++++++++++++++++++++++++++++---
- 2 files changed, 144 insertions(+), 10 deletions(-)
-
---
+diff --git a/drivers/hid/hid-hyperv.c b/drivers/hid/hid-hyperv.c
+index 7d2b0063df151..fd90196430e29 100644
+--- a/drivers/hid/hid-hyperv.c
++++ b/drivers/hid/hid-hyperv.c
+@@ -171,18 +171,32 @@ static void mousevsc_free_device(struct mousevsc_dev *device)
+ }
+ 
+ static void mousevsc_on_receive_device_info(struct mousevsc_dev *input_device,
+-				struct synthhid_device_info *device_info)
++					    struct synthhid_device_info *device_info,
++					    u32 device_info_size)
+ {
+ 	int ret = 0;
+ 	struct hid_descriptor *desc;
+ 	struct mousevsc_prt_msg ack;
++	size_t desc_offset;
++	size_t desc_size;
+ 
+ 	input_device->dev_info_status = -ENOMEM;
+ 
++	if (device_info_size < sizeof(*device_info)) {
++		input_device->dev_info_status = -EINVAL;
++		goto cleanup;
++	}
++
+ 	input_device->hid_dev_info = device_info->hid_dev_info;
+ 	desc = &device_info->hid_descriptor;
++	desc_offset = offsetof(struct synthhid_device_info, hid_descriptor);
++	desc_size = device_info_size - desc_offset;
+ 	if (desc->bLength == 0)
+ 		goto cleanup;
++	if (desc->bLength < sizeof(*desc) || desc->bLength > desc_size) {
++		input_device->dev_info_status = -EINVAL;
++		goto cleanup;
++	}
+ 
+ 	/* The pointer is not NULL when we resume from hibernation */
+ 	kfree(input_device->hid_desc);
+@@ -197,6 +211,10 @@ static void mousevsc_on_receive_device_info(struct mousevsc_dev *input_device,
+ 		input_device->dev_info_status = -EINVAL;
+ 		goto cleanup;
+ 	}
++	if (input_device->report_desc_size > desc_size - desc->bLength) {
++		input_device->dev_info_status = -EINVAL;
++		goto cleanup;
++	}
+ 
+ 	/* The pointer is not NULL when we resume from hibernation */
+ 	kfree(input_device->report_desc);
+@@ -273,14 +291,17 @@ static void mousevsc_on_receive(struct hv_device *device,
+ 		break;
+ 
+ 	case SYNTH_HID_INITIAL_DEVICE_INFO:
+-		WARN_ON(pipe_msg->size < sizeof(struct hv_input_dev_info));
++		if (WARN_ON_ONCE(pipe_msg->size <
++				 sizeof(struct synthhid_device_info)))
++			break;
+ 
+ 		/*
+ 		 * Parse out the device info into device attr,
+ 		 * hid desc and report desc
+ 		 */
+ 		mousevsc_on_receive_device_info(input_dev,
+-			(struct synthhid_device_info *)pipe_msg->data);
++						(struct synthhid_device_info *)pipe_msg->data,
++						pipe_msg->size);
+ 		break;
+ 	case SYNTH_HID_INPUT_REPORT:
+ 		input_report =
+-- 
 2.53.0
 
