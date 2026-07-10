@@ -1,49 +1,49 @@
-Return-Path: <linux-hyperv+bounces-11927-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11928-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id +4jyGkJuUWoSEwMAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11927-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 00:12:18 +0200
+	id 3lT4B3xuUWo+EwMAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11928-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 00:13:16 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D924373F621
-	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 00:12:17 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F48673F6C1
+	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 00:13:15 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linux-foundation.org header.s=korg header.b=yaM672l8;
+	dkim=pass header.d=linux-foundation.org header.s=korg header.b="vrKNqD/R";
 	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11927-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11927-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11928-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11928-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 84EB9301F494
-	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jul 2026 22:12:15 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 1A109304C307
+	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jul 2026 22:12:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 916303C8C43;
-	Fri, 10 Jul 2026 22:12:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76BD63B4EB3;
+	Fri, 10 Jul 2026 22:12:19 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D1C346FCA;
-	Fri, 10 Jul 2026 22:12:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4070E390CB0;
+	Fri, 10 Jul 2026 22:12:18 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783721532; cv=none; b=LeL8ZAe2rSUFfDreEtQ6sOjbXsDbXYYmLjhPlyo+EUzaa3k7Fj5b+rkTARS4tDWcbzsAfcrZOchpZl5n1ptO4ew0FTAEArvxHLH9nR6DQdmGEYkO+crRLHXtePC8op1XVIN876kntFqUi/+rSl71opPBOWoUN/LQb3ANMVcMoVQ=
+	t=1783721539; cv=none; b=KeuOA2FC5tNq/HOW9CSl0/Yoa4N+/udGJ0j4/p7jhKLO5t50yPrSz84Q898/JmNt/1HGy3JtNtr6C1faWb1E8WecF9T0pvoBeSTPNKgWaL4y6lva3OD+NOcvXyTVgJn665ormvm7cGDiGNncAL+TJjrv29TtGU94Du3SBs+jFWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783721532; c=relaxed/simple;
-	bh=AZRiN8fHqLe//F1J0HLYXYtYLFkLf41jfZO8V1DqJGA=;
+	s=arc-20240116; t=1783721539; c=relaxed/simple;
+	bh=DfwO7lvIA/c3YQWaQKhwtD7+4prB1pmA4pglMn75P6s=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=U8ZdBa6eR27C8oMkNBEba4J+9mjrhS6sEK5/4KQrnmYLjUicHN2cpIV6+PElPdN6hwMF8nP/tNNqlir9SELB9UjJ+JXlPcrh40OD83FGTU3Kv7yhvGgjGiCybc+bCLFNHdkRTv/hkbejCo6kEXXjHArlI7WqCU9PdFRa8LWEU2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=yaM672l8; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE30C1F000E9;
-	Fri, 10 Jul 2026 22:12:09 +0000 (UTC)
+	 Mime-Version:Content-Type; b=XQl7Rqr46hdc4PefC1Ry09KDfAnhy4exsf1CzDBaEQlNwAtvC08VGMGDWyjr4n4FAkPN3ykp+AXee3ovxtEKiBTpvdT9C2nDsGQGqrdeHlKeZSMeRAO+tPAzRC9ExG8zrEKsJEH+PaF5HK+IRCIgH8ZWHpjuqGQQcVOGraq2KMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=vrKNqD/R; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C384A1F00A3E;
+	Fri, 10 Jul 2026 22:12:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux-foundation.org; s=korg; t=1783721530;
-	bh=fo7hh4EtlekICL5k1AderHImVib8Wo/fra/wRbqEq/U=;
+	d=linux-foundation.org; s=korg; t=1783721538;
+	bh=vZPCZ7vPd1NuY/NOvoRK1wg4DzJ9OfLHTV03rmwvPpc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=yaM672l8pa/XMuK2uZBBEO6oCy6GZgo5f+KmfIVM/ga9krsyMfE5SWqDP7o7QFIGc
-	 lGJhMoIXqjfeE0FMaH7nJ6ePG7Wzz1LC+2cK0WS2NcmXDgVqfHH34jNk0JoY7+u4V9
-	 BsiLi8zdUMFgF7SqWqnUIoo6uK8JKalKt/P+V2qs=
-Date: Fri, 10 Jul 2026 15:12:09 -0700
+	b=vrKNqD/RSYZafjQOwVndW01m5aLwswfnuVAfqI5wWJJiUGxMunb7KBRBbR+vIavWm
+	 Jwjm7GTEqUP54kAGt2vK1og8+S0X4K5USi4sGzpjMkFtbq+y8rgsLvuLfwWeKzYqds
+	 EILDdi2jW5IYL94/XhZxUobGPOo9gvao6LZmzPYg=
+Date: Fri, 10 Jul 2026 15:12:16 -0700
 From: Andrew Morton <akpm@linux-foundation.org>
 To: Stanislav Kinsburskii <skinsburskii@gmail.com>
 Cc: airlied@gmail.com, akhilesh@ee.iitb.ac.in, corbet@lwn.net,
@@ -59,12 +59,12 @@ Cc: airlied@gmail.com, akhilesh@ee.iitb.ac.in, corbet@lwn.net,
  linux-mm@kvack.org, linux-doc@vger.kernel.org,
  linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH v8 2/8] mm/hmm: add hmm_range_fault_unlocked_timeout()
- for mmap lock-drop support
-Message-Id: <20260710151209.157d7c80b03dc56d73b5884a@linux-foundation.org>
-In-Reply-To: <178371879503.900500.7148019929226548795.stgit@skinsburskii>
+Subject: Re: [PATCH v8 4/8] mshv: Use hmm_range_fault_unlocked_timeout() for
+ region faults
+Message-Id: <20260710151216.0397a6f9ac5c7b4ccd274cc1@linux-foundation.org>
+In-Reply-To: <178371881034.900500.5214601525971121683.stgit@skinsburskii>
 References: <178371866223.900500.12312667138651735591.stgit@skinsburskii>
-	<178371879503.900500.7148019929226548795.stgit@skinsburskii>
+	<178371881034.900500.5214601525971121683.stgit@skinsburskii>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -79,7 +79,7 @@ X-Spamd-Result: default: False [-1.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MV_CASE(0.50)[];
 	R_DKIM_ALLOW(-0.20)[linux-foundation.org:s=korg];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -94,7 +94,7 @@ X-Spamd-Result: default: False [-1.16 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-11927-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11928-lists,linux-hyperv=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[linux-foundation.org:+];
 	FORGED_SENDER_FORWARDING(0.00)[];
@@ -106,107 +106,56 @@ X-Spamd-Result: default: False [-1.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	TO_DN_SOME(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[linux-foundation.org:from_mime,linux-foundation.org:dkim,linux-foundation.org:mid,vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: D924373F621
+X-Rspamd-Queue-Id: 9F48673F6C1
 
-On Fri, 10 Jul 2026 14:26:35 -0700 Stanislav Kinsburskii <skinsburskii@gmail.com> wrote:
+On Fri, 10 Jul 2026 14:26:50 -0700 Stanislav Kinsburskii <skinsburskii@gmail.com> wrote:
 
-> hmm_range_fault() requires the caller to hold the mmap read lock for the
-> duration of the call. This is incompatible with mappings whose fault
-> handler may release the mmap lock, notably userfaultfd-managed regions,
-> where handle_mm_fault() can return VM_FAULT_RETRY or VM_FAULT_COMPLETED
-> after dropping the lock. Drivers that need to populate device page tables
-> for such mappings have no way to do so today.
+> MSHV currently faults movable memory regions by taking mmap_read_lock()
+> around hmm_range_fault(). That prevents the fault path from handling VMAs
+> whose fault handlers need to drop mmap_lock, such as userfaultfd-backed
+> mappings.
 > 
-> Add hmm_range_fault_unlocked_timeout() for callers that do not need to hold
-> mmap_lock across any work outside the HMM fault itself. The helper takes
-> mmap_read_lock_killable() internally, calls the common HMM fault
-> implementation, and releases the lock before returning if it is still held.
-> The timeout is specified in jiffies; passing 0 retries indefinitely, while
-> a non-zero timeout makes the helper return -EBUSY when the retry budget
-> expires.
+> Use hmm_range_fault_unlocked_timeout() instead. Passing a timeout of 0
+> preserves MSHV's existing unbounded retry behavior while letting the HMM
+> helper own mmap_lock acquisition and refresh range->notifier_seq internally
+> before walking the range. After the fault succeeds, MSHV still takes
+> mreg_mutex and checks mmu_interval_read_retry() before installing the pages
+> into the region, so the existing invalidation synchronization is preserved.
 > 
-> When handle_mm_fault() drops mmap_lock, or when the range is invalidated,
-> hmm_range_fault_unlocked_timeout() refreshes range->notifier_seq and
-> retries the walk internally. If the lock was dropped, the retry deadline is
-> also restarted because a lock-dropping fault handler made progress.
-> Ordinary -EBUSY retries keep the existing deadline, preserving the caller's
-> timeout policy for repeated mmu-notifier invalidations.
-> 
-> The caller only needs to perform the usual post-success
-> mmu_interval_read_retry() check while holding its update lock before
-> consuming the pfns. If mmap_lock acquisition is interrupted or a fatal
-> signal is pending during retry handling, -EINTR is returned instead.
-> 
-> The common implementation conditionally sets FAULT_FLAG_ALLOW_RETRY and
-> FAULT_FLAG_KILLABLE only for hmm_range_fault_unlocked_timeout(). The
-> existing hmm_range_fault() path still passes no locked state, does not
-> allow handle_mm_fault() to drop mmap_lock, and remains a thin wrapper
-> preserving the existing API contract for current callers.
-> 
-> The previous refactor that moved page fault handling out of the page-table
-> walk callbacks is what makes this change small. Faults now run after
-> walk_page_range() has unwound, with only mmap_lock held, so dropping it
-> does not interact with the walker's pte spinlock or hugetlb_vma_lock.
-> Hugetlb regions therefore participate in the unlocked path uniformly with
-> PTE- and PMD-level mappings; no special case is required.
-> 
-> Documentation/mm/hmm.rst is updated with a description of the new API and
-> the recommended caller pattern.
+> Fold the small fault-and-lock helper into mshv_region_range_fault(), since
+> the remaining retry path is just the standard "fault, take the driver lock,
+> check the interval notifier sequence" pattern.
 > 
 > ...
 >
-
-A trivial thing:
-
-> +int hmm_range_fault_unlocked_timeout(struct hmm_range *range,
-> +				     unsigned long timeout)
-> +{
-> +	struct mm_struct *mm = range->notifier->mm;
-> +	unsigned long deadline = 0;
-> +	bool locked = false;
-
-This could be local to the do loop and it needn't be initialized.
-
-> +	int ret;
+> @@ -452,13 +412,19 @@ static int mshv_region_range_fault(struct mshv_mem_region *region,
+>  	range.start = region->start_uaddr + page_offset * HV_HYP_PAGE_SIZE;
+>  	range.end = range.start + page_count * HV_HYP_PAGE_SIZE;
+>  
+> -	do {
+> -		ret = mshv_region_hmm_fault_and_lock(region, &range);
+> -	} while (ret == -EBUSY);
+> -
+> +again:
+> +	ret = hmm_range_fault_unlocked_timeout(&range, 0);
+>  	if (ret)
+>  		goto out;
+>  
+> +	mutex_lock(&region->mreg_mutex);
 > +
-> +	do {
-> +		if (fatal_signal_pending(current))
-> +			return -EINTR;
-> +
-> +		if (timeout) {
-> +			/*
-> +			 * If the previous fault dropped mmap_lock, then the fault
-> +			 * handler made progress. Restart the retry timeout in that
-> +			 * case, but keep the existing deadline for ordinary -EBUSY
-> +			 * retries.
-> +			 */
-> +			if (!locked)
-> +				deadline = jiffies + timeout;
-> +
-> +			if (time_after(jiffies, deadline))
-> +				return -EBUSY;
-> +		}
-> +
-> +		range->notifier_seq =
-> +			mmu_interval_read_begin(range->notifier);
-> +
-> +		ret = mmap_read_lock_killable(mm);
-> +		if (ret)
-> +			return ret;
-> +
-> +		locked = true;
-> +		ret = hmm_range_fault_locked(range, &locked);
-> +		if (locked)
-> +			mmap_read_unlock(mm);
-> +	} while (ret == -EBUSY);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL(hmm_range_fault_unlocked_timeout);
+> +	if (mmu_interval_read_retry(range.notifier, range.notifier_seq)) {
+> +		mutex_unlock(&region->mreg_mutex);
+> +		cond_resched();
+> +		goto again;
+> +	}
 > +
 
+If the calling process has realtime scheduling policy and either a)
+we're uniprocessor or b) this process and the holder of
+interval_sub->invalidate_seq are both pinned to the same CPU then
+cond_resched() won't do anything, and this might be an infinite loop?
 
