@@ -1,83 +1,83 @@
-Return-Path: <linux-hyperv+bounces-11932-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11933-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id mgwhB+qzUWpNHgMAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11932-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 05:09:30 +0200
+	id z68nNDi1UWqeHgMAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11933-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 05:15:04 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67A3D740242
-	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 05:09:29 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61F51740274
+	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 05:15:04 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=D3qaXtGK;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=j9usNja3;
 	dmarc=pass (policy=none) header.from=gmail.com;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11932-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11932-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11933-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11933-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id CEC38301A12F
-	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 03:09:28 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 9979F301AC1A
+	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 03:15:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2719F2EB5A6;
-	Sat, 11 Jul 2026 03:09:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B0982E62B3;
+	Sat, 11 Jul 2026 03:14:59 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C842D6E66
-	for <linux-hyperv@vger.kernel.org>; Sat, 11 Jul 2026 03:09:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2452DB7BE
+	for <linux-hyperv@vger.kernel.org>; Sat, 11 Jul 2026 03:14:57 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783739365; cv=none; b=CUycw/HfqL2x45D/jI/2QwEN1w4O+KIy1og3JhvIOS4eMegmIIFzwQMGDBu+lotQz6JTelOerTcgTllschWdobllag2u/GCL8r3ybURBNDE7sQ7PKJlZN0sqgSAAGQ9uo0iMbZ0W9LdJYxpcvt3RvGx5Eaw9B8kVO2La1t3YT10=
+	t=1783739699; cv=none; b=PUrlSQrtI9g8MYPy5+epRsorn4vu3zGLAxSmrJHV+nWTTHbTdsnoOiZdSKJOOU339soKynmbu8cdXw40+Geas47JGO5/4ASXYzD0QMID3PQDNJRrXszIS0faKhbCAqR39EFmf8otb+urshpOlbss4J3hrhYELcEEFp9Jn8TKTug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783739365; c=relaxed/simple;
-	bh=Talh9NFQCx452XKRUTeh7mUAoB/ijgfuASG+mTSXc/U=;
+	s=arc-20240116; t=1783739699; c=relaxed/simple;
+	bh=qqBMc1pIZ4OwB1WOwiQC+Ffr8ykArNIN3N1czmLBQLA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P5hUGzpWGKlCGEPXbp/Hh0BJjWn/3rpXObulg9vpeEVYRC4/X67Lv7hnlSkmXX3xxsGQ6zCpPMtMf3Zpst7LS13ICqzzhscPdqROuekljQnVi/hlZD628V7o02GWfrDXYPCKdry/2W0bI/CEE6hhN1HfTT62h6scT2QOpiLYLj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D3qaXtGK; arc=none smtp.client-ip=209.85.215.177
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-c96cb024ee0so1074722a12.1
-        for <linux-hyperv@vger.kernel.org>; Fri, 10 Jul 2026 20:09:23 -0700 (PDT)
+	 Content-Type:Content-Disposition:In-Reply-To; b=ts0NyNru6PS/9XnzTf0VHr0L4fr7DW7iKAve5UOmz0NDVJjxaKSecdsLGtkdbQ/63pI90U4T4CD5ol14s09FWT1Dws1wsCDoUZYH0ODDvII53ZT8wXqG0ON8glAN0pYwq+yFUVHKJozLvsyBAKFfTje65J8g/3zy8lpcNt8eAPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j9usNja3; arc=none smtp.client-ip=209.85.216.41
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-383b4a3755fso1538996a91.3
+        for <linux-hyperv@vger.kernel.org>; Fri, 10 Jul 2026 20:14:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783739362; x=1784344162; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=KBT/pxhbpviyB1eK4ppjTwsrTkYiVk3Lhi/aEEh6q5s=;
-        b=D3qaXtGKb2Xf/9+wr2HRFKL8jmCpHoxmOjnzBKRHFG4bHHCEScpCbA5LpnhM2eS11X
-         nG9M0kPvxBXep+/0ZCyYpRgX9l/ZOilK8nOM71Vgq6QSmbYjtBkKLSTeFdNymLrs/NtM
-         lHJqYdTRaEwaAkny4yNm2SHBIWlKx0LsU1YAI8HL2f/iW6YlZOXXXaHQBlQD9xfTOEEf
-         qaGDiV+BqsVGAnDAlYreU+5w03vSy3s7iByMkQO+PHscZvMeT1dJQUSue75LORCHtvZb
-         OMKMnwjruN3UimS/yQ0MnbqQtL/WsXfSgGLdVFnix7IQ8JsllW63eDEk3VrejGY7F/03
-         vdYA==
+        d=gmail.com; s=20251104; t=1783739697; x=1784344497; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=xrd/oJTRX2Uc0zxJ+R9Qjxy6xmTV66E4ZoYglWTlGgs=;
+        b=j9usNja3Rw5jRvVQMhlvbBICaZdQiWUjddeAsYDi9fiyL8Joamdn0JxMIZ5dk38bIQ
+         /dornZxQMlIROVUjVoRhbGHUKuukf6Og8glDQTCDAJbg4K0QgRqqm/1/PM97bWK8yUzb
+         cDMHXHbpXI7+NZzaaVzeYzRIphjIJgazuYXMlodgbRGw9iEFgEltoznH76c8Y5kiH7/l
+         sCjepKEumOcKyeYvn7JtRE9U0wehywpYEDvMG7zDQKECSL9yoKlNaJvg3/R2NRKxJ/aE
+         FTNW2+vTGF6P2K39qMI8aKDaAcI8+pI9elzMZpeldCoY2Ji70VUFBU9h7WkHDCr1dQob
+         ZG+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783739362; x=1784344162;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=KBT/pxhbpviyB1eK4ppjTwsrTkYiVk3Lhi/aEEh6q5s=;
-        b=Wsqn4EquBcsbwCMdxmgeQuykeDb5sbNOmopZWJV/P478O9hSMRtD+Td6ofHVfNC7hz
-         39lCx4J8r4CkZ9ZGTNb2Irlfb0DwwAbuqBTRAydD1QOvMoLibUmAPqC9CI7HfaUEy+BG
-         u8gm3W4ucoK3oA6RU/xCOk/r1QzQID6IS5/O0Chmla6qN7p1PLpg5CjQtG3pULx1E9+B
-         ZBHf3BliJA0YrimRqiP6Bz52A62Gm5Ohamvfn9CDMPjMPW/0cvL6trmcDCuj8rSxRaGi
-         kUewk/9ynyXduL+aZhfI/o0p1WaCCloEq6bV8tAyxTtdyt74w3Q7lSYn99FYNHt2FqZ/
-         SRlg==
-X-Forwarded-Encrypted: i=1; AHgh+RpnhPD9++X3YmjJDYWJLGuoSbHaYU8D3lbPdS94H3a+pND1BLKt7U6JxmqD3XXBe74L+w8KsMpIhmt/bZQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxWnwNbNLm540ZYmxa7Y9qgcJ+UH7EH+bp+uYl/ZGjivKF9ZBG
-	9KK+XQ41jexz+xucFPD0RV0QTkxzNfohLsQNSl874VobpypdCVSHxsKC
-X-Gm-Gg: AfdE7cnluj1XLAsQFnmqa3gjpxoD8XP7fIrwsA32QuiBdXkS5v3kxawB3DJemoXNPv8
-	4IUYtAq0v5STpMNQ1q7OfYriDnY66m/VQW7CrSoMKJeNS+vJEzKpL/Ur7hiu/7kIUbqTnVqw1Tx
-	RPBfs7GbwZRklb7Am9b4vSivZBxAQFz5II/WzspGfaLqUhfJelWUp56waNIlphjXXAfg4uucSR8
-	+hDHlXOwWvLz2scyieDtnNQTGHUPXNvv2fG04zcw3+3HjJ4N7VkHNRS58JFWXM3m4lnYYlbLRy1
-	pX0V4gL8f2meBb7Med3j6R+3MX++6oYYX4VUuqt541KdRq41CkKVtkAWWatZXwT+ZynzyzjIZk1
-	N2dy5vaXN+rel5nQry1cZlrnp+zYCDTXVdiCB7z445GuWM+TdA2VEJHv/Kj+2rwbryKFUCUH4rx
-	iMvIR6KYgjx8i9s99lGPGLA9g/u8U8zYIcxIo0XKffHscZEPZL5V88P4s=
-X-Received: by 2002:a05:6a00:3404:b0:847:9151:3409 with SMTP id d2e1a72fcca58-84889797ad5mr1318139b3a.55.1783739362452;
-        Fri, 10 Jul 2026 20:09:22 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1783739697; x=1784344497;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=xrd/oJTRX2Uc0zxJ+R9Qjxy6xmTV66E4ZoYglWTlGgs=;
+        b=nh8wTn4YsFa18fPjc8dm+yRLfvPiuzCCJx6xj/yVVWqltEGlx+QA5DXdToWCV5bLqz
+         T23KrY1i3RaLHoOnMF0LDeIGFi+j5M5h764y4F9OgtDHpyqSNSeOci9U7O/lMxpE1Dgd
+         o+O7b3lne7NosQWpYkUS40tsd/D/XJ1jyliYHglF2Iv3KO1vcXgId0RyNF+ZP06+Z2gq
+         FmdO4aZu4GALSx2m6d9+sENR8q2HPEGpAAFf7Ha8ewBB0ZH15i5pVeoEtBRQeql4KiZ0
+         8sQ8Z2ezdZx1QEj3V9g5d2CUgzB2nJOY7usBPY/TPRpKvyyZ98hWFH8VeYrUCGysT5G3
+         QkCQ==
+X-Forwarded-Encrypted: i=1; AHgh+Rr7uv7hjoEiAbwkTtbSW6wVG3lHY+wiUVnlOyCvdPlomrDGxdC8zF5YGBpZZhlHM9ZoExhkG2s7Fi8H7yI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YylqC4lZHf+JoLhfSBQ2XAQVrA8AW5hHYgcBc4Jz72PCl7nYizO
+	oMWnqjdYlzkGfIVx0MFpS0UqQMaFfAv52Dz5SMj0fRgUWlurx0irrWnR
+X-Gm-Gg: AfdE7cnQ+ukibMVZNl4HU50GluS8D2fBCnPkvJAnkBffRANtgKlL/Z8hVwuz7yCPMSo
+	7xu1aYKpMO6Ty5eJmE2YH7DP7fBRW/FoD1irR5zMMBoj1sowYWHn75KnN11rfO6NA/GaynIuHwt
+	osbPyXRiOHsQ1x/D4D5aqqN0MzHpR9vU4R7rxh4cCjBs+iAkfHP29/nxCYQv7aKdb61mq4yBHwD
+	RrKCQTYAJZvdsEpFI1wBAZBzvSbv43SufMa849YF1F7xtgoGkt41FUiULC7hc5h1dkn/mawIyN+
+	4cAgSRo1EcM5Vuhj+wIxH0M4kS5YLj68SPa+W7t1uKLbHz5C8dohZUOsvq2U+bioSXvI8wgoQS5
+	ZvkmySBd/044DUpF5IW09o3q2AdnpNADebe/G1pVrDl0HqsXum2N1zD1cSagHWZMISVkV6ig6Aq
+	7X+G0FKIGj3tD6+fyOqbXJfDlelRLEZ/6gTePRXYJnPZ1W2jS+Z9IjNqU=
+X-Received: by 2002:a17:90b:5688:b0:381:29f2:481b with SMTP id 98e67ed59e1d1-38dc74cbe73mr1405854a91.11.1783739697430;
+        Fri, 10 Jul 2026 20:14:57 -0700 (PDT)
 Received: from skinsburskii (c-98-225-44-182.hsd1.wa.comcast.net. [98.225.44.182])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-847f6db29d1sm11140358b3a.53.2026.07.10.20.09.20
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-38a55a47286sm3463061a91.10.2026.07.10.20.14.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2026 20:09:21 -0700 (PDT)
-Date: Fri, 10 Jul 2026 20:09:18 -0700
+        Fri, 10 Jul 2026 20:14:56 -0700 (PDT)
+Date: Fri, 10 Jul 2026 20:14:47 -0700
 From: Stanislav Kinsburskii <skinsburskii@gmail.com>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: airlied@gmail.com, akhilesh@ee.iitb.ac.in, corbet@lwn.net,
@@ -95,22 +95,21 @@ Cc: airlied@gmail.com, akhilesh@ee.iitb.ac.in, corbet@lwn.net,
 	linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
 	linux-rdma@vger.kernel.org
-Subject: Re: [PATCH v8 2/8] mm/hmm: add hmm_range_fault_unlocked_timeout()
- for mmap lock-drop support
-Message-ID: <alGz3vywc6W5hvso@skinsburskii>
+Subject: Re: [PATCH v8 4/8] mshv: Use hmm_range_fault_unlocked_timeout() for
+ region faults
+Message-ID: <alG1JwgUK44dCiN4@skinsburskii>
 References: <178371866223.900500.12312667138651735591.stgit@skinsburskii>
- <178371879503.900500.7148019929226548795.stgit@skinsburskii>
- <20260710151209.157d7c80b03dc56d73b5884a@linux-foundation.org>
+ <178371881034.900500.5214601525971121683.stgit@skinsburskii>
+ <20260710151216.0397a6f9ac5c7b4ccd274cc1@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260710151209.157d7c80b03dc56d73b5884a@linux-foundation.org>
+In-Reply-To: <20260710151216.0397a6f9ac5c7b4ccd274cc1@linux-foundation.org>
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [2.34 / 15.00];
 	MID_END_EQ_FROM_USER_PART(4.00)[];
@@ -118,12 +117,12 @@ X-Spamd-Result: default: False [2.34 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	MID_RHS_NOT_FQDN(0.50)[];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCPT_COUNT_TWELVE(0.00)[39];
-	TAGGED_FROM(0.00)[bounces-11932-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11933-lists,linux-hyperv=lfdr.de];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -144,116 +143,64 @@ X-Spamd-Result: default: False [2.34 / 15.00];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	TO_DN_SOME(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 67A3D740242
+X-Rspamd-Queue-Id: 61F51740274
 
-On Fri, Jul 10, 2026 at 03:12:09PM -0700, Andrew Morton wrote:
-> On Fri, 10 Jul 2026 14:26:35 -0700 Stanislav Kinsburskii <skinsburskii@gmail.com> wrote:
+On Fri, Jul 10, 2026 at 03:12:16PM -0700, Andrew Morton wrote:
+> On Fri, 10 Jul 2026 14:26:50 -0700 Stanislav Kinsburskii <skinsburskii@gmail.com> wrote:
 > 
-> > hmm_range_fault() requires the caller to hold the mmap read lock for the
-> > duration of the call. This is incompatible with mappings whose fault
-> > handler may release the mmap lock, notably userfaultfd-managed regions,
-> > where handle_mm_fault() can return VM_FAULT_RETRY or VM_FAULT_COMPLETED
-> > after dropping the lock. Drivers that need to populate device page tables
-> > for such mappings have no way to do so today.
+> > MSHV currently faults movable memory regions by taking mmap_read_lock()
+> > around hmm_range_fault(). That prevents the fault path from handling VMAs
+> > whose fault handlers need to drop mmap_lock, such as userfaultfd-backed
+> > mappings.
 > > 
-> > Add hmm_range_fault_unlocked_timeout() for callers that do not need to hold
-> > mmap_lock across any work outside the HMM fault itself. The helper takes
-> > mmap_read_lock_killable() internally, calls the common HMM fault
-> > implementation, and releases the lock before returning if it is still held.
-> > The timeout is specified in jiffies; passing 0 retries indefinitely, while
-> > a non-zero timeout makes the helper return -EBUSY when the retry budget
-> > expires.
+> > Use hmm_range_fault_unlocked_timeout() instead. Passing a timeout of 0
+> > preserves MSHV's existing unbounded retry behavior while letting the HMM
+> > helper own mmap_lock acquisition and refresh range->notifier_seq internally
+> > before walking the range. After the fault succeeds, MSHV still takes
+> > mreg_mutex and checks mmu_interval_read_retry() before installing the pages
+> > into the region, so the existing invalidation synchronization is preserved.
 > > 
-> > When handle_mm_fault() drops mmap_lock, or when the range is invalidated,
-> > hmm_range_fault_unlocked_timeout() refreshes range->notifier_seq and
-> > retries the walk internally. If the lock was dropped, the retry deadline is
-> > also restarted because a lock-dropping fault handler made progress.
-> > Ordinary -EBUSY retries keep the existing deadline, preserving the caller's
-> > timeout policy for repeated mmu-notifier invalidations.
-> > 
-> > The caller only needs to perform the usual post-success
-> > mmu_interval_read_retry() check while holding its update lock before
-> > consuming the pfns. If mmap_lock acquisition is interrupted or a fatal
-> > signal is pending during retry handling, -EINTR is returned instead.
-> > 
-> > The common implementation conditionally sets FAULT_FLAG_ALLOW_RETRY and
-> > FAULT_FLAG_KILLABLE only for hmm_range_fault_unlocked_timeout(). The
-> > existing hmm_range_fault() path still passes no locked state, does not
-> > allow handle_mm_fault() to drop mmap_lock, and remains a thin wrapper
-> > preserving the existing API contract for current callers.
-> > 
-> > The previous refactor that moved page fault handling out of the page-table
-> > walk callbacks is what makes this change small. Faults now run after
-> > walk_page_range() has unwound, with only mmap_lock held, so dropping it
-> > does not interact with the walker's pte spinlock or hugetlb_vma_lock.
-> > Hugetlb regions therefore participate in the unlocked path uniformly with
-> > PTE- and PMD-level mappings; no special case is required.
-> > 
-> > Documentation/mm/hmm.rst is updated with a description of the new API and
-> > the recommended caller pattern.
+> > Fold the small fault-and-lock helper into mshv_region_range_fault(), since
+> > the remaining retry path is just the standard "fault, take the driver lock,
+> > check the interval notifier sequence" pattern.
 > > 
 > > ...
 > >
+> > @@ -452,13 +412,19 @@ static int mshv_region_range_fault(struct mshv_mem_region *region,
+> >  	range.start = region->start_uaddr + page_offset * HV_HYP_PAGE_SIZE;
+> >  	range.end = range.start + page_count * HV_HYP_PAGE_SIZE;
+> >  
+> > -	do {
+> > -		ret = mshv_region_hmm_fault_and_lock(region, &range);
+> > -	} while (ret == -EBUSY);
+> > -
+> > +again:
+> > +	ret = hmm_range_fault_unlocked_timeout(&range, 0);
+> >  	if (ret)
+> >  		goto out;
+> >  
+> > +	mutex_lock(&region->mreg_mutex);
+> > +
+> > +	if (mmu_interval_read_retry(range.notifier, range.notifier_seq)) {
+> > +		mutex_unlock(&region->mreg_mutex);
+> > +		cond_resched();
+> > +		goto again;
+> > +	}
+> > +
 > 
-> A trivial thing:
-> 
-> > +int hmm_range_fault_unlocked_timeout(struct hmm_range *range,
-> > +				     unsigned long timeout)
-> > +{
-> > +	struct mm_struct *mm = range->notifier->mm;
-> > +	unsigned long deadline = 0;
-> > +	bool locked = false;
-> 
-> This could be local to the do loop and it needn't be initialized.
-> 
+> If the calling process has realtime scheduling policy and either a)
+> we're uniprocessor or b) this process and the holder of
+> interval_sub->invalidate_seq are both pinned to the same CPU then
+> cond_resched() won't do anything, and this might be an infinite loop?
 
-Unfortunately, it can’t, because its state is mutated in
-hmm_range_fault_locked() and the resulting state needs to be preserved
-across iterations of the loop as deadline reset depends on it.
+Yes, looks like it might.
+What can be done to prevent this?
 
 Thanks,
 Stanislav
 
-> > +	int ret;
-> > +
-> > +	do {
-> > +		if (fatal_signal_pending(current))
-> > +			return -EINTR;
-> > +
-> > +		if (timeout) {
-> > +			/*
-> > +			 * If the previous fault dropped mmap_lock, then the fault
-> > +			 * handler made progress. Restart the retry timeout in that
-> > +			 * case, but keep the existing deadline for ordinary -EBUSY
-> > +			 * retries.
-> > +			 */
-> > +			if (!locked)
-> > +				deadline = jiffies + timeout;
-> > +
-> > +			if (time_after(jiffies, deadline))
-> > +				return -EBUSY;
-> > +		}
-> > +
-> > +		range->notifier_seq =
-> > +			mmu_interval_read_begin(range->notifier);
-> > +
-> > +		ret = mmap_read_lock_killable(mm);
-> > +		if (ret)
-> > +			return ret;
-> > +
-> > +		locked = true;
-> > +		ret = hmm_range_fault_locked(range, &locked);
-> > +		if (locked)
-> > +			mmap_read_unlock(mm);
-> > +	} while (ret == -EBUSY);
-> > +
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL(hmm_range_fault_unlocked_timeout);
-> > +
-> 
 
