@@ -1,185 +1,250 @@
-Return-Path: <linux-hyperv+bounces-11945-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11946-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id Xp9sFFFcUmokOwMAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11945-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 17:08:01 +0200
+	id pCgzEjiGUmp6QgMAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11946-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 20:06:48 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08E08741E31
-	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 17:08:01 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 84B6E74272D
+	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 20:06:47 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=RdER+N6g;
-	dmarc=pass (policy=none) header.from=gmail.com;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11945-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11945-lists+linux-hyperv=lfdr.de@vger.kernel.org";
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=pass header.d=outlook.com header.s=selector1 header.b=Jmtje7SW;
+	dmarc=pass (policy=none) header.from=outlook.com;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11946-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11946-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 6676F3042C72
-	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 15:06:38 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4E3A73010C0D
+	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 18:06:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E11363328FC;
-	Sat, 11 Jul 2026 15:06:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4D853CF020;
+	Sat, 11 Jul 2026 18:06:45 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazolkn19012021.outbound.protection.outlook.com [52.103.11.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AC672D595B
-	for <linux-hyperv@vger.kernel.org>; Sat, 11 Jul 2026 15:06:33 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783782394; cv=none; b=oywPkVfx0rWXW1L2z5SOogKdj2ku8z43qXtFTN45H9xktvZ0CIzJwz3oW1iyKuMYCVvEe5xHc9GEi7fWE4ypC3sK/ZUNU/EBXrxpRZnAL+BTid+ixLBPuBEkjr74oGQi9lf97mkzC32OdKkNQLae/iU93cEDqR0ZBNMAZZ57lSI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783782394; c=relaxed/simple;
-	bh=xfd1Qij55WSKgMYmH/iULiROavfzelZy0Gq6Ktbvt4s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=X7LD5972j379NNLn/iLrzepqMi+nl73pKT2IxfsfiZKZ79CeT8fshS5vKuM8uZ+shiBPsRG+njdhZPiQATTvIwpjQ8DlkjcfnP9HmaAUulzrQY/7EF8wcxS0AJkFd1psjEAgR+Ogw24uNA2riQ6AdBwnyPTzg4N7Z6IQbOKtuuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RdER+N6g; arc=none smtp.client-ip=209.85.160.181
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-51bfe810293so9835311cf.1
-        for <linux-hyperv@vger.kernel.org>; Sat, 11 Jul 2026 08:06:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783782392; x=1784387192; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=XSPQ4s327xjju3OZzaMxfnUi+7xam88AtuluAZAKUPI=;
-        b=RdER+N6ghm5RpSKKvj+gqtJxRBfPmMkBL8fMv4K6APpV1kKcCcxbKfb5/4cKDFpTtg
-         FwCU4a/ts9PUK1uxOiASMqHWAPZBj7oCY5/VG2TDLeMgcFI0F3pmM6OehTWfJxlWvWmA
-         ah3CqWm3AK/jmu2R6lJVPtlaj0PmN8hka8eK+DXUa/pVcf1fygS69HwuV4pENMFmziC/
-         xROgyWzftvniM5Q86qCuKbjsmDvx6lx9HgEXP8eicWeLYRGBw3muIhXTNrn1ja2P5Q29
-         q7vDzGqm5U8rmfAtaCRZJOwQdyAKP+Mx1n2TTczKw2aLxJHKKOem+CC31ZLhAyYd/enM
-         slUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783782392; x=1784387192;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=XSPQ4s327xjju3OZzaMxfnUi+7xam88AtuluAZAKUPI=;
-        b=tMMGk7S75FedquKJ/18Jb0fcTMIaXgfO0xsqs3HP5ahvR4XknizVY8Qx8RiOxEZek9
-         WKz8g0pCfzg2FRM7PbPk9xGO1w+FiBsfl4qCqpdFeuvsdu5s8V/pKBemCmJOdUaFRhS3
-         S5L6djDbSES8PkVPLnX/5eogDEilAkn9EEb8CXP3v1V3qo+gyJ92nm1THVueTUnrowBa
-         6DBQtT3o8nl0EnOLYLyut9MwiBSXcoQGLehc/I+5yDbKg2EYLfNNmr6Kfi6Hes0VjxMo
-         22+OynBnXc0JHouva5lZ6p+AlmyyLaj1rk7vjsukdlFIdSVbrb2XyPJuG435TbklssX1
-         K3RQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rqh7TYSRPTyXdFTtbe4D9oTi2KhxEdV6QP2l26MI/AIValXKmowhXIktmvPZzBWM8yS0IW/f34R2J2XwBc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yza2b4AH8FGLvR197c/F+1/U4HUKTVL1rWr7JF5l+X42GFlaPpw
-	lM6gAjmpo3JYxqlN1HVaJwbm/gQYDYFeg0f80bUbI2GeVM4T8sg1h1C1
-X-Gm-Gg: AfdE7cnBLHqpGpTlB1pQQEVmNmaOhPhAAb4oHalt2HFIsRL+dymZmkf/Hqvdr2Y5TjJ
-	3ha/lGfdoWLxhX9R1pb2KlFLYTHnf+JajHZGSsEk2fJ9emNVQQFsSE7TEYhdaTC/JmtIWanjA/o
-	7dNMfH/w8nLjAIw/hR6cw9Udq0U4q2jQ+12n0BzVkr+x6xbbQnQlHHAQpPVwfLYx+RGgQa2GDC1
-	7qKJDL8qT6FtQ1dbWuZKwC9VEFKYU4riP49/qJlg1AxNrFandva7jMIMUDJ2t8SsqoC45JTGSHQ
-	xaxe2xEYS0iga4hymj6fz2eEa+p2/mUMfZiVCOCTVP6PngTuLuuIEiPZpOgrUXWjjRlKnl0meO9
-	nC89t4hzyh+YoYSRMCm7Iok9v/zb23NDheF+MlLoHkGky1KAJ19UUP7rB2thgIsH/Liu62+HbWL
-	LJB1nANGRHi4nrx5CEDx2oUhVWZgwvbm55zUlL3Sus1Z5+cDYgjcyI1iJvdJ6Ow94bGp+IWU9fG
-	C6n4BGPhw==
-X-Received: by 2002:a05:620a:28c9:b0:92e:8e36:32a7 with SMTP id af79cd13be357-92ef2c7289amr321690985a.68.1783782392025;
-        Sat, 11 Jul 2026 08:06:32 -0700 (PDT)
-Received: from server0 (c-68-48-65-54.hsd1.mi.comcast.net. [68.48.65.54])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-92ee5b88a38sm465793285a.12.2026.07.11.08.06.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Jul 2026 08:06:31 -0700 (PDT)
-From: Michael Bommarito <michael.bommarito@gmail.com>
-To: Haiyang Zhang <haiyangz@microsoft.com>,
-	Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>
-Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH] net: mana: cap HWC init max message size to HW_CHANNEL_MAX_REQUEST_SIZE
-Date: Sat, 11 Jul 2026 11:06:28 -0400
-Message-ID: <20260711150628.2914205-1-michael.bommarito@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B11A3CD8A9;
+	Sat, 11 Jul 2026 18:06:44 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783793205; cv=fail; b=OgeE6AW/lecMeF1rdxqJ/Kr5XnkMCePQ6sjJE+yH9fwu8C1BK1G8IayQ35OnIdWEq/4cVt/iox3R4UHczP/MKULy/wYsSFS1M3KhPhqQYqNUP+ZUK3OKxy40TPBGioHR18KKz3J7rjkVz0l5xtriiDaAKjbrHCWjVlndYz+3/og=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783793205; c=relaxed/simple;
+	bh=eDmstlaEUh2PxcCp0UVGsnrJ9ND/kkLvpNdJ1yBTauE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=udoq8Ka70iNCwRgLVwQ+wtsw8T5KL5R+ivkE10bhdIZD/8Fw4HUd47wak9gfSsHhbAGl7XA8wMcBejYeEIYtgcgimeP1HuerYdM1Los0L6AV1W2zuKdQycRuXJPSm0/Q7zg5uwUcpKp9VhGxJnmUogac7VLFpeodWC3AcrSa+u0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Jmtje7SW; arc=fail smtp.client-ip=52.103.11.21
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xbB2jaWKLgzZtq7nSHB8aap9VCmZOD8EWSjl0Jf+wUnSSiyIe4KYEOr3e3ODihDaqo8nYcZABdIWp17D52fY+h6gtvdPE7ol1/F/H4E4yU4UfA+S+Gyb4QNja1XdSh1Ct3mFmcKtnL607O4dISHFVmal9ZQxdt4TNfT2kknk58TM0bcAEmhT9X+yRKpO6icqKfSCZZpSb1iCfShbZWnOwwpulnvTi9ya51xnUIr9+NHdY49+KKq6Do+wxp5vyv7D4PNytERjWVRviqA/TsGmHVtNodWr/nVvRWDX7AsKm7dNwxYnKKCe4XzfzSq/Jgzla9NPkhQfuwSI66XRvcaR5Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=i79v9JQlGkJDc2S74npd6rnvyQ8CfAa7STSWGJKtY/g=;
+ b=O/NsRFDVcXk5a6n3/Nh2oXMV3Txq4+eVS9kWWDyAV7i762YWw6P6e75ZR86ewWwNqQprUduUPpUTuPsiFPjoGqyiZDZBllpBpQc2CIt47qxcUeGGzScFpWQrcCjvfVzCM98LF98LB21twWyNxrfyurj5Rb/Rx6nhPIXqEU69lpP7qitF/6ADrdgCdWDbUHt6k+VFOtM7dmDVraV71QfSDX7UdOryO/oOffAaaIEBAOwUPU/oNnqW1xzqXXYU3oDELlMHWOjHFOB5RSGErj7WyPfke9CeGBhUOTmHUw+dw7IhmUUA2ebd/w8ML8spq2iVt3pqe/iaYcLMHtz/dHFaqg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i79v9JQlGkJDc2S74npd6rnvyQ8CfAa7STSWGJKtY/g=;
+ b=Jmtje7SWYXTFyRuYI69m8CSJoAnWDGQ6sXm668ETwchIvYwekWGMTsM3G8QD74AdI6vaZcOEd0kRDOzFuQQw/mNQV/HmYq09+1hv+fKpQigVIlOFD3s5pYqZO6yQpCAD6vGZfgGB56Z4aYsRfrQtRa/lOC7QMivVSIJewmnU2CsLzfhy8OttUjGi1FTV0DWKY08r2zuWvZKvbNoGFGUghgG/uPSgBzP4kjkoPRfzBb2EjKLNZwmWjShjtap6+bvCCBT2D0d5WaG4xQGFHRaoHOuODcS2pcpI6X2FBinrBZ46fDhK9n2gW9T5XipG2kaFbvnsPZNDpVnCk3TDRt9saA==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by SAWPR02MB11439.namprd02.prod.outlook.com (2603:10b6:806:4c8::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.22; Sat, 11 Jul
+ 2026 18:06:42 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::900:1ccf:2b1e:52b6%3]) with mapi id 15.21.0181.017; Sat, 11 Jul 2026
+ 18:06:42 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Michael Bommarito <michael.bommarito@gmail.com>, Jiri Kosina
+	<jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
+	"kys@microsoft.com" <kys@microsoft.com>, Haiyang Zhang
+	<haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>
+CC: Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
+	"linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH 0/2] HID: hyperv: bound initial device info descriptor
+Thread-Topic: [PATCH 0/2] HID: hyperv: bound initial device info descriptor
+Thread-Index: AQHqIQBWpWEJ7wPGIDK8IqS/5c/pZLZOecHw
+Date: Sat, 11 Jul 2026 18:06:41 +0000
+Message-ID:
+ <SN6PR02MB4157EEE7437300BE9443AF84D4FC2@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20260710022854.3739558-1-michael.bommarito@gmail.com>
+In-Reply-To: <20260710022854.3739558-1-michael.bommarito@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SAWPR02MB11439:EE_
+x-ms-office365-filtering-correlation-id: 5c3693c6-142a-44ce-aca4-08dedf772932
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|25010399006|37011999003|8022599003|15080799012|31061999003|8060799015|13091999003|19110799012|24021099003|8062599012|3412199025|440099028|4302099013|102099032|10035399007|1602099012;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?aaFbWFpgxRS2TVpeC7WMMv/mcFRKndZwZ03PEbCMuHkc6+taKmwh7mPQLqGd?=
+ =?us-ascii?Q?jKP3lboW2goQzyYkZSII+cN06HP3j9iBSkuQUNSA2QUAUhwJY3ciIUydjyah?=
+ =?us-ascii?Q?g8eccOPxJRNhStRZ8LW3RdhujihCj5PSRuUG4vSq6YaCVYM68I7lg+PT4B6a?=
+ =?us-ascii?Q?jP4Z8wJ8u5Z3JocI8UV3mlHhELbYRdn8pQBaJPczfHaHqwtZrsTaHeL3Ra4j?=
+ =?us-ascii?Q?TZ0F/LapHv4Gt+vgLlTKU+eay77rM0SLjQuLRKTSPwHa5f8s3VMNcUeY5t59?=
+ =?us-ascii?Q?3A+CD6Xmy6ZhtkWz3i5KRmHEKjwOL0yghVRiw7BI8x4brexXugx0OHvRTeA9?=
+ =?us-ascii?Q?5jUBgNTB5YXO3T2ygMn3Lo1AGzepzV/1+5fU34+Yh1/ePt+EpZCnzV6t6R7O?=
+ =?us-ascii?Q?bUtke7oGHPuFiLBtdr07A6+uQQQX770+Om+nAsRhSg2eohvHei0sV/2R9T2w?=
+ =?us-ascii?Q?Gj7qU4bftzXTbdna2Kouw7GsZwKfpgfQt4qn9sSjptJ3stwzNwyqJsQ4ghgo?=
+ =?us-ascii?Q?4WnxwnPSqVlUP7YvKocvYhOiq/jzXHrL/cfAXhklbhIAnkuSsauu5rSUmgx2?=
+ =?us-ascii?Q?DeFRCjDh6LFMAer6BNAImLdt1uDtmGTBcHAwclrrWQv1dswnutlnAFSspnu9?=
+ =?us-ascii?Q?5WP1HgX0g2KbDkoZi11RVG2hpEo4AG3or160X0p34FVTXorRoPpmnU4F1Qji?=
+ =?us-ascii?Q?PoSEDm/favzF7ccyPUI1b0KGl5SRFHNejrXT8A1JHUcISp27VZuRZN2P6GNq?=
+ =?us-ascii?Q?bROHRG9lmRNlumXgqW/RThDcxr7dUQYlCaLdNqG4v0NuDJJfZe130zjD/7yK?=
+ =?us-ascii?Q?n51NbXNadDqzj7mfdh0QI3u9eAKOv2ULlVi5aeyyeyZKvWsFYNsWOk80prXA?=
+ =?us-ascii?Q?u7KlG+dYLrFLgVqKP8pb06EqVc4A19RzRcbYjZtBW7Qns1itO2ShRVpEmTdU?=
+ =?us-ascii?Q?w/+RUdcIrvFDvkIk1t9XELWj3Ai+LeJTESJLklLio/85wo4vhalndM6m20oU?=
+ =?us-ascii?Q?t5vmJbiBZuU+0eVGcvRkrQvYssbv6jh0vFzkcFnWXYJw+CetT2laNqN7aCAv?=
+ =?us-ascii?Q?XiVlNObr?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?ozx1Op/DsHliNbgfU/1v8wadJ5FWSRnrg8KFRrdnYa2gt3VuApmBypxOwlO+?=
+ =?us-ascii?Q?xqQyTUIoHhftIrT3ScRK+PYkvu2vUfzR0/TxF9NNKhZ1boYPj7LYw4fbViPn?=
+ =?us-ascii?Q?bx2dDzoVgshy3Rjgajb5KWZpODpUlbM7szn+U71uPBG48cddhBb7ueZU5wxc?=
+ =?us-ascii?Q?79FE/bHE11L2RTNfQ97V1jbCUTc5sdgtBCWi9ZCCx4GZaUJhi0qytv0WZiX3?=
+ =?us-ascii?Q?yewb9Aw9JU3dO6jhQa+gmW+sKJDSmept9tuB9UWBQ+QeHFDfsQQu6tN9VD5k?=
+ =?us-ascii?Q?Wnf/NP8upNqoEAdXIefkFUr+8CzaIb/QcM1gK1mop/ivkrZoG+crlGZpNlAu?=
+ =?us-ascii?Q?k6EPFKFRvdI59KNrdDqRdYxtOywaux1lFReaAunS5VWxZNVhXsDEbdcn2ieo?=
+ =?us-ascii?Q?Q+J9CLjlIIgsz5Nr+OqR8vApXlhNGzdEVmwmBr2L8FQzquLAYwYQbFXd4bya?=
+ =?us-ascii?Q?IL+DZljzeQXG6tlgjBLvGuS9tGphR1aC15xceu/v9L0IOnOxeZjeiU2NWWAv?=
+ =?us-ascii?Q?rxQmFH/Fmb6XduUzRrlgzTxFn/wuuHbJXQkA4Trs+lfbXQ3iAeX/sOQcZgn5?=
+ =?us-ascii?Q?aKCzKNDIByWqR/yRODrJwvnUGNccOeIY1Ze3SUlI9XUE59rTgMUV9Qz+G0na?=
+ =?us-ascii?Q?gkxf/3EJU6ZAtIYD6+sptnYFdxn+yqB8x33GysvpdtHViK3DTYcN5KbFaQmq?=
+ =?us-ascii?Q?RlfsUDet9uSRMcrCBgy1p6775EFgB+nUg12QC7q0hrNVY+3leCaiL1UGhqrM?=
+ =?us-ascii?Q?/hlQ8RpAJVoFArMVXaZgfl2QXxtSsmGznWAXILVfC+78Y4APV4EGbyqNN+Qv?=
+ =?us-ascii?Q?WYbj9xt3l/Z2zLdXHyesQS7r6+XdIc7f6mhii3kLS05Cage/T1L6M35P1Der?=
+ =?us-ascii?Q?vpJu1ekuYrn+SlIcuYJppmTKQSHKbXViVS+c/SZ7UbC1kbazVdPHWAw3DvXI?=
+ =?us-ascii?Q?KjoFHCoxtM3b3lMglDalqZCkV6tZfUte/8K+HgP/LduInVHbwBEaaoWP7LW8?=
+ =?us-ascii?Q?s8LuvumGglzBMygTjdLC6Ti4/U/wG+Py94aFidBfwiKRqnVxMfAeZstO27iz?=
+ =?us-ascii?Q?OVS8MfkOBxac/BHos/fd+OIyd6d3DyZDgYvFxmemmbjLTK/4D+p7a9DePwu1?=
+ =?us-ascii?Q?WhqEM3gCN8YiyW1JNqpbQrqzQNYMpV8T0q4qogUnOR/9tTfHGVWWkmasG61w?=
+ =?us-ascii?Q?mAahiG4kwWS5m2fuczcaI7qJ0ii3Uz8rtPMr6D9agzdHdmhE4v2teQGbx43S?=
+ =?us-ascii?Q?vWX+3qe+t7+a8Q3qS36rvBzYNVHTfVxkj0Y0X2gJU6aPN+qvpal9OO3gHsnD?=
+ =?us-ascii?Q?YgHPA9ITHvLCGo5u1OzB9Y6vBWW6mbbO5XH0uz4rbPGfBXiV1nz527a/n4vJ?=
+ =?us-ascii?Q?CxUPMks=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5c3693c6-142a-44ce-aca4-08dedf772932
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jul 2026 18:06:41.7588
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SAWPR02MB11439
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [1.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[outlook.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[outlook.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	TAGGED_FROM(0.00)[bounces-11945-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	TAGGED_FROM(0.00)[bounces-11946-lists,linux-hyperv=lfdr.de];
+	FREEMAIL_FROM(0.00)[outlook.com];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER(0.00)[michaelbommarito@gmail.com,linux-hyperv@vger.kernel.org];
-	FORGED_RECIPIENTS(0.00)[m:haiyangz@microsoft.com,m:decui@microsoft.com,m:longli@microsoft.com,m:kys@microsoft.com,m:wei.liu@kernel.org,m:andrew+netdev@lunn.ch,m:kuba@kernel.org,m:pabeni@redhat.com,m:netdev@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:stable@vger.kernel.org,m:andrew@lunn.ch,s:lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com,kernel.org,microsoft.com];
+	FORGED_RECIPIENTS(0.00)[m:michael.bommarito@gmail.com,m:jikos@kernel.org,m:bentiss@kernel.org,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:linux-input@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:stable@vger.kernel.org,m:michaelbommarito@gmail.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[mhklinux@outlook.com,linux-hyperv@vger.kernel.org];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[michaelbommarito@gmail.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	FROM_HAS_DN(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mhklinux@outlook.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[outlook.com:+];
 	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-hyperv];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,outlook.com:from_mime,outlook.com:dkim,SN6PR02MB4157.namprd02.prod.outlook.com:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 08E08741E31
+X-Rspamd-Queue-Id: 84B6E74272D
 
-mana_hwc_init_event_handler() in hw_channel.c stores device-advertised
-HWC_INIT_DATA_MAX_REQUEST and HWC_INIT_DATA_MAX_RESPONSE values
-without bounds checking. mana_hwc_alloc_dma_buf() later computes the
-DMA buffer size as MANA_PAGE_ALIGN(q_depth * max_msg_size) in 32-bit
-arithmetic. A malicious device returning a large max_msg_size causes
-the product to wrap, allocating a small buffer while laying out
-q_depth request slots at the unwrapped stride, placing slots outside
-the allocation.
+From: Michael Bommarito <michael.bommarito@gmail.com> Sent: Thursday, July =
+9, 2026 7:29 PM
+>=20
+> A malicious Hyper-V host or backend can crash a guest with a short
+> SYNTH_HID_INITIAL_DEVICE_INFO message. mousevsc_on_receive_device_info()
+> trusts the HID descriptor bLength and wDescriptorLength without checking
+> that the received VMBus packet actually contains both byte ranges, so a
+> truncated packet with an oversized report-descriptor length makes the
+> guest read past the received packet while copying the descriptor. This
+> matters most for a confidential guest, where the host is outside the trus=
+t
+> boundary.
 
-Impact: a compromised hypervisor device model or malicious MANA PCI
-device can cause out-of-bounds DMA buffer writes during HWC channel
-initialization. A reproducer is available on request.
+For some additional background on the assumed threat model that
+underlies this kind of validation (and lack thereof), see [1]. This Hyper-V
+mouse driver has .allowed_in_isolated set to "false", so it is never loaded
+in a CoCo VM. In normal VMs, the threat model says that we trust the
+Hyper-V host not to provide bad values.
 
-Clamp both values to HW_CHANNEL_MAX_REQUEST_SIZE (4096), consistent
-with the cap already applied at the channel-create callsite.
+But as I said in [1], I'm good with taking additional validations. But Wei
+Liu as the maintainer for the Hyper-V drivers is the person who should
+decide whether we want to take additional validations.
 
-Fixes: ca9c54d2d6a5 ("net: mana: Add a driver for Microsoft Azure Network Adapter (MANA)")
-Cc: stable@vger.kernel.org
-Assisted-by: Claude:claude-opus-4-7
-Signed-off-by: Michael Bommarito <michael.bommarito@gmail.com>
----
- drivers/net/ethernet/microsoft/mana/hw_channel.c | 4 ++++
- 1 file changed, 4 insertions(+)
+If we take these additional validations, there's a separate question of
+whether to backport them to stable kernels. I'm inclined to *not*
+backport to avoid introducing churn (and the risk of breaking something)
+when it isn't fixing an observed or likely-to-happen problem. But Wei Liu
+should probably weigh in on that as well.
 
-diff --git a/drivers/net/ethernet/microsoft/mana/hw_channel.c b/drivers/net/ethernet/microsoft/mana/hw_channel.c
-index 48a9acea4ab6c..a0916b50cffce 100644
---- a/drivers/net/ethernet/microsoft/mana/hw_channel.c
-+++ b/drivers/net/ethernet/microsoft/mana/hw_channel.c
-@@ -152,10 +152,14 @@ static void mana_hwc_init_event_handler(void *ctx, struct gdma_queue *q_self,
- 			break;
- 
- 		case HWC_INIT_DATA_MAX_REQUEST:
-+			if (val == 0 || val > HW_CHANNEL_MAX_REQUEST_SIZE)
-+				val = HW_CHANNEL_MAX_REQUEST_SIZE;
- 			hwc->hwc_init_max_req_msg_size = val;
- 			break;
- 
- 		case HWC_INIT_DATA_MAX_RESPONSE:
-+			if (val == 0 || val > HW_CHANNEL_MAX_REQUEST_SIZE)
-+				val = HW_CHANNEL_MAX_REQUEST_SIZE;
- 			hwc->hwc_init_max_resp_msg_size = val;
- 			break;
- 
--- 
-2.53.0
+[1] https://lore.kernel.org/linux-hyperv/SN6PR02MB4157D595B990A321BFA85B40D=
+4002@SN6PR02MB4157.namprd02.prod.outlook.com/
+
+Michael
+
+>=20
+> Patch 1 passes the received initial-device-info size into the parser and
+> rejects descriptor lengths that exceed the packet. Patch 2 adds
+> same-translation-unit KUnit coverage: a well-formed message that must
+> still parse and the truncated/oversized message that must now be rejected=
+.
+>=20
+> Reproduced with the KUnit/KASAN test: stock reads past the packet on the
+> short message after the benign control passes; patched rejects it and bot=
+h
+> cases pass.
+>=20
+> Cc: stable@vger.kernel.org
+>=20
+> Michael Bommarito (2):
+>   HID: hyperv: validate initial device info bounds
+>   HID: hyperv: add KUnit coverage for device info bounds
+>=20
+>  drivers/hid/Kconfig      |  10 +++
+>  drivers/hid/hid-hyperv.c | 144 ++++++++++++++++++++++++++++++++++++---
+>  2 files changed, 144 insertions(+), 10 deletions(-)
+>=20
+> --
+> 2.53.0
 
 
