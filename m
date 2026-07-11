@@ -1,172 +1,211 @@
-Return-Path: <linux-hyperv+bounces-11936-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11937-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id oc3mMAS3UWqqHwMAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11936-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 05:22:44 +0200
+	id 2fyyIDbDUWqeIQMAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11937-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 06:14:46 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B6707402EE
-	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 05:22:44 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB8EC740410
+	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 06:14:45 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=Y+T7qVfQ;
-	dmarc=pass (policy=none) header.from=gmail.com;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11936-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11936-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=linux.microsoft.com header.s=default header.b=IMFui4qN;
+	dmarc=pass (policy=none) header.from=linux.microsoft.com;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11937-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11937-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id C2C94301C2E1
-	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 03:22:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A45F1301BF58
+	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 04:14:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C63F01A3166;
-	Sat, 11 Jul 2026 03:22:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07BB52798EA;
+	Sat, 11 Jul 2026 04:14:44 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76EF826F288
-	for <linux-hyperv@vger.kernel.org>; Sat, 11 Jul 2026 03:22:38 +0000 (UTC)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB3472D0C89;
+	Sat, 11 Jul 2026 04:14:39 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783740159; cv=none; b=bAg3uoK5odewfhVTAGse22Q1hO1yw4x24w4PD4lGJf1C4QcVtMaIVmJakaMMiB7BBsh+W6epo1j0bI2nk/RthiSDfrSRGfNU3peISx+tqo4txM/H6d7CO0XrvPIYyGes1EIJhNWkxpWr4JFY2QDusfgPDVZYyGeTwv6sZ9uIRzk=
+	t=1783743283; cv=none; b=qk+qq55XOkfhSTxobobOx3sV0fQSMEVy9qxpuW9I4KVI1jEpAVW4+R73Xgx0k6pTWSnF50fxWL9smjkbDdc2GyUI7SHftLADCcwEs1ymgJ5+/C9Fc6F5c7l13y/+XkddgwZXq935okSVZegNkrR+Nzry7ENWATWLchmrMEdNsGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783740159; c=relaxed/simple;
-	bh=Sus7BKnPvFUSij7CjYjdJ5SdK+WtzY+EQEDkUmlaEDE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pzm947NXrkeSt9I0y02OwhNTL2cQYYthE/k6yAP4XSceamfekoNT5KNnUtqtJ38iGnzOQ3IFUD3NrlEfh8r13BGZROm/PbJyLDmdfuQ/tlU6BgujBw4U7oFAhsNRcztocVBk/iADbadtZRzGZIAIf/5NaXWTM7gX7vpdyVFOHbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y+T7qVfQ; arc=none smtp.client-ip=209.85.210.172
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-845c92bc464so1385466b3a.2
-        for <linux-hyperv@vger.kernel.org>; Fri, 10 Jul 2026 20:22:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783740158; x=1784344958; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=ZoRTmK7mqG76n1GL0uhVSS5eZwslPyOiLYDvdkV1GQU=;
-        b=Y+T7qVfQB2TUolswh+PJg2roQbg2dl792e74RhbyG/9Vj8N3+WvCQ3UIjHx98pcPsv
-         is2mm7ENnYmfoaDc5bE7/gq6fEKu019fp4/gbj9/v0igV96h2UO0N/1BiaC065sk8ylr
-         lF8EDEi7VXvTRm98EXSCwfFSt/ImJ636rlG3ntOjBtH05FFfcE5YWPgnFnTRrAObJ9Oj
-         aqesQhIYU64Em1aYmKWuSyG3xbGMAbIbH0yzO53DzB1Srir/r4KHX5GTvBRArbmp7/7c
-         cUGiE5LIe23VkhT+2v07URqgvcMoex+PNjQ2n70OnLg+zdPTlwfIENkTQvj1WG5PAEtQ
-         DCXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783740158; x=1784344958;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ZoRTmK7mqG76n1GL0uhVSS5eZwslPyOiLYDvdkV1GQU=;
-        b=HJtP2fLukHeVrCshXUuSiz4wCOtjaPs9C8m9InMjztNtPWy7cE7c+5FYIb/hqMOKpe
-         eTm+aWidmQFDS5ri9DhGkZwU05QzFaw5a4Zb46UiSu68M0OOVGS/jwJkOUQtUTtrA7Gg
-         WqufkHCBTZTseZZTSDneTz6pxg99HdfysFVaxhlNMSIRwRb5qP7xj1scL4WgfM4ewChe
-         cml1DX1FgXQ4lK/aseuBGiPztTYuM/4KzsdNiZOFSrzvR0JpnNjCovNy7Y3YZB19GJ5P
-         HqzdNzjPZ8BU1iUHgNGZTYKQJwbDcK2+LEiYMy0ym1XYhvla5laPBLkrk1gOBiDcOo5i
-         yRYw==
-X-Forwarded-Encrypted: i=1; AHgh+RpH0WsqEfM/NVgXlsPZdAxa98kvNc1pudzu5yrWO0SKZd6xbCZj2x5+ga91I9SGcIXKgTy1wDH26lQr/Dw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpUzgDtavbLryNaSHQkNdtYEK3/Um8A9kpvdLW7GxSGhziE9LJ
-	jsWJOdGm47LHUpIK8s42gcfK26gMG2Do8cz3bJRA41xyNN4ogX3Zw8OT
-X-Gm-Gg: AfdE7clVeFF1YXddJA+ZUYSNBBrAY0GU6U/mBWAsirXIwZAGvkQpAivvfSsYHIA5VlE
-	x4hKz/S6gTisCED3tq70jQShtzDKB/AeZIZBU9gwSiHb2OeT5EB4Zs7t3Y/f9U6J1VUBg4CJDki
-	Xr5y+jxgt838RL7zamwrZs+bsAUDP4tGy4iIxOMCnAgwcBVwVwFetCy87sTNZHtAoYeWJLTaheL
-	CpCaoQt1U0lVe4Oib7WnPB5aCrES6ntG8ZFnoRS0mAHBY+ktP6O2KZ9mCGlJnT5wsPc3BtT+VN1
-	ckCl3DnJ34dUchVSogE18WuV60mkE5046ujLAFtsT6YzBWixKujTztM+7XvKaiTGZkg7voWeyAe
-	TiuHq6qBI6mMAFkNxxQK81fTKfnNwbGg4nlhI9m+LeLZ/mBoOGwtQk9Aj7oaS2ijhx8TLu+QwUU
-	TgxPGrIIP/MB3fLr1OpB0iN0zKaWw4HlrWYtbI5rErE34oiEzNhPIaNKo=
-X-Received: by 2002:a05:6a00:2303:b0:848:2f74:1d68 with SMTP id d2e1a72fcca58-84889750a60mr1542258b3a.78.1783740157808;
-        Fri, 10 Jul 2026 20:22:37 -0700 (PDT)
-Received: from skinsburskii (c-98-225-44-182.hsd1.wa.comcast.net. [98.225.44.182])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84856e7c8edsm3652647b3a.36.2026.07.10.20.22.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2026 20:22:37 -0700 (PDT)
-Date: Fri, 10 Jul 2026 20:22:33 -0700
-From: Stanislav Kinsburskii <skinsburskii@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: airlied@gmail.com, akhilesh@ee.iitb.ac.in, corbet@lwn.net,
-	dakr@kernel.org, david@kernel.org, decui@microsoft.com,
-	haiyangz@microsoft.com, jgg@ziepe.ca, kees@kernel.org,
-	kys@microsoft.com, leon@kernel.org, liam@infradead.org,
-	lizhi.hou@amd.com, ljs@kernel.org, longli@microsoft.com,
-	lyude@redhat.com, maarten.lankhorst@linux.intel.com,
-	mamin506@gmail.com, mhocko@suse.com, mripard@kernel.org,
-	nouveau@lists.freedesktop.org, ogabbay@kernel.org, oleg@redhat.com,
-	rppt@kernel.org, shuah@kernel.org, simona@ffwll.ch,
-	skhan@linuxfoundation.org, surenb@google.com, tzimmermann@suse.de,
-	vbabka@kernel.org, wei.liu@kernel.org,
-	dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
-	linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Subject: Re: [PATCH v8 0/8] mm/hmm: Add mmap lock-drop support for
- userfaultfd-backed mappings
-Message-ID: <alG2-RSitzPWClAX@skinsburskii>
-References: <178371866223.900500.12312667138651735591.stgit@skinsburskii>
- <20260710151151.1e193eedd0cf2591ae392f76@linux-foundation.org>
+	s=arc-20240116; t=1783743283; c=relaxed/simple;
+	bh=an9xkeuT4N4k301iR3nhL/8C4OiSpyPgbZmbQfUebno=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=gpD8nAq/YgU22PskalCQ8p/2i3XxXRFkSDkg2WdOkImASwicaL0InlwQ65MhoayN1poD3X1YbTKLJFaVhb/K2PXbtAbi3Y9upLcYvfegrDmRICtJfuN+H9YizMvKVWl85n2ej7ljx7TB5m6304uuqY8oQ948Fif0CdMsGHkCxZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=IMFui4qN; arc=none smtp.client-ip=13.77.154.182
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 8E4FC20B7169;
+	Fri, 10 Jul 2026 21:14:32 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8E4FC20B7169
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1783743272;
+	bh=kHpLmZ//rsWAkpJYMVDT1zWDarg+LT6a1vs+4pt/K7k=;
+	h=From:To:Subject:Date:From;
+	b=IMFui4qN4+42C56HpZHh8qh6XL8grsTrv2+v52JLmbVZ4KjOt0Bq/+AWmhyaN8+T/
+	 Zc/ypGFZpOw7pOqj0naWYLcHKenh3LYwIfM8TSY2/atXU/w3S+7byLolY8uiNRTKcN
+	 aaEN/Nkrl7B0EFnvgkn3bcdC5+r8iBuO9xzIiiUo=
+From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	leon@kernel.org,
+	longli@microsoft.com,
+	kotaranov@microsoft.com,
+	horms@kernel.org,
+	shradhagupta@linux.microsoft.com,
+	ssengar@linux.microsoft.com,
+	ernis@linux.microsoft.com,
+	shirazsaleem@microsoft.com,
+	linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	stephen@networkplumber.org,
+	jacob.e.keller@intel.com,
+	dipayanroy@microsoft.com,
+	leitao@debian.org,
+	kees@kernel.org,
+	john.fastabend@gmail.com,
+	hawk@kernel.org,
+	bpf@vger.kernel.org,
+	daniel@iogearbox.net,
+	ast@kernel.org,
+	sdf@fomichev.me,
+	yury.norov@gmail.com,
+	pavan.chebbi@broadcom.com,
+	schakrabarti@linux.microsoft.com,
+	gargaditya@linux.microsoft.com
+Subject: [PATCH net-next v12 0/4] net: mana: add ethtool private flag for full-page RX buffers
+Date: Fri, 10 Jul 2026 21:10:20 -0700
+Message-ID: <20260711041415.3008868-1-dipayanroy@linux.microsoft.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260710151151.1e193eedd0cf2591ae392f76@linux-foundation.org>
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [2.34 / 15.00];
-	MID_END_EQ_FROM_USER_PART(4.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[microsoft.com:d:+,kernel.org:s:+];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
+	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[39];
-	TAGGED_FROM(0.00)[bounces-11936-lists,linux-hyperv=lfdr.de];
-	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11937-lists,linux-hyperv=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:akpm@linux-foundation.org,m:airlied@gmail.com,m:akhilesh@ee.iitb.ac.in,m:corbet@lwn.net,m:dakr@kernel.org,m:david@kernel.org,m:decui@microsoft.com,m:haiyangz@microsoft.com,m:jgg@ziepe.ca,m:kees@kernel.org,m:kys@microsoft.com,m:leon@kernel.org,m:liam@infradead.org,m:lizhi.hou@amd.com,m:ljs@kernel.org,m:longli@microsoft.com,m:lyude@redhat.com,m:maarten.lankhorst@linux.intel.com,m:mamin506@gmail.com,m:mhocko@suse.com,m:mripard@kernel.org,m:nouveau@lists.freedesktop.org,m:ogabbay@kernel.org,m:oleg@redhat.com,m:rppt@kernel.org,m:shuah@kernel.org,m:simona@ffwll.ch,m:skhan@linuxfoundation.org,m:surenb@google.com,m:tzimmermann@suse.de,m:vbabka@kernel.org,m:wei.liu@kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-mm@kvack.org,m:linux-doc@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-kselftest@vger.kernel.org,m:linux-rdma@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[microsoft.com,kernel.org,lunn.ch,davemloft.net,google.com,redhat.com,linux.microsoft.com,vger.kernel.org,networkplumber.org,intel.com,debian.org,gmail.com,iogearbox.net,fomichev.me,broadcom.com];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FREEMAIL_CC(0.00)[gmail.com,ee.iitb.ac.in,lwn.net,kernel.org,microsoft.com,ziepe.ca,infradead.org,amd.com,redhat.com,linux.intel.com,suse.com,lists.freedesktop.org,ffwll.ch,linuxfoundation.org,google.com,suse.de,kvack.org,vger.kernel.org];
-	FORGED_SENDER(0.00)[skinsburskii@gmail.com,linux-hyperv@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER(0.00)[dipayanroy@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:andrew+netdev@lunn.ch,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:leon@kernel.org,m:longli@microsoft.com,m:kotaranov@microsoft.com,m:horms@kernel.org,m:shradhagupta@linux.microsoft.com,m:ssengar@linux.microsoft.com,m:ernis@linux.microsoft.com,m:shirazsaleem@microsoft.com,m:linux-hyperv@vger.kernel.org,m:netdev@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:stephen@networkplumber.org,m:jacob.e.keller@intel.com,m:dipayanroy@microsoft.com,m:leitao@debian.org,m:kees@kernel.org,m:john.fastabend@gmail.com,m:hawk@kernel.org,m:bpf@vger.kernel.org,m:daniel@iogearbox.net,m:ast@kernel.org,m:sdf@fomichev.me,m:yury.norov@gmail.com,m:pavan.chebbi@broadcom.com,m:schakrabarti@linux.microsoft.com,m:gargaditya@linux.microsoft.com,m:andrew@lunn.ch,m:johnfastabend@gmail.com,m:yurynorov@gmail.com,s:lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	RCPT_COUNT_TWELVE(0.00)[36];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[skinsburskii@gmail.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dipayanroy@linux.microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[linux.microsoft.com:+];
+	TO_DN_NONE(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ALIAS_RESOLVED(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,skinsburskii:mid,vger.kernel.org:from_smtp]
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.microsoft.com:from_mime,linux.microsoft.com:dkim,linux.microsoft.com:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5B6707402EE
+X-Rspamd-Queue-Id: CB8EC740410
 
-On Fri, Jul 10, 2026 at 03:11:51PM -0700, Andrew Morton wrote:
-> On Fri, 10 Jul 2026 14:26:20 -0700 Stanislav Kinsburskii <skinsburskii@gmail.com> wrote:
-> 
-> > This series extends the HMM framework to support userfaultfd-backed memory
-> > by allowing the mmap read lock to be dropped during hmm_range_fault().
-> 
-> Thanks.  This seems fairly mature and mostly-reviewed so I'll give it a
-> spin in mm.git's mm-new branch.
-> 
-> Unfortunately Sashiko wasn't able to apply this or v7.  I'm not sure
-> what base you were using.  Hopefully there's a reason for a v9 so we
-> can retry this.
-> 
+On some ARM64 platforms with 4K PAGE_SIZE, utilizing page_pool
+fragments for allocation in the RX refill path (~2kB buffer per fragment)
+causes 15-20% throughput regression under high connection counts
+(>16 TCP streams at 180+ Gbps). Using full-page buffers on these
+platforms shows no regression and restores line-rate performance.
 
-I rebased this series on top of mm-new right before sending it out.
-Should I have used a different branch?
+This behavior is observed on a single platform; other platforms
+perform better with page_pool fragments, indicating this is not a
+page_pool issue but platform-specific.
 
-Thanks,
-Stanislav
+This series adds an ethtool private flag "full-page-rx" to let the
+user opt in to one RX buffer per page:
 
-> I have a few niggles, nothing major...
+  ethtool --set-priv-flags eth0 full-page-rx on
+
+There is no behavioral change by default. The flag can be persisted
+via udev rule for affected platforms.
+
+Patches 2 and 4 harden the detach/attach path so that ethtool
+operations (ring size, channel count, priv-flags) can recover the
+port via the queue_reset_work handler when mana_attach() fails,
+instead of leaving the port permanently dead.
+
+This series depends on the following fixes now merged in net-next:
+  commit 17bfe0a8c014 ("net: mana: Add NULL guards in teardown path to prevent panic on attach failure")
+  commit 5b05aa36ee24 ("net: mana: Skip redundant detach on already-detached port")
+
+Changes in v12:
+  - Added patch 2 to ensure mana_detach() always completes its full
+    teardown even if mana_dealloc_queues() fails, keeping port state
+    consistent for recovery.
+  - Added patch 4 to schedule queue_reset_work when mana_attach()
+    fails during ethtool ring size or channel count changes, with
+    fallback values that maximize recovery chances.
+Changes in v11:
+  - Rebased on net-next
+Changes in v10:
+  - Rebased on net-next which now includes the prerequisite fixes.
+  - Recovery logic in mana_set_priv_flags() leverages the idempotent
+    mana_detach() from the merged fixes.
+Changes in v9:
+  - Added correct tree.
+Changes in v8:
+  - Fixed queue_reset_work recovery by restoring port_is_up before
+    scheduling reset so the handler can properly re-attach.
+  - Simplified "err && schedule_port_reset" to "schedule_port_reset".
+Changes in v7:
+  - Rebased onto net-next.
+  - Retained private flag approach after David Wei's testing on
+    Grace (ARM64) confirmed that fragment mode outperforms
+    full-page mode on other platforms, validating this is a
+    single-platform workaround rather than a generic issue.
+Changes in v6:
+  - Added missed maintainers.
+Changes in v5:
+  - Split prep refactor into separate patch (patch 1/2)
+Changes in v4:
+  - Dropping the smbios string parsing and add ethtool priv flag
+    to reconfigure the queues with full page rx buffers.
+Changes in v3:
+  - changed u8* to char*
+Changes in v2:
+  - separate reading string index and the string, remove inline.
+
+Dipayaan Roy (4):
+  net: mana: refactor mana_get_strings() and mana_get_sset_count() to
+    use switch
+  net: mana: do not bail out of mana_detach on dealloc failure
+  net: mana: force full-page RX buffers via ethtool private flag
+  net: mana: recover port on attach failure in ethtool operations
+
+ drivers/net/ethernet/microsoft/mana/mana_en.c |  26 +-
+ .../ethernet/microsoft/mana/mana_ethtool.c    | 223 +++++++++++++++---
+ include/net/mana/mana.h                       |   8 +
+ 3 files changed, 220 insertions(+), 37 deletions(-)
+
+-- 
+2.43.0
+
 
