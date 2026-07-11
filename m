@@ -1,48 +1,48 @@
-Return-Path: <linux-hyperv+bounces-11939-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11938-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id G71tAkjDUWqyIQMAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11939-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 06:15:04 +0200
+	id G0DiLz3DUWqiIQMAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11938-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 06:14:53 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64AB074042D
-	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 06:15:03 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B44974041A
+	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 06:14:53 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linux.microsoft.com header.s=default header.b=F7EmHu22;
+	dkim=pass header.d=linux.microsoft.com header.s=default header.b=OmsVJg0q;
 	dmarc=pass (policy=none) header.from=linux.microsoft.com;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11939-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11939-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11938-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11938-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E39D4301FFB6
-	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 04:14:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6B5C0301DE07
+	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 04:14:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 232B02F39C7;
-	Sat, 11 Jul 2026 04:14:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9E132EB859;
+	Sat, 11 Jul 2026 04:14:44 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEC2F29E116;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF1DB2E7165;
 	Sat, 11 Jul 2026 04:14:40 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783743284; cv=none; b=cL4a9B75jq0dYdkNDHwDDl2KgP40/DiK0TgANXKY5JC0E3GYxfRmbUI1/Navgll2RMjqnzq/2SdjTLRb1lLSJkr7vPd+7lYCNSg8brBHTl/Sg5RgFASMFZAFO8VgiDiJggYcqkHTq9RQ4Na/UlZyc1BH1mLkOqOy6FEIM4zt0Wk=
+	t=1783743284; cv=none; b=SGbKM/LuSCqO5SxM6Rch1LQurDRz3Pn/3fTpTfAXw/Y+7xJMA35FVu29Q4R7v9a9xFOn7eQU3Ikt3jG48nRsCXKHcVXZ/5ZN6JMMs2HTFEJxU/8ifEBKz7kyhLToHuwfLjnq9b+TV2bs7hIhSEHZjSDFD//ihKjydLRqi4LrDIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1783743284; c=relaxed/simple;
-	bh=Y2ytEviYtuEfInxxVrHmxYK/yDakQ+T4iS/+B5gW8bs=;
+	bh=okSyZywuqHV+Cm2f8lzFI27HsSTmR6M4in7XkC4F/oA=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Pu/MrrXoNAI2CPF2P/O+623TD1cTnO3TK0Qn7H7jIzg+xuNwHo8XTYtKVUpaAVfd+2rwGZ0e8rdHdzO8vwHpuPHf8b9pyWLnrBZAB4pXNMJBj7BsYKzALaRdxmCSE6PPwZaNVT/R2mmME29nQgxJLeOGkekd2b8UJg3Y47MG/p8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=F7EmHu22; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=sAscS+bY5Xto3PWgmAFXVSA83WbSN9YEarb8lFxLys8IahT5zZIafxV8eBCbUPqj609tMIQCc9wFYKMXAgCIKuofcwgI8qK5gP5zYmdsNXfpcPUqHBpRUDn+XakOJtVvoOmIIVPNnlfjFmBcc2Q/2cnAQITIfX4WVdUt0zNHi1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=OmsVJg0q; arc=none smtp.client-ip=13.77.154.182
 Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 14CE320B716F;
+	by linux.microsoft.com (Postfix) with ESMTPSA id 81C5920B7172;
 	Fri, 10 Jul 2026 21:14:33 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 14CE320B716F
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 81C5920B7172
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1783743273;
-	bh=Q7aELUN/m5GYjnuqRTtkZe028YJFzr253JFbIINDFFo=;
+	bh=QUJr0cSBp7DDYOpENoiFxljH1AKPOMDQDxe5QybqQo4=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=F7EmHu22NHGVGtKBTGf2P2dlqAzLXKnI9utnt+7YMYoWJaM8MK1+DqM699JDIOysZ
-	 2beXYCLiU8Gle4mvQzuBAuRZlli+f+OPgT9E3N7QtPjsferspT035NMSmWEh5UkcwG
-	 7GlyfJmy1QP5KkPBK5/FkSA74tX8W9R8RyZ22HUY=
+	b=OmsVJg0qDaEa8xvcK1Zgf6EIDfjKTZBc4q5n1AIafgjkoLmY9zeHaLX7P6rOBmzFP
+	 TrwoJWD2sGkScJfDMqNcNAazKt/U6AqsOkzfxBKAh2uoQzxmiL7GQIRcRxEkCp9UBF
+	 5Pl1tfoJi379pDeKQKcWJQc5dyacyS8bi+yP3CV8=
 From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
 To: kys@microsoft.com,
 	haiyangz@microsoft.com,
@@ -80,9 +80,9 @@ To: kys@microsoft.com,
 	pavan.chebbi@broadcom.com,
 	schakrabarti@linux.microsoft.com,
 	gargaditya@linux.microsoft.com
-Subject: [PATCH net-next v12 1/4] net: mana: refactor mana_get_strings() and mana_get_sset_count() to use switch
-Date: Fri, 10 Jul 2026 21:10:21 -0700
-Message-ID: <20260711041415.3008868-2-dipayanroy@linux.microsoft.com>
+Subject: [PATCH net-next v12 2/4] net: mana: do not bail out of mana_detach on dealloc failure
+Date: Fri, 10 Jul 2026 21:10:22 -0700
+Message-ID: <20260711041415.3008868-3-dipayanroy@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.7
 In-Reply-To: <20260711041415.3008868-1-dipayanroy@linux.microsoft.com>
 References: <20260711041415.3008868-1-dipayanroy@linux.microsoft.com>
@@ -101,13 +101,13 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[linux.microsoft.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[linux.microsoft.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11939-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11938-lists,linux-hyperv=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_TO(0.00)[microsoft.com,kernel.org,lunn.ch,davemloft.net,google.com,redhat.com,linux.microsoft.com,vger.kernel.org,networkplumber.org,intel.com,debian.org,gmail.com,iogearbox.net,fomichev.me,broadcom.com];
 	FORWARDED(0.00)[lists@lfdr.de];
@@ -124,130 +124,51 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	DKIM_TRACE(0.00)[linux.microsoft.com:+];
 	TO_DN_NONE(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	ALIAS_RESOLVED(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.microsoft.com:from_mime,linux.microsoft.com:dkim,linux.microsoft.com:mid,vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 64AB074042D
+X-Rspamd-Queue-Id: 5B44974041A
 
-Refactor mana_get_strings() and mana_get_sset_count() from if/else to
-switch statements in preparation for adding ethtool private flags
-support which requires handling ETH_SS_PRIV_FLAGS.
+mana_detach() sets port_is_up = false before calling
+mana_dealloc_queues(). If that call were to fail and return early,
+netif_device_detach() and mana_cleanup_port_context() are skipped,
+leaving the port in an inconsistent state where port_is_up is false
+but netif_device_present() still returns true. A subsequent
+mana_detach() from the reset work handler would then overwrite
+port_st_save with false, causing mana_attach() to skip queue
+allocation and leave the port permanently dead.
 
-No functional change.
+Remove the early return so that mana_detach() always completes its
+full teardown. mana_dealloc_queues() already performs best-effort
+cleanup regardless of internal errors (and in practice cannot fail
+here since port_is_up is already false), so continuing to
+netif_device_detach() and mana_cleanup_port_context() is safe and
+ensures the state is always consistent for recovery.
 
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
 Signed-off-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
 ---
- .../ethernet/microsoft/mana/mana_ethtool.c    | 75 ++++++++++++-------
- 1 file changed, 46 insertions(+), 29 deletions(-)
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-index 9e31e2595ae3..482cd16009ab 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-@@ -138,53 +138,70 @@ static int mana_get_sset_count(struct net_device *ndev, int stringset)
- 	struct mana_port_context *apc = netdev_priv(ndev);
- 	unsigned int num_queues = apc->num_queues;
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index 89e7f59f635d..5e3c7a2a2b49 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -3707,10 +3707,8 @@ int mana_detach(struct net_device *ndev, bool from_close)
  
--	if (stringset != ETH_SS_STATS)
-+	switch (stringset) {
-+	case ETH_SS_STATS:
-+		return ARRAY_SIZE(mana_eth_stats) +
-+		       ARRAY_SIZE(mana_phy_stats) +
-+		       ARRAY_SIZE(mana_hc_stats)  +
-+		       num_queues * (MANA_STATS_RX_COUNT + MANA_STATS_TX_COUNT);
-+	default:
- 		return -EINVAL;
--
--	return ARRAY_SIZE(mana_eth_stats) + ARRAY_SIZE(mana_phy_stats) + ARRAY_SIZE(mana_hc_stats) +
--			num_queues * (MANA_STATS_RX_COUNT + MANA_STATS_TX_COUNT);
-+	}
- }
- 
--static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
-+static void mana_get_strings_stats(struct mana_port_context *apc, u8 **data)
- {
--	struct mana_port_context *apc = netdev_priv(ndev);
- 	unsigned int num_queues = apc->num_queues;
- 	int i, j;
- 
--	if (stringset != ETH_SS_STATS)
--		return;
- 	for (i = 0; i < ARRAY_SIZE(mana_eth_stats); i++)
--		ethtool_puts(&data, mana_eth_stats[i].name);
-+		ethtool_puts(data, mana_eth_stats[i].name);
- 
- 	for (i = 0; i < ARRAY_SIZE(mana_hc_stats); i++)
--		ethtool_puts(&data, mana_hc_stats[i].name);
-+		ethtool_puts(data, mana_hc_stats[i].name);
- 
- 	for (i = 0; i < ARRAY_SIZE(mana_phy_stats); i++)
--		ethtool_puts(&data, mana_phy_stats[i].name);
-+		ethtool_puts(data, mana_phy_stats[i].name);
- 
- 	for (i = 0; i < num_queues; i++) {
--		ethtool_sprintf(&data, "rx_%d_packets", i);
--		ethtool_sprintf(&data, "rx_%d_bytes", i);
--		ethtool_sprintf(&data, "rx_%d_xdp_drop", i);
--		ethtool_sprintf(&data, "rx_%d_xdp_tx", i);
--		ethtool_sprintf(&data, "rx_%d_xdp_redirect", i);
--		ethtool_sprintf(&data, "rx_%d_pkt_len0_err", i);
-+		ethtool_sprintf(data, "rx_%d_packets", i);
-+		ethtool_sprintf(data, "rx_%d_bytes", i);
-+		ethtool_sprintf(data, "rx_%d_xdp_drop", i);
-+		ethtool_sprintf(data, "rx_%d_xdp_tx", i);
-+		ethtool_sprintf(data, "rx_%d_xdp_redirect", i);
-+		ethtool_sprintf(data, "rx_%d_pkt_len0_err", i);
- 		for (j = 0; j < MANA_RXCOMP_OOB_NUM_PPI - 1; j++)
--			ethtool_sprintf(&data, "rx_%d_coalesced_cqe_%d", i, j + 2);
-+			ethtool_sprintf(data,
-+					"rx_%d_coalesced_cqe_%d",
-+					i,
-+					j + 2);
+ 	if (apc->port_st_save) {
+ 		err = mana_dealloc_queues(ndev);
+-		if (err) {
++		if (err)
+ 			netdev_err(ndev, "%s failed to deallocate queues: %d\n", __func__, err);
+-			return err;
+-		}
  	}
  
- 	for (i = 0; i < num_queues; i++) {
--		ethtool_sprintf(&data, "tx_%d_packets", i);
--		ethtool_sprintf(&data, "tx_%d_bytes", i);
--		ethtool_sprintf(&data, "tx_%d_xdp_xmit", i);
--		ethtool_sprintf(&data, "tx_%d_tso_packets", i);
--		ethtool_sprintf(&data, "tx_%d_tso_bytes", i);
--		ethtool_sprintf(&data, "tx_%d_tso_inner_packets", i);
--		ethtool_sprintf(&data, "tx_%d_tso_inner_bytes", i);
--		ethtool_sprintf(&data, "tx_%d_long_pkt_fmt", i);
--		ethtool_sprintf(&data, "tx_%d_short_pkt_fmt", i);
--		ethtool_sprintf(&data, "tx_%d_csum_partial", i);
--		ethtool_sprintf(&data, "tx_%d_mana_map_err", i);
-+		ethtool_sprintf(data, "tx_%d_packets", i);
-+		ethtool_sprintf(data, "tx_%d_bytes", i);
-+		ethtool_sprintf(data, "tx_%d_xdp_xmit", i);
-+		ethtool_sprintf(data, "tx_%d_tso_packets", i);
-+		ethtool_sprintf(data, "tx_%d_tso_bytes", i);
-+		ethtool_sprintf(data, "tx_%d_tso_inner_packets", i);
-+		ethtool_sprintf(data, "tx_%d_tso_inner_bytes", i);
-+		ethtool_sprintf(data, "tx_%d_long_pkt_fmt", i);
-+		ethtool_sprintf(data, "tx_%d_short_pkt_fmt", i);
-+		ethtool_sprintf(data, "tx_%d_csum_partial", i);
-+		ethtool_sprintf(data, "tx_%d_mana_map_err", i);
-+	}
-+}
-+
-+static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
-+{
-+	struct mana_port_context *apc = netdev_priv(ndev);
-+
-+	switch (stringset) {
-+	case ETH_SS_STATS:
-+		mana_get_strings_stats(apc, &data);
-+		break;
-+	default:
-+		break;
- 	}
- }
- 
+ 	if (!from_close) {
 -- 
 2.43.0
 
