@@ -1,138 +1,185 @@
-Return-Path: <linux-hyperv+bounces-11944-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11945-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id xQvCEYPZUWpLJgMAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11944-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 07:49:55 +0200
+	id Xp9sFFFcUmokOwMAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11945-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 17:08:01 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C15A7406EC
-	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 07:49:54 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 08E08741E31
+	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 17:08:01 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linux-foundation.org header.s=korg header.b=kbiBT4UI;
-	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11944-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11944-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=RdER+N6g;
+	dmarc=pass (policy=none) header.from=gmail.com;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11945-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11945-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3C683301A934
-	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 05:49:53 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 6676F3042C72
+	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 15:06:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEDE72F363F;
-	Sat, 11 Jul 2026 05:49:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E11363328FC;
+	Sat, 11 Jul 2026 15:06:34 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E013313D51E;
-	Sat, 11 Jul 2026 05:49:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AC672D595B
+	for <linux-hyperv@vger.kernel.org>; Sat, 11 Jul 2026 15:06:33 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783748992; cv=none; b=Qg/PtH1ZVVx0KJ3fMKGgpMdg1e8E8deuIn3KcHaAKOTGpVldkySjnVFwr30Ju0LrISzTb+b84YYHNoIsCOH+LKUpa9Cwhhvnku14CnPq+7u9rxXs2bmpNel9QUfW5lZeY7VQljxhRe61uoTGzMazH03GAdNjwsju4rTZNHLZVEg=
+	t=1783782394; cv=none; b=oywPkVfx0rWXW1L2z5SOogKdj2ku8z43qXtFTN45H9xktvZ0CIzJwz3oW1iyKuMYCVvEe5xHc9GEi7fWE4ypC3sK/ZUNU/EBXrxpRZnAL+BTid+ixLBPuBEkjr74oGQi9lf97mkzC32OdKkNQLae/iU93cEDqR0ZBNMAZZ57lSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783748992; c=relaxed/simple;
-	bh=KslYtVd6/FiSNgaU6k/vDiT76YGKqUbQU7/K1vnmVGs=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=d7GGkXSg8dBJJOigfZkRLU3oylpX7eUr9v7PPvB3IpVsjNFuhbYYtehCuPDXVsaxO4pRAGN/LDkdeyY62N4ELM/kTDxd6PLn/pxxPrggNVOShWgdlr3lGXTK3wYu6BRTYjisj9A9RcF/SVvUtm0t4RXCpAbj/VIjrzMjKSSLmsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=kbiBT4UI; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77C7C1F000E9;
-	Sat, 11 Jul 2026 05:49:50 +0000 (UTC)
+	s=arc-20240116; t=1783782394; c=relaxed/simple;
+	bh=xfd1Qij55WSKgMYmH/iULiROavfzelZy0Gq6Ktbvt4s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=X7LD5972j379NNLn/iLrzepqMi+nl73pKT2IxfsfiZKZ79CeT8fshS5vKuM8uZ+shiBPsRG+njdhZPiQATTvIwpjQ8DlkjcfnP9HmaAUulzrQY/7EF8wcxS0AJkFd1psjEAgR+Ogw24uNA2riQ6AdBwnyPTzg4N7Z6IQbOKtuuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RdER+N6g; arc=none smtp.client-ip=209.85.160.181
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-51bfe810293so9835311cf.1
+        for <linux-hyperv@vger.kernel.org>; Sat, 11 Jul 2026 08:06:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux-foundation.org; s=korg; t=1783748991;
-	bh=ORvew2lmZPoxsW3E1uuEKYOedhDenWUn2ruaSYxV7Zw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=kbiBT4UI8EsOzp5Z6jcjE98+zJxsZeeKjK7DQ8Q28feKtSsl5P2ADzs/pTEcqC0/J
-	 QY82X8hqbvOUNwXy7z96UyQ9MiH9eTOe4kxzhnxuDvLyE2M7RAXChoKV7pn9eSdotM
-	 zjLpw7SDmjk5NIon4EHpDP7oKzGvYv+jnEP2DHoA=
-Date: Fri, 10 Jul 2026 22:49:50 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Stanislav Kinsburskii <skinsburskii@gmail.com>
-Cc: airlied@gmail.com, akhilesh@ee.iitb.ac.in, corbet@lwn.net,
- dakr@kernel.org, david@kernel.org, decui@microsoft.com,
- haiyangz@microsoft.com, jgg@ziepe.ca, kees@kernel.org, kys@microsoft.com,
- leon@kernel.org, liam@infradead.org, lizhi.hou@amd.com, ljs@kernel.org,
- longli@microsoft.com, lyude@redhat.com, maarten.lankhorst@linux.intel.com,
- mamin506@gmail.com, mhocko@suse.com, mripard@kernel.org,
- nouveau@lists.freedesktop.org, ogabbay@kernel.org, oleg@redhat.com,
- rppt@kernel.org, shuah@kernel.org, simona@ffwll.ch,
- skhan@linuxfoundation.org, surenb@google.com, tzimmermann@suse.de,
- vbabka@kernel.org, wei.liu@kernel.org, dri-devel@lists.freedesktop.org,
- linux-mm@kvack.org, linux-doc@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH v8 0/8] mm/hmm: Add mmap lock-drop support for
- userfaultfd-backed mappings
-Message-Id: <20260710224950.53bcb43ce7e564f07a1f6a8c@linux-foundation.org>
-In-Reply-To: <alG2-RSitzPWClAX@skinsburskii>
-References: <178371866223.900500.12312667138651735591.stgit@skinsburskii>
-	<20260710151151.1e193eedd0cf2591ae392f76@linux-foundation.org>
-	<alG2-RSitzPWClAX@skinsburskii>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        d=gmail.com; s=20251104; t=1783782392; x=1784387192; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=XSPQ4s327xjju3OZzaMxfnUi+7xam88AtuluAZAKUPI=;
+        b=RdER+N6ghm5RpSKKvj+gqtJxRBfPmMkBL8fMv4K6APpV1kKcCcxbKfb5/4cKDFpTtg
+         FwCU4a/ts9PUK1uxOiASMqHWAPZBj7oCY5/VG2TDLeMgcFI0F3pmM6OehTWfJxlWvWmA
+         ah3CqWm3AK/jmu2R6lJVPtlaj0PmN8hka8eK+DXUa/pVcf1fygS69HwuV4pENMFmziC/
+         xROgyWzftvniM5Q86qCuKbjsmDvx6lx9HgEXP8eicWeLYRGBw3muIhXTNrn1ja2P5Q29
+         q7vDzGqm5U8rmfAtaCRZJOwQdyAKP+Mx1n2TTczKw2aLxJHKKOem+CC31ZLhAyYd/enM
+         slUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783782392; x=1784387192;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=XSPQ4s327xjju3OZzaMxfnUi+7xam88AtuluAZAKUPI=;
+        b=tMMGk7S75FedquKJ/18Jb0fcTMIaXgfO0xsqs3HP5ahvR4XknizVY8Qx8RiOxEZek9
+         WKz8g0pCfzg2FRM7PbPk9xGO1w+FiBsfl4qCqpdFeuvsdu5s8V/pKBemCmJOdUaFRhS3
+         S5L6djDbSES8PkVPLnX/5eogDEilAkn9EEb8CXP3v1V3qo+gyJ92nm1THVueTUnrowBa
+         6DBQtT3o8nl0EnOLYLyut9MwiBSXcoQGLehc/I+5yDbKg2EYLfNNmr6Kfi6Hes0VjxMo
+         22+OynBnXc0JHouva5lZ6p+AlmyyLaj1rk7vjsukdlFIdSVbrb2XyPJuG435TbklssX1
+         K3RQ==
+X-Forwarded-Encrypted: i=1; AHgh+Rqh7TYSRPTyXdFTtbe4D9oTi2KhxEdV6QP2l26MI/AIValXKmowhXIktmvPZzBWM8yS0IW/f34R2J2XwBc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yza2b4AH8FGLvR197c/F+1/U4HUKTVL1rWr7JF5l+X42GFlaPpw
+	lM6gAjmpo3JYxqlN1HVaJwbm/gQYDYFeg0f80bUbI2GeVM4T8sg1h1C1
+X-Gm-Gg: AfdE7cnBLHqpGpTlB1pQQEVmNmaOhPhAAb4oHalt2HFIsRL+dymZmkf/Hqvdr2Y5TjJ
+	3ha/lGfdoWLxhX9R1pb2KlFLYTHnf+JajHZGSsEk2fJ9emNVQQFsSE7TEYhdaTC/JmtIWanjA/o
+	7dNMfH/w8nLjAIw/hR6cw9Udq0U4q2jQ+12n0BzVkr+x6xbbQnQlHHAQpPVwfLYx+RGgQa2GDC1
+	7qKJDL8qT6FtQ1dbWuZKwC9VEFKYU4riP49/qJlg1AxNrFandva7jMIMUDJ2t8SsqoC45JTGSHQ
+	xaxe2xEYS0iga4hymj6fz2eEa+p2/mUMfZiVCOCTVP6PngTuLuuIEiPZpOgrUXWjjRlKnl0meO9
+	nC89t4hzyh+YoYSRMCm7Iok9v/zb23NDheF+MlLoHkGky1KAJ19UUP7rB2thgIsH/Liu62+HbWL
+	LJB1nANGRHi4nrx5CEDx2oUhVWZgwvbm55zUlL3Sus1Z5+cDYgjcyI1iJvdJ6Ow94bGp+IWU9fG
+	C6n4BGPhw==
+X-Received: by 2002:a05:620a:28c9:b0:92e:8e36:32a7 with SMTP id af79cd13be357-92ef2c7289amr321690985a.68.1783782392025;
+        Sat, 11 Jul 2026 08:06:32 -0700 (PDT)
+Received: from server0 (c-68-48-65-54.hsd1.mi.comcast.net. [68.48.65.54])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-92ee5b88a38sm465793285a.12.2026.07.11.08.06.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Jul 2026 08:06:31 -0700 (PDT)
+From: Michael Bommarito <michael.bommarito@gmail.com>
+To: Haiyang Zhang <haiyangz@microsoft.com>,
+	Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH] net: mana: cap HWC init max message size to HW_CHANNEL_MAX_REQUEST_SIZE
+Date: Sat, 11 Jul 2026 11:06:28 -0400
+Message-ID: <20260711150628.2914205-1-michael.bommarito@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MV_CASE(0.50)[];
-	R_DKIM_ALLOW(-0.20)[linux-foundation.org:s=korg];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:skinsburskii@gmail.com,m:airlied@gmail.com,m:akhilesh@ee.iitb.ac.in,m:corbet@lwn.net,m:dakr@kernel.org,m:david@kernel.org,m:decui@microsoft.com,m:haiyangz@microsoft.com,m:jgg@ziepe.ca,m:kees@kernel.org,m:kys@microsoft.com,m:leon@kernel.org,m:liam@infradead.org,m:lizhi.hou@amd.com,m:ljs@kernel.org,m:longli@microsoft.com,m:lyude@redhat.com,m:maarten.lankhorst@linux.intel.com,m:mamin506@gmail.com,m:mhocko@suse.com,m:mripard@kernel.org,m:nouveau@lists.freedesktop.org,m:ogabbay@kernel.org,m:oleg@redhat.com,m:rppt@kernel.org,m:shuah@kernel.org,m:simona@ffwll.ch,m:skhan@linuxfoundation.org,m:surenb@google.com,m:tzimmermann@suse.de,m:vbabka@kernel.org,m:wei.liu@kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-mm@kvack.org,m:linux-doc@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-kselftest@vger.kernel.org,m:linux-rdma@vger.kernel.org,s:lists@lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	DMARC_NA(0.00)[linux-foundation.org];
-	FORGED_SENDER(0.00)[akpm@linux-foundation.org,linux-hyperv@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	TAGGED_FROM(0.00)[bounces-11945-lists,linux-hyperv=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[39];
-	FREEMAIL_TO(0.00)[gmail.com];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER(0.00)[michaelbommarito@gmail.com,linux-hyperv@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:haiyangz@microsoft.com,m:decui@microsoft.com,m:longli@microsoft.com,m:kys@microsoft.com,m:wei.liu@kernel.org,m:andrew+netdev@lunn.ch,m:kuba@kernel.org,m:pabeni@redhat.com,m:netdev@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:stable@vger.kernel.org,m:andrew@lunn.ch,s:lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-11944-lists,linux-hyperv=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[linux-foundation.org:+];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[akpm@linux-foundation.org,linux-hyperv@vger.kernel.org];
-	FREEMAIL_CC(0.00)[gmail.com,ee.iitb.ac.in,lwn.net,kernel.org,microsoft.com,ziepe.ca,infradead.org,amd.com,redhat.com,linux.intel.com,suse.com,lists.freedesktop.org,ffwll.ch,linuxfoundation.org,google.com,suse.de,kvack.org,vger.kernel.org];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[michaelbommarito@gmail.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux-foundation.org:from_mime,linux-foundation.org:dkim,linux-foundation.org:mid,vger.kernel.org:from_smtp]
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 7C15A7406EC
+X-Rspamd-Queue-Id: 08E08741E31
 
-On Fri, 10 Jul 2026 20:22:33 -0700 Stanislav Kinsburskii <skinsburskii@gmail.com> wrote:
+mana_hwc_init_event_handler() in hw_channel.c stores device-advertised
+HWC_INIT_DATA_MAX_REQUEST and HWC_INIT_DATA_MAX_RESPONSE values
+without bounds checking. mana_hwc_alloc_dma_buf() later computes the
+DMA buffer size as MANA_PAGE_ALIGN(q_depth * max_msg_size) in 32-bit
+arithmetic. A malicious device returning a large max_msg_size causes
+the product to wrap, allocating a small buffer while laying out
+q_depth request slots at the unwrapped stride, placing slots outside
+the allocation.
 
-> On Fri, Jul 10, 2026 at 03:11:51PM -0700, Andrew Morton wrote:
-> > On Fri, 10 Jul 2026 14:26:20 -0700 Stanislav Kinsburskii <skinsburskii@gmail.com> wrote:
-> > 
-> > > This series extends the HMM framework to support userfaultfd-backed memory
-> > > by allowing the mmap read lock to be dropped during hmm_range_fault().
-> > 
-> > Thanks.  This seems fairly mature and mostly-reviewed so I'll give it a
-> > spin in mm.git's mm-new branch.
-> > 
-> > Unfortunately Sashiko wasn't able to apply this or v7.  I'm not sure
-> > what base you were using.  Hopefully there's a reason for a v9 so we
-> > can retry this.
-> > 
-> 
-> I rebased this series on top of mm-new right before sending it out.
-> Should I have used a different branch?
+Impact: a compromised hypervisor device model or malicious MANA PCI
+device can cause out-of-bounds DMA buffer writes during HWC channel
+initialization. A reproducer is available on request.
 
-mm-new is good - Sashiko attempts that.  But it's changing rapidly at
-this point in the development cycle.
+Clamp both values to HW_CHANNEL_MAX_REQUEST_SIZE (4096), consistent
+with the cap already applied at the channel-create callsite.
+
+Fixes: ca9c54d2d6a5 ("net: mana: Add a driver for Microsoft Azure Network Adapter (MANA)")
+Cc: stable@vger.kernel.org
+Assisted-by: Claude:claude-opus-4-7
+Signed-off-by: Michael Bommarito <michael.bommarito@gmail.com>
+---
+ drivers/net/ethernet/microsoft/mana/hw_channel.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/net/ethernet/microsoft/mana/hw_channel.c b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+index 48a9acea4ab6c..a0916b50cffce 100644
+--- a/drivers/net/ethernet/microsoft/mana/hw_channel.c
++++ b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+@@ -152,10 +152,14 @@ static void mana_hwc_init_event_handler(void *ctx, struct gdma_queue *q_self,
+ 			break;
+ 
+ 		case HWC_INIT_DATA_MAX_REQUEST:
++			if (val == 0 || val > HW_CHANNEL_MAX_REQUEST_SIZE)
++				val = HW_CHANNEL_MAX_REQUEST_SIZE;
+ 			hwc->hwc_init_max_req_msg_size = val;
+ 			break;
+ 
+ 		case HWC_INIT_DATA_MAX_RESPONSE:
++			if (val == 0 || val > HW_CHANNEL_MAX_REQUEST_SIZE)
++				val = HW_CHANNEL_MAX_REQUEST_SIZE;
+ 			hwc->hwc_init_max_resp_msg_size = val;
+ 			break;
+ 
+-- 
+2.53.0
 
 
