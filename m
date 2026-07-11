@@ -1,49 +1,49 @@
-Return-Path: <linux-hyperv+bounces-11943-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11944-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id SqH5CTrZUWpCJgMAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11943-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 07:48:42 +0200
+	id xQvCEYPZUWpLJgMAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11944-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 07:49:55 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5875C7406D7
-	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 07:48:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C15A7406EC
+	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 07:49:54 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linux-foundation.org header.s=korg header.b=zxP6H3RU;
+	dkim=pass header.d=linux-foundation.org header.s=korg header.b=kbiBT4UI;
 	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11943-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11943-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11944-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11944-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7D3C5301BCE4
-	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 05:48:38 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3C683301A934
+	for <lists+linux-hyperv@lfdr.de>; Sat, 11 Jul 2026 05:49:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 438202EC08C;
-	Sat, 11 Jul 2026 05:48:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEDE72F363F;
+	Sat, 11 Jul 2026 05:49:52 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9EA02DB7BE;
-	Sat, 11 Jul 2026 05:48:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E013313D51E;
+	Sat, 11 Jul 2026 05:49:51 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783748917; cv=none; b=o0qhbtm23gtBCm4kFZk3ZDH1gRVDzNFPYjdnRtZobapVz7u1AijXLmYqw3z4pgJyV2yUCf8dwJYRVceStt3Q0O5r4Tno/ZRLLYlbg8f4vQ9a/ROaGdsvtTUeEq8KjeVUWJ8CJZjnjWohs3wW2+sOU7byTrXOsW9HFDF/TP3m8pU=
+	t=1783748992; cv=none; b=Qg/PtH1ZVVx0KJ3fMKGgpMdg1e8E8deuIn3KcHaAKOTGpVldkySjnVFwr30Ju0LrISzTb+b84YYHNoIsCOH+LKUpa9Cwhhvnku14CnPq+7u9rxXs2bmpNel9QUfW5lZeY7VQljxhRe61uoTGzMazH03GAdNjwsju4rTZNHLZVEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783748917; c=relaxed/simple;
-	bh=2X3u/rhMdoK2ZSzI5yRlLbKzVLTeEAk7NfzAxOZxq8M=;
+	s=arc-20240116; t=1783748992; c=relaxed/simple;
+	bh=KslYtVd6/FiSNgaU6k/vDiT76YGKqUbQU7/K1vnmVGs=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Svv3aPSGkD1Q0veLIwbSj3XAS1SgUWDr/DbneYWlZzhh1Co2O27I0E6kX2O2A9cCmRfRSlYfNoWlNeGPKRTbRCY4UH97zZeT38wQppzri+A9lT+hpx8GhYVtMw4R1bJWpqbqPFwVIYdQ1gCdzXUTz1Ap32OFjcVG1oyIc2UD9vI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=zxP6H3RU; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40B1C1F000E9;
-	Sat, 11 Jul 2026 05:48:34 +0000 (UTC)
+	 Mime-Version:Content-Type; b=d7GGkXSg8dBJJOigfZkRLU3oylpX7eUr9v7PPvB3IpVsjNFuhbYYtehCuPDXVsaxO4pRAGN/LDkdeyY62N4ELM/kTDxd6PLn/pxxPrggNVOShWgdlr3lGXTK3wYu6BRTYjisj9A9RcF/SVvUtm0t4RXCpAbj/VIjrzMjKSSLmsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=kbiBT4UI; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77C7C1F000E9;
+	Sat, 11 Jul 2026 05:49:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux-foundation.org; s=korg; t=1783748915;
-	bh=/bm56TdW2Rt1TzYZP4AwroZ1H/akE8N7PaZmAo9v49o=;
+	d=linux-foundation.org; s=korg; t=1783748991;
+	bh=ORvew2lmZPoxsW3E1uuEKYOedhDenWUn2ruaSYxV7Zw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=zxP6H3RUmBd6ihlhUQIdRJzfv+dWAy7/NIa1aujz+UJUigwYO9G60/3Bm1HoqfjnX
-	 DZhiti+OpHf6AgYSszNldBtjYCKgg5QG6160LxG4/45mDd4arD7V/RUmAhgcW9bWTx
-	 E9/cf5f5XfN6+ulL7h4VwT+i3BR5zKS6NdueS7go=
-Date: Fri, 10 Jul 2026 22:48:33 -0700
+	b=kbiBT4UI8EsOzp5Z6jcjE98+zJxsZeeKjK7DQ8Q28feKtSsl5P2ADzs/pTEcqC0/J
+	 QY82X8hqbvOUNwXy7z96UyQ9MiH9eTOe4kxzhnxuDvLyE2M7RAXChoKV7pn9eSdotM
+	 zjLpw7SDmjk5NIon4EHpDP7oKzGvYv+jnEP2DHoA=
+Date: Fri, 10 Jul 2026 22:49:50 -0700
 From: Andrew Morton <akpm@linux-foundation.org>
 To: Stanislav Kinsburskii <skinsburskii@gmail.com>
 Cc: airlied@gmail.com, akhilesh@ee.iitb.ac.in, corbet@lwn.net,
@@ -59,14 +59,13 @@ Cc: airlied@gmail.com, akhilesh@ee.iitb.ac.in, corbet@lwn.net,
  linux-mm@kvack.org, linux-doc@vger.kernel.org,
  linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH v8 5/8] drm/nouveau: Use
- hmm_range_fault_unlocked_timeout() for SVM faults
-Message-Id: <20260710224833.9caf2a0a9906f0515e326a45@linux-foundation.org>
-In-Reply-To: <alG1k3JsoywE2CBM@skinsburskii>
+Subject: Re: [PATCH v8 0/8] mm/hmm: Add mmap lock-drop support for
+ userfaultfd-backed mappings
+Message-Id: <20260710224950.53bcb43ce7e564f07a1f6a8c@linux-foundation.org>
+In-Reply-To: <alG2-RSitzPWClAX@skinsburskii>
 References: <178371866223.900500.12312667138651735591.stgit@skinsburskii>
-	<178371881847.900500.8789369230260725500.stgit@skinsburskii>
-	<20260710151222.ddb35eab9c81a8720491464a@linux-foundation.org>
-	<alG1k3JsoywE2CBM@skinsburskii>
+	<20260710151151.1e193eedd0cf2591ae392f76@linux-foundation.org>
+	<alG2-RSitzPWClAX@skinsburskii>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -96,7 +95,7 @@ X-Spamd-Result: default: False [-1.16 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-11943-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11944-lists,linux-hyperv=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[linux-foundation.org:+];
 	FORGED_SENDER_FORWARDING(0.00)[];
@@ -112,33 +111,28 @@ X-Spamd-Result: default: False [-1.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux-foundation.org:from_mime,linux-foundation.org:dkim,linux-foundation.org:mid,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5875C7406D7
+X-Rspamd-Queue-Id: 7C15A7406EC
 
-On Fri, 10 Jul 2026 20:16:35 -0700 Stanislav Kinsburskii <skinsburskii@gmail.com> wrote:
+On Fri, 10 Jul 2026 20:22:33 -0700 Stanislav Kinsburskii <skinsburskii@gmail.com> wrote:
 
-> On Fri, Jul 10, 2026 at 03:12:22PM -0700, Andrew Morton wrote:
-> > On Fri, 10 Jul 2026 14:26:58 -0700 Stanislav Kinsburskii <skinsburskii@gmail.com> wrote:
+> On Fri, Jul 10, 2026 at 03:11:51PM -0700, Andrew Morton wrote:
+> > On Fri, 10 Jul 2026 14:26:20 -0700 Stanislav Kinsburskii <skinsburskii@gmail.com> wrote:
 > > 
-> > > @@ -683,15 +683,11 @@ static int nouveau_range_fault(struct nouveau_svmm *svmm,
-> > >  			goto out;
-> > >  		}
-> > >  
-> > > -		range.notifier_seq = mmu_interval_read_begin(range.notifier);
-> > > -		mmap_read_lock(mm);
-> > > -		ret = hmm_range_fault(&range);
-> > > -		mmap_read_unlock(mm);
-> > > -		if (ret) {
-> > > -			if (ret == -EBUSY)
-> > > -				continue;
-> > > +		ret = hmm_range_fault_unlocked_timeout(&range,
-> > > +						       max(timeout - jiffies,
-> > > +							   1L));
+> > > This series extends the HMM framework to support userfaultfd-backed memory
+> > > by allowing the mmap read lock to be dropped during hmm_range_fault().
 > > 
-> > "1UL" here?  I'd have expected min() to warn, as it likes to do.
+> > Thanks.  This seems fairly mature and mostly-reviewed so I'll give it a
+> > spin in mm.git's mm-new branch.
+> > 
+> > Unfortunately Sashiko wasn't able to apply this or v7.  I'm not sure
+> > what base you were using.  Hopefully there's a reason for a v9 so we
+> > can retry this.
+> > 
 > 
-> I'm not sure... The "timeout - jiffies" can become negative.
-> Won't 1UL convert both of them to "UL" and thus make the comparison
-> overflow?
+> I rebased this series on top of mm-new right before sending it out.
+> Should I have used a different branch?
 
-`timeout' and `jiffies' are both unsigned long.
+mm-new is good - Sashiko attempts that.  But it's changing rapidly at
+this point in the development cycle.
+
 
