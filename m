@@ -1,283 +1,257 @@
-Return-Path: <linux-hyperv+bounces-11964-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11965-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id B0+oFp8aVWr1jwAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11964-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Jul 2026 19:04:31 +0200
+	id tePxIsEiVWp7kQAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11965-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Jul 2026 19:39:13 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D336A74DD79
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Jul 2026 19:04:30 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id DCC7874E156
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Jul 2026 19:39:12 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=AkhOldmC;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11964-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11964-lists+linux-hyperv=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=pass header.d=outlook.com header.s=selector1 header.b=CYaXFDnP;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11965-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11965-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=outlook.com;
+	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id CC68330DAB1A
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Jul 2026 17:01:28 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3B8873021708
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Jul 2026 17:37:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D6CF31B828;
-	Mon, 13 Jul 2026 17:01:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6A6B34B1AD;
+	Mon, 13 Jul 2026 17:37:56 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azolkn19010036.outbound.protection.outlook.com [52.103.10.36])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABFE727A10F
-	for <linux-hyperv@vger.kernel.org>; Mon, 13 Jul 2026 17:01:26 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783962087; cv=none; b=dA6vgzQNc+mh4G/iPPX+/bGziD/l5c1GB/FIs8EGiOv5+NcWpY24DY6vXvTiROkzAwUepg+o3jhUTzcLaxthIcGZnYNsgeKx194whFGUo+Spt2Jq/e2lgz/8CdaAXRwa9s6EOEM61hlCX6dwhYZpj8j6v5zn8Gl13NNcspfXQLg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783962087; c=relaxed/simple;
-	bh=SqPTyIhNXXnGeYnJM9ztptY4dZp2tvlRUebzoP8AMpk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JfRpnLtwGG7jIbr2bCv5/Io0j4ljPyc5v38dLGXPy6AUpxt7KeW0tnp9b8vkF0Fo0lvOIOzcoadyGlN0C6ZkltAAQ6paF0RCZTl73xTwN2oEBNIwZUXQnHZt4F18U8ddwA3v8myBb+DeJhG0JltePiKjG6B6W10ZyNPC+IqBq+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AkhOldmC; arc=none smtp.client-ip=209.85.214.173
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2caced6038eso1602235ad.0
-        for <linux-hyperv@vger.kernel.org>; Mon, 13 Jul 2026 10:01:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783962086; x=1784566886; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=R9LV+16tD32KS6yXCzCBkB0u2lL8SNr6pDg+a+HPC20=;
-        b=AkhOldmCDDLl6AWrOAH2b4PKTeRjNceHNnP8hN2To4OzZo/dmzYg09EBRQ3/kR4/Xp
-         TOYV6mNhKy2x/GMEqloSARoWonpxnlEzKaj/yZoJ0JzZlMyn8oyoGBQy5aUZrNHC+aui
-         ReaybeVbyIieMUdbUBfF2G44VVLzOZ0gilHtNkFeGXG/KyCEvZHRZKbzyqUnDHP8O6d/
-         Sfh0lzrb5T+VFSVQajjx2HY/kA5rh+DCPORYWO372r2nXBV9+rkzJTkxWBzfIasEeE5Z
-         MZpSC10KcG8GTdXC0/Z39118LkAj5g0qDKa8anHxoLyqTYpCz1w+LNjoAFqNTrXFVUJz
-         xrAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783962086; x=1784566886;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=R9LV+16tD32KS6yXCzCBkB0u2lL8SNr6pDg+a+HPC20=;
-        b=fnl01UTbXtHyDwF2/tWbtuxBxDVxmOIaGRsU4+7925N2HSO9RhpzwKX1O9qBMRjUfr
-         jHTYe8jsdEmrB3jUGEAtQchghHD33273sv3oSWC6G/BtCTPs3IQsRNaVzEP4yBL8Yjbm
-         WxbRU4o4iesj+/y4kd0WAcQk4hpXo7Aa8W5xqPfmzvefS8aXZI+aLGEkJPb69UvtgWMu
-         s6fCHNhDzoGgUPw3WterSdvo8++ExBOa3bDcMp+OfyUAQwhnN7/CBjaDQ3z8mWGVDWqf
-         L4i53WHpwKfwiOXomWnD5QizexxiD6ItU+EYrppSa+iBmOU/k/YKip9mAPMPgypwn9q0
-         Wmtg==
-X-Forwarded-Encrypted: i=1; AHgh+Rr2tdyJUpqerqMyCITCdzA2fFyV7CevINqCIyIh837mz7TVNW2w0cuwO/VTbw0YZ5l1xbpAiL3Pe4e6w5A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGUcWzF11ro77ySdWzbOHD1RrvYxrGdwI99bgM/ZqLTqiICloK
-	hy6PvWuVXDv7FLDYWn9IjYyEBvhgwmAFL6+CuHInxfHisYxOtKkXncuX
-X-Gm-Gg: AfdE7cl6ToqpDnQz+66Y+48kyQ+g1xyqW2Harh7XPUVz+UaF6KhBJOg7MK4t/cSQBQp
-	yV7i+lMymnoDQMHLloW7F1uX4kbAY7jS7Q2yOvaZ1rplTMfTOMvPtq9yBx6gRzLJaQNIsvxlSLs
-	rXfM30sw/s2fOKmE3BWzoeVng23GnXCeByztYycmVDS90AfqkpUILKOWfa8RGWdemu7jPJZf3XK
-	OQQhgj7t2m4OBcj1iepY+NvS/M25vGJn70y5sjPbXmaf+KwZ9BSW8aoGmKWS2r643Qtv0d+mD49
-	h0R4zGgF6pVVb7PtKLRo3gO+pn9X9Kzm6xc/q9JPnDkeiNJg+DDcIbcExrDhMcehvaf8+zFX7mu
-	FEIWAgurzlCG9cKxQ5iL2BzxhYq1KsSfguYQnRNd+jwXCnk39gSrtxFxA+DRd8t2K9wsFXWFfFu
-	7nVW8EV+auCkq3C9mYW2wnwGALm7l0BysjwD6yqtlpX3EWCSWHpKke+UE=
-X-Received: by 2002:a17:902:e88a:b0:2ca:de3:15d7 with SMTP id d9443c01a7336-2ce8292bad0mr123460335ad.16.1783962085860;
-        Mon, 13 Jul 2026 10:01:25 -0700 (PDT)
-Received: from skinsburskii (c-98-225-44-182.hsd1.wa.comcast.net. [98.225.44.182])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ccc9d3d451sm102224465ad.65.2026.07.13.10.01.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2026 10:01:22 -0700 (PDT)
-Date: Mon, 13 Jul 2026 10:01:20 -0700
-From: Stanislav Kinsburskii <skinsburskii@gmail.com>
-To: Matthew Brost <matthew.brost@intel.com>
-Cc: airlied@gmail.com, akhilesh@ee.iitb.ac.in, akpm@linux-foundation.org,
-	corbet@lwn.net, dakr@kernel.org, david@kernel.org,
-	decui@microsoft.com, haiyangz@microsoft.com, jgg@ziepe.ca,
-	kees@kernel.org, kys@microsoft.com, leon@kernel.org,
-	liam@infradead.org, lizhi.hou@amd.com, ljs@kernel.org,
-	longli@microsoft.com, lyude@redhat.com,
-	maarten.lankhorst@linux.intel.com, mamin506@gmail.com,
-	mhocko@suse.com, mripard@kernel.org, nouveau@lists.freedesktop.org,
-	ogabbay@kernel.org, oleg@redhat.com, rppt@kernel.org,
-	shuah@kernel.org, simona@ffwll.ch, skhan@linuxfoundation.org,
-	surenb@google.com, tzimmermann@suse.de, vbabka@kernel.org,
-	wei.liu@kernel.org, dri-devel@lists.freedesktop.org,
-	linux-mm@kvack.org, linux-doc@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH v8 8/8] drm/gpusvm: Use
- hmm_range_fault_unlocked_timeout() for range faults
-Message-ID: <alUZ4NQptiD9fRfz@skinsburskii>
-References: <178371866223.900500.12312667138651735591.stgit@skinsburskii>
- <178371883977.900500.2198446134676328631.stgit@skinsburskii>
- <alUSq0o7CC2Pnr+H@gsse-cloud1.jf.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E51349CDC;
+	Mon, 13 Jul 2026 17:37:55 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783964276; cv=fail; b=QPhAxbxKbbwNQQ5f8kipkZhIPgN2CFaqKkB9Ljf/7PmE4Zkc1npiRojGTAycXsTD8KZWCYQTUny2hNYnMCvWa9VD5MT7QsDlNcQBp+m3vU+hABAEDZNi357aO+yV6QvPm8cMa1M9PrejgKh8y0IOtMo5De0RP+fpWQPJqUWPiC0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783964276; c=relaxed/simple;
+	bh=VnKzvYCyXXkAWm9b/OjwjYm63qk0Q65V7c2n/7SeJDo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=RITECWpW/q+Sw4vCJzB1NvaUc5our+ZIRkaX2jmNy6JhllZtlNLIMjfinmpdEwhgvsb4L3BTx1PUWeDN0gdpXHhFMx06uvCisskcdUWwpzah0fspfi4X6h1Pe7xLT0zNQTJT5sFO45ihqk0ptQkIC3MWLkrgX4TpMjPRfg/Fc2g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=CYaXFDnP; arc=fail smtp.client-ip=52.103.10.36
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=eGDxG7knbhY1OJTQb/Kd5T1PEyahcwK+kny1gkcFTbTsskM6GJxa5HECpB9UxbBDkrvyRe8yRMIYVu1LaZl76UEd1tTWyEEC5mQF7VPWWFtRC1MPkbYzp7Mw/zv4VeyxckYqADhn7MWK06h9bysOlUMRXbW/cqi3TzwCp9BUCLRAupfD1LsGn7Q/xQBgNZJtiWzBwwb73+0WaRWA7au2SVNPytseFLDLQSUHCGDM3nCYd0ROO5QFGHUTrzTV9NponJx/gnAXOc8AxCe4ZY2y+X9QCUeQGMju6TEDP7igqw09g5fpxoZtBLwe1dKxsJjDfT74bKgxKzXaFrqgbufZ7w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Mkm0UTQBw8bDw5wqo8OQrDLCTSN1xFr0G0kLArLdDR8=;
+ b=BrW9zxW93mPEL8LtWzaSLkIFnVrexvonTT8o0dNEqm8b+gqYFNpX02L6TiMpfBxseYoTwIsr+WPnGttPXe31wPQsIbkxy1j6/uqgIucC97powg6TKBExzv10LzI43zz43aungySKcARDaV4XzX2LqVThgzdt56mZO8IfA8KJ2pgl7H4E3m6v0uZvZZE7EzG4wKAz4Y9JvFnmTbCA7zLPcHe8cI3wvK7mGmLc9DVhrB6mLoavBNe89fBzpPxSK7MEm7bxXajeGC0rp5QZmyKqE1bxiK5pLLRpiSK3T6TF/a/kqZLu7YLrOY2FySLNoxAf9uyVUYL3qq3BXyHbNPL+1Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Mkm0UTQBw8bDw5wqo8OQrDLCTSN1xFr0G0kLArLdDR8=;
+ b=CYaXFDnPHfkPpri+j+LWXKqGyjvX7MVVnF27q67lc7lAxn5GNaFTvsZJP9UYR4zhIDu/VIqDxxfCc7PYSLpta4YAqPPLkkBjfFJGcxkUp+14mmAVt1ovL976Ylo99a6Ez9T9brN6d8I1Aet0gBlfmXCA3nyZMU0y3D7573+/rC1hb1B43HNijcCuoY/E0Rr59tIUdUcW9oNQwDc0BnfIDkw0ZBbTVW365vib0N82kPPclOipJjAZO4voDRC7WMyNzl0EqVsGIaeKmDT/5xPChaVOzpL6SmeVap6nIc0uX0p9sei6f3MODV5o5kgoFcMZO/QE/XoMSbT3cU2mH/a8uA==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by SA1PR02MB9758.namprd02.prod.outlook.com (2603:10b6:806:373::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.202.18; Mon, 13 Jul
+ 2026 17:37:51 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::900:1ccf:2b1e:52b6%3]) with mapi id 15.21.0202.014; Mon, 13 Jul 2026
+ 17:37:51 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Yu Zhang <zhangyu1@linux.microsoft.com>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "linux-arch@vger.kernel.org"
+	<linux-arch@vger.kernel.org>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
+	<haiyangz@microsoft.com>, "decui@microsoft.com" <decui@microsoft.com>,
+	"longli@microsoft.com" <longli@microsoft.com>, "joro@8bytes.org"
+	<joro@8bytes.org>, "will@kernel.org" <will@kernel.org>,
+	"robin.murphy@arm.com" <robin.murphy@arm.com>, "bhelgaas@google.com"
+	<bhelgaas@google.com>, "kwilczynski@kernel.org" <kwilczynski@kernel.org>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>, "mani@kernel.org"
+	<mani@kernel.org>, "robh@kernel.org" <robh@kernel.org>, "arnd@arndb.de"
+	<arnd@arndb.de>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
+	"jacob.pan@linux.microsoft.com" <jacob.pan@linux.microsoft.com>,
+	"tgopinath@linux.microsoft.com" <tgopinath@linux.microsoft.com>,
+	"easwar.hariharan@linux.microsoft.com"
+	<easwar.hariharan@linux.microsoft.com>, "mrathor@linux.microsoft.com"
+	<mrathor@linux.microsoft.com>
+Subject: RE: [PATCH v2 3/4] iommu/hyperv: Add para-virtualized IOMMU support
+ for Hyper-V guest
+Thread-Topic: [PATCH v2 3/4] iommu/hyperv: Add para-virtualized IOMMU support
+ for Hyper-V guest
+Thread-Index: AQHdCjyk3FoDd2PvoEaR3JQ0We2DX7ZlmCnQgADQU4CAAknxcIADB1oAgAAOZJA=
+Date: Mon, 13 Jul 2026 17:37:51 +0000
+Message-ID:
+ <SN6PR02MB41575E067DFEBEACF316CD35D4FA2@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20260702160518.311234-1-zhangyu1@linux.microsoft.com>
+ <20260702160518.311234-4-zhangyu1@linux.microsoft.com>
+ <SN6PR02MB4157253E030D477FD91B7E26D4FE2@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <enpkphavwmqrkded73c43vprczslvei4755lkxuedof4z2k3kk@y2jtklbk4efz>
+ <SN6PR02MB4157805F23ACA85A668FA065D4FC2@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <3ty6yq6oftsvq52skrngjv5xpyixhsyfo3dndhoujt7emxsb2o@y6ischifpmfn>
+In-Reply-To: <3ty6yq6oftsvq52skrngjv5xpyixhsyfo3dndhoujt7emxsb2o@y6ischifpmfn>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SA1PR02MB9758:EE_
+x-ms-office365-filtering-correlation-id: 331d68f2-8330-4403-c9be-08dee10576c0
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|25010399006|37011999003|24021099003|51005399006|15080799012|13091999003|8060799015|19110799012|8062599012|31061999003|12091999003|3412199025|440099028|102099032|40105399003;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?Kj/Qf861LN+zQB3HyRGM3oR3LzUqDTXWoAFnz8MCGdXVaYwQs5TGu4akYmXM?=
+ =?us-ascii?Q?eJIivpKkj8yewZbwVvW5h6D56SikfH/35vzEp3RQVaVZXGejZUi7wxl9AK/u?=
+ =?us-ascii?Q?ovhJWiaZ3rK1QW2ccBGZvVaHmcfL7K/GADyUG89so0qoCKpgtYVq5+KM4/ef?=
+ =?us-ascii?Q?Ldeb3+TdkeGNg/GT9tCzPky7yqSvZT/EpmMKGuoK7M+2G63OHpKslAxFHsf6?=
+ =?us-ascii?Q?WXz0tIb978fTiEW7GTDn2WxVjYtOgFiqrZR0lVSwMs3sHQdnGLmi5me9ioTd?=
+ =?us-ascii?Q?71uoIkWFKzhVvlbWzhs21/I6q/MxsNLGUzfw44USxz6nYr/GMPL2cw+VmH0L?=
+ =?us-ascii?Q?ihvgwkcSrFul/6W7EwkI9zi7Ox8Cfa7guHYE6IO1MOayluzspJQBUURz+yCn?=
+ =?us-ascii?Q?uwy7Ovfpj60n65habH2n0JknLG5kUbV5QOvuIMAuejeBVLOetqHv+tdXnZdF?=
+ =?us-ascii?Q?YczCUwv/NDdXB6F/uXiaEFsL9fXzdYM+0hDeR8VuL7hUy2gMkJDuMssgQfxa?=
+ =?us-ascii?Q?tazvXk8vCGS4qt0Vcp6CEGw96i4l/SNF6bcCEC+YC3xVKduKPNo6zvWAaHTt?=
+ =?us-ascii?Q?Cmc7pEgDN8FUME3IU52AymOncq89vCWnunk3qyGILO7fWYZY4GoTsEBHz7En?=
+ =?us-ascii?Q?L/NGv44rkYZ64Uvw1qMFnqpgIUiCevJW4b7RzKhJ46OcKpCQXPScBe9d9Cnx?=
+ =?us-ascii?Q?17M6OAwfmqAg6qDN8Qdmh+jOF4BhgL77DYPAvSkdOIDWd+szh4Y8q1IlmPfc?=
+ =?us-ascii?Q?qTKgOndbrOnn79p01AsX/maeWxTr5TNvff1n28GiISbotgqGFv/uFOtpudrr?=
+ =?us-ascii?Q?YsC/NAh79a89ZCM2vRTyJuntnlSqsV+WSw/9MoWtNcvsTE/8DTgg8tJsXor/?=
+ =?us-ascii?Q?m79pF97xTzUp9NONntWEiC/pmKWaqnr13t26Z6CUvIx4+OJgCbh7S0YmnEsJ?=
+ =?us-ascii?Q?ZnnURli0nYJeza83o0CG195n57EeJZhMeNvJDq9MWqvZo9rV+HO2cMMzK4OD?=
+ =?us-ascii?Q?m1FalHmUqqk/mNHXLJaUBc08owHs+OJK8ZeNGbLJ6S7Ge80=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?ccYszQ+u9cY54G2ptaXD2rPdhYpd/TJthMNmsNEbclegOPY2RFvNyGcLy1U4?=
+ =?us-ascii?Q?ivOk4/eAVq3XSL2L3ExU1LzoByoLfe4wB0G6fGsdo9AJBbmXU2n3UQC/jCn2?=
+ =?us-ascii?Q?bGRQKfW9CzMdAfSemV+n7wt9S9ZgzQKuaUyRUg+k1PNgkEf+tLj0dhZys+Y4?=
+ =?us-ascii?Q?dl7z0Rp94rV9NAEngWwaI2g6Pn4N/Yn5V5aDAG3YqbcEVn6QF2bHaVR+tB/7?=
+ =?us-ascii?Q?lO+TrUZitE18pOhk3KIZEIrxU2x/ZoDqEZLS20Lia6/p1MtjA5El+8vAPJZZ?=
+ =?us-ascii?Q?9JZx91tYZQwagM0Mk6z2EYc6L3Gstz9HkYsYv7wgdeA2lIwZRlDS4hSw1aHm?=
+ =?us-ascii?Q?2dZe/E6muKEKq9zOqRNPh0JUDw8FXzRhn6fh76ZHoeMgYInGm5Qa4mai/Fu9?=
+ =?us-ascii?Q?vjmVx3g6nSGvDSUuRdac7VD7RvcxcNN/eX30738/oEmblWhWDtKDBQ+85BVf?=
+ =?us-ascii?Q?ha4KrUaQln6o8Oa/W+Uc7UPFU7gy2eiAGUQ7bupow7qR8OAD5Vb9ak7PvzPV?=
+ =?us-ascii?Q?DLmlq95MRa07TcTtP+jbmrlw2k40KpihNvc7Tt0iCEMiD2fgm7gjMhj9aeuk?=
+ =?us-ascii?Q?Hk+C4nvTo6y3BTyURgNhU0XQjUkixFPjTcbepax1QWX9dz2RFUPXAMc54JPk?=
+ =?us-ascii?Q?/6pyjgawLImtH920REd43s1tMDkGIP6F9WO//7r+WNLynYCxM8BMYZhSjgy2?=
+ =?us-ascii?Q?OjwLG7WbSPtt6fswchMEuF63+UdvUZKLSCT2wGT+iPOdvFSAze8OKj5rOTuj?=
+ =?us-ascii?Q?BStIsnZ4q3eEaocd63l8QJPLPxDiBQAoqETSXLrQENpk6vZvvb+7+RScd6CA?=
+ =?us-ascii?Q?UaVT0vSSXX7S3ba02SwPmY/bm4llLjhY3vZLWguVTcub8eWd5vVA/yJ9kLlM?=
+ =?us-ascii?Q?mR0T1vEzVWCxNXRU9eql0cOHBupZ/FDKnWSEVimAKS1qs6NPIt78O978SUrS?=
+ =?us-ascii?Q?0hBksTQ0jUaQW1rhqXRM9SXrJ4ctt8nKF23monR9tsIo+Nfk7PEECmEtcN1G?=
+ =?us-ascii?Q?mWA/mJhaJvpjZGdPP0vjeJWBwyLWRVY3klrgAWThS5KhD6QQTitrhp063bf4?=
+ =?us-ascii?Q?ugYuF5xMUaVFE9PjSO+vyZxqaCb+r/P4X3qSCmF5B5BjDUSXT7ar6EYRfZZi?=
+ =?us-ascii?Q?qjGgem70GfgHf5Ht8wq5Y+jKDuajc79enJOqO6UYcG0k/bRu7TO+yOpJVSuW?=
+ =?us-ascii?Q?jXO1OwqtLFG2Yvqzj5fpHFUidKyg2ieQP8pPtpANYXM+pwWOF7egaaI/J4+i?=
+ =?us-ascii?Q?B6GGAX1IKMz9XYWl14KfltgvPqElNJJ8xgPeCKf8JZd0PjKI8vUEWhbVW3UG?=
+ =?us-ascii?Q?MpRkSbpU1tDcy5j+qCFUshOR+ySwvgwrgxAwGAPXKt7YuoXtcOGYyspOH8/g?=
+ =?us-ascii?Q?x/1x9yQ=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alUSq0o7CC2Pnr+H@gsse-cloud1.jf.intel.com>
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 331d68f2-8330-4403-c9be-08dee10576c0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jul 2026 17:37:51.6177
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR02MB9758
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [2.34 / 15.00];
-	MID_END_EQ_FROM_USER_PART(4.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[outlook.com,none];
+	R_DKIM_ALLOW(-0.20)[outlook.com:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[40];
-	TAGGED_FROM(0.00)[bounces-11964-lists,linux-hyperv=lfdr.de];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:matthew.brost@intel.com,m:airlied@gmail.com,m:akhilesh@ee.iitb.ac.in,m:akpm@linux-foundation.org,m:corbet@lwn.net,m:dakr@kernel.org,m:david@kernel.org,m:decui@microsoft.com,m:haiyangz@microsoft.com,m:jgg@ziepe.ca,m:kees@kernel.org,m:kys@microsoft.com,m:leon@kernel.org,m:liam@infradead.org,m:lizhi.hou@amd.com,m:ljs@kernel.org,m:longli@microsoft.com,m:lyude@redhat.com,m:maarten.lankhorst@linux.intel.com,m:mamin506@gmail.com,m:mhocko@suse.com,m:mripard@kernel.org,m:nouveau@lists.freedesktop.org,m:ogabbay@kernel.org,m:oleg@redhat.com,m:rppt@kernel.org,m:shuah@kernel.org,m:simona@ffwll.ch,m:skhan@linuxfoundation.org,m:surenb@google.com,m:tzimmermann@suse.de,m:vbabka@kernel.org,m:wei.liu@kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-mm@kvack.org,m:linux-doc@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-kselftest@vger.kernel.org,m:linux-rdma@vger.kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11965-lists,linux-hyperv=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:zhangyu1@linux.microsoft.com,m:linux-kernel@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:iommu@lists.linux.dev,m:linux-pci@vger.kernel.org,m:linux-arch@vger.kernel.org,m:wei.liu@kernel.org,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:decui@microsoft.com,m:longli@microsoft.com,m:joro@8bytes.org,m:will@kernel.org,m:robin.murphy@arm.com,m:bhelgaas@google.com,m:kwilczynski@kernel.org,m:lpieralisi@kernel.org,m:mani@kernel.org,m:robh@kernel.org,m:arnd@arndb.de,m:jgg@ziepe.ca,m:jacob.pan@linux.microsoft.com,m:tgopinath@linux.microsoft.com,m:easwar.hariharan@linux.microsoft.com,m:mrathor@linux.microsoft.com,s:lists@lfdr.de];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FREEMAIL_CC(0.00)[gmail.com,ee.iitb.ac.in,linux-foundation.org,lwn.net,kernel.org,microsoft.com,ziepe.ca,infradead.org,amd.com,redhat.com,linux.intel.com,suse.com,lists.freedesktop.org,ffwll.ch,linuxfoundation.org,google.com,suse.de,kvack.org,vger.kernel.org];
-	FORGED_SENDER(0.00)[skinsburskii@gmail.com,linux-hyperv@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[skinsburskii@gmail.com,linux-hyperv@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv];
-	TO_DN_SOME(0.00)[];
+	FREEMAIL_FROM(0.00)[outlook.com];
+	FORGED_SENDER(0.00)[mhklinux@outlook.com,linux-hyperv@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[25];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[outlook.com:+];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,skinsburskii:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,lists.freedesktop.org:email,nvidia.com:email]
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mhklinux@outlook.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-hyperv];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:from_mime,outlook.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: D336A74DD79
+X-Rspamd-Queue-Id: DCC7874E156
 
-On Mon, Jul 13, 2026 at 09:30:35AM -0700, Matthew Brost wrote:
-> On Fri, Jul 10, 2026 at 02:27:19PM -0700, Stanislav Kinsburskii wrote:
-> 
-> Please send series like this to intel-xe@lists.freedesktop.org list too
-> as this will trigger our CI which expercises the change paths changed in
-> this series.
-> 
-> > Several GPU SVM paths take mmap_read_lock() only to call hmm_range_fault(),
-> > then retry -EBUSY until HMM_RANGE_DEFAULT_TIMEOUT expires. Those paths use
-> > MMU interval notifiers whose mm matches the mm that was locked for the HMM
-> > fault.
-> > 
-> > Use hmm_range_fault_unlocked_timeout() for those faults and pass the
-> > remaining retry budget to HMM. The helper owns mmap_lock acquisition and
-> > refreshes range->notifier_seq internally for each retry, while GPU SVM
-> > keeps its existing driver-lock validation with mmu_interval_read_retry()
-> > after a successful fault.
-> > 
-> > Leave drm_gpusvm_check_pages() on hmm_range_fault() because that path is
-> > called with the mmap lock already held by its caller.
-> > 
-> > Signed-off-by: Stanislav Kinsburskii <skinsburskii@gmail.com>
-> > Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-> > ---
-> >  drivers/gpu/drm/drm_gpusvm.c |   52 ++++++------------------------------------
-> >  1 file changed, 7 insertions(+), 45 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/drm_gpusvm.c b/drivers/gpu/drm/drm_gpusvm.c
-> > index 958cb605aedd..6b7a6eaebcd9 100644
-> > --- a/drivers/gpu/drm/drm_gpusvm.c
-> > +++ b/drivers/gpu/drm/drm_gpusvm.c
-> > @@ -788,22 +788,8 @@ enum drm_gpusvm_scan_result drm_gpusvm_scan_mm(struct drm_gpusvm_range *range,
-> >  	hmm_range.hmm_pfns = pfns;
-> >  
-> >  retry:
-> > -	hmm_range.notifier_seq = mmu_interval_read_begin(notifier);
-> > -	mmap_read_lock(range->gpusvm->mm);
-> > -
-> > -	while (true) {
-> > -		err = hmm_range_fault(&hmm_range);
-> > -		if (err == -EBUSY) {
-> > -			if (time_after(jiffies, timeout))
-> > -				break;
-> > -
-> > -			hmm_range.notifier_seq =
-> > -				mmu_interval_read_begin(notifier);
-> > -			continue;
-> > -		}
-> > -		break;
-> > -	}
-> > -	mmap_read_unlock(range->gpusvm->mm);
-> > +	err = hmm_range_fault_unlocked_timeout(&hmm_range,
-> > +					       max(timeout - jiffies, 1L));
-> >  	if (err)
-> >  		goto err_free;
-> >  
-> > @@ -1439,21 +1425,8 @@ int drm_gpusvm_get_pages(struct drm_gpusvm *gpusvm,
-> >  	}
-> >  
-> >  	hmm_range.hmm_pfns = pfns;
-> > -	while (true) {
-> > -		mmap_read_lock(mm);
-> > -		err = hmm_range_fault(&hmm_range);
-> > -		mmap_read_unlock(mm);
-> > -
-> > -		if (err == -EBUSY) {
-> > -			if (time_after(jiffies, timeout))
-> > -				break;
-> > -
-> > -			hmm_range.notifier_seq =
-> > -				mmu_interval_read_begin(notifier);
-> > -			continue;
-> > -		}
-> > -		break;
-> > -	}
-> > +	err = hmm_range_fault_unlocked_timeout(&hmm_range,
-> > +				max_t(long, timeout - jiffies, 1));
-> 
-> Unaligned indentation.
-> 
-> So I'd write this like this to avoid weird wraps:
-> 
-> ctimeout = max_t(long, timeout - jiffies, 1));
-> err = hmm_range_fault_unlocked_timeout(&hmm_range, ctimeout);
-> 
-> >  	mmput(mm);
-> >  	if (err)
-> >  		goto err_free;
-> > @@ -1736,24 +1709,13 @@ int drm_gpusvm_range_evict(struct drm_gpusvm *gpusvm,
-> >  		return -ENOMEM;
-> >  
-> >  	hmm_range.hmm_pfns = pfns;
-> > -	while (!time_after(jiffies, timeout)) {
-> > -		hmm_range.notifier_seq = mmu_interval_read_begin(notifier);
-> > -		if (time_after(jiffies, timeout)) {
-> > -			err = -ETIME;
-> > -			break;
-> > -		}
-> > -
-> > -		mmap_read_lock(mm);
-> > -		err = hmm_range_fault(&hmm_range);
-> > -		mmap_read_unlock(mm);
-> > -		if (err != -EBUSY)
-> > -			break;
-> > -	}
-> > +	err = hmm_range_fault_unlocked_timeout(&hmm_range,
-> > +				max_t(long, timeout - jiffies, 1));
-> >  
-> 
-> Same here.
-> 
-> Nits, aside LGTM.
-> 
+From: Yu Zhang <zhangyu1@linux.microsoft.com> Sent: Monday, July 13, 2026 9=
+:46 AM
+>=20
+> On Sat, Jul 11, 2026 at 06:31:15PM +0000, Michael Kelley wrote:
+> > From: Yu Zhang <zhangyu1@linux.microsoft.com> Sent: Friday, July 10, 20=
+26 12:34 AM
 
-Will change as requested and send to intel-xe@lists.freedesktop.org next time.
+[snip]
 
-Thanks,
-Stanislav
+> >
+> > One new thought:  Have you considered the hibernate/resume
+> > cycle? Does anything need to be done with the pvIOMMU to
+> > make it functional again after resume? I see that the Intel and
+> > AMD IOMMU drivers have suspend and resume functions. I
+> > don't know enough about the Hyper-V pvIOMMU to know if it
+> > might also need suspend and resume functions.
+> >
+>=20
+> Thanks for raising this, Michael. We have not considered such support.
+>=20
+> My understanding is that the Intel and AMD drivers only disable the
+> IOMMU translation, flush the IOTLB during the suspend and re-enable/
+> reload the preserved root tables and other HW state during in the
+> resueme.
+>=20
+> But for pvIOMMU, I guess such job shall be done by the hypervisor?
+> For a device resumed on the same VM, its logical device ID should
+> also remain unchanged?  And the corresponding Hyper-V domain objects,
+> configuration, and device attachments shall be preserved and restored
+> by hypervisor? I don't think the current Hyper-V ABI explicitly defines
+> this. But maybe if we want such feature, it could be done by the
+> hypervisor transparently?
+>=20
 
-> Matt
-> 
-> >  	kvfree(pfns);
-> >  	mmput(mm);
-> >  
-> > -	return err;
-> > +	return err == -EBUSY ? -ETIME : err;
-> >  }
-> >  EXPORT_SYMBOL_GPL(drm_gpusvm_range_evict);
-> >  
-> > 
-> > 
+I agree with your and Jacob's comments that the guest doesn't have
+any responsibility for saving/restoring IOMMU hardware state, as the
+Intel and AMD IOMMU drivers do.
+
+But yes, I'm wondering about the Hyper-V domain objects and device
+attachments. I doubt Hyper-V can do anything to save and restore
+them. Hibernation is a Linux concept that the Hyper-V host doesn't
+know anything about.
+
+Hibernation is already complicated, and in a VM it is even worse. :-(
+As a start, see Documentation/virt/hyperv/hibernation.rst, which I
+wrote about 18 months ago. It provides some basics as well as outlines
+the additional complexity in a Hyper-V guest VM. I'll also try to spend
+some time thinking through the implications for a pvIOMMU, and let
+you know if I have any more thoughts.
+
+Michael
 
