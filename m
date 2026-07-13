@@ -1,49 +1,49 @@
-Return-Path: <linux-hyperv+bounces-11967-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11968-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id P2GJAptqVWpNoAAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11967-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Tue, 14 Jul 2026 00:45:47 +0200
+	id nnn4C3RyVWo/ogAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11968-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Tue, 14 Jul 2026 01:19:16 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDBBC74F91C
-	for <lists+linux-hyperv@lfdr.de>; Tue, 14 Jul 2026 00:45:45 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 822B574FAF1
+	for <lists+linux-hyperv@lfdr.de>; Tue, 14 Jul 2026 01:19:15 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linux-foundation.org header.s=korg header.b=DjnhDYqH;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11967-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11967-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=linux-foundation.org header.s=korg header.b="nZler/ys";
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11968-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11968-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	dmarc=none;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id E3A1A300E146
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Jul 2026 22:45:42 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 7692D3007641
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Jul 2026 23:18:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F3723B7B7A;
-	Mon, 13 Jul 2026 22:45:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96BFD386C1B;
+	Mon, 13 Jul 2026 23:18:23 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B3A2FBE1F;
-	Mon, 13 Jul 2026 22:45:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5DC2E8B9B;
+	Mon, 13 Jul 2026 23:18:22 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783982739; cv=none; b=WqzJsvuGWz7B3vm3wdzfJmKwiSLIIuqmpWP9+XuoIKvU9xOVvL4V4kJVeSUfgiSOplpAgj6CWLDqPG3E2n71GNFWP6dLBblsd2Q7cRGs5Ckd9UeiCTACBgbms8C+tyCbnCrBaUPxaC5rDR4TzSI+viOZQ0cAsFGg6yYWFdFkyuQ=
+	t=1783984703; cv=none; b=Q1MYIjvrN3UTSMUwMJbDK/dqzvMSzIwGDDJOJfdsxGIqp+/YegwqyTkH4nD4tjmFnBEcyUYBBkC3f92wPcIu4hTXqocqMsQCwDWVXN3OCrl2kB1Lzw3k10ynWv84/+P4iojYfUKf8pdSXxkyyDNjg+evtlieWhPpDJnwu964tIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783982739; c=relaxed/simple;
-	bh=KoZgYoV6LVbvr5a/Ri2RZeRNUucziB4DF0uxNYrmx1U=;
+	s=arc-20240116; t=1783984703; c=relaxed/simple;
+	bh=zAhTcmGet1zbfalwg6YD+G8NVjqXlIHXtbfcMxYpDwc=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=cN1ELu0V9pNAgivsDGp1Qq5NPvvFsfRNi9DDXz5+IHbkfFs7iD0R8tz354h8KrVq6zfOj571HsHg37/NjvnZPglJZHbv805iTmJ89G7UU+pOOKittUWZMwNSyyJ5EnLSZKs6LazAGuBygxYCsQ78wlHlLCH7i1J5upUoraZNheQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=DjnhDYqH; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D21771F000E9;
-	Mon, 13 Jul 2026 22:45:35 +0000 (UTC)
+	 Mime-Version:Content-Type; b=SbDGOj+lNU+P/gdcPgXgrMcLSB9Jt8/P97b5EuSj4yuc3Du/Y+z8t8SUIKCwj8m7pdva2VrDvP5rZXRO8okSIF7QFupvIFfUJZ9RYSWD+tyQ4uUUY3G5esWFE6f6X+2nf/ESX/Uds+pCd+ANDza4gIia2p36dVR8d8v+k2Us8X4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=nZler/ys; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E807B1F000E9;
+	Mon, 13 Jul 2026 23:18:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux-foundation.org; s=korg; t=1783982737;
-	bh=adnYTFi3hoT5aFMOesERJpy3+zRYVUFF+RkxLaSOV5A=;
+	d=linux-foundation.org; s=korg; t=1783984702;
+	bh=f5EDysaFuDNgPurWzUMZsX1j7CfSV1oHh5QC4rjPyqo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=DjnhDYqH05eQ/7HFowjW8Rg67YLnpNK8S5WnhB/Caim8Ni6IKziN7IvqqsTpwVRXT
-	 PMtPLLU/mEWJPiMd3fD7JuVerRhg9R6QFlBw+PJJKVNUtuSM691nugGB6JmjFy2ka6
-	 croIvxMU+tK89yt+R7GdUBAIMoJ1m8j6C4g4WY/c=
-Date: Mon, 13 Jul 2026 15:45:35 -0700
+	b=nZler/ysO6IBo934carYd2XqUDIMaFaeiUMVtZhtTP9n+0D4DjPtZs2k+yOsT1Fx5
+	 TLAeqjC/pvL6zMH2/jytpd4FVcVHGbYHPanj59p1Zh69G+c1G/sD/6MLodFGtLct3E
+	 XADqVu2KrZngtk7/bOTMrI43ujnTM80o4BDpBedk=
+Date: Mon, 13 Jul 2026 16:18:20 -0700
 From: Andrew Morton <akpm@linux-foundation.org>
 To: Stanislav Kinsburskii <skinsburskii@gmail.com>
 Cc: airlied@gmail.com, akhilesh@ee.iitb.ac.in, corbet@lwn.net,
@@ -59,15 +59,16 @@ Cc: airlied@gmail.com, akhilesh@ee.iitb.ac.in, corbet@lwn.net,
  linux-mm@kvack.org, linux-doc@vger.kernel.org,
  linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH v8 0/8] mm/hmm: Add mmap lock-drop support for
- userfaultfd-backed mappings
-Message-Id: <20260713154535.7656b3a630e2f6f076b4e76e@linux-foundation.org>
-In-Reply-To: <alVRU38lMfvmUFqJ@skinsburskii>
+Subject: Re: [PATCH v8 5/8] drm/nouveau: Use
+ hmm_range_fault_unlocked_timeout() for SVM faults
+Message-Id: <20260713161820.8f72577b91c730a2e853f6a5@linux-foundation.org>
+In-Reply-To: <alUZZYIPY-UkhpY4@skinsburskii>
 References: <178371866223.900500.12312667138651735591.stgit@skinsburskii>
-	<20260710151151.1e193eedd0cf2591ae392f76@linux-foundation.org>
-	<alG2-RSitzPWClAX@skinsburskii>
-	<20260710224950.53bcb43ce7e564f07a1f6a8c@linux-foundation.org>
-	<alVRU38lMfvmUFqJ@skinsburskii>
+	<178371881847.900500.8789369230260725500.stgit@skinsburskii>
+	<20260710151222.ddb35eab9c81a8720491464a@linux-foundation.org>
+	<alG1k3JsoywE2CBM@skinsburskii>
+	<20260710224833.9caf2a0a9906f0515e326a45@linux-foundation.org>
+	<alUZZYIPY-UkhpY4@skinsburskii>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -82,7 +83,7 @@ X-Spamd-Result: default: False [-1.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MV_CASE(0.50)[];
 	R_DKIM_ALLOW(-0.20)[linux-foundation.org:s=korg];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -97,7 +98,7 @@ X-Spamd-Result: default: False [-1.16 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-11967-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11968-lists,linux-hyperv=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[linux-foundation.org:+];
 	FORGED_SENDER_FORWARDING(0.00)[];
@@ -109,31 +110,27 @@ X-Spamd-Result: default: False [-1.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-hyperv];
 	TO_DN_SOME(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux-foundation.org:from_mime,linux-foundation.org:dkim,linux-foundation.org:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: EDBBC74F91C
+X-Rspamd-Queue-Id: 822B574FAF1
 
-On Mon, 13 Jul 2026 13:57:55 -0700 Stanislav Kinsburskii <skinsburskii@gmail.com> wrote:
+On Mon, 13 Jul 2026 09:59:17 -0700 Stanislav Kinsburskii <skinsburskii@gmail.com> wrote:
 
-> > > I rebased this series on top of mm-new right before sending it out.
-> > > Should I have used a different branch?
+> > > I'm not sure... The "timeout - jiffies" can become negative.
+> > > Won't 1UL convert both of them to "UL" and thus make the comparison
+> > > overflow?
 > > 
-> > mm-new is good - Sashiko attempts that.  But it's changing rapidly at
-> > this point in the development cycle.
-> > 
+> > `timeout' and `jiffies' are both unsigned long.
 > 
-> I’d like to send another revision addressing a few comments and also
-> replace the `max/max_t` check with something simpler.
+> Yeah, I’m sorry for the sloppy wording.
 > 
-> Which branch should I base it on so that Sashiko can apply it
-> successfully?
+> What I meant was: will "max(timeout - jiffies, 1UL)" correctly handle
+> the case where jiffies < timeout?
 
-mainline Linus would be safest.
+That will return `timeout - jiffies': a smallish positive number.
 
-> Or would it be better to send fixups against `mm-new`?
-
-That should work as well, but it doesn't give us a Sashiko scan of the
-whole patchset.
+I'm not sure what's intended here.  Perhaps the code should be
+using time_after() or similar?
 
