@@ -1,257 +1,187 @@
-Return-Path: <linux-hyperv+bounces-11965-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11966-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id tePxIsEiVWp7kQAAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11965-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Jul 2026 19:39:13 +0200
+	id LSuVCF9RVWpImwAAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11966-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Jul 2026 22:58:07 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCC7874E156
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Jul 2026 19:39:12 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2FA4A74F28D
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Jul 2026 22:58:06 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=outlook.com header.s=selector1 header.b=CYaXFDnP;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11965-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11965-lists+linux-hyperv=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=outlook.com;
-	arc=reject ("cv is fail on i=2")
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=NgBrxDlp;
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11966-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11966-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=gmail.com;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3B8873021708
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Jul 2026 17:37:57 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 907A5307A9CF
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Jul 2026 20:58:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6A6B34B1AD;
-	Mon, 13 Jul 2026 17:37:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1642A35E1D9;
+	Mon, 13 Jul 2026 20:58:01 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azolkn19010036.outbound.protection.outlook.com [52.103.10.36])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E51349CDC;
-	Mon, 13 Jul 2026 17:37:55 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783964276; cv=fail; b=QPhAxbxKbbwNQQ5f8kipkZhIPgN2CFaqKkB9Ljf/7PmE4Zkc1npiRojGTAycXsTD8KZWCYQTUny2hNYnMCvWa9VD5MT7QsDlNcQBp+m3vU+hABAEDZNi357aO+yV6QvPm8cMa1M9PrejgKh8y0IOtMo5De0RP+fpWQPJqUWPiC0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783964276; c=relaxed/simple;
-	bh=VnKzvYCyXXkAWm9b/OjwjYm63qk0Q65V7c2n/7SeJDo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=RITECWpW/q+Sw4vCJzB1NvaUc5our+ZIRkaX2jmNy6JhllZtlNLIMjfinmpdEwhgvsb4L3BTx1PUWeDN0gdpXHhFMx06uvCisskcdUWwpzah0fspfi4X6h1Pe7xLT0zNQTJT5sFO45ihqk0ptQkIC3MWLkrgX4TpMjPRfg/Fc2g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=CYaXFDnP; arc=fail smtp.client-ip=52.103.10.36
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=eGDxG7knbhY1OJTQb/Kd5T1PEyahcwK+kny1gkcFTbTsskM6GJxa5HECpB9UxbBDkrvyRe8yRMIYVu1LaZl76UEd1tTWyEEC5mQF7VPWWFtRC1MPkbYzp7Mw/zv4VeyxckYqADhn7MWK06h9bysOlUMRXbW/cqi3TzwCp9BUCLRAupfD1LsGn7Q/xQBgNZJtiWzBwwb73+0WaRWA7au2SVNPytseFLDLQSUHCGDM3nCYd0ROO5QFGHUTrzTV9NponJx/gnAXOc8AxCe4ZY2y+X9QCUeQGMju6TEDP7igqw09g5fpxoZtBLwe1dKxsJjDfT74bKgxKzXaFrqgbufZ7w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Mkm0UTQBw8bDw5wqo8OQrDLCTSN1xFr0G0kLArLdDR8=;
- b=BrW9zxW93mPEL8LtWzaSLkIFnVrexvonTT8o0dNEqm8b+gqYFNpX02L6TiMpfBxseYoTwIsr+WPnGttPXe31wPQsIbkxy1j6/uqgIucC97powg6TKBExzv10LzI43zz43aungySKcARDaV4XzX2LqVThgzdt56mZO8IfA8KJ2pgl7H4E3m6v0uZvZZE7EzG4wKAz4Y9JvFnmTbCA7zLPcHe8cI3wvK7mGmLc9DVhrB6mLoavBNe89fBzpPxSK7MEm7bxXajeGC0rp5QZmyKqE1bxiK5pLLRpiSK3T6TF/a/kqZLu7YLrOY2FySLNoxAf9uyVUYL3qq3BXyHbNPL+1Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Mkm0UTQBw8bDw5wqo8OQrDLCTSN1xFr0G0kLArLdDR8=;
- b=CYaXFDnPHfkPpri+j+LWXKqGyjvX7MVVnF27q67lc7lAxn5GNaFTvsZJP9UYR4zhIDu/VIqDxxfCc7PYSLpta4YAqPPLkkBjfFJGcxkUp+14mmAVt1ovL976Ylo99a6Ez9T9brN6d8I1Aet0gBlfmXCA3nyZMU0y3D7573+/rC1hb1B43HNijcCuoY/E0Rr59tIUdUcW9oNQwDc0BnfIDkw0ZBbTVW365vib0N82kPPclOipJjAZO4voDRC7WMyNzl0EqVsGIaeKmDT/5xPChaVOzpL6SmeVap6nIc0uX0p9sei6f3MODV5o5kgoFcMZO/QE/XoMSbT3cU2mH/a8uA==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by SA1PR02MB9758.namprd02.prod.outlook.com (2603:10b6:806:373::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.202.18; Mon, 13 Jul
- 2026 17:37:51 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6%3]) with mapi id 15.21.0202.014; Mon, 13 Jul 2026
- 17:37:51 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Yu Zhang <zhangyu1@linux.microsoft.com>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "linux-arch@vger.kernel.org"
-	<linux-arch@vger.kernel.org>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
-	<haiyangz@microsoft.com>, "decui@microsoft.com" <decui@microsoft.com>,
-	"longli@microsoft.com" <longli@microsoft.com>, "joro@8bytes.org"
-	<joro@8bytes.org>, "will@kernel.org" <will@kernel.org>,
-	"robin.murphy@arm.com" <robin.murphy@arm.com>, "bhelgaas@google.com"
-	<bhelgaas@google.com>, "kwilczynski@kernel.org" <kwilczynski@kernel.org>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>, "mani@kernel.org"
-	<mani@kernel.org>, "robh@kernel.org" <robh@kernel.org>, "arnd@arndb.de"
-	<arnd@arndb.de>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
-	"jacob.pan@linux.microsoft.com" <jacob.pan@linux.microsoft.com>,
-	"tgopinath@linux.microsoft.com" <tgopinath@linux.microsoft.com>,
-	"easwar.hariharan@linux.microsoft.com"
-	<easwar.hariharan@linux.microsoft.com>, "mrathor@linux.microsoft.com"
-	<mrathor@linux.microsoft.com>
-Subject: RE: [PATCH v2 3/4] iommu/hyperv: Add para-virtualized IOMMU support
- for Hyper-V guest
-Thread-Topic: [PATCH v2 3/4] iommu/hyperv: Add para-virtualized IOMMU support
- for Hyper-V guest
-Thread-Index: AQHdCjyk3FoDd2PvoEaR3JQ0We2DX7ZlmCnQgADQU4CAAknxcIADB1oAgAAOZJA=
-Date: Mon, 13 Jul 2026 17:37:51 +0000
-Message-ID:
- <SN6PR02MB41575E067DFEBEACF316CD35D4FA2@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20260702160518.311234-1-zhangyu1@linux.microsoft.com>
- <20260702160518.311234-4-zhangyu1@linux.microsoft.com>
- <SN6PR02MB4157253E030D477FD91B7E26D4FE2@SN6PR02MB4157.namprd02.prod.outlook.com>
- <enpkphavwmqrkded73c43vprczslvei4755lkxuedof4z2k3kk@y2jtklbk4efz>
- <SN6PR02MB4157805F23ACA85A668FA065D4FC2@SN6PR02MB4157.namprd02.prod.outlook.com>
- <3ty6yq6oftsvq52skrngjv5xpyixhsyfo3dndhoujt7emxsb2o@y6ischifpmfn>
-In-Reply-To: <3ty6yq6oftsvq52skrngjv5xpyixhsyfo3dndhoujt7emxsb2o@y6ischifpmfn>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SA1PR02MB9758:EE_
-x-ms-office365-filtering-correlation-id: 331d68f2-8330-4403-c9be-08dee10576c0
-x-microsoft-antispam:
- BCL:0;ARA:14566002|25010399006|37011999003|24021099003|51005399006|15080799012|13091999003|8060799015|19110799012|8062599012|31061999003|12091999003|3412199025|440099028|102099032|40105399003;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?Kj/Qf861LN+zQB3HyRGM3oR3LzUqDTXWoAFnz8MCGdXVaYwQs5TGu4akYmXM?=
- =?us-ascii?Q?eJIivpKkj8yewZbwVvW5h6D56SikfH/35vzEp3RQVaVZXGejZUi7wxl9AK/u?=
- =?us-ascii?Q?ovhJWiaZ3rK1QW2ccBGZvVaHmcfL7K/GADyUG89so0qoCKpgtYVq5+KM4/ef?=
- =?us-ascii?Q?Ldeb3+TdkeGNg/GT9tCzPky7yqSvZT/EpmMKGuoK7M+2G63OHpKslAxFHsf6?=
- =?us-ascii?Q?WXz0tIb978fTiEW7GTDn2WxVjYtOgFiqrZR0lVSwMs3sHQdnGLmi5me9ioTd?=
- =?us-ascii?Q?71uoIkWFKzhVvlbWzhs21/I6q/MxsNLGUzfw44USxz6nYr/GMPL2cw+VmH0L?=
- =?us-ascii?Q?ihvgwkcSrFul/6W7EwkI9zi7Ox8Cfa7guHYE6IO1MOayluzspJQBUURz+yCn?=
- =?us-ascii?Q?uwy7Ovfpj60n65habH2n0JknLG5kUbV5QOvuIMAuejeBVLOetqHv+tdXnZdF?=
- =?us-ascii?Q?YczCUwv/NDdXB6F/uXiaEFsL9fXzdYM+0hDeR8VuL7hUy2gMkJDuMssgQfxa?=
- =?us-ascii?Q?tazvXk8vCGS4qt0Vcp6CEGw96i4l/SNF6bcCEC+YC3xVKduKPNo6zvWAaHTt?=
- =?us-ascii?Q?Cmc7pEgDN8FUME3IU52AymOncq89vCWnunk3qyGILO7fWYZY4GoTsEBHz7En?=
- =?us-ascii?Q?L/NGv44rkYZ64Uvw1qMFnqpgIUiCevJW4b7RzKhJ46OcKpCQXPScBe9d9Cnx?=
- =?us-ascii?Q?17M6OAwfmqAg6qDN8Qdmh+jOF4BhgL77DYPAvSkdOIDWd+szh4Y8q1IlmPfc?=
- =?us-ascii?Q?qTKgOndbrOnn79p01AsX/maeWxTr5TNvff1n28GiISbotgqGFv/uFOtpudrr?=
- =?us-ascii?Q?YsC/NAh79a89ZCM2vRTyJuntnlSqsV+WSw/9MoWtNcvsTE/8DTgg8tJsXor/?=
- =?us-ascii?Q?m79pF97xTzUp9NONntWEiC/pmKWaqnr13t26Z6CUvIx4+OJgCbh7S0YmnEsJ?=
- =?us-ascii?Q?ZnnURli0nYJeza83o0CG195n57EeJZhMeNvJDq9MWqvZo9rV+HO2cMMzK4OD?=
- =?us-ascii?Q?m1FalHmUqqk/mNHXLJaUBc08owHs+OJK8ZeNGbLJ6S7Ge80=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?ccYszQ+u9cY54G2ptaXD2rPdhYpd/TJthMNmsNEbclegOPY2RFvNyGcLy1U4?=
- =?us-ascii?Q?ivOk4/eAVq3XSL2L3ExU1LzoByoLfe4wB0G6fGsdo9AJBbmXU2n3UQC/jCn2?=
- =?us-ascii?Q?bGRQKfW9CzMdAfSemV+n7wt9S9ZgzQKuaUyRUg+k1PNgkEf+tLj0dhZys+Y4?=
- =?us-ascii?Q?dl7z0Rp94rV9NAEngWwaI2g6Pn4N/Yn5V5aDAG3YqbcEVn6QF2bHaVR+tB/7?=
- =?us-ascii?Q?lO+TrUZitE18pOhk3KIZEIrxU2x/ZoDqEZLS20Lia6/p1MtjA5El+8vAPJZZ?=
- =?us-ascii?Q?9JZx91tYZQwagM0Mk6z2EYc6L3Gstz9HkYsYv7wgdeA2lIwZRlDS4hSw1aHm?=
- =?us-ascii?Q?2dZe/E6muKEKq9zOqRNPh0JUDw8FXzRhn6fh76ZHoeMgYInGm5Qa4mai/Fu9?=
- =?us-ascii?Q?vjmVx3g6nSGvDSUuRdac7VD7RvcxcNN/eX30738/oEmblWhWDtKDBQ+85BVf?=
- =?us-ascii?Q?ha4KrUaQln6o8Oa/W+Uc7UPFU7gy2eiAGUQ7bupow7qR8OAD5Vb9ak7PvzPV?=
- =?us-ascii?Q?DLmlq95MRa07TcTtP+jbmrlw2k40KpihNvc7Tt0iCEMiD2fgm7gjMhj9aeuk?=
- =?us-ascii?Q?Hk+C4nvTo6y3BTyURgNhU0XQjUkixFPjTcbepax1QWX9dz2RFUPXAMc54JPk?=
- =?us-ascii?Q?/6pyjgawLImtH920REd43s1tMDkGIP6F9WO//7r+WNLynYCxM8BMYZhSjgy2?=
- =?us-ascii?Q?OjwLG7WbSPtt6fswchMEuF63+UdvUZKLSCT2wGT+iPOdvFSAze8OKj5rOTuj?=
- =?us-ascii?Q?BStIsnZ4q3eEaocd63l8QJPLPxDiBQAoqETSXLrQENpk6vZvvb+7+RScd6CA?=
- =?us-ascii?Q?UaVT0vSSXX7S3ba02SwPmY/bm4llLjhY3vZLWguVTcub8eWd5vVA/yJ9kLlM?=
- =?us-ascii?Q?mR0T1vEzVWCxNXRU9eql0cOHBupZ/FDKnWSEVimAKS1qs6NPIt78O978SUrS?=
- =?us-ascii?Q?0hBksTQ0jUaQW1rhqXRM9SXrJ4ctt8nKF23monR9tsIo+Nfk7PEECmEtcN1G?=
- =?us-ascii?Q?mWA/mJhaJvpjZGdPP0vjeJWBwyLWRVY3klrgAWThS5KhD6QQTitrhp063bf4?=
- =?us-ascii?Q?ugYuF5xMUaVFE9PjSO+vyZxqaCb+r/P4X3qSCmF5B5BjDUSXT7ar6EYRfZZi?=
- =?us-ascii?Q?qjGgem70GfgHf5Ht8wq5Y+jKDuajc79enJOqO6UYcG0k/bRu7TO+yOpJVSuW?=
- =?us-ascii?Q?jXO1OwqtLFG2Yvqzj5fpHFUidKyg2ieQP8pPtpANYXM+pwWOF7egaaI/J4+i?=
- =?us-ascii?Q?B6GGAX1IKMz9XYWl14KfltgvPqElNJJ8xgPeCKf8JZd0PjKI8vUEWhbVW3UG?=
- =?us-ascii?Q?MpRkSbpU1tDcy5j+qCFUshOR+ySwvgwrgxAwGAPXKt7YuoXtcOGYyspOH8/g?=
- =?us-ascii?Q?x/1x9yQ=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C933235E1AA
+	for <linux-hyperv@vger.kernel.org>; Mon, 13 Jul 2026 20:57:59 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783976281; cv=none; b=QNuox6L3roFtesIRCZ0iFPAxlUE22AKKXyKc9HkZmddiION/S+sBFjwQvCZkULooDhLlEntgbHv5E4SDCel7Cd2QTcK1APaUaNAAuz1IoPh2grNKP1GdPe9E3lbccHewZC3dbd2xuFLPEg1QObK/4LAG1CCZCeTxWnSjqxBMkP4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783976281; c=relaxed/simple;
+	bh=D3eahPIAIk1fvhyOZkYEJP6bQ6n0at+bhFjOvvkmzpo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZUnr3sIqyRU0OHbp1QRBE77py2vECuVMuh3dnW7GuSbw/J/qBE20TWvNn/84STTt+8KZWZ/1qus83jiGVfEqeBTbEkzV9rlEBSLUUsDjXAIltTMtQvf4Xd3AVLhSVqJcepNDSVCFRd+ub387/ke+3fdn2JgX92l6SQ5tRS0F4Sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NgBrxDlp; arc=none smtp.client-ip=209.85.216.52
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-384c94c9414so272115a91.3
+        for <linux-hyperv@vger.kernel.org>; Mon, 13 Jul 2026 13:57:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783976279; x=1784581079; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=oNqruOZIzwruIpGvkzB4DJORZxeTGWU0clCn+vXfCzI=;
+        b=NgBrxDlpDoknd6Zv5Ca/Oeewg5yuANlXmHDRnnhqXDWhgDP2P44OrR0s0/MTMy34mZ
+         n3zXMmcIfGoNR7Sd680LfEr1/geQl8EGetahP7W6fUt1MxIqIdI/L1VUVBggJAmQ51v0
+         jXoSwvwvp/CrIoMSWg71PL3DRpm2hdJGate6aUcUOOKGl8xTstjSeqi6gEKS96UO7Zjd
+         lb2a22B/uNSSHg5FZmQ48yi/TVkiA9sVtHA1/za6mSwdA5n6CL1pr/nmcJGtyJ1Z/Prh
+         VUKEcE5b/3E9zbq5R57HBRuSsc33Y7ePwJV08k/0UBOriBpPl9MhiDN0KZiEmLww+N0n
+         mgVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783976279; x=1784581079;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=oNqruOZIzwruIpGvkzB4DJORZxeTGWU0clCn+vXfCzI=;
+        b=JkjrPCa48kwylB48qxou2nJiGCoGoLy6+HDgrZ2NMM0f/wbzRNNgsZ0yndnCMaodZD
+         QhG+Rx4AtjH1eAl8vIB0CB2e05Mzap4r/Gs72QGr1paiuhVQ29A/McETAK9CEuPzLMNJ
+         NRQZQQuRWUQhBTqHtRehyGW+z9EL/OLrrhn8IXLhqOWs6H08enzU0i5W82kwM9hy3KZ3
+         dqswvhp6wK7kapzJHuBxyJmY2gbG0ViK451NllE2LcTbwh9eEVg1NG8t2nasKhOnigSp
+         P0I2rW9htptvzWN76M4aDimJKIxzOk4PWzz1SxgwDSRN955Z7izCjb9kl0HQkCMyQudG
+         WJRw==
+X-Forwarded-Encrypted: i=1; AHgh+RpIEnxPfKwUUU5Bl5PjIRherSXNOlc4g/1ujJnK5gcQZyIwsH7oqv8LObSTUbF9anOTvbqmy1T3Fxjnm5U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyy8K17PIxXzS51c/CP69z8Lrn3RrgdXlB/i4KXQZNT9+r6VMNJ
+	TZgElI9aI2R6wOJs1Nfz7yKekkXEZ1rN9INVKUul6TRJJJXku9eV/TVo
+X-Gm-Gg: AfdE7cm2q8XOCwGf1Ag0qRH5dQN5y1OoaUKvFOvSHTAxom8f/gjWtVRuxiYU0uy0tFE
+	80UToOPuxehvpuFKqe94TZHkrc+f4A0df68jRUL8vuPIKLh02Z43oMzMCW5niUvDvqTS55XYdej
+	5PM5iahPOhDFBK0TYcRlypVp4SaQ5gWon3NpBgqLPUo9wgyW8CycqC6etaTOKEeMiSHDLXlyJtq
+	FtmlueHqNMaaN1rpovrMxbIR56BxIXUjpZI9tjM2iEEZuEQrGQT1NTesXkRe4eSxttAhslQPBv3
+	j0ED45dpgfj2OF+qLPGMOsmYhYm3fhvUyMO6NN7gk865RbS6kuFCjs+Tn9pG/4a89OEiYs2t9yV
+	fuDA60Ltg8+86r9PRv+OfLDVZZ6YU0ut0pOHSnq/7cTz9bcoUOJDeVCm4mZqnzCmYfi2FMX6X54
+	rKtQtvVYtooYoUWyFNqlnCr87/xHg6gpSofSB35n5kqEMA56wmRIfqvZzfXOE6g0Uu7g==
+X-Received: by 2002:a17:90a:d88b:b0:381:528a:808c with SMTP id 98e67ed59e1d1-38dc75e3d4fmr9572711a91.12.1783976279067;
+        Mon, 13 Jul 2026 13:57:59 -0700 (PDT)
+Received: from skinsburskii (c-98-225-44-182.hsd1.wa.comcast.net. [98.225.44.182])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-38e172b6ce6sm403816a91.1.2026.07.13.13.57.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2026 13:57:58 -0700 (PDT)
+Date: Mon, 13 Jul 2026 13:57:55 -0700
+From: Stanislav Kinsburskii <skinsburskii@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: airlied@gmail.com, akhilesh@ee.iitb.ac.in, corbet@lwn.net,
+	dakr@kernel.org, david@kernel.org, decui@microsoft.com,
+	haiyangz@microsoft.com, jgg@ziepe.ca, kees@kernel.org,
+	kys@microsoft.com, leon@kernel.org, liam@infradead.org,
+	lizhi.hou@amd.com, ljs@kernel.org, longli@microsoft.com,
+	lyude@redhat.com, maarten.lankhorst@linux.intel.com,
+	mamin506@gmail.com, mhocko@suse.com, mripard@kernel.org,
+	nouveau@lists.freedesktop.org, ogabbay@kernel.org, oleg@redhat.com,
+	rppt@kernel.org, shuah@kernel.org, simona@ffwll.ch,
+	skhan@linuxfoundation.org, surenb@google.com, tzimmermann@suse.de,
+	vbabka@kernel.org, wei.liu@kernel.org,
+	dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+	linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Subject: Re: [PATCH v8 0/8] mm/hmm: Add mmap lock-drop support for
+ userfaultfd-backed mappings
+Message-ID: <alVRU38lMfvmUFqJ@skinsburskii>
+References: <178371866223.900500.12312667138651735591.stgit@skinsburskii>
+ <20260710151151.1e193eedd0cf2591ae392f76@linux-foundation.org>
+ <alG2-RSitzPWClAX@skinsburskii>
+ <20260710224950.53bcb43ce7e564f07a1f6a8c@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 331d68f2-8330-4403-c9be-08dee10576c0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jul 2026 17:37:51.6177
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR02MB9758
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260710224950.53bcb43ce7e564f07a1f6a8c@linux-foundation.org>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[outlook.com,none];
-	R_DKIM_ALLOW(-0.20)[outlook.com:s=selector1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+X-Spamd-Result: default: False [2.34 / 15.00];
+	MID_END_EQ_FROM_USER_PART(4.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11965-lists,linux-hyperv=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[39];
+	TAGGED_FROM(0.00)[bounces-11966-lists,linux-hyperv=lfdr.de];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:zhangyu1@linux.microsoft.com,m:linux-kernel@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:iommu@lists.linux.dev,m:linux-pci@vger.kernel.org,m:linux-arch@vger.kernel.org,m:wei.liu@kernel.org,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:decui@microsoft.com,m:longli@microsoft.com,m:joro@8bytes.org,m:will@kernel.org,m:robin.murphy@arm.com,m:bhelgaas@google.com,m:kwilczynski@kernel.org,m:lpieralisi@kernel.org,m:mani@kernel.org,m:robh@kernel.org,m:arnd@arndb.de,m:jgg@ziepe.ca,m:jacob.pan@linux.microsoft.com,m:tgopinath@linux.microsoft.com,m:easwar.hariharan@linux.microsoft.com,m:mrathor@linux.microsoft.com,s:lists@lfdr.de];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FREEMAIL_FROM(0.00)[outlook.com];
-	FORGED_SENDER(0.00)[mhklinux@outlook.com,linux-hyperv@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[25];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[outlook.com:+];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mhklinux@outlook.com,linux-hyperv@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:akpm@linux-foundation.org,m:airlied@gmail.com,m:akhilesh@ee.iitb.ac.in,m:corbet@lwn.net,m:dakr@kernel.org,m:david@kernel.org,m:decui@microsoft.com,m:haiyangz@microsoft.com,m:jgg@ziepe.ca,m:kees@kernel.org,m:kys@microsoft.com,m:leon@kernel.org,m:liam@infradead.org,m:lizhi.hou@amd.com,m:ljs@kernel.org,m:longli@microsoft.com,m:lyude@redhat.com,m:maarten.lankhorst@linux.intel.com,m:mamin506@gmail.com,m:mhocko@suse.com,m:mripard@kernel.org,m:nouveau@lists.freedesktop.org,m:ogabbay@kernel.org,m:oleg@redhat.com,m:rppt@kernel.org,m:shuah@kernel.org,m:simona@ffwll.ch,m:skhan@linuxfoundation.org,m:surenb@google.com,m:tzimmermann@suse.de,m:vbabka@kernel.org,m:wei.liu@kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-mm@kvack.org,m:linux-doc@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-kselftest@vger.kernel.org,m:linux-rdma@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FREEMAIL_CC(0.00)[gmail.com,ee.iitb.ac.in,lwn.net,kernel.org,microsoft.com,ziepe.ca,infradead.org,amd.com,redhat.com,linux.intel.com,suse.com,lists.freedesktop.org,ffwll.ch,linuxfoundation.org,google.com,suse.de,kvack.org,vger.kernel.org];
+	FORGED_SENDER(0.00)[skinsburskii@gmail.com,linux-hyperv@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
 	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[skinsburskii@gmail.com,linux-hyperv@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-hyperv];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:from_mime,outlook.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[skinsburskii:mid,vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: DCC7874E156
+X-Rspamd-Queue-Id: 2FA4A74F28D
 
-From: Yu Zhang <zhangyu1@linux.microsoft.com> Sent: Monday, July 13, 2026 9=
-:46 AM
->=20
-> On Sat, Jul 11, 2026 at 06:31:15PM +0000, Michael Kelley wrote:
-> > From: Yu Zhang <zhangyu1@linux.microsoft.com> Sent: Friday, July 10, 20=
-26 12:34 AM
+On Fri, Jul 10, 2026 at 10:49:50PM -0700, Andrew Morton wrote:
+> On Fri, 10 Jul 2026 20:22:33 -0700 Stanislav Kinsburskii <skinsburskii@gmail.com> wrote:
+> 
+> > On Fri, Jul 10, 2026 at 03:11:51PM -0700, Andrew Morton wrote:
+> > > On Fri, 10 Jul 2026 14:26:20 -0700 Stanislav Kinsburskii <skinsburskii@gmail.com> wrote:
+> > > 
+> > > > This series extends the HMM framework to support userfaultfd-backed memory
+> > > > by allowing the mmap read lock to be dropped during hmm_range_fault().
+> > > 
+> > > Thanks.  This seems fairly mature and mostly-reviewed so I'll give it a
+> > > spin in mm.git's mm-new branch.
+> > > 
+> > > Unfortunately Sashiko wasn't able to apply this or v7.  I'm not sure
+> > > what base you were using.  Hopefully there's a reason for a v9 so we
+> > > can retry this.
+> > > 
+> > 
+> > I rebased this series on top of mm-new right before sending it out.
+> > Should I have used a different branch?
+> 
+> mm-new is good - Sashiko attempts that.  But it's changing rapidly at
+> this point in the development cycle.
+> 
 
-[snip]
+I’d like to send another revision addressing a few comments and also
+replace the `max/max_t` check with something simpler.
 
-> >
-> > One new thought:  Have you considered the hibernate/resume
-> > cycle? Does anything need to be done with the pvIOMMU to
-> > make it functional again after resume? I see that the Intel and
-> > AMD IOMMU drivers have suspend and resume functions. I
-> > don't know enough about the Hyper-V pvIOMMU to know if it
-> > might also need suspend and resume functions.
-> >
->=20
-> Thanks for raising this, Michael. We have not considered such support.
->=20
-> My understanding is that the Intel and AMD drivers only disable the
-> IOMMU translation, flush the IOTLB during the suspend and re-enable/
-> reload the preserved root tables and other HW state during in the
-> resueme.
->=20
-> But for pvIOMMU, I guess such job shall be done by the hypervisor?
-> For a device resumed on the same VM, its logical device ID should
-> also remain unchanged?  And the corresponding Hyper-V domain objects,
-> configuration, and device attachments shall be preserved and restored
-> by hypervisor? I don't think the current Hyper-V ABI explicitly defines
-> this. But maybe if we want such feature, it could be done by the
-> hypervisor transparently?
->=20
+Which branch should I base it on so that Sashiko can apply it
+successfully?
 
-I agree with your and Jacob's comments that the guest doesn't have
-any responsibility for saving/restoring IOMMU hardware state, as the
-Intel and AMD IOMMU drivers do.
+Or would it be better to send fixups against `mm-new`?
 
-But yes, I'm wondering about the Hyper-V domain objects and device
-attachments. I doubt Hyper-V can do anything to save and restore
-them. Hibernation is a Linux concept that the Hyper-V host doesn't
-know anything about.
-
-Hibernation is already complicated, and in a VM it is even worse. :-(
-As a start, see Documentation/virt/hyperv/hibernation.rst, which I
-wrote about 18 months ago. It provides some basics as well as outlines
-the additional complexity in a Hyper-V guest VM. I'll also try to spend
-some time thinking through the implications for a pvIOMMU, and let
-you know if I have any more thoughts.
-
-Michael
+Thanks, Stanislav
 
