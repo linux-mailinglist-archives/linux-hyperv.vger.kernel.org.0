@@ -1,40 +1,40 @@
-Return-Path: <linux-hyperv+bounces-11984-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11983-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id wDHANgv/VmpoEAEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11984-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Jul 2026 05:31:23 +0200
+	id TaOxGW//Vmp+EAEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11983-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Jul 2026 05:33:03 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4ED3475A48F
-	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Jul 2026 05:31:23 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B11D175A4B9
+	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Jul 2026 05:33:02 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
 	dkim=none;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11984-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11984-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11983-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11983-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	dmarc=fail reason="SPF not aligned (relaxed), No valid DKIM" header.from=microsoft.com (policy=reject);
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 9C41A3061D58
-	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Jul 2026 03:30:33 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 35B8D312A9C1
+	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Jul 2026 03:30:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1DF63AF66D;
-	Wed, 15 Jul 2026 03:30:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3317B3ADB94;
+	Wed, 15 Jul 2026 03:30:19 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D895D3ACEE0;
-	Wed, 15 Jul 2026 03:30:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5AD93A7F7A;
+	Wed, 15 Jul 2026 03:30:10 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784086220; cv=none; b=BOWaViRIfLO2gTewG/NUrsWSTwU6JTDgmQB7tFBozimS8pHti3yBb6IF89urYiTsXTmVd3BYpjNcpdY2LM4fZ5TI8gdXgPlPQiCnNqu1RPyiyJOWNqvKOlzkzSavZNmvHvtqVhqhK0exlCj97wWxKXsW6wb6AfxCorEexPmdoqs=
+	t=1784086216; cv=none; b=Jehfu1h75pgQOsl/LasKVQyAFONIeo6UldHwOEYsJPBwzbyU6A0mx9bTfAU7s8isk8xitJf3G45PAUpMXy9GlERjmAQW6kQnDaTqEo7pqSITWdP+N7eQb2jzFdho16upF6mggYbCL/EdhnX03m1/WkB0geU+ZbzbYWeqbqRXLIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784086220; c=relaxed/simple;
-	bh=VsixF+qnTTCLETMM5CI39ot8RDAO0bs0NG4gHjgFEoQ=;
+	s=arc-20240116; t=1784086216; c=relaxed/simple;
+	bh=2zJR6uxy0j0AruNUd8uJFxVj6MIqqnp1SzBCRWyjCYw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=elK7Yn4lRSeALXJnNxeswXtKS1XQIMQdsCEeCICqtidoYExU/BZNLAC69P2vmWSCFvEZI2hUS3iyrW5LkZzp98/kObEAxndWiBoa78yI3Eihdi40+jl6dhBQ7wLEjCRU8wa0pV9d5d93xjEev/tvrfMwZAuGUiV9v1mya14lvQ8=
+	 MIME-Version:Content-Type; b=hUtM6DFB0mMLv30IUtt+aG5KD7HHKQGFug50Em8FsSrLcRFfXbQRJU6qkWtrj4rt+mqp7mrFKzUSpu9WjDsRoGgvY9y1xNa8c2E0KMGZ4i0XAHe9eTVMKhITmgqpgvN6hb8nSkManAYRBxVNamWUReRuw/0yoTQLSxRqENs/m20=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; arc=none smtp.client-ip=13.77.154.182
 Received: by linux.microsoft.com (Postfix, from userid 1202)
-	id 7223420B7168; Tue, 14 Jul 2026 20:30:00 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7223420B7168
+	id 4FA5120B716B; Tue, 14 Jul 2026 20:30:02 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4FA5120B716B
 From: Long Li <longli@microsoft.com>
 To: Long Li <longli@microsoft.com>,
 	Konstantin Taranov <kotaranov@microsoft.com>,
@@ -55,9 +55,9 @@ Cc: netdev@vger.kernel.org,
 	linux-rdma@vger.kernel.org,
 	linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 4/7] net: mana: validate hardware-supplied values in the HWC RX path
-Date: Tue, 14 Jul 2026 20:29:38 -0700
-Message-ID: <20260715032942.3945317-5-longli@microsoft.com>
+Subject: [PATCH net-next 5/7] net: mana: fix HWC teardown safety with setup_active flag and destroy ordering
+Date: Tue, 14 Jul 2026 20:29:39 -0700
+Message-ID: <20260715032942.3945317-6-longli@microsoft.com>
 X-Mailer: git-send-email 2.43.7
 In-Reply-To: <20260715032942.3945317-1-longli@microsoft.com>
 References: <20260715032942.3945317-1-longli@microsoft.com>
@@ -75,19 +75,19 @@ X-Spamd-Result: default: False [3.04 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11984-lists,linux-hyperv=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11983-lists,linux-hyperv=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[19];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:longli@microsoft.com,m:kotaranov@microsoft.com,m:kuba@kernel.org,m:davem@davemloft.net,m:pabeni@redhat.com,m:edumazet@google.com,m:andrew+netdev@lunn.ch,m:jgg@ziepe.ca,m:leon@kernel.org,m:haiyangz@microsoft.com,m:kys@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:shradhagupta@linux.microsoft.com,m:horms@kernel.org,m:netdev@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:andrew@lunn.ch,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER(0.00)[longli@microsoft.com,linux-hyperv@vger.kernel.org];
-	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:longli@microsoft.com,m:kotaranov@microsoft.com,m:kuba@kernel.org,m:davem@davemloft.net,m:pabeni@redhat.com,m:edumazet@google.com,m:andrew+netdev@lunn.ch,m:jgg@ziepe.ca,m:leon@kernel.org,m:haiyangz@microsoft.com,m:kys@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:shradhagupta@linux.microsoft.com,m:horms@kernel.org,m:netdev@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:andrew@lunn.ch,s:lists@lfdr.de];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
@@ -97,137 +97,239 @@ X-Spamd-Result: default: False [3.04 / 15.00];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	R_DKIM_NA(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 4ED3475A48F
+X-Rspamd-Queue-Id: B11D175A4B9
 
-mana_hwc_rx_event_handler() and mana_hwc_handle_resp() consumed lengths
-and indices taken straight from device DMA without validation.  A buggy
-firmware or a malicious host (in a confidential VM, where the DMA buffer
-is shared) could drive a wrong or reused in-flight request to completion
-or index out of bounds.  Validate before use:
+Two teardown hazards let the hardware touch memory the driver freed.
 
-  - match the SGE address against the address the driver posted for that
-    slot, not just an in-range index -- an in-range but wrong SGE would
-    otherwise truncate onto a neighbouring slot and read a stale response;
-  - require the response to cover a full gdma_resp_hdr before reading
-    hwc_msg_id, so a short response cannot complete a slot with stale
-    bytes left by the buffer's previous occupant;
-  - bounds-check hwc_msg_id in mana_hwc_handle_resp() before indexing the
-    inflight bitmap and caller_ctx;
-  - reject a resp_len larger than the RX buffer.
+First, once mana_smc_setup_hwc() succeeds the device has active MST
+entries and can DMA into the HWC queue buffers.  If a later step in
+mana_hwc_establish_channel() fails, the caller had no reliable way to
+know teardown was required and could free those buffers while the
+mappings were still live -- a DMA-after-free.  max_num_cqs was used as a
+"HWC is up" proxy, but it is only set when the init EQE arrives.
 
-Repost the RX WQE on every validation early-return so a rejected response
-does not permanently shrink the posted RQ depth.  The one path that
-cannot identify the slot (SGE mismatch) intentionally leaks a single WQE
-rather than risk reposting the wrong one.
+Add a setup_active flag, set the moment setup_hwc activates MST entries.
+establish_channel() now tears down on any later failure and clears
+setup_active once teardown succeeds; destroy_channel() gates teardown on
+setup_active.  max_num_cqs is no longer reset: it is an immutable bound
+(see gdma.h) and cq_table == NULL is the sole teardown signal.
+
+Second, destroy_channel() freed the TXQ/RXQ buffers while the HWC EQ was
+still on the interrupt dispatch list, so an in-flight interrupt could run
+the handler against freed buffers:
+
+  CPU A (mana_gd_intr, hard IRQ)        CPU B (destroy_channel)
+  ----------------------------------    ------------------------------
+                                        free TXQ/RXQ DMA buffers
+  handler accesses RQ/TXQ buffers       (EQ still registered)
+
+Destroy the CQ first: mana_hwc_destroy_cq() -> mana_gd_deregister_irq()
+removes the EQ via list_del_rcu() + synchronize_rcu(), after which no
+handler can reach the queues; only then free the TXQ and RXQ.
 
 Fixes: ca9c54d2d6a5 ("net: mana: Add a driver for Microsoft Azure Network Adapter (MANA)")
 Signed-off-by: Long Li <longli@microsoft.com>
 ---
- .../net/ethernet/microsoft/mana/hw_channel.c  | 58 +++++++++++++++++--
- 1 file changed, 54 insertions(+), 4 deletions(-)
+ .../net/ethernet/microsoft/mana/hw_channel.c  | 106 ++++++++++++++----
+ include/net/mana/gdma.h                       |   8 +-
+ include/net/mana/hw_channel.h                 |   8 ++
+ 3 files changed, 100 insertions(+), 22 deletions(-)
 
 diff --git a/drivers/net/ethernet/microsoft/mana/hw_channel.c b/drivers/net/ethernet/microsoft/mana/hw_channel.c
-index 2239fdeda57c..68236727aee8 100644
+index 68236727aee8..b26c2122ebf5 100644
 --- a/drivers/net/ethernet/microsoft/mana/hw_channel.c
 +++ b/drivers/net/ethernet/microsoft/mana/hw_channel.c
-@@ -83,6 +83,17 @@ static void mana_hwc_handle_resp(struct hw_channel_context *hwc, u32 resp_len,
- 	struct hwc_caller_ctx *ctx;
- 	int err;
+@@ -4,6 +4,7 @@
+ #include <net/mana/gdma.h>
+ #include <net/mana/mana.h>
+ #include <net/mana/hw_channel.h>
++#include <linux/pci.h>
+ #include <linux/vmalloc.h>
  
-+	/* Validate msg_id is in range before using it to index bitmap
-+	 * and caller_ctx array.  Malicious firmware could send
-+	 * out-of-range msg_id causing out-of-bounds access.
-+	 */
-+	if (msg_id >= hwc->num_inflight_msg) {
-+		dev_err(hwc->dev, "hwc_rx: msg_id %u >= max %u\n",
-+			msg_id, hwc->num_inflight_msg);
-+		mana_hwc_post_rx_wqe(hwc->rxq, rx_req);
-+		return;
-+	}
-+
- 	if (!test_bit(msg_id, hwc->inflight_msg_res.map)) {
- 		dev_err(hwc->dev, "hwc_rx: invalid msg_id = %u\n", msg_id);
- 		mana_hwc_post_rx_wqe(hwc->rxq, rx_req);
-@@ -90,6 +101,18 @@ static void mana_hwc_handle_resp(struct hw_channel_context *hwc, u32 resp_len,
- 	}
- 
- 	ctx = hwc->caller_ctx + msg_id;
-+
-+	/* Reject responses larger than the RX DMA buffer — the SGE
-+	 * limits what hardware can DMA, so an oversized resp_len
-+	 * indicates a firmware bug.  Fail rather than silently
-+	 * truncating.
-+	 */
-+	if (resp_len > rx_req->buf_len) {
-+		dev_err(hwc->dev, "HWC RX: resp_len %u > buf_len %u\n",
-+			resp_len, rx_req->buf_len);
-+		resp_len = 0;
-+	}
-+
- 	err = mana_hwc_verify_resp_msg(ctx, resp_msg, resp_len);
+ static int mana_hwc_get_msg_index(struct hw_channel_context *hwc, u16 *msg_id)
+@@ -744,20 +745,33 @@ static int mana_hwc_establish_channel(struct gdma_context *gc, u16 *q_depth,
  	if (err)
- 		goto out;
-@@ -261,19 +284,45 @@ static void mana_hwc_rx_event_handler(void *ctx, u32 gdma_rxq_id,
+ 		return err;
  
- 	sge = (struct gdma_sge *)(wqe + 8 + dma_oob->inline_oob_size_div4 * 4);
- 
--	/* Select the RX work request for virtual address and for reposting. */
-+	/* Recover the originating RX slot from the SGE address.  Of the three
-+	 * terms here only sge->address lives in device-accessible RQ memory;
-+	 * rq_base_addr and max_resp_msg_size are driver-private constants.  An
-+	 * in-range but wrong/unaligned SGE (corrupted WQE, or a malicious host
-+	 * in a CVM) would otherwise truncate onto a neighbouring slot, letting
-+	 * us read a stale response that could complete the wrong, reused
-+	 * in-flight request.  Require the index to be in range AND the address
-+	 * to exactly match the value the driver posted for that slot.
+-	if (!wait_for_completion_timeout(&hwc->hwc_init_eqe_comp, 60 * HZ))
+-		return -ETIMEDOUT;
++	/* setup_hwc activated MST entries — hardware can now DMA into
++	 * our queue buffers.  If anything below fails, we must tear
++	 * down before returning so the caller doesn't need to track
++	 * whether setup_hwc succeeded.
 +	 */
- 	rq_base_addr = hwc_rxq->msg_buf->mem_info.dma_handle;
- 	rx_req_idx = (sge->address - rq_base_addr) / hwc->max_resp_msg_size;
++	hwc->setup_active = true;
++
++	if (!wait_for_completion_timeout(&hwc->hwc_init_eqe_comp, 60 * HZ)) {
++		err = -ETIMEDOUT;
++		goto teardown;
++	}
  
--	if (rx_req_idx >= hwc_rxq->msg_buf->num_reqs) {
--		dev_err(hwc->dev, "HWC RX: wrong rx_req_idx=%llu, num_reqs=%u\n",
--			rx_req_idx, hwc_rxq->msg_buf->num_reqs);
-+	if (rx_req_idx >= hwc_rxq->queue_depth ||
-+	    sge->address != (u64)hwc_rxq->msg_buf->reqs[rx_req_idx].buf_sge_addr) {
-+		/* Cannot trust which WQE this is, so we cannot safely repost
-+		 * it; leak one RX WQE and bail.  This permanently leaks one
-+		 * RX WQE but indicates a corrupted SGE from hardware (or host
-+		 * tampering), which is an unrecoverable device error.
-+		 */
-+		dev_err(hwc->dev, "HWC RX: invalid SGE address %llx (idx=%llu)\n",
-+			sge->address, rx_req_idx);
+ 	*q_depth = hwc->hwc_init_q_depth_max;
+ 	*max_req_msg_size = hwc->hwc_init_max_req_msg_size;
+ 	*max_resp_msg_size = hwc->hwc_init_max_resp_msg_size;
+ 
+ 	/* Both were set in mana_hwc_init_event_handler(). */
+-	if (WARN_ON(cq->id >= gc->max_num_cqs))
+-		return -EPROTO;
++	if (WARN_ON(cq->id >= gc->max_num_cqs)) {
++		err = -EPROTO;
++		goto teardown;
++	}
+ 
+ 	cq_table = vcalloc(gc->max_num_cqs, sizeof(*cq_table));
+-	if (!cq_table)
+-		return -ENOMEM;
++	if (!cq_table) {
++		err = -ENOMEM;
++		goto teardown;
++	}
+ 
+ 	rcu_assign_pointer(cq_table[cq->id], cq);
+ 	/* Publish the fully-initialised table last; pairs with the
+@@ -766,6 +780,16 @@ static int mana_hwc_establish_channel(struct gdma_context *gc, u16 *q_depth,
+ 	rcu_assign_pointer(gc->cq_table, cq_table);
+ 
+ 	return 0;
++
++teardown:
++	{
++		int td_err = mana_smc_teardown_hwc(&gc->shm_channel, false);
++
++		if (!td_err)
++			hwc->setup_active = false;
++
++		return td_err ? td_err : err;
++	}
+ }
+ 
+ static int mana_hwc_init_queues(struct hw_channel_context *hwc, u16 q_depth,
+@@ -878,11 +902,62 @@ void mana_hwc_destroy_channel(struct gdma_context *gc)
+ 	if (!hwc)
  		return;
- 	}
  
- 	rx_req = &hwc_rxq->msg_buf->reqs[rx_req_idx];
- 	resp = (struct gdma_resp_hdr *)rx_req->buf_va;
- 
-+	/* Validate resp_len covers the response header before reading
-+	 * hwc_msg_id.  A short response leaves stale data from the
-+	 * previous buffer occupant, which could match a live slot and
-+	 * complete the wrong request.
-+	 */
-+	if (rx_oob->tx_oob_data_size < sizeof(*resp)) {
-+		dev_err(hwc->dev, "HWC RX: short resp_len=%u\n",
-+			rx_oob->tx_oob_data_size);
-+		mana_hwc_post_rx_wqe(hwc_rxq, rx_req);
-+		return;
+-	/* gc->max_num_cqs is set in mana_hwc_init_event_handler(). If it's
+-	 * non-zero, the HWC worked and we should tear down the HWC here.
++	/* Tear down the HWC if setup_hwc previously activated MST entries.
++	 * This is the definitive flag — unlike max_num_cqs which depends
++	 * on the init EQE arriving.
+ 	 */
+-	if (gc->max_num_cqs > 0)
+-		mana_smc_teardown_hwc(&gc->shm_channel, false);
++	if (hwc->setup_active) {
++		int td_err = mana_smc_teardown_hwc(&gc->shm_channel, false);
++
++		if (td_err) {
++			dev_err(gc->dev, "HWC teardown failed: %d, issuing FLR\n",
++				td_err);
++
++			/* On systems without IOMMU, freeing DMA memory with
++			 * active hardware MST mappings risks memory corruption.
++			 * Issue FLR to force-reset the device and invalidate
++			 * all hardware state including MST entries.
++			 */
++			td_err = pcie_flr(to_pci_dev(gc->dev));
++			if (td_err) {
++				/* Device is wedged: teardown and FLR both failed.
++				 * Hardware may still have active MST entries that
++				 * allow DMA into our queue buffers.
++				 *
++				 * On IOMMU systems: dma_free_coherent() would unmap
++				 * the IOVA, causing hardware DMA to fault at the
++				 * IOMMU (safe). But on non-IOMMU systems, freeing
++				 * the physical pages allows them to be reused for
++				 * other purposes while hardware can still DMA to
++				 * them (unsafe).
++				 *
++				 * but leak all DMA buffers to prevent corruption.
++				 */
++
++				dev_warn(gc->dev,
++					 "Leaked HWC DMA buffers (CQ/RQ/TXQ) to prevent memory corruption. Device is no longer usable.\n");
++
++				/* Do NOT proceed to mana_hwc_destroy_cq/wq — they
++				 * would call dma_free_coherent().  Leave hwc, cq,
++				 * rxq, txq allocated forever.
++				 */
++				return;
++			}
++
++			dev_info(gc->dev, "FLR succeeded, hardware state cleared\n");
++		}
++
++		hwc->setup_active = false;
 +	}
 +
- 	/* Read msg_id once from DMA buffer to prevent TOCTOU:
- 	 * DMA memory is shared/unencrypted in CVMs - host can
- 	 * modify it between reads.
-@@ -281,6 +330,7 @@ static void mana_hwc_rx_event_handler(void *ctx, u32 gdma_rxq_id,
- 	msg_id = READ_ONCE(resp->response.hwc_msg_id);
- 	if (msg_id >= hwc->num_inflight_msg) {
- 		dev_err(hwc->dev, "HWC RX: wrong msg_id=%u\n", msg_id);
-+		mana_hwc_post_rx_wqe(hwc_rxq, rx_req);
- 		return;
- 	}
++	/* Tear down the HWC CQ object first — mana_hwc_destroy_cq()
++	 * both unpublishes the CQ from cq_table (+synchronize_rcu) and
++	 * deregisters the HWC EQ from the interrupt handler list (via
++	 * mana_gd_deregister_irq + synchronize_rcu), guaranteeing no
++	 * interrupt handler can access RQ/TXQ buffers after this point.
++	 */
++	if (hwc->cq)
++		mana_hwc_destroy_cq(hwc->gdma_dev->gdma_context, hwc->cq);
+ 
+ 	if (hwc->txq)
+ 		mana_hwc_destroy_wq(hwc, hwc->txq);
+@@ -890,17 +965,6 @@ void mana_hwc_destroy_channel(struct gdma_context *gc)
+ 	if (hwc->rxq)
+ 		mana_hwc_destroy_wq(hwc, hwc->rxq);
+ 
+-	if (hwc->cq)
+-		mana_hwc_destroy_cq(hwc->gdma_dev->gdma_context, hwc->cq);
+-
+-	/* Reset only after mana_hwc_destroy_cq() above has run with a valid
+-	 * max_num_cqs so mana_gd_destroy_cq() clears the CQ table slot and
+-	 * waits out in-flight EQ handlers (synchronize_rcu) before the CQ is
+-	 * freed.  Clearing it earlier would make that path early-return and
+-	 * skip the slot clear, leaving a dangling cq_table entry.
+-	 */
+-	gc->max_num_cqs = 0;
+-
+ 	kfree(hwc->caller_ctx);
+ 	hwc->caller_ctx = NULL;
+ 
+diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
+index da52701e7816..9ca7cf523366 100644
+--- a/include/net/mana/gdma.h
++++ b/include/net/mana/gdma.h
+@@ -428,7 +428,13 @@ struct gdma_context {
+ 	/* L2 MTU */
+ 	u16 adapter_mtu;
+ 
+-	/* This maps a CQ index to the queue structure. */
++	/* Size of cq_table, i.e. the largest valid CQ index + 1.  Set once
++	 * when cq_table is allocated and treated as immutable for the
++	 * table's lifetime (a bound only) -- it is never reset on teardown.
++	 * cq_table == NULL is the sole "table torn down" signal, so every
++	 * cq_table[id] access must guard with both !cq_table (gone) and
++	 * id >= max_num_cqs (out of bounds).
++	 */
+ 	unsigned int		max_num_cqs;
+ 	/* Both the base pointer and each entry are RCU-managed.  The fast
+ 	 * path (mana_gd_process_eqe) reads the base via rcu_dereference()
+diff --git a/include/net/mana/hw_channel.h b/include/net/mana/hw_channel.h
+index 73671f479399..684dcec8e612 100644
+--- a/include/net/mana/hw_channel.h
++++ b/include/net/mana/hw_channel.h
+@@ -200,6 +200,14 @@ struct hw_channel_context {
+ 	u32 pf_dest_vrcq_id;
+ 	u32 hwc_timeout;
+ 
++	/* Set after mana_smc_setup_hwc() succeeds (hardware has active
++	 * MST entries).  On recoverable paths (establish_channel)
++	 * cleared only after successful teardown so a retry remains
++	 * possible.  On the terminal destroy_channel path, cleared
++	 * unconditionally since hwc is about to be freed.
++	 */
++	bool setup_active;
++
+ 	struct hwc_caller_ctx *caller_ctx;
+ };
  
 -- 
 2.43.0
