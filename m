@@ -1,40 +1,40 @@
-Return-Path: <linux-hyperv+bounces-11982-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-11984-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id r/DrCEb/Vmp8EAEAu9opvQ
-	(envelope-from <linux-hyperv+bounces-11982-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
-	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Jul 2026 05:32:22 +0200
+	id wDHANgv/VmpoEAEAu9opvQ
+	(envelope-from <linux-hyperv+bounces-11984-lists+linux-hyperv=lfdr.de@vger.kernel.org>)
+	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Jul 2026 05:31:23 +0200
 X-Original-To: lists+linux-hyperv@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 643E875A4AF
-	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Jul 2026 05:32:21 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4ED3475A48F
+	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Jul 2026 05:31:23 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
 	dkim=none;
-	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11982-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11982-lists+linux-hyperv=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-hyperv+bounces-11984-lists+linux-hyperv=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-hyperv+bounces-11984-lists+linux-hyperv=lfdr.de@vger.kernel.org";
 	dmarc=fail reason="SPF not aligned (relaxed), No valid DKIM" header.from=microsoft.com (policy=reject);
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6C0E73116FAC
-	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Jul 2026 03:30:14 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 9C41A3061D58
+	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Jul 2026 03:30:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A8D33AD51C;
-	Wed, 15 Jul 2026 03:30:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1DF63AF66D;
+	Wed, 15 Jul 2026 03:30:22 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E1B63AB5B7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D895D3ACEE0;
 	Wed, 15 Jul 2026 03:30:08 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784086211; cv=none; b=DorEQMxXN22eddcvZ4ggXGpEi84tIpUl/Ey9jpGsdvIM5h54+nWluZhWjYqFiTf/KNHGVXqpsUT8TU0AtLT22mngieDRvvgDDPV/SAk2vcrqfiLf9+VCYzgI+IOL+ssnjXfy1p5dB8U0VoZEeOIi8XyBjfEaatsRP+2nRG4ACJs=
+	t=1784086220; cv=none; b=BOWaViRIfLO2gTewG/NUrsWSTwU6JTDgmQB7tFBozimS8pHti3yBb6IF89urYiTsXTmVd3BYpjNcpdY2LM4fZ5TI8gdXgPlPQiCnNqu1RPyiyJOWNqvKOlzkzSavZNmvHvtqVhqhK0exlCj97wWxKXsW6wb6AfxCorEexPmdoqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784086211; c=relaxed/simple;
-	bh=fW7MLrkN3fiIRL1AdvJb2iiQxx8j5Cs8dbZRl/K2E04=;
+	s=arc-20240116; t=1784086220; c=relaxed/simple;
+	bh=VsixF+qnTTCLETMM5CI39ot8RDAO0bs0NG4gHjgFEoQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fG1SOnrDb0DZUS4AfzLo8+nKK/Bapss67UAnhSmTTu3+tl+DcvMuNmBby3+vrwJkGZmREWNVF/Bd/m2t/vAnGSofyIpLD75pQgaYXQ9rJtzlSihuXAi2ulIA9B9LG5wiICiJLtrT/K4DtZqEwRLTfIHjkIWL6JdSe14Bolwa4e8=
+	 MIME-Version:Content-Type; b=elK7Yn4lRSeALXJnNxeswXtKS1XQIMQdsCEeCICqtidoYExU/BZNLAC69P2vmWSCFvEZI2hUS3iyrW5LkZzp98/kObEAxndWiBoa78yI3Eihdi40+jl6dhBQ7wLEjCRU8wa0pV9d5d93xjEev/tvrfMwZAuGUiV9v1mya14lvQ8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; arc=none smtp.client-ip=13.77.154.182
 Received: by linux.microsoft.com (Postfix, from userid 1202)
-	id A379A20B716C; Tue, 14 Jul 2026 20:29:59 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A379A20B716C
+	id 7223420B7168; Tue, 14 Jul 2026 20:30:00 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7223420B7168
 From: Long Li <longli@microsoft.com>
 To: Long Li <longli@microsoft.com>,
 	Konstantin Taranov <kotaranov@microsoft.com>,
@@ -55,9 +55,9 @@ Cc: netdev@vger.kernel.org,
 	linux-rdma@vger.kernel.org,
 	linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 3/7] net: mana: free HWC comp_buf after destroying the EQ
-Date: Tue, 14 Jul 2026 20:29:37 -0700
-Message-ID: <20260715032942.3945317-4-longli@microsoft.com>
+Subject: [PATCH net-next 4/7] net: mana: validate hardware-supplied values in the HWC RX path
+Date: Tue, 14 Jul 2026 20:29:38 -0700
+Message-ID: <20260715032942.3945317-5-longli@microsoft.com>
 X-Mailer: git-send-email 2.43.7
 In-Reply-To: <20260715032942.3945317-1-longli@microsoft.com>
 References: <20260715032942.3945317-1-longli@microsoft.com>
@@ -67,82 +67,167 @@ List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [3.54 / 15.00];
+X-Spamd-Result: default: False [3.04 / 15.00];
 	DMARC_POLICY_REJECT(2.00)[microsoft.com : SPF not aligned (relaxed), No valid DKIM,reject];
 	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	MID_CONTAINS_FROM(1.00)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER(0.00)[longli@microsoft.com,linux-hyperv@vger.kernel.org];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:longli@microsoft.com,m:kotaranov@microsoft.com,m:kuba@kernel.org,m:davem@davemloft.net,m:pabeni@redhat.com,m:edumazet@google.com,m:andrew+netdev@lunn.ch,m:jgg@ziepe.ca,m:leon@kernel.org,m:haiyangz@microsoft.com,m:kys@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:shradhagupta@linux.microsoft.com,m:horms@kernel.org,m:netdev@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:andrew@lunn.ch,s:lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11984-lists,linux-hyperv=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[19];
-	TAGGED_FROM(0.00)[bounces-11982-lists,linux-hyperv=lfdr.de];
-	FROM_NEQ_ENVFROM(0.00)[longli@microsoft.com,linux-hyperv@vger.kernel.org];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
-	R_DKIM_NA(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:longli@microsoft.com,m:kotaranov@microsoft.com,m:kuba@kernel.org,m:davem@davemloft.net,m:pabeni@redhat.com,m:edumazet@google.com,m:andrew+netdev@lunn.ch,m:jgg@ziepe.ca,m:leon@kernel.org,m:haiyangz@microsoft.com,m:kys@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:shradhagupta@linux.microsoft.com,m:horms@kernel.org,m:netdev@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:andrew@lunn.ch,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[longli@microsoft.com,linux-hyperv@vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[longli@microsoft.com,linux-hyperv@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG]
+	FORGED_SENDER_FORWARDING(0.00)[];
+	R_DKIM_NA(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	TAGGED_RCPT(0.00)[linux-hyperv,netdev];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 643E875A4AF
+X-Rspamd-Queue-Id: 4ED3475A48F
 
-mana_hwc_destroy_cq() freed hwc_cq->comp_buf before destroying the CQ and
-EQ.  comp_buf is dereferenced by mana_hwc_comp_event(), which the EQ
-interrupt handler invokes; freeing it while the EQ was still registered
-let a late handler touch freed memory.
+mana_hwc_rx_event_handler() and mana_hwc_handle_resp() consumed lengths
+and indices taken straight from device DMA without validation.  A buggy
+firmware or a malicious host (in a confidential VM, where the DMA buffer
+is shared) could drive a wrong or reused in-flight request to completion
+or index out of bounds.  Validate before use:
 
-Destroy the CQ and EQ first -- the EQ teardown deregisters the IRQ and
-fences in-flight handlers -- then free comp_buf and hwc_cq.
+  - match the SGE address against the address the driver posted for that
+    slot, not just an in-range index -- an in-range but wrong SGE would
+    otherwise truncate onto a neighbouring slot and read a stale response;
+  - require the response to cover a full gdma_resp_hdr before reading
+    hwc_msg_id, so a short response cannot complete a slot with stale
+    bytes left by the buffer's previous occupant;
+  - bounds-check hwc_msg_id in mana_hwc_handle_resp() before indexing the
+    inflight bitmap and caller_ctx;
+  - reject a resp_len larger than the RX buffer.
+
+Repost the RX WQE on every validation early-return so a rejected response
+does not permanently shrink the posted RQ depth.  The one path that
+cannot identify the slot (SGE mismatch) intentionally leaks a single WQE
+rather than risk reposting the wrong one.
 
 Fixes: ca9c54d2d6a5 ("net: mana: Add a driver for Microsoft Azure Network Adapter (MANA)")
 Signed-off-by: Long Li <longli@microsoft.com>
 ---
- drivers/net/ethernet/microsoft/mana/hw_channel.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ .../net/ethernet/microsoft/mana/hw_channel.c  | 58 +++++++++++++++++--
+ 1 file changed, 54 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/net/ethernet/microsoft/mana/hw_channel.c b/drivers/net/ethernet/microsoft/mana/hw_channel.c
-index 3f011ebbe7b3..2239fdeda57c 100644
+index 2239fdeda57c..68236727aee8 100644
 --- a/drivers/net/ethernet/microsoft/mana/hw_channel.c
 +++ b/drivers/net/ethernet/microsoft/mana/hw_channel.c
-@@ -384,14 +384,20 @@ static void mana_hwc_comp_event(void *ctx, struct gdma_queue *q_self)
+@@ -83,6 +83,17 @@ static void mana_hwc_handle_resp(struct hw_channel_context *hwc, u32 resp_len,
+ 	struct hwc_caller_ctx *ctx;
+ 	int err;
  
- static void mana_hwc_destroy_cq(struct gdma_context *gc, struct hwc_cq *hwc_cq)
- {
--	kfree(hwc_cq->comp_buf);
--
- 	if (hwc_cq->gdma_cq)
- 		mana_gd_destroy_queue(gc, hwc_cq->gdma_cq);
- 
-+	/* comp_buf is reached only by mana_hwc_comp_event(), which the
-+	 * EQ handler invokes via cq_table[id].  The CQ destroy above
-+	 * already cleared that slot and ran synchronize_rcu(), so no
-+	 * handler can reach comp_buf once it returns.  Destroying the EQ
-+	 * here additionally tears down the IRQ (defense in depth) before
-+	 * comp_buf and hwc_cq are freed below.
++	/* Validate msg_id is in range before using it to index bitmap
++	 * and caller_ctx array.  Malicious firmware could send
++	 * out-of-range msg_id causing out-of-bounds access.
 +	 */
- 	if (hwc_cq->gdma_eq)
- 		mana_gd_destroy_queue(gc, hwc_cq->gdma_eq);
++	if (msg_id >= hwc->num_inflight_msg) {
++		dev_err(hwc->dev, "hwc_rx: msg_id %u >= max %u\n",
++			msg_id, hwc->num_inflight_msg);
++		mana_hwc_post_rx_wqe(hwc->rxq, rx_req);
++		return;
++	}
++
+ 	if (!test_bit(msg_id, hwc->inflight_msg_res.map)) {
+ 		dev_err(hwc->dev, "hwc_rx: invalid msg_id = %u\n", msg_id);
+ 		mana_hwc_post_rx_wqe(hwc->rxq, rx_req);
+@@ -90,6 +101,18 @@ static void mana_hwc_handle_resp(struct hw_channel_context *hwc, u32 resp_len,
+ 	}
  
-+	kfree(hwc_cq->comp_buf);
- 	kfree(hwc_cq);
- }
+ 	ctx = hwc->caller_ctx + msg_id;
++
++	/* Reject responses larger than the RX DMA buffer — the SGE
++	 * limits what hardware can DMA, so an oversized resp_len
++	 * indicates a firmware bug.  Fail rather than silently
++	 * truncating.
++	 */
++	if (resp_len > rx_req->buf_len) {
++		dev_err(hwc->dev, "HWC RX: resp_len %u > buf_len %u\n",
++			resp_len, rx_req->buf_len);
++		resp_len = 0;
++	}
++
+ 	err = mana_hwc_verify_resp_msg(ctx, resp_msg, resp_len);
+ 	if (err)
+ 		goto out;
+@@ -261,19 +284,45 @@ static void mana_hwc_rx_event_handler(void *ctx, u32 gdma_rxq_id,
+ 
+ 	sge = (struct gdma_sge *)(wqe + 8 + dma_oob->inline_oob_size_div4 * 4);
+ 
+-	/* Select the RX work request for virtual address and for reposting. */
++	/* Recover the originating RX slot from the SGE address.  Of the three
++	 * terms here only sge->address lives in device-accessible RQ memory;
++	 * rq_base_addr and max_resp_msg_size are driver-private constants.  An
++	 * in-range but wrong/unaligned SGE (corrupted WQE, or a malicious host
++	 * in a CVM) would otherwise truncate onto a neighbouring slot, letting
++	 * us read a stale response that could complete the wrong, reused
++	 * in-flight request.  Require the index to be in range AND the address
++	 * to exactly match the value the driver posted for that slot.
++	 */
+ 	rq_base_addr = hwc_rxq->msg_buf->mem_info.dma_handle;
+ 	rx_req_idx = (sge->address - rq_base_addr) / hwc->max_resp_msg_size;
+ 
+-	if (rx_req_idx >= hwc_rxq->msg_buf->num_reqs) {
+-		dev_err(hwc->dev, "HWC RX: wrong rx_req_idx=%llu, num_reqs=%u\n",
+-			rx_req_idx, hwc_rxq->msg_buf->num_reqs);
++	if (rx_req_idx >= hwc_rxq->queue_depth ||
++	    sge->address != (u64)hwc_rxq->msg_buf->reqs[rx_req_idx].buf_sge_addr) {
++		/* Cannot trust which WQE this is, so we cannot safely repost
++		 * it; leak one RX WQE and bail.  This permanently leaks one
++		 * RX WQE but indicates a corrupted SGE from hardware (or host
++		 * tampering), which is an unrecoverable device error.
++		 */
++		dev_err(hwc->dev, "HWC RX: invalid SGE address %llx (idx=%llu)\n",
++			sge->address, rx_req_idx);
+ 		return;
+ 	}
+ 
+ 	rx_req = &hwc_rxq->msg_buf->reqs[rx_req_idx];
+ 	resp = (struct gdma_resp_hdr *)rx_req->buf_va;
+ 
++	/* Validate resp_len covers the response header before reading
++	 * hwc_msg_id.  A short response leaves stale data from the
++	 * previous buffer occupant, which could match a live slot and
++	 * complete the wrong request.
++	 */
++	if (rx_oob->tx_oob_data_size < sizeof(*resp)) {
++		dev_err(hwc->dev, "HWC RX: short resp_len=%u\n",
++			rx_oob->tx_oob_data_size);
++		mana_hwc_post_rx_wqe(hwc_rxq, rx_req);
++		return;
++	}
++
+ 	/* Read msg_id once from DMA buffer to prevent TOCTOU:
+ 	 * DMA memory is shared/unencrypted in CVMs - host can
+ 	 * modify it between reads.
+@@ -281,6 +330,7 @@ static void mana_hwc_rx_event_handler(void *ctx, u32 gdma_rxq_id,
+ 	msg_id = READ_ONCE(resp->response.hwc_msg_id);
+ 	if (msg_id >= hwc->num_inflight_msg) {
+ 		dev_err(hwc->dev, "HWC RX: wrong msg_id=%u\n", msg_id);
++		mana_hwc_post_rx_wqe(hwc_rxq, rx_req);
+ 		return;
+ 	}
  
 -- 
 2.43.0
